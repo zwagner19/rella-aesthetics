@@ -166,20 +166,20 @@ async function seed() {
     console.log(`✓ Service: ${svc.name}`);
   }
 
-  // 4. Create Dr. Sonia Dhillon team member
+  // 4. Create placeholder team member (update with real provider info)
   await client.createOrReplace({
-    _id: "team-dr-dhillon",
+    _id: "team-medical-director",
     _type: "teamMember",
-    name: "Dr. Sonia Dhillon",
+    name: "Medical Director",
     role: "Medical Director & Founder",
-    credentials: "MD",
+    credentials: "",
     order: 1,
     locations: [
       { _type: "reference", _ref: vacaville._id, _key: "vac" },
       { _type: "reference", _ref: napa._id, _key: "nap" },
     ],
   });
-  console.log("✓ Team: Dr. Sonia Dhillon");
+  console.log("✓ Team: Medical Director (update name in Sanity Studio)");
 
   console.log("\n✅ Sanity seed complete!");
 }

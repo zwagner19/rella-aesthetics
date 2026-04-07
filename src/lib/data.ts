@@ -66,7 +66,7 @@ export const services = [
 
 export const testimonials = [
   {
-    quote: "Dr. Sonia Dhillon is wonderful at her craft. She takes the time to listen and makes sure you are comfortable. I always leave feeling refreshed and confident.",
+    quote: "The team here is wonderful at their craft. They take the time to listen and make sure you are comfortable. I always leave feeling refreshed and confident.",
     name: "Emika Freeman",
     source: "Google Review",
   },

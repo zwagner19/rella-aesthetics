@@ -58,7 +58,7 @@ export default function HomePage() {
             <SectionHeader
               eyebrow="Why Rella"
               title="Physician-Led, Patient-Centered"
-              description="Founded by Dr. Sonia Dhillon, Rella Aesthetics combines medical expertise with an artist's eye. Every treatment is personally supervised and designed for naturally beautiful outcomes."
+              description="Rella Aesthetics combines medical expertise with an artist's eye. Every treatment is physician-supervised and designed for naturally beautiful outcomes."
             />
             <Button href="/about" variant="ghost">
               Meet Our Team

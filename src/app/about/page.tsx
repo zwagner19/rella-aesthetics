@@ -5,13 +5,13 @@ import { Button } from "@/components/ui/Button";
 export const metadata: Metadata = {
   title: "About Rella Aesthetics",
   description:
-    "Meet Dr. Sonia Dhillon and the Rella Aesthetics team — physician-led luxury med spa in Vacaville and Napa, CA. Our mission, values, and approach.",
+    "Meet the Rella Aesthetics team — physician-led luxury med spa in Vacaville and Napa, CA. Our mission, values, and approach.",
 };
 
 const values = [
   {
     title: "Physician-Led Care",
-    description: "Every treatment is overseen by Dr. Sonia Dhillon, ensuring medical precision and patient safety at every step.",
+    description: "Every treatment is physician-supervised, ensuring medical precision and patient safety at every step.",
   },
   {
     title: "Natural Results",
@@ -56,7 +56,7 @@ export default function AboutPage() {
                 title="Confidence Through Expertise"
               />
               <p className="text-silver leading-relaxed mb-4">
-                Dr. Sonia Dhillon founded Rella Aesthetics to bridge the gap between clinical
+                Rella Aesthetics was founded to bridge the gap between clinical
                 excellence and luxury patient experience. With years of medical training and an
                 artist&apos;s eye for facial anatomy, she leads a team dedicated to helping every
                 patient feel confident and cared for.
