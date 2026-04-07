@@ -1,0 +1,11 @@
+# *
+User-agent: *
+Allow: /
+Disallow: /api/
+Disallow: /studio/
+
+# Host
+Host: https://experiencerella.com
+
+# Sitemaps
+Sitemap: https://experiencerella.com/sitemap.xml

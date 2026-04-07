@@ -1,0 +1,430 @@
+export interface ServicePageData {
+  slug: string;
+  title: string;
+  metaTitle: string;
+  metaDescription: string;
+  heroEyebrow: string;
+  heroTitle: string;
+  heroDescription: string;
+  whatItIs: { heading: string; body: string };
+  whoItsFor: { heading: string; body: string; bullets: string[] };
+  whatToExpect: { heading: string; body: string; steps: string[] };
+  pricing: { heading: string; body: string; note?: string };
+  faq: { question: string; answer: string }[];
+  image: string;
+}
+
+export const servicePages: ServicePageData[] = [
+  {
+    slug: "botox",
+    title: "Botox & Dysport",
+    metaTitle: "Botox & Dysport Injections in Vacaville & Napa",
+    metaDescription: "Smooth fine lines and prevent new wrinkles with expert Botox and Dysport injections at Rella Aesthetics in Vacaville and Napa, CA.",
+    heroEyebrow: "Injectables",
+    heroTitle: "Botox & Dysport",
+    heroDescription: "Expertly administered neuromodulators to smooth fine lines, prevent new wrinkles, and refresh your natural appearance.",
+    whatItIs: {
+      heading: "What Is Botox?",
+      body: "Botox and Dysport are neuromodulators that temporarily relax targeted facial muscles, smoothing dynamic wrinkles caused by repeated expressions. Results appear within 3–7 days and typically last 3–4 months. Our physician-led approach ensures precise placement for natural, refreshed results — never frozen.",
+    },
+    whoItsFor: {
+      heading: "Who Is It For?",
+      body: "Neuromodulators are ideal for patients looking to treat or prevent expression lines.",
+      bullets: [
+        "Forehead lines and frown lines (11s)",
+        "Crow's feet around the eyes",
+        "Preventive treatment for patients in their late 20s–30s",
+        "Brow lift and jawline slimming",
+        "Excessive sweating (hyperhidrosis)",
+      ],
+    },
+    whatToExpect: {
+      heading: "What to Expect",
+      body: "A typical Botox appointment takes 15–20 minutes with minimal downtime.",
+      steps: [
+        "Consultation to assess facial anatomy and goals",
+        "Targeted injections using fine needles — most patients feel only a slight pinch",
+        "No downtime — return to normal activities immediately",
+        "Results appear within 3–7 days and peak at 2 weeks",
+        "Schedule a touch-up at 3–4 months to maintain results",
+      ],
+    },
+    pricing: {
+      heading: "Pricing",
+      body: "Botox: $13/unit | Dysport: $4.33/unit. VIP Members receive preferred pricing.",
+      note: "Most patients use 20–40 units per treatment area.",
+    },
+    faq: [
+      { question: "Does Botox hurt?", answer: "Most patients describe a slight pinch. No anesthesia is needed, and the procedure takes about 15 minutes." },
+      { question: "How long does Botox last?", answer: "Results typically last 3–4 months. Regular treatments may extend the duration over time as muscles adapt." },
+      { question: "Will I look frozen?", answer: "Our physician uses precise dosing and placement to maintain your natural expressions while smoothing wrinkles." },
+      { question: "What is the difference between Botox and Dysport?", answer: "Both are neuromodulators with similar results. Dysport may spread slightly more, making it ideal for larger areas like the forehead. Your provider will recommend the best option for your goals." },
+      { question: "When will I see results?", answer: "Initial softening appears within 3–5 days, with full results visible at 10–14 days." },
+    ],
+    image: "/images/service-botox.jpg",
+  },
+  {
+    slug: "dermal-fillers",
+    title: "Dermal Fillers",
+    metaTitle: "Dermal Fillers in Vacaville & Napa CA",
+    metaDescription: "Restore facial volume, define contours, and enhance lips with premium dermal fillers at Rella Aesthetics. Physician-led treatments in Vacaville and Napa.",
+    heroEyebrow: "Injectables",
+    heroTitle: "Dermal Fillers",
+    heroDescription: "Restore lost volume, define contours, and enhance your natural features with premium hyaluronic acid fillers.",
+    whatItIs: {
+      heading: "What Are Dermal Fillers?",
+      body: "Dermal fillers are injectable gels — typically hyaluronic acid — used to restore volume, smooth deep lines, and enhance facial contours. We carry a full range of premium fillers to address specific areas including cheeks, lips, jawline, under-eyes, and nasolabial folds. Results are immediate and last 6–18 months depending on the product and treatment area.",
+    },
+    whoItsFor: {
+      heading: "Who Is It For?",
+      body: "Fillers are ideal for patients experiencing age-related volume loss or those seeking subtle enhancement.",
+      bullets: [
+        "Cheek and midface volume restoration",
+        "Lip enhancement and definition",
+        "Jawline contouring and chin projection",
+        "Under-eye hollows and tear troughs",
+        "Nasolabial folds and marionette lines",
+      ],
+    },
+    whatToExpect: {
+      heading: "What to Expect",
+      body: "Filler treatments typically take 30–45 minutes depending on the areas treated.",
+      steps: [
+        "Facial assessment to determine volume needs and product selection",
+        "Topical numbing applied for comfort",
+        "Precise injections using cannula or needle technique based on the area",
+        "Immediate visible improvement with continued settling over 2 weeks",
+        "Minimal downtime — some bruising or swelling is normal for 2–5 days",
+      ],
+    },
+    pricing: {
+      heading: "Pricing",
+      body: "Filler starts at $600/syringe. VIP Members receive preferred pricing starting at $450/syringe.",
+      note: "Most patients require 1–3 syringes depending on treatment goals.",
+    },
+    faq: [
+      { question: "How long do fillers last?", answer: "Most fillers last 6–18 months depending on the product and treatment area. Lip filler typically lasts 6–9 months, while cheek filler can last 12–18 months." },
+      { question: "Is the procedure painful?", answer: "We apply topical numbing cream before treatment, and most fillers contain lidocaine for added comfort. Most patients rate discomfort as minimal." },
+      { question: "Can fillers be reversed?", answer: "Yes. Hyaluronic acid fillers can be dissolved with hyaluronidase if needed, providing an added safety measure." },
+      { question: "How much filler will I need?", answer: "This depends on your goals and the areas being treated. During your consultation, your provider will create a personalized treatment plan." },
+    ],
+    image: "/images/service-fillers.jpg",
+  },
+  {
+    slug: "chemical-peels",
+    title: "Chemical Peels",
+    metaTitle: "Chemical Peels in Vacaville & Napa CA",
+    metaDescription: "Reveal smoother, brighter skin with medical-grade chemical peels at Rella Aesthetics. Customized treatments for acne, pigmentation, and aging skin.",
+    heroEyebrow: "Skin Care",
+    heroTitle: "Chemical Peels",
+    heroDescription: "Medical-grade peels that reveal smoother, brighter skin by removing damaged outer layers and stimulating cell renewal.",
+    whatItIs: {
+      heading: "What Is a Chemical Peel?",
+      body: "Chemical peels use controlled acid solutions to exfoliate damaged skin layers, revealing fresh, rejuvenated skin beneath. We offer light, medium, and deep peel options customized to your skin type, concerns, and desired downtime. Peels effectively address hyperpigmentation, acne scars, fine lines, and uneven texture.",
+    },
+    whoItsFor: {
+      heading: "Who Is It For?",
+      body: "Chemical peels benefit a wide range of skin concerns and types.",
+      bullets: [
+        "Sun damage and hyperpigmentation",
+        "Acne scars and active breakouts",
+        "Fine lines and early signs of aging",
+        "Uneven skin tone and texture",
+        "Dull or lackluster complexion",
+      ],
+    },
+    whatToExpect: {
+      heading: "What to Expect",
+      body: "Treatment takes 30–45 minutes. Downtime varies by peel depth.",
+      steps: [
+        "Skin analysis and peel selection based on your concerns",
+        "Gentle cleansing and prep of the treatment area",
+        "Application of the peel solution — a tingling or warm sensation is normal",
+        "Neutralization and soothing post-treatment care",
+        "Light peels: no downtime. Medium peels: 3–7 days of peeling",
+      ],
+    },
+    pricing: {
+      heading: "Pricing",
+      body: "Chemical peels start at $150. Package pricing available for series treatments.",
+    },
+    faq: [
+      { question: "How many peels do I need?", answer: "Most patients see significant improvement after 3–6 treatments spaced 4–6 weeks apart. Your provider will recommend a series based on your goals." },
+      { question: "Is there downtime?", answer: "Light peels have no downtime. Medium and deep peels involve 3–7 days of visible peeling and redness." },
+      { question: "Can I wear makeup after a peel?", answer: "For light peels, makeup can be applied the next day. For deeper peels, wait until peeling has resolved — typically 5–7 days." },
+    ],
+    image: "/images/service-peels.jpg",
+  },
+  {
+    slug: "facials",
+    title: "Facials",
+    metaTitle: "Professional Facials in Vacaville & Napa CA",
+    metaDescription: "Customized professional facials at Rella Aesthetics. Targeted treatments for acne, hydration, anti-aging, and sensitive skin in Vacaville and Napa.",
+    heroEyebrow: "Skin Care",
+    heroTitle: "Facials",
+    heroDescription: "Customized professional facials designed to address your unique skin concerns with medical-grade products and expert technique.",
+    whatItIs: {
+      heading: "What Is a Professional Facial?",
+      body: "Our facials go beyond spa relaxation — they are targeted skin treatments using medical-grade products and techniques. Each facial is customized after a thorough skin analysis to address your specific concerns, from acne and congestion to dehydration and early aging.",
+    },
+    whoItsFor: {
+      heading: "Who Is It For?",
+      body: "Professional facials are beneficial for nearly every skin type and concern.",
+      bullets: [
+        "Acne-prone or congested skin",
+        "Dehydrated or dull complexion",
+        "Sensitive skin needing gentle, targeted care",
+        "Anti-aging maintenance between advanced treatments",
+        "General skin health and preventive care",
+      ],
+    },
+    whatToExpect: {
+      heading: "What to Expect",
+      body: "Sessions typically last 45–60 minutes.",
+      steps: [
+        "Skin analysis to identify concerns and customize your treatment",
+        "Deep cleansing, steam, and exfoliation",
+        "Extractions (if needed) and targeted treatment serums",
+        "Mask application tailored to your skin type",
+        "SPF and hydrating finish — leave glowing",
+      ],
+    },
+    pricing: {
+      heading: "Pricing",
+      body: "Facials start at $120. Ask about our facial series packages for ongoing skin care.",
+    },
+    faq: [
+      { question: "How often should I get a facial?", answer: "We recommend monthly facials for optimal skin health. Your provider may suggest a different frequency based on your skin concerns and treatment plan." },
+      { question: "Will I break out after a facial?", answer: "Some purging is normal after a deep-cleansing facial, especially for acne-prone skin. This typically resolves within a few days." },
+      { question: "Can I combine a facial with other treatments?", answer: "Yes, facials pair well with chemical peels, microneedling, and LED therapy. Your provider will recommend the best combination." },
+    ],
+    image: "/images/service-facials.jpg",
+  },
+  {
+    slug: "hydrafacial",
+    title: "HydraFacial",
+    metaTitle: "HydraFacial Treatments in Vacaville & Napa CA",
+    metaDescription: "Experience the HydraFacial at Rella Aesthetics — deep cleansing, exfoliation, and hydration in one advanced treatment. No downtime. Immediate glow.",
+    heroEyebrow: "Skin Care",
+    heroTitle: "HydraFacial",
+    heroDescription: "The ultimate skin refresh — deep cleansing, gentle exfoliation, and intense hydration in one comfortable treatment.",
+    whatItIs: {
+      heading: "What Is a HydraFacial?",
+      body: "HydraFacial is a patented multi-step treatment that combines cleansing, exfoliation, extraction, and hydration using a specialized vortex technology. It delivers medical-grade serums deep into the skin while removing impurities. The result is instantly visible — clearer, more radiant skin with zero downtime.",
+    },
+    whoItsFor: {
+      heading: "Who Is It For?",
+      body: "HydraFacial is suitable for all skin types and can be customized with targeted boosters.",
+      bullets: [
+        "All skin types including sensitive skin",
+        "Patients wanting immediate visible results",
+        "Fine lines and loss of firmness",
+        "Enlarged pores and congestion",
+        "Pre-event glow with no downtime",
+      ],
+    },
+    whatToExpect: {
+      heading: "What to Expect",
+      body: "A HydraFacial takes 30–45 minutes. No downtime — walk out glowing.",
+      steps: [
+        "Cleanse + peel using gentle exfoliating acids",
+        "Extract + hydrate using vortex suction to remove debris and infuse serums",
+        "Fuse + protect with antioxidants and peptides for lasting glow",
+        "Optional booster add-ons for targeted concerns (brightening, firming, acne)",
+        "Immediate results — wear makeup or return to your day right away",
+      ],
+    },
+    pricing: {
+      heading: "Pricing",
+      body: "HydraFacial starts at $199. Add-on boosters available for customization.",
+    },
+    faq: [
+      { question: "How is a HydraFacial different from a regular facial?", answer: "HydraFacial uses patented vortex technology to deeply cleanse, extract, and hydrate simultaneously. Traditional facials rely on manual techniques. HydraFacial is more consistent and delivers serums more effectively." },
+      { question: "How often should I get a HydraFacial?", answer: "Monthly treatments are recommended for optimal skin health. Many patients enjoy it as a pre-event treatment for an immediate glow." },
+      { question: "Is there any downtime?", answer: "None. Your skin may appear slightly flushed for 30–60 minutes, but you can apply makeup and resume normal activities immediately." },
+    ],
+    image: "/images/service-hydrafacial.jpg",
+  },
+  {
+    slug: "microneedling",
+    title: "Microneedling",
+    metaTitle: "Microneedling in Vacaville & Napa CA",
+    metaDescription: "Stimulate collagen production and improve skin texture with medical microneedling at Rella Aesthetics. Expert treatments in Vacaville and Napa.",
+    heroEyebrow: "Skin Care",
+    heroTitle: "Microneedling",
+    heroDescription: "Stimulate your skin's natural healing to improve texture, reduce scarring, and boost collagen production.",
+    whatItIs: {
+      heading: "What Is Microneedling?",
+      body: "Microneedling (collagen induction therapy) uses fine, sterile needles to create controlled micro-injuries in the skin. This triggers the body's natural wound-healing process, stimulating collagen and elastin production. The result is firmer, smoother, more even-toned skin over a series of treatments.",
+    },
+    whoItsFor: {
+      heading: "Who Is It For?",
+      body: "Microneedling is effective for a wide range of concerns and skin types.",
+      bullets: [
+        "Acne scars and post-inflammatory hyperpigmentation",
+        "Fine lines and early wrinkles",
+        "Enlarged pores and rough texture",
+        "Stretch marks (body treatments available)",
+        "Dull skin needing collagen boost",
+      ],
+    },
+    whatToExpect: {
+      heading: "What to Expect",
+      body: "Treatment takes 30–45 minutes. Expect 2–3 days of redness similar to a mild sunburn.",
+      steps: [
+        "Cleanse and apply topical numbing cream (20–30 minutes)",
+        "Microneedling with customized depth settings for each area",
+        "Application of growth factor serum during treatment for enhanced results",
+        "Calming mask and SPF applied post-treatment",
+        "Redness subsides within 48–72 hours; new collagen develops over 4–6 weeks",
+      ],
+    },
+    pricing: {
+      heading: "Pricing",
+      body: "Microneedling starts at $300/session. Series of 3 recommended for best results.",
+    },
+    faq: [
+      { question: "How many sessions do I need?", answer: "Most patients see optimal results after 3–6 sessions spaced 4–6 weeks apart. Maintenance treatments are recommended every 3–6 months." },
+      { question: "Does microneedling hurt?", answer: "A topical numbing cream is applied before treatment. Most patients describe the sensation as mild pressure or light prickling." },
+      { question: "When will I see results?", answer: "Initial improvement is visible within 1–2 weeks as redness fades. Collagen remodeling continues for 3–6 months, with progressive improvement after each session." },
+    ],
+    image: "/images/service-microneedling.jpg",
+  },
+  {
+    slug: "iv-hydration",
+    title: "IV Hydration",
+    metaTitle: "IV Hydration Therapy in Vacaville & Napa CA",
+    metaDescription: "Vitamin-infused IV therapy for energy, immunity, and recovery at Rella Aesthetics. Medical-grade IV drips in Vacaville and Napa.",
+    heroEyebrow: "Body & Wellness",
+    heroTitle: "IV Hydration",
+    heroDescription: "Medical-grade vitamin infusions delivered directly to your bloodstream for maximum absorption and immediate wellness benefits.",
+    whatItIs: {
+      heading: "What Is IV Hydration?",
+      body: "IV hydration therapy delivers vitamins, minerals, and fluids directly into your bloodstream, bypassing the digestive system for 100% absorption. Our custom IV formulas target energy, immunity, recovery, and skin radiance. Treatments are administered by licensed medical professionals in a comfortable, relaxing setting.",
+    },
+    whoItsFor: {
+      heading: "Who Is It For?",
+      body: "IV therapy benefits patients seeking targeted wellness support.",
+      bullets: [
+        "Low energy or chronic fatigue",
+        "Immune support during cold and flu season",
+        "Post-workout or athletic recovery",
+        "Hangover relief and dehydration",
+        "Skin radiance and anti-aging from within",
+      ],
+    },
+    whatToExpect: {
+      heading: "What to Expect",
+      body: "Sessions take 30–60 minutes. Relax in a comfortable setting while your drip works.",
+      steps: [
+        "Brief health screening and IV formula selection",
+        "Small IV catheter placed in the arm (quick, minimal discomfort)",
+        "Relax while your custom drip infuses over 30–60 minutes",
+        "Many patients feel energized immediately after treatment",
+        "No downtime — resume your normal activities right away",
+      ],
+    },
+    pricing: {
+      heading: "Pricing",
+      body: "IV drips start at $175. Add-on boosters available for customization.",
+    },
+    faq: [
+      { question: "How often should I get an IV drip?", answer: "For general wellness, monthly treatments are popular. For specific goals like immune support or athletic recovery, weekly sessions may be recommended for a short period." },
+      { question: "Is IV therapy safe?", answer: "Yes. All treatments are administered by licensed medical professionals using sterile, medical-grade supplies. A brief health screening ensures the treatment is appropriate for you." },
+      { question: "Will I feel the effects immediately?", answer: "Most patients feel more hydrated and energized within hours. Some benefits, like immune support and skin radiance, build with consistent treatments." },
+    ],
+    image: "/images/service-iv.jpg",
+  },
+  {
+    slug: "laser-treatments",
+    title: "Laser Treatments",
+    metaTitle: "Laser Treatments in Vacaville & Napa CA",
+    metaDescription: "IPL, laser hair removal, spider vein removal, and Erbium skin resurfacing at Rella Aesthetics. Expert laser services in Vacaville and Napa.",
+    heroEyebrow: "Body & Wellness",
+    heroTitle: "Laser Treatments",
+    heroDescription: "Advanced laser technology for hair removal, vein treatment, skin resurfacing, and photofacial rejuvenation.",
+    whatItIs: {
+      heading: "What Are Laser Treatments?",
+      body: "We offer a comprehensive suite of laser and light-based treatments including IPL photofacials for sun damage and redness, laser hair removal for long-lasting smoothness, spider vein treatment, and Erbium laser resurfacing for deeper skin concerns. Each treatment uses calibrated wavelengths to target specific skin concerns with precision.",
+    },
+    whoItsFor: {
+      heading: "Who Is It For?",
+      body: "Laser treatments address a wide range of aesthetic concerns.",
+      bullets: [
+        "Sun damage, brown spots, and redness (IPL)",
+        "Unwanted body and facial hair (laser hair removal)",
+        "Spider veins and broken capillaries",
+        "Acne scars and deep texture concerns (Erbium resurfacing)",
+        "General skin rejuvenation and tone improvement",
+      ],
+    },
+    whatToExpect: {
+      heading: "What to Expect",
+      body: "Treatment time and downtime vary by procedure.",
+      steps: [
+        "Consultation to determine the right laser modality for your goals",
+        "Skin prep and protective eyewear application",
+        "Laser treatment — sensation varies from warm snapping to mild heat",
+        "Post-treatment cooling and soothing products applied",
+        "Downtime: IPL 1–3 days (darkening then flaking); Erbium 5–7 days; hair removal none",
+      ],
+    },
+    pricing: {
+      heading: "Pricing",
+      body: "IPL starts at $250/session. Laser hair removal from $100/area. Erbium resurfacing from $500. Contact us for package pricing.",
+    },
+    faq: [
+      { question: "How many laser sessions do I need?", answer: "IPL typically requires 3–5 sessions. Laser hair removal needs 6–8 sessions. Erbium resurfacing may require 1–3 sessions. Your provider will create a customized plan." },
+      { question: "Does laser treatment hurt?", answer: "Sensation varies by treatment type. Most patients describe IPL as a rubber band snap. Topical numbing is available for more intensive treatments." },
+      { question: "Can laser treatments be done on all skin types?", answer: "Most lasers work best on lighter skin tones. During your consultation, we will assess your skin type and recommend the safest, most effective approach." },
+    ],
+    image: "/images/service-laser.jpg",
+  },
+  {
+    slug: "weight-loss",
+    title: "Medical Weight Loss",
+    metaTitle: "Medical Weight Loss Program — Semaglutide in Vacaville & Napa",
+    metaDescription: "Physician-supervised medical weight loss with semaglutide at Rella Aesthetics. Weekly check-ins, personalized support, and lasting results in Vacaville and Napa.",
+    heroEyebrow: "Body & Wellness",
+    heroTitle: "Medical Weight Loss",
+    heroDescription: "A physician-supervised semaglutide program with weekly support, personalized dosing, and a focus on sustainable results.",
+    whatItIs: {
+      heading: "What Is Medical Weight Loss?",
+      body: "Our medical weight loss program uses semaglutide (the same active ingredient in Ozempic and Wegovy) to support healthy, sustainable weight loss. Semaglutide works by reducing appetite and slowing gastric emptying, helping patients feel full longer and make healthier choices naturally. Your program includes physician oversight, weekly check-ins, and nutritional guidance.",
+    },
+    whoItsFor: {
+      heading: "Who Is It For?",
+      body: "Our program is designed for patients who have struggled with traditional diet and exercise alone.",
+      bullets: [
+        "BMI of 27+ with weight-related health concerns",
+        "BMI of 30+ (obesity classification)",
+        "Patients who have plateaued with diet and exercise",
+        "Those seeking a medically supervised, non-surgical approach",
+        "Patients committed to long-term lifestyle changes",
+      ],
+    },
+    whatToExpect: {
+      heading: "What to Expect",
+      body: "The program begins with a comprehensive medical evaluation and continues with weekly support.",
+      steps: [
+        "Initial consultation with bloodwork and health assessment",
+        "Personalized dosing plan with gradual semaglutide titration",
+        "Weekly check-ins to monitor progress and adjust dosing",
+        "Nutritional guidance and lifestyle coaching throughout",
+        "Most patients see 15–20% body weight reduction over 6–12 months",
+      ],
+    },
+    pricing: {
+      heading: "Pricing",
+      body: "Medical weight loss starts at $350/month including medication, weekly check-ins, and physician oversight.",
+      note: "Initial consultation includes comprehensive bloodwork.",
+    },
+    faq: [
+      { question: "What is semaglutide?", answer: "Semaglutide is a GLP-1 receptor agonist originally developed for diabetes management. It has been FDA-approved for chronic weight management and works by reducing appetite and promoting feelings of fullness." },
+      { question: "How much weight can I lose?", answer: "Clinical studies show average weight loss of 15–20% of body weight over 12 months. Individual results vary based on adherence, lifestyle changes, and starting weight." },
+      { question: "Are there side effects?", answer: "Common side effects include mild nausea, especially during the first few weeks as your body adjusts. Starting with a low dose and gradually increasing minimizes side effects. Your physician monitors your progress weekly." },
+      { question: "Do I need to diet and exercise too?", answer: "While semaglutide reduces appetite, best results come from combining medication with healthy nutrition and regular physical activity. We provide guidance and support throughout your journey." },
+    ],
+    image: "/images/service-weightloss.jpg",
+  },
+];

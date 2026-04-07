@@ -1,0 +1,59 @@
+@import "tailwindcss";
+
+@theme inline {
+  /* Brand Colors */
+  --color-rose: #F7A19A;
+  --color-rose-dark: #e8887f;
+  --color-rose-light: #fbc8c4;
+  --color-rose-blush: #FDF7F5;
+  --color-rose-text: #b5645d;
+  --color-rose-cta: #c4716a;
+
+  --color-silver: #83888D;
+  --color-silver-dark: #5a5e62;
+  --color-silver-light: #b0b4b8;
+  --color-silver-pale: #f4f4f5;
+
+  --color-ink: #1a1a1a;
+  --color-white: #ffffff;
+
+  /* Typography */
+  --font-sans: var(--font-poppins), 'Helvetica Neue', Helvetica, Arial, sans-serif;
+
+  /* Spacing extensions */
+  --spacing-18: 4.5rem;
+  --spacing-22: 5.5rem;
+  --spacing-26: 6.5rem;
+  --spacing-30: 7.5rem;
+}
+
+/* Base styles */
+body {
+  color: var(--color-silver-dark);
+  background: var(--color-white);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Selection */
+::selection {
+  background: var(--color-rose-light);
+  color: var(--color-ink);
+}
+
+/* Focus visible for accessibility */
+:focus-visible {
+  outline: 2px solid var(--color-rose);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* List markers */
+li::marker {
+  color: var(--color-rose);
+}
