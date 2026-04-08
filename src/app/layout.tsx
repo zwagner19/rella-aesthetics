@@ -5,6 +5,8 @@ import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { SkipNav } from "@/components/layout/SkipNav";
 import { GhlChatWidget } from "@/components/integrations/GhlChatWidget";
+import { GoogleAnalytics } from "@/components/integrations/GoogleAnalytics";
+import { MetaPixel } from "@/components/integrations/MetaPixel";
 
 const poppins = Poppins({
   variable: "--font-poppins",
@@ -39,6 +41,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${poppins.variable} antialiased`}>
+      <head>
+        <GoogleAnalytics />
+        <MetaPixel />
+      </head>
       <body className="min-h-screen flex flex-col font-sans text-silver-dark bg-white">
         <SkipNav />
         <Header />

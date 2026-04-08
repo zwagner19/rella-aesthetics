@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import { SectionHeader } from "@/components/ui/SectionHeader";
+import { BoulevardCustomBooking } from "@/components/integrations/BoulevardCustomBooking";
 
 export const metadata: Metadata = {
   title: "Book an Appointment",
@@ -10,28 +12,22 @@ export const metadata: Metadata = {
 export default function BookingPage() {
   return (
     <section className="py-24">
-      <div className="mx-auto max-w-[800px] px-6 md:px-8 lg:px-12 text-center">
+      <div className="mx-auto max-w-[800px] px-6 md:px-8 lg:px-12 text-left">
         <SectionHeader
           eyebrow="Schedule"
           title="Book Your Appointment"
-          description="Select your preferred location and treatment below. The Boulevard booking widget will load here once your API credentials are configured."
+          description="Choose your location, service, and time. You can complete payment here when your Boulevard settings require a card on file."
         />
 
-        {/* Boulevard Self-Booking Overlay target */}
-        <div
-          id="boulevard-booking"
-          className="min-h-[500px] border-2 border-dashed border-silver-light rounded-lg flex items-center justify-center text-silver"
-        >
-          <div>
-            <p className="text-lg mb-2">Boulevard Booking Widget</p>
-            <p className="text-sm text-silver-light">
-              Configure your Boulevard business ID in{" "}
-              <code className="bg-silver-pale px-2 py-0.5 rounded text-xs">
-                src/components/integrations/BoulevardBooking.tsx
-              </code>
+        <Suspense
+          fallback={
+            <p className="text-sm text-silver" role="status">
+              Loading booking…
             </p>
-          </div>
-        </div>
+          }
+        >
+          <BoulevardCustomBooking />
+        </Suspense>
       </div>
     </section>
   );

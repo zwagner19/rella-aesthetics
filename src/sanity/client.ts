@@ -4,8 +4,10 @@ export const projectId = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID ?? "";
 export const dataset = process.env.NEXT_PUBLIC_SANITY_DATASET ?? "production";
 export const apiVersion = "2024-01-01";
 
+const isSanityConfigured = Boolean(projectId && /^[a-z0-9-]+$/.test(projectId));
+
 function buildClient(): SanityClient | null {
-  if (!projectId) return null;
+  if (!isSanityConfigured) return null;
   return createClient({
     projectId,
     dataset,

@@ -105,7 +105,7 @@ export function ContactForm() {
       </div>
 
       {status === "error" && (
-        <p className="text-sm text-red-600">Something went wrong. Please try again or call us directly.</p>
+        <p className="text-sm text-rose-dark">Something went wrong. Please try again or call us directly.</p>
       )}
 
       <Button type="submit" disabled={status === "sending"}>

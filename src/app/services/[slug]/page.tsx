@@ -47,7 +47,9 @@ export default async function ServicePage({ params }: ServicePageProps) {
           <p className="text-lg font-light text-silver max-w-[560px] leading-relaxed mb-8">
             {service.heroDescription}
           </p>
-          <Button href="/booking">Book {service.title}</Button>
+          <Button href={`/booking?service=${encodeURIComponent(service.slug)}`}>
+            Book {service.title}
+          </Button>
         </div>
       </section>
 
@@ -114,7 +116,9 @@ export default async function ServicePage({ params }: ServicePageProps) {
               <p className="text-sm text-silver-light mt-2">{service.pricing.note}</p>
             )}
             <div className="mt-8">
-              <Button href="/booking">Book {service.title}</Button>
+              <Button href={`/booking?service=${encodeURIComponent(service.slug)}`}>
+                Book {service.title}
+              </Button>
             </div>
           </div>
         </div>
@@ -140,7 +144,7 @@ export default async function ServicePage({ params }: ServicePageProps) {
             Schedule your consultation to learn if {service.title.toLowerCase()} is right for you.
           </p>
           <Button
-            href="/booking"
+            href={`/booking?service=${encodeURIComponent(service.slug)}`}
             className="bg-white !text-rose hover:bg-white/90 hover:!text-rose-dark"
           >
             Book {service.title}
