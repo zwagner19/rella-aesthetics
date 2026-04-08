@@ -19,11 +19,30 @@ declare module "@boulevard/blvd-book-sdk" {
 
   /** Cart instance returned by the Book SDK (methods match runtime). */
   export interface Cart {
+    startTime?: string;
+    bookingQuestions?: Array<{
+      id: string;
+      valueType?: string;
+      label?: string;
+      name?: string;
+      required?: boolean;
+      options?: Array<{ id: string; name?: string; label?: string }>;
+      answer?: unknown;
+      submitAnswer: (value: unknown) => Promise<Cart>;
+    }>;
+    summary?: {
+      paymentMethodRequired?: boolean;
+      total?: number;
+      depositAmount?: number;
+      subtotal?: number;
+    };
     getAvailableCategories(): Promise<
       Array<{
         availableItems: object[];
       }>
     >;
+    getSelectedItems(): Promise<Array<{ id: string }>>;
+    removeSelectedItem(item: { id: string }): Promise<Cart>;
     addBookableItem(item: object, opts?: object): Promise<Cart>;
     getBookableDates(opts?: object): Promise<Array<{ date: string }>>;
     getBookableTimes(args: { date: string }, opts?: object): Promise<

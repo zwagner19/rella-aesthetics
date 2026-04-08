@@ -13,8 +13,14 @@ interface BlogPostPageProps {
 
 export async function generateStaticParams() {
   if (!client) return [];
-  const posts = await client.fetch<{ slug: string }[]>(blogPostSlugsQuery);
-  return posts.map((p) => ({ slug: p.slug }));
+  try {
+    const posts = await client.fetch<{ slug: string }[]>(blogPostSlugsQuery);
+    return posts.map((p) => ({ slug: p.slug }));
+  } catch {
+    // Don’t fail the whole Vercel build if Sanity is unreachable at build time;
+    // `[slug]` can still render on-demand when the CMS is available.
+    return [];
+  }
 }
 
 export async function generateMetadata({ params }: BlogPostPageProps): Promise<Metadata> {
