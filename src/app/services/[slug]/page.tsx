@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { servicePages } from "@/lib/service-data";
-import { BOOKING_URL_DEFAULT } from "@/lib/booking-links";
+import { bookingUrlForService } from "@/lib/booking-links";
 import { FaqAccordion, FaqSchema } from "@/components/blocks/FaqAccordion";
 import { Button } from "@/components/ui/Button";
 
@@ -48,7 +48,7 @@ export default async function ServicePage({ params }: ServicePageProps) {
           <p className="text-lg font-light text-silver max-w-[560px] leading-relaxed mb-8">
             {service.heroDescription}
           </p>
-          <Button href={BOOKING_URL_DEFAULT}>
+          <Button href={bookingUrlForService(service.slug)}>
             Book {service.title}
           </Button>
         </div>
@@ -117,7 +117,7 @@ export default async function ServicePage({ params }: ServicePageProps) {
               <p className="text-sm text-silver-light mt-2">{service.pricing.note}</p>
             )}
             <div className="mt-8">
-              <Button href={BOOKING_URL_DEFAULT}>
+              <Button href={bookingUrlForService(service.slug)}>
                 Book {service.title}
               </Button>
             </div>
@@ -145,7 +145,7 @@ export default async function ServicePage({ params }: ServicePageProps) {
             Schedule your consultation to learn if {service.title.toLowerCase()} is right for you.
           </p>
           <Button
-            href={BOOKING_URL_DEFAULT}
+            href={bookingUrlForService(service.slug)}
             className="bg-white !text-rose hover:bg-white/90 hover:!text-rose-dark"
           >
             Book {service.title}
