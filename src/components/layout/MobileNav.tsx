@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useEffect } from "react";
+import { BOOKING_URL_DEFAULT } from "@/lib/booking-links";
 
 interface MobileNavProps {
   links: { href: string; label: string }[];
@@ -57,7 +58,7 @@ export function MobileNav({ links, isOpen, onClose }: MobileNavProps) {
       ))}
 
       <Link
-        href="/booking"
+        href={BOOKING_URL_DEFAULT}
         onClick={onClose}
         className="mt-4 inline-flex items-center justify-center font-bold text-[0.6875rem] tracking-[0.18em] uppercase bg-rose text-white px-10 py-4 hover:bg-rose-dark transition-colors"
       >

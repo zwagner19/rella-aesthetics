@@ -3,6 +3,7 @@ import { SectionHeader } from "@/components/ui/SectionHeader";
 import { Button } from "@/components/ui/Button";
 import { locations } from "@/lib/data";
 import { localBusinessSchema } from "@/lib/schemas";
+import { BOOKING_URL_NAPA } from "@/lib/booking-links";
 
 export const metadata: Metadata = {
   title: "Napa Med Spa",
@@ -54,7 +55,7 @@ export default function NapaPage() {
                 <p key={i} className="text-silver text-sm">{line}</p>
               ))}
               <div className="mt-8">
-                <Button href="/booking">Book at Napa</Button>
+                <Button href={BOOKING_URL_NAPA}>Book at Napa</Button>
               </div>
             </div>
             <div className="aspect-[4/3] bg-silver-pale rounded-lg" />

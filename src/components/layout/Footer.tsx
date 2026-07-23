@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { BOOKING_URL_DEFAULT } from "@/lib/booking-links";
 
 export function Footer() {
   return (
@@ -54,7 +55,7 @@ export function Footer() {
             </p>
             <ul className="space-y-2">
               <li><Link href="/contact" className="text-sm hover:text-rose-light transition-colors">Get in Touch</Link></li>
-              <li><Link href="/booking" className="text-sm hover:text-rose-light transition-colors">Book Online</Link></li>
+              <li><Link href={BOOKING_URL_DEFAULT} className="text-sm hover:text-rose-light transition-colors">Book Online</Link></li>
               <li><a href="tel:+17073582928" className="text-sm hover:text-rose-light transition-colors">707.358.2928</a></li>
             </ul>
           </div>

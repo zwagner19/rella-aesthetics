@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/Button";
+import { BOOKING_URL_DEFAULT } from "@/lib/booking-links";
 
 interface SidebarPost {
   slug: string;
@@ -61,7 +62,7 @@ export function BlogSidebar({ categories, recentPosts }: BlogSidebarProps) {
       <div className="bg-rose-blush rounded-lg p-6 text-center">
         <p className="font-medium text-silver-dark mb-2">Ready to begin?</p>
         <p className="text-sm text-silver mb-4">Schedule your consultation today.</p>
-        <Button href="/booking" size="sm">
+        <Button href={BOOKING_URL_DEFAULT} size="sm">
           Book Consultation
         </Button>
       </div>

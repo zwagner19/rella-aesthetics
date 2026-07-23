@@ -3,6 +3,7 @@ import { SectionHeader } from "@/components/ui/SectionHeader";
 import { TierCard } from "@/components/blocks/TierCard";
 import { FaqAccordion, FaqSchema } from "@/components/blocks/FaqAccordion";
 import { membershipTiers } from "@/lib/data";
+import { BOOKING_URL_DEFAULT } from "@/lib/booking-links";
 
 export const metadata: Metadata = {
   title: "VIP Membership",
@@ -56,7 +57,7 @@ export default function MembershipPage() {
                 period={tier.period}
                 benefits={[...tier.benefits]}
                 featured={"featured" in tier && tier.featured === true}
-                ctaHref="/booking"
+                ctaHref={BOOKING_URL_DEFAULT}
               />
             ))}
           </div>

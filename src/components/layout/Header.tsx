@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useState } from "react";
 import { MobileNav } from "./MobileNav";
+import { BOOKING_URL_DEFAULT } from "@/lib/booking-links";
 
 const navLinks = [
   { href: "/about", label: "About" },
@@ -42,7 +43,7 @@ export function Header() {
           </nav>
 
           <Link
-            href="/booking"
+            href={BOOKING_URL_DEFAULT}
             className="hidden lg:inline-flex items-center justify-center font-bold text-[0.6875rem] tracking-[0.18em] uppercase bg-rose text-white px-7 py-3 hover:bg-rose-dark transition-colors duration-150"
           >
             Book Consultation

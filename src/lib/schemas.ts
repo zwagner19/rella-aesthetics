@@ -40,12 +40,6 @@ export function medicalBusinessSchema() {
         closes: "13:00",
       },
     ],
-    aggregateRating: {
-      "@type": "AggregateRating",
-      ratingValue: "4.9",
-      reviewCount: "32",
-      bestRating: "5",
-    },
   };
 }
 

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { SectionHeader } from "@/components/ui/SectionHeader";
 import { Button } from "@/components/ui/Button";
+import { BOOKING_URL_DEFAULT } from "@/lib/booking-links";
 
 export const metadata: Metadata = {
   title: "About Rella Aesthetics",
@@ -97,7 +98,7 @@ export default function AboutPage() {
             Schedule a consultation and experience the Rella Aesthetics difference.
           </p>
           <Button
-            href="/booking"
+            href={BOOKING_URL_DEFAULT}
             className="bg-white !text-rose hover:bg-white/90 hover:!text-rose-dark"
           >
             Book Consultation

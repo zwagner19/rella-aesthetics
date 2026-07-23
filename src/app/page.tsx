@@ -1,4 +1,5 @@
 import { Hero } from "@/components/blocks/Hero";
+import { BOOKING_URL_DEFAULT } from "@/lib/booking-links";
 import { ServiceCard } from "@/components/blocks/ServiceCard";
 import { TestimonialCard } from "@/components/blocks/TestimonialCard";
 import { MembershipBanner } from "@/components/blocks/MembershipBanner";
@@ -24,7 +25,7 @@ export default function HomePage() {
         title="Ageless Beauty"
         description="Physician-led aesthetic treatments designed around your goals. Natural results, elevated care — in Vacaville and Napa."
         ctaText="Book Consultation"
-        ctaHref="/booking"
+        ctaHref={BOOKING_URL_DEFAULT}
         secondaryCta={{ text: "Explore Services", href: "/services" }}
       />
 
@@ -131,7 +132,7 @@ export default function HomePage() {
             Schedule your complimentary consultation today and discover what&apos;s possible.
           </p>
           <Button
-            href="/booking"
+            href={BOOKING_URL_DEFAULT}
             className="bg-white !text-rose hover:bg-white/90 hover:!text-rose-dark"
           >
             Book Consultation

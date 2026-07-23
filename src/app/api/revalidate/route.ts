@@ -5,8 +5,13 @@ const SANITY_WEBHOOK_SECRET = process.env.SANITY_WEBHOOK_SECRET ?? "";
 
 export async function POST(req: NextRequest) {
   try {
+    // Fail closed: if the secret is not configured, reject all requests.
+    if (!SANITY_WEBHOOK_SECRET) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
     const authHeader = req.headers.get("authorization");
-    if (SANITY_WEBHOOK_SECRET && authHeader !== `Bearer ${SANITY_WEBHOOK_SECRET}`) {
+    if (authHeader !== `Bearer ${SANITY_WEBHOOK_SECRET}`) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 

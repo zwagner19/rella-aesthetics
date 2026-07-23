@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { client } from "@/sanity/client";
 import { urlFor } from "@/sanity/image";
 import { blogPostBySlugQuery, blogPostSlugsQuery } from "@/sanity/queries";
+import { BOOKING_URL_DEFAULT } from "@/lib/booking-links";
 import { BlogContent } from "@/components/blog/BlogContent";
 import { Button } from "@/components/ui/Button";
 
@@ -142,7 +143,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
             Book a consultation to discuss your treatment options with our team.
           </p>
           <Button
-            href="/booking"
+            href={BOOKING_URL_DEFAULT}
             className="bg-white !text-rose hover:bg-white/90 hover:!text-rose-dark"
           >
             Book Consultation
