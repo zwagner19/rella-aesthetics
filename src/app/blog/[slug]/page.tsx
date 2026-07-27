@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { resolveBookingHref } from "@/lib/booking-routes";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import { client } from "@/sanity/client";
@@ -142,7 +143,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
             Book a consultation to discuss your treatment options with our team.
           </p>
           <Button
-            href="/booking"
+            href={resolveBookingHref({})}
             className="bg-white !text-rose hover:bg-white/90 hover:!text-rose-dark"
           >
             Book Consultation

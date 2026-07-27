@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { resolveBookingHref } from "@/lib/booking-routes";
 import { useEffect } from "react";
 
 interface MobileNavProps {
@@ -57,7 +58,7 @@ export function MobileNav({ links, isOpen, onClose }: MobileNavProps) {
       ))}
 
       <Link
-        href="/booking"
+        href={resolveBookingHref({})}
         onClick={onClose}
         className="mt-4 inline-flex items-center justify-center font-bold text-[0.6875rem] tracking-[0.18em] uppercase bg-rose text-white px-10 py-4 hover:bg-rose-dark transition-colors"
       >

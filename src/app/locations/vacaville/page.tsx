@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { SectionHeader } from "@/components/ui/SectionHeader";
 import { Button } from "@/components/ui/Button";
+import { resolveBookingHref } from "@/lib/booking-routes";
 import { locations } from "@/lib/data";
 import { localBusinessSchema } from "@/lib/schemas";
 
@@ -54,7 +55,7 @@ export default function VacavillePage() {
                 <p key={i} className="text-silver text-sm">{line}</p>
               ))}
               <div className="mt-8">
-                <Button href="/booking">Book at Vacaville</Button>
+                <Button href={resolveBookingHref({ location: "vacaville" })}>Book at Vacaville</Button>
               </div>
             </div>
             <div className="aspect-[4/3] bg-silver-pale rounded-lg" />

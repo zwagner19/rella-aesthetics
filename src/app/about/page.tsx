@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { resolveBookingHref } from "@/lib/booking-routes";
 import { SectionHeader } from "@/components/ui/SectionHeader";
 import { Button } from "@/components/ui/Button";
 
@@ -97,7 +98,7 @@ export default function AboutPage() {
             Schedule a consultation and experience the Rella Aesthetics difference.
           </p>
           <Button
-            href="/booking"
+            href={resolveBookingHref({})}
             className="bg-white !text-rose hover:bg-white/90 hover:!text-rose-dark"
           >
             Book Consultation

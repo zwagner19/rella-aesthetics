@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { resolveBookingHref } from "@/lib/booking-routes";
 import { SectionHeader } from "@/components/ui/SectionHeader";
 import { Button } from "@/components/ui/Button";
 
@@ -70,7 +71,7 @@ export default function GalleryPage() {
             Book a consultation and discover what&apos;s possible.
           </p>
           <Button
-            href="/booking"
+            href={resolveBookingHref({})}
             className="bg-white !text-rose hover:bg-white/90 hover:!text-rose-dark"
           >
             Book Consultation
