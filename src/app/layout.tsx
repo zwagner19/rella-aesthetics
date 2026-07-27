@@ -1,10 +1,6 @@
 import type { Metadata } from "next";
 import { Poppins } from "next/font/google";
 import "./globals.css";
-import { Header } from "@/components/layout/Header";
-import { Footer } from "@/components/layout/Footer";
-import { SkipNav } from "@/components/layout/SkipNav";
-import { GhlChatWidget } from "@/components/integrations/GhlChatWidget";
 import { GoogleAnalytics } from "@/components/integrations/GoogleAnalytics";
 import { MetaPixel } from "@/components/integrations/MetaPixel";
 
@@ -45,14 +41,15 @@ export default function RootLayout({
         <GoogleAnalytics />
         <MetaPixel />
       </head>
+      {/*
+        The root layout owns only the document, the font, and the
+        marketing-root analytics. Site chrome (SkipNav / Header / MobileNav /
+        Footer / GHL chat) lives in the `(site)` route group, so the `(campaign)`
+        group can render the focused B01 shell instead of hiding chrome with CSS.
+        Both groups keep their URLs unchanged — route groups are path-invisible.
+      */}
       <body className="min-h-screen flex flex-col font-sans text-silver-dark bg-white">
-        <SkipNav />
-        <Header />
-        <main id="main" className="flex-1">
-          {children}
-        </main>
-        <Footer />
-        <GhlChatWidget />
+        {children}
       </body>
     </html>
   );

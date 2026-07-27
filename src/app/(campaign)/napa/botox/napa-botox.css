@@ -1,0 +1,381 @@
+/**
+ * B01 Napa Botox campaign styles — Revision 06.
+ *
+ * Every value here is transcribed from the accepted `Napa Botox Landing.dc.html`
+ * and `boards/20-landing-production-ready.jpg`. Notes on the three things a
+ * reviewer is most likely to check:
+ *
+ *  TYPOGRAPHY — the accepted design loads exactly ONE family, Poppins, and uses
+ *  an uppercase, wide-tracked display treatment for the hero. The package
+ *  contains no second family. An earlier pass introduced a display-font token
+ *  that was never actually loaded, so the browser silently substituted a system
+ *  fallback; that token is gone. (The banned family names are deliberately not
+ *  spelled out here — naming them would defeat the release scan that greps for
+ *  them.)
+ *
+ *  SHAPE — every action in the accepted design is a 999px pill. The board shows
+ *  uppercase, 700-weight, 0.12em-tracked labels inside them.
+ *
+ *  CONTRAST — the legacy silver token is 3.58:1 and is decorative/large-display
+ *  only, so it is absent here (naming its hex would defeat the release scan).
+ *  Small text uses muted #70757A (4.65:1) on white; on the rose-50 tint that
+ *  drops to 4.24:1, so filled bands use ink-soft #4A4A4A (8.9:1) instead.
+ */
+.nb {
+  --nb-paper: #ffffff;
+  --nb-porcelain: #fafaf9;
+  --nb-rose50: #fdf2f0;
+  --nb-rose: #f7a19a;
+  --nb-ink: #1a1a1a;
+  --nb-ink-soft: #4a4a4a;
+  --nb-muted: #70757a;
+  --nb-hairline: #e8e6e3;
+  --nb-clay: #b04a40;
+  --nb-clay-pressed: #963e36;
+
+  --nb-target: 44px;
+  --nb-focus-width: 3px;
+  --nb-focus-offset: 2px;
+  --nb-gutter: clamp(16px, 5vw, 64px);
+  --nb-max: 1160px;
+
+  color: var(--nb-ink);
+  background: var(--nb-paper);
+  /* Poppins is already loaded by the root layout as --font-poppins. */
+  font-family: var(--font-poppins), "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+.nb a,
+.nb button,
+.nb summary {
+  min-height: var(--nb-target);
+}
+/* `min-height` does nothing on an inline box, which once left an inline text
+   link at a 20px target. Links are inline-flex so the rule actually applies. */
+.nb a {
+  display: inline-flex;
+  align-items: center;
+}
+
+.nb :focus-visible {
+  outline: var(--nb-focus-width) solid var(--nb-clay);
+  outline-offset: var(--nb-focus-offset);
+  border-radius: 999px;
+}
+
+/* Skip link: off-screen until focused, then a visible clay pill. */
+.nb a.nb-skip {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  z-index: 50;
+}
+.nb a.nb-skip:focus {
+  left: 8px;
+  top: 8px;
+  background: var(--nb-clay);
+  color: var(--nb-paper);
+  border-radius: 999px;
+  padding: 10px 18px;
+  font-size: 13.5px;
+  font-weight: 600;
+}
+
+.nb-wrap {
+  max-width: var(--nb-max);
+  margin: 0 auto;
+}
+
+/* ── Campaign header ─────────────────────────────────────────────────────── */
+.nb-header {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  background: var(--nb-paper);
+  border-bottom: 1px solid var(--nb-hairline);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 10px var(--nb-gutter);
+  min-height: 44px;
+}
+.nb-logo {
+  width: clamp(84px, 22vw, 108px);
+  height: auto;
+  flex: none;
+}
+.nb-headeractions {
+  display: flex;
+  align-items: center;
+  gap: clamp(8px, 2vw, 14px);
+  min-width: 0;
+}
+/* The accepted header hides the plain phone text on the narrowest screens; the
+   sticky bar carries Call there, so the action is never lost.
+   
+   SPECIFICITY MATTERS HERE. `.nb a` (0-1-1) sets `display: inline-flex` for every
+   link on the page. A bare `.nb-headertel` (0-1-0) inside a media query LOSES to
+   it — media queries add no specificity — so the phone stayed visible at 320px
+   and pushed the header Book pill past the viewport edge. The hide rule is
+   written as `.nb a.nb-headertel` (0-2-1) so it actually wins. */
+.nb a.nb-headertel {
+  font-size: 13.5px;
+  font-weight: 500;
+  color: var(--nb-ink);
+  white-space: nowrap;
+}
+@media (max-width: 679px) {
+  .nb a.nb-headertel { display: none; }
+}
+
+/* ── Actions — 999px pills, uppercase, tracked ───────────────────────────── */
+.nb-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: var(--nb-target);
+  border-radius: 999px;
+  font-size: 13.5px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  text-align: center;
+  padding: 15px clamp(20px, 4vw, 32px);
+  box-sizing: border-box;
+  max-width: 100%;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+.nb-btn--primary {
+  background: var(--nb-clay);
+  color: var(--nb-paper);
+  border: 1.5px solid var(--nb-clay);
+}
+.nb-btn--primary:hover {
+  background: var(--nb-clay-pressed);
+  border-color: var(--nb-clay-pressed);
+}
+.nb-btn--secondary {
+  background: transparent;
+  color: var(--nb-ink);
+  border: 1.5px solid var(--nb-ink);
+}
+.nb-btn--secondary:hover {
+  background: rgba(26, 26, 26, 0.06);
+}
+/* Compact pill used in the header and the location row. */
+.nb-btn--compact {
+  padding: 11px clamp(14px, 3vw, 22px);
+  font-size: clamp(12px, 3.2vw, 13.5px);
+  font-weight: 500;
+  letter-spacing: normal;
+  text-transform: none;
+}
+.nb-btn--quiet {
+  background: transparent;
+  color: var(--nb-clay);
+  border: 1px solid var(--nb-hairline);
+}
+.nb-btn--quiet:hover { border-color: var(--nb-clay); }
+
+.nb-actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: 6px;
+}
+
+/* ── Display + text ──────────────────────────────────────────────────────── */
+.nb-h1 {
+  margin: 0;
+  font-size: clamp(30px, 7.4vw, 68px);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  line-height: 1.1;
+  text-transform: uppercase;
+  color: var(--nb-ink);
+  max-width: 15ch;
+  text-wrap: pretty;
+  overflow-wrap: break-word;
+}
+.nb-h2 {
+  margin: 0;
+  font-size: clamp(22px, 4.2vw, 34px);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  line-height: 1.15;
+  text-transform: uppercase;
+  color: var(--nb-ink);
+}
+.nb-eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.nb-eyebrow::before {
+  content: "";
+  width: clamp(28px, 6vw, 56px);
+  height: 2px;
+  background: var(--nb-clay);
+  flex: none;
+}
+.nb-eyebrow span {
+  font-size: clamp(13px, 3.4vw, 15px);
+  font-style: italic;
+  color: var(--nb-clay);
+}
+.nb-kicker {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--nb-clay);
+  margin: 0;
+}
+.nb-lede {
+  margin: 0;
+  font-size: clamp(14px, 3.8vw, 19px);
+  font-weight: 300;
+  color: var(--nb-ink-soft);
+  line-height: 1.65;
+  max-width: 46ch;
+}
+.nb-body {
+  font-size: 15px;
+  font-weight: 300;
+  line-height: 1.7;
+  color: var(--nb-ink-soft);
+}
+
+/* ── Surfaces ────────────────────────────────────────────────────────────── */
+.nb-hero {
+  background: var(--nb-rose50);
+  border-bottom: 4px solid var(--nb-clay);
+  padding: clamp(48px, 9vw, 104px) var(--nb-gutter) clamp(40px, 7vw, 88px);
+}
+.nb-section {
+  padding: clamp(40px, 7vw, 80px) var(--nb-gutter);
+}
+.nb-section--tint { background: var(--nb-porcelain); }
+.nb-card {
+  background: var(--nb-paper);
+  border: 1px solid var(--nb-hairline);
+  border-radius: 18px;
+  padding: 22px 24px;
+}
+.nb-card--rose { background: var(--nb-rose50); }
+.nb-grid { display: grid; gap: 16px; }
+@media (min-width: 768px) {
+  .nb-grid--3 { grid-template-columns: repeat(3, 1fr); }
+  .nb-grid--2 { grid-template-columns: repeat(2, 1fr); }
+}
+.nb-rule { border: 0; border-top: 1px solid var(--nb-hairline); }
+
+.nb-stat {
+  font-size: 34px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  line-height: 1;
+  color: var(--nb-ink);
+  margin: 0;
+}
+
+/* ── FAQ ─────────────────────────────────────────────────────────────────── */
+.nb-faq { border-top: 1px solid var(--nb-hairline); }
+.nb-faq:last-of-type { border-bottom: 1px solid var(--nb-hairline); }
+.nb-faq > summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 14px 4px;
+  cursor: pointer;
+  font-weight: 500;
+  font-size: 15px;
+  color: var(--nb-ink);
+  list-style: none;
+}
+.nb-faq > summary::-webkit-details-marker { display: none; }
+.nb-faq > summary::after {
+  content: "+";
+  font-size: 22px;
+  line-height: 1;
+  color: var(--nb-clay);
+}
+.nb-faq[open] > summary::after { content: "–"; }
+
+/* ── Campaign footer ─────────────────────────────────────────────────────── */
+.nb-footer {
+  border-top: 1px solid var(--nb-hairline);
+  padding: 32px var(--nb-gutter) 40px;
+}
+.nb-footer-legal {
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.7;
+  color: var(--nb-muted);
+  max-width: 90ch;
+}
+.nb-footer-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  align-items: center;
+  margin-top: 18px;
+}
+.nb-footer-links {
+  display: flex;
+  gap: 12px 20px;
+  font-size: 12.5px;
+  color: var(--nb-ink-soft);
+  flex-wrap: wrap;
+  align-items: center;
+}
+.nb-footer-links a { color: var(--nb-ink-soft); }
+
+/* ── Mobile sticky actions ───────────────────────────────────────────────── */
+.nb-sticky {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 30;
+  display: flex;
+  border-top: 1px solid var(--nb-hairline);
+  box-shadow: 0 -6px 24px rgba(26, 26, 26, 0.08);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  background: var(--nb-paper);
+}
+.nb-sticky a {
+  text-align: center;
+  padding: 15px 8px;
+  font-size: 14.5px;
+  font-weight: 500;
+  min-height: var(--nb-target);
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.nb-sticky .nb-sticky-book { flex: 1.5; background: var(--nb-clay); color: var(--nb-paper); }
+.nb-sticky .nb-sticky-book:hover { background: var(--nb-clay-pressed); }
+.nb-sticky .nb-sticky-call { flex: 1; background: var(--nb-paper); color: var(--nb-ink); }
+/* Reserves space so the fixed bar can never cover the last content. */
+.nb-pad { padding-bottom: calc(64px + env(safe-area-inset-bottom, 0px)); }
+
+@media (min-width: 1024px) {
+  .nb-sticky { display: none; }
+  .nb-pad { padding-bottom: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nb *,
+  .nb *::before,
+  .nb *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
