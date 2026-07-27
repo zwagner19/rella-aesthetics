@@ -40,12 +40,10 @@ export function medicalBusinessSchema() {
         closes: "13:00",
       },
     ],
-    aggregateRating: {
-      "@type": "AggregateRating",
-      ratingValue: "4.9",
-      reviewCount: "32",
-      bestRating: "5",
-    },
+    // No aggregateRating. The 4.9 / 32-review figures previously emitted here
+    // were not traceable to a verifiable source, and star ratings in structured
+    // data are a representation to both search engines and patients. Rating
+    // markup may return only when the numbers come from an auditable feed.
   };
 }
 
