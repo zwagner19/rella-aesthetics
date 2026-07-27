@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { resolveBookingHref } from "@/lib/booking-routes";
 import {
   PRICING, VISIT, PAYMENT_DISCLOSURE, CANCELLATION_POLICY_URL,
@@ -30,6 +29,26 @@ import "./napa-botox.css";
 const BOOKING_HREF = resolveBookingHref({ location: "napa", service: "botox" });
 const CANONICAL = "https://experiencerella.com/napa/botox/";
 const LOGO = "/brand/rella-logo-black.svg";
+
+/**
+ * Non-booking navigation, as ABSOLUTE public URLs.
+ *
+ * Verified against `experiencerella.com` on 2026-07-27:
+ *   /services              → 404   (was linked; broken)
+ *   /terms                 → 404   (was linked; broken)
+ *   /botox/                → 200   ✅ semantically the treatments destination
+ *   /privacy-policy/       → 200   ✅ unchanged
+ *   /terms-and-conditions/ → 200   ✅ the real terms page
+ *
+ * They are absolute rather than root-relative so the link target is identical
+ * whether the document is served from a Vercel alias or proxied onto the public
+ * WordPress host — a root-relative `/terms` would 404 in production.
+ */
+export const PUBLIC_LINKS = {
+  treatments: "https://experiencerella.com/botox/",
+  privacy: "https://experiencerella.com/privacy-policy/",
+  terms: "https://experiencerella.com/terms-and-conditions/",
+} as const;
 
 export const metadata: Metadata = {
   title: "Botox in Napa — Physician-Owned Med Spa",
@@ -282,10 +301,17 @@ export default function NapaBotoxLandingPage() {
           <div className="nb-footer-row">
             {/* eslint-disable-next-line @next/next/no-img-element -- see header */}
             <img src={LOGO} alt="Rella Aesthetics" width={360} height={176} style={{ width: 96, height: "auto" }} decoding="async" />
+            {/* Footer destinations must resolve on the PUBLIC WordPress domain,
+                because this page is intended to be proxied onto
+                experiencerella.com while the rest of that host stays WordPress.
+                Verified live 2026-07-27: /services → 404 and /terms → 404, while
+                /botox/, /privacy-policy/ and /terms-and-conditions/ all → 200.
+                These are absolute public URLs precisely so they cannot silently
+                resolve against a Vercel alias in staging and 404 in production. */}
             <div className="nb-footer-links">
-              <Link href="/services">Explore treatments</Link>
-              <Link href="/privacy-policy">Privacy Policy</Link>
-              <Link href="/terms">Terms &amp; Conditions</Link>
+              <a href={PUBLIC_LINKS.treatments}>Explore treatments</a>
+              <a href={PUBLIC_LINKS.privacy}>Privacy Policy</a>
+              <a href={PUBLIC_LINKS.terms}>Terms &amp; Conditions</a>
               <span style={{ color: "var(--nb-muted)" }}>&copy; 2026 Rella Aesthetics</span>
             </div>
           </div>

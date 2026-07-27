@@ -126,7 +126,10 @@ describe("campaign landmarks: header and footer are SIBLINGS of one main", () =>
       .replace(/\/\*[\s\S]*?\*\//g, " ")
       .replace(/\/\/[^\n]*/g, " ");
     expect(layout).not.toMatch(/<main/);
-    expect(layout).toMatch(/<>\{children\}<\/>/);
+    // Still a fragment — it wraps children in <>…</> and adds only the campaign
+    // GTM container (Wave 4B), never a landmark element.
+    expect(layout).toMatch(/<>[\s\S]*\{children\}[\s\S]*<\/>/);
+    expect(layout).not.toMatch(/<(header|footer|nav|section)\b/);
   });
 
   it("the sticky actions sit outside main, after the footer", () => {
