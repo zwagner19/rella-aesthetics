@@ -1,0 +1,192 @@
+/**
+ * Revision 06 light design tokens, scoped to the Napa Botox landing page.
+ *
+ * Scoped rather than added to the global @theme so this page cannot alter the
+ * rest of the marketing site, and so it does not collide with concurrent work.
+ * Values come from the accepted Revision 06 Foundations + contrast tokens.
+ *
+ * Contrast note that matters: the legacy silver token is 3.58:1 — decorative
+ * and large-display only, so it is deliberately absent here (naming its hex in
+ * a comment would defeat the release scan that checks for it). Small text uses
+ * muted #70757A (4.65:1). Clay #B04A40 (5.4:1) carries interaction. Brand rose
+ * is 2.0:1 and is never text. No large dark ground appears on this page.
+ */
+.nb {
+  --nb-paper: #ffffff;
+  --nb-porcelain: #fafaf9;
+  --nb-rose50: #fdf2f0;
+  --nb-rose: #f7a19a;
+  --nb-ink: #1a1a1a;
+  --nb-ink-soft: #4a4a4a;
+  --nb-muted: #70757a;
+  --nb-hairline: #e8e6e3;
+  --nb-clay: #b04a40;
+  --nb-clay-pressed: #963d34;
+
+  --nb-target: 44px;
+  --nb-focus-width: 3px;
+  --nb-focus-offset: 2px;
+
+  --nb-serif: "Lora", Georgia, "Times New Roman", serif;
+
+  color: var(--nb-ink-soft);
+  background: var(--nb-paper);
+}
+
+/* Every interactive target on this page clears 44px, per the B01 a11y spec.
+   `min-height` does nothing on an inline box, so inline text links are
+   explicitly inline-flex — a 20px-tall text link was exactly the defect this
+   rule exists to prevent. */
+.nb a,
+.nb button,
+.nb summary {
+  min-height: var(--nb-target);
+}
+.nb a {
+  display: inline-flex;
+  align-items: center;
+}
+
+.nb :focus-visible {
+  outline: var(--nb-focus-width) solid var(--nb-clay);
+  outline-offset: var(--nb-focus-offset);
+  border-radius: 6px;
+}
+
+.nb-serif {
+  font-family: var(--nb-serif);
+  font-weight: 600;
+  line-height: 1.15;
+  color: var(--nb-ink);
+}
+
+.nb-kicker {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--nb-clay);
+}
+
+/* Actions ------------------------------------------------------------------ */
+.nb-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  min-height: var(--nb-target);
+  padding: 0.875rem 1.5rem;
+  border-radius: 10px;
+  font-weight: 600;
+  font-size: 1rem;
+  text-align: center;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+.nb-btn--primary {
+  background: var(--nb-clay);
+  color: #ffffff;
+  border: 1px solid var(--nb-clay);
+}
+.nb-btn--primary:hover {
+  background: var(--nb-clay-pressed);
+  border-color: var(--nb-clay-pressed);
+}
+.nb-btn--secondary {
+  background: var(--nb-paper);
+  color: var(--nb-clay);
+  border: 1px solid var(--nb-clay);
+}
+.nb-btn--secondary:hover {
+  background: var(--nb-rose50);
+}
+
+/* Surfaces ----------------------------------------------------------------- */
+.nb-card {
+  background: var(--nb-paper);
+  border: 1px solid var(--nb-hairline);
+  border-radius: 14px;
+  padding: 1.25rem 1.375rem;
+}
+.nb-band {
+  background: var(--nb-porcelain);
+}
+.nb-band--rose {
+  background: var(--nb-rose50);
+}
+
+.nb-rule {
+  border: 0;
+  border-top: 1px solid var(--nb-hairline);
+}
+
+/* FAQ ---------------------------------------------------------------------- */
+.nb-faq {
+  border-top: 1px solid var(--nb-hairline);
+}
+.nb-faq:last-of-type {
+  border-bottom: 1px solid var(--nb-hairline);
+}
+.nb-faq > summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.875rem 0.25rem;
+  cursor: pointer;
+  font-weight: 600;
+  color: var(--nb-ink);
+  list-style: none;
+}
+.nb-faq > summary::-webkit-details-marker {
+  display: none;
+}
+.nb-faq > summary::after {
+  content: "+";
+  font-size: 1.375rem;
+  line-height: 1;
+  color: var(--nb-clay);
+}
+.nb-faq[open] > summary::after {
+  content: "–";
+}
+
+/* Mobile sticky action bar — specified by B01 mobile guidance, and explicitly
+   NOT present at >=1024px per the desktop spec. Safe-area padded. */
+.nb-sticky {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 40;
+  display: flex;
+  gap: 0.625rem;
+  padding: 0.625rem 1rem calc(0.625rem + env(safe-area-inset-bottom, 0px));
+  background: rgba(255, 255, 255, 0.97);
+  border-top: 1px solid var(--nb-hairline);
+}
+.nb-sticky .nb-btn {
+  flex: 1;
+  padding-left: 0.75rem;
+  padding-right: 0.75rem;
+}
+/* The spacer reserves room so the bar can never cover the last content. */
+.nb-sticky-spacer {
+  height: 84px;
+}
+@media (min-width: 1024px) {
+  .nb-sticky,
+  .nb-sticky-spacer {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nb *,
+  .nb *::before,
+  .nb *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}

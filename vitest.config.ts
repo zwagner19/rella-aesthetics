@@ -6,7 +6,11 @@ export default defineConfig({
     alias: { "@": fileURLToPath(new URL("./src", import.meta.url)) },
   },
   test: {
-    include: ["src/**/*.test.ts"],
+    // NOTE (Wave 3): this previously read `src/**/*.test.ts`, which silently
+    // EXCLUDED every `.test.tsx` file. A component suite that is never
+    // discovered manufactures false confidence — the same defect cost a full
+    // review cycle in rella-booking. `napa-botox-config.test.ts` guards it.
+    include: ["src/**/*.test.{ts,tsx}", "tests/**/*.test.{ts,tsx}"],
     environment: "node",
   },
 });
