@@ -5,8 +5,16 @@ const SANITY_WEBHOOK_SECRET = process.env.SANITY_WEBHOOK_SECRET ?? "";
 
 export async function POST(req: NextRequest) {
   try {
+    // FAIL CLOSED. The previous guard read
+    //   if (SECRET && authHeader !== `Bearer ${SECRET}`) → 401
+    // so when the secret was missing or empty the check was skipped entirely and
+    // the endpoint accepted anonymous revalidation requests. An unconfigured
+    // deployment is exactly when it is least safe to be open.
+    if (!SANITY_WEBHOOK_SECRET) {
+      return NextResponse.json({ error: "Revalidation is not configured" }, { status: 503 });
+    }
     const authHeader = req.headers.get("authorization");
-    if (SANITY_WEBHOOK_SECRET && authHeader !== `Bearer ${SANITY_WEBHOOK_SECRET}`) {
+    if (authHeader !== `Bearer ${SANITY_WEBHOOK_SECRET}`) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
