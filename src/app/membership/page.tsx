@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { resolveBookingHref } from "@/lib/booking-routes";
 import { SectionHeader } from "@/components/ui/SectionHeader";
 import { TierCard } from "@/components/blocks/TierCard";
 import { FaqAccordion, FaqSchema } from "@/components/blocks/FaqAccordion";
@@ -56,7 +57,7 @@ export default function MembershipPage() {
                 period={tier.period}
                 benefits={[...tier.benefits]}
                 featured={"featured" in tier && tier.featured === true}
-                ctaHref="/booking"
+                ctaHref={resolveBookingHref({})}
               />
             ))}
           </div>

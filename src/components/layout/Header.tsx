@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { resolveBookingHref } from "@/lib/booking-routes";
 import { useState } from "react";
 import { MobileNav } from "./MobileNav";
 
@@ -42,7 +43,7 @@ export function Header() {
           </nav>
 
           <Link
-            href="/booking"
+            href={resolveBookingHref({})}
             className="hidden lg:inline-flex items-center justify-center font-bold text-[0.6875rem] tracking-[0.18em] uppercase bg-rose text-white px-7 py-3 hover:bg-rose-dark transition-colors duration-150"
           >
             Book Consultation

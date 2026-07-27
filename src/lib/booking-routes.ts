@@ -30,9 +30,14 @@ export const BOULEVARD_WIDGET_NAPA = `${WIDGET_BASE}?locationId=${NAPA_LOCATION_
 export const BOULEVARD_WIDGET_VACAVILLE = `${WIDGET_BASE}?locationId=${VACAVILLE_LOCATION_ID}`;
 
 const deepLink = (menuPath: string) =>
-  `${WIDGET_BASE}?path=${encodeURIComponent(`/cart/menu/${menuPath}`)}&visitType=SELF_VISIT`;
+  `${WIDGET_BASE}?path=${encodeURIComponent(`/cart/menu/${menuPath}`)}&locationId=${NAPA_LOCATION_ID}&visitType=SELF_VISIT`;
 
-/** VERIFIED Boulevard service deep links, by canonical service slug (Napa menu). */
+/**
+ * VERIFIED Boulevard service deep links, by canonical service slug — Napa menu,
+ * with the Napa locationId pinned (a service path alone is not sufficient). These
+ * are ONLY used for an explicit `location: "napa"` intent; a locationless service
+ * intent never resolves here (it must not assume Napa).
+ */
 const VERIFIED_NAPA_SERVICE_DEEPLINKS: Readonly<Record<string, string>> = {
   hydrafacial: deepLink("Facials/s_68b27f62-4a04-4f9f-953e-ec4b2918ad3d"),
   // botox/tox intentionally NOT here — Napa Tox routes to the canonical app.
@@ -70,8 +75,8 @@ export function resolveBookingHref(intent: BookingIntent = {}): string {
     return BOULEVARD_WIDGET_NAPA; // Napa, unspecified/other service — not Tox
   }
 
-  // No explicit location. A bare Tox/Botox slug is NOT enough to assume Napa —
-  // route to the generic widget so the visitor confirms location/service.
-  if (svc && VERIFIED_NAPA_SERVICE_DEEPLINKS[svc]) return VERIFIED_NAPA_SERVICE_DEEPLINKS[svc];
+  // No explicit location: never assume Napa — not even for a known service slug
+  // like hydrafacial. Route to the generic widget so the visitor selects a
+  // location before any location-specific menu/deep link is used.
   return BOULEVARD_WIDGET_GENERIC;
 }

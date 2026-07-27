@@ -23,9 +23,10 @@ describe("resolveBookingHref — explicit Napa Tox", () => {
 });
 
 describe("resolveBookingHref — Napa non-Tox", () => {
-  it("napa + hydrafacial → verified deep link, NOT the Tox app", () => {
+  it("napa + hydrafacial → verified deep link pinned to the Napa locationId, NOT the Tox app", () => {
     const href = resolveBookingHref({ location: "napa", service: "hydrafacial" });
     expect(href).toContain("s_68b27f62");
+    expect(href).toContain("locationId=91eba843-57fb-49e9-8505-431d501ffec7");
     expect(href).not.toBe(CANONICAL_NAPA_TOX);
   });
   it("napa + unspecified service → Napa widget, NOT the Tox app", () => {
@@ -54,8 +55,8 @@ describe("resolveBookingHref — generic (no location) never silently Napa Tox",
       expect(href).not.toContain("book.experiencerella.com");
     });
   }
-  it("no-location + hydrafacial → verified deep link (service-specific, still not Tox)", () => {
-    expect(resolveBookingHref({ service: "hydrafacial" })).toContain("s_68b27f62");
+  it("no-location + hydrafacial → generic widget (never assumes Napa, even for a known service)", () => {
+    expect(resolveBookingHref({ service: "hydrafacial" })).toBe(BOULEVARD_WIDGET_GENERIC);
   });
   it("no-location, no service → generic business widget", () => {
     expect(resolveBookingHref({})).toBe(BOULEVARD_WIDGET_GENERIC);
