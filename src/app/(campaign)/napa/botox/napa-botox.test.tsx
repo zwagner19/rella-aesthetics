@@ -58,10 +58,18 @@ describe("pricing canon is stated exactly", () => {
 });
 
 describe("visit facts", () => {
-  it("states a 30-minute visit", () => {
+  it("states a 30-minute visit, and the closing sentence renders EXACTLY", () => {
     expect(VISIT.durationMinutes).toBe(30);
     expect(decoded).toMatch(/30 min/);
-    expect(decoded).toContain("30 minutes new-patient visit".replace("30 minutes ", "30 minutes ").trim().slice(0, 0) + "");
+    // The previous version of this assertion reduced its expected value to an
+    // empty string via `.slice(0, 0)`, so `toContain("")` was trivially true and
+    // could not see the missing space. This is the real sentence.
+    const EXPECTED = "Book your 30 minutes new-patient visit online, or call and we\u2019ll get you scheduled.";
+    expect(decoded).toContain(EXPECTED);
+    // And explicitly reject every missing-space form.
+    expect(decoded).not.toContain("minutesnew-patient");
+    expect(decoded).not.toContain("minutesnew");
+    expect(decoded).not.toMatch(/\d\s*minutes\S/);
   });
 
   it("states the $50 deposit is charged at confirmation, by Boulevard", () => {
@@ -98,8 +106,8 @@ describe("booking CTA routing", () => {
   });
 
   it("every rendered booking CTA points at that one URL — no competing URL", () => {
-    const hrefs = [...html.matchAll(/data-testid="book-cta"[^>]*/g)].length;
-    const bookHrefs = [...html.matchAll(/<a[^>]+href="([^"]+)"[^>]*data-testid="book-cta"/g)].map((m) => m[1]);
+    const hrefs = [...html.matchAll(/data-cta="book"[^>]*/g)].length;
+    const bookHrefs = [...html.matchAll(/<a[^>]+href="([^"]+)"[^>]*data-cta="book"/g)].map((m) => m[1]);
     expect(bookHrefs.length).toBeGreaterThanOrEqual(3); // repeated CTA, per B01
     expect(new Set(bookHrefs)).toEqual(new Set([CANONICAL_NAPA_TOX]));
     expect(hrefs).toBe(bookHrefs.length);
@@ -199,9 +207,13 @@ describe("FAQ visible copy and schema agree exactly", () => {
 });
 
 describe("accepted light design, no photography", () => {
-  it("renders no photographic hero or img element", () => {
-    expect(html).not.toMatch(/<img\b/);
+  it("renders no photography — the only image is the approved brand logo", () => {
+    const imgs = [...html.matchAll(/<img\b([^>]*)>/g)].map((m) => m[1]);
+    for (const attrs of imgs) {
+      expect(attrs, "only the approved logo asset may be an <img>").toMatch(/\/brand\/rella-logo-black\.svg/);
+    }
     expect(html).not.toMatch(/hero-band\.png|face-blue\.png|background-image/);
+    expect(html).not.toMatch(/\.(jpe?g|webp|avif)\b/i);   // no photographic formats at all
   });
 
   it("uses no prohibited dark page ground", () => {
@@ -221,6 +233,38 @@ describe("accepted light design, no photography", () => {
     expect(css).toContain("--nb-target: 44px");
     expect(css).toMatch(/prefers-reduced-motion/);
     expect(css).toMatch(/:focus-visible/);
+  });
+
+  it("is Poppins-only — no serif token, no unloaded font family", () => {
+    const css = readFileSync(join(__dirname, "napa-botox.css"), "utf8");
+    expect(css).toMatch(/font-family:\s*var\(--font-poppins\)/);
+    for (const src of [css, readFileSync(join(__dirname, "page.tsx"), "utf8")]) {
+      for (const banned of ["Lora", "Georgia", "Times New Roman"]) {
+        expect(src, `${banned} must not appear`).not.toContain(banned);
+      }
+      // `serif` as a STANDALONE family is banned; `sans-serif` is the correct
+      // generic fallback and must not trip this check.
+      expect(src.replace(/sans-serif/g, "")).not.toMatch(/\bserif\b/);
+    }
+  });
+
+  it("uses the accepted pill action shape, not rectangular controls", () => {
+    const css = readFileSync(join(__dirname, "napa-botox.css"), "utf8");
+    const btn = /\.nb-btn\s*\{([^}]*)\}/.exec(css)?.[1] ?? "";
+    expect(btn).toMatch(/border-radius:\s*999px/);
+    expect(btn).toMatch(/text-transform:\s*uppercase/);
+    expect(btn).toMatch(/letter-spacing:\s*0\.12em/);
+    expect(btn).toMatch(/font-weight:\s*700/);
+    expect(btn).not.toMatch(/border-radius:\s*\d{1,2}px/);
+  });
+
+  it("uses the accepted uppercase display treatment for the hero", () => {
+    const css = readFileSync(join(__dirname, "napa-botox.css"), "utf8");
+    const h1 = /\.nb-h1\s*\{([^}]*)\}/.exec(css)?.[1] ?? "";
+    expect(h1).toMatch(/text-transform:\s*uppercase/);
+    expect(h1).toMatch(/font-weight:\s*700/);
+    expect(h1).toMatch(/letter-spacing:\s*0\.08em/);
+    expect(h1).toMatch(/line-height:\s*1\.1/);
   });
 
   it("small text never uses the decorative-only silver token", () => {
@@ -289,9 +333,13 @@ describe("accessibility structure", () => {
     for (const attrs of sections) expect(attrs).toMatch(/aria-labelledby=/);
   });
 
-  it("the mobile sticky bar is grouped, labelled, and preceded by a spacer", () => {
-    expect(html).toMatch(/nb-sticky-spacer/);
+  it("the mobile sticky bar is grouped, labelled, and cannot cover the last content", () => {
     expect(html).toMatch(/class="nb-sticky"[^>]*role="group"[^>]*aria-label=/);
-    expect(html.indexOf("nb-sticky-spacer")).toBeLessThan(html.indexOf('class="nb-sticky"'));
+    // The page root carries bottom padding sized for the bar (nb-pad), which the
+    // accepted design uses instead of an extra spacer element.
+    expect(html).toMatch(/class="nb nb-pad"/);
+    const css = readFileSync(join(__dirname, "napa-botox.css"), "utf8");
+    expect(css).toMatch(/\.nb-pad\s*\{[^}]*padding-bottom:\s*calc\(64px/);
+    expect(css).toMatch(/@media \(min-width:\s*1024px\)[\s\S]*\.nb-sticky\s*\{\s*display:\s*none/);
   });
 });
