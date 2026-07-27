@@ -63,6 +63,24 @@
   border-radius: 999px;
 }
 
+/* Skip link: off-screen until focused, then a visible clay pill. */
+.nb a.nb-skip {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  z-index: 50;
+}
+.nb a.nb-skip:focus {
+  left: 8px;
+  top: 8px;
+  background: var(--nb-clay);
+  color: var(--nb-paper);
+  border-radius: 999px;
+  padding: 10px 18px;
+  font-size: 13.5px;
+  font-weight: 600;
+}
+
 .nb-wrap {
   max-width: var(--nb-max);
   margin: 0 auto;
@@ -94,15 +112,21 @@
   min-width: 0;
 }
 /* The accepted header hides the plain phone text on the narrowest screens; the
-   sticky bar carries Call there, so the action is never lost. */
-.nb-headertel {
+   sticky bar carries Call there, so the action is never lost.
+   
+   SPECIFICITY MATTERS HERE. `.nb a` (0-1-1) sets `display: inline-flex` for every
+   link on the page. A bare `.nb-headertel` (0-1-0) inside a media query LOSES to
+   it — media queries add no specificity — so the phone stayed visible at 320px
+   and pushed the header Book pill past the viewport edge. The hide rule is
+   written as `.nb a.nb-headertel` (0-2-1) so it actually wins. */
+.nb a.nb-headertel {
   font-size: 13.5px;
   font-weight: 500;
   color: var(--nb-ink);
   white-space: nowrap;
 }
 @media (max-width: 679px) {
-  .nb-headertel { display: none; }
+  .nb a.nb-headertel { display: none; }
 }
 
 /* ── Actions — 999px pills, uppercase, tracked ───────────────────────────── */

@@ -73,7 +73,12 @@ export default function NapaBotoxLandingPage() {
     <div className="nb nb-pad">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
 
+      {/* Skip link — first focusable element, targets the single <main>. */}
+      <a className="nb-skip" href="#main">Skip to content</a>
+
       {/* ── Campaign header: logo · phone · one primary action ─────────────── */}
+      {/* Landmark note: header and footer are SIBLINGS of <main>, never inside
+          it, so the document exposes a real banner / main / contentinfo set. */}
       <header className="nb-header">
         {/* eslint-disable-next-line @next/next/no-img-element -- fixed-size brand
             asset; next/image adds nothing for an inline SVG wordmark. */}
@@ -84,6 +89,7 @@ export default function NapaBotoxLandingPage() {
         </div>
       </header>
 
+      <main id="main">
       {/* ── Hero — no photography, uppercase display ───────────────────────── */}
       <section className="nb-hero" aria-labelledby="nb-h1">
         <div className="nb-wrap">
@@ -261,6 +267,8 @@ export default function NapaBotoxLandingPage() {
           </div>
         </div>
       </section>
+
+      </main>
 
       {/* ── Compact campaign footer ────────────────────────────────────────── */}
       <footer className="nb-footer">

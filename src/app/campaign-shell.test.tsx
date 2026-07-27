@@ -90,6 +90,83 @@ describe("the campaign route renders the focused B01 shell", () => {
   });
 });
 
+describe("campaign landmarks: header and footer are SIBLINGS of one main", () => {
+  it("renders exactly one <main>, with id=main", () => {
+    expect([...campaignDoc.matchAll(/<main\b/g)]).toHaveLength(1);
+    expect(campaignDoc).toMatch(/<main id="main">/);
+  });
+
+  it("the campaign header precedes main and is NOT inside it", () => {
+    const h = campaignDoc.indexOf('<header class="nb-header">');
+    const m = campaignDoc.indexOf('<main id="main">');
+    expect(h).toBeGreaterThanOrEqual(0);
+    expect(h).toBeLessThan(m);
+    const mainInner = campaignDoc.slice(m, campaignDoc.indexOf("</main>"));
+    expect(mainInner).not.toContain("<header");
+  });
+
+  it("the campaign footer follows main and is NOT inside it", () => {
+    const mEnd = campaignDoc.indexOf("</main>");
+    const f = campaignDoc.indexOf('<footer class="nb-footer">');
+    expect(f).toBeGreaterThan(mEnd);
+    const mainInner = campaignDoc.slice(campaignDoc.indexOf('<main id="main">'), mEnd);
+    expect(mainInner).not.toContain("<footer");
+  });
+
+  it("a skip link exists, targets #main, and is the first focusable element", () => {
+    expect(campaignDoc).toContain('href="#main"');
+    expect(campaignDoc).toMatch(/<a class="nb-skip" href="#main">Skip to content<\/a>/);
+    const firstAnchor = /<a\b[^>]*>/.exec(campaignDoc)?.[0] ?? "";
+    expect(firstAnchor).toContain("nb-skip");
+  });
+
+  it("the campaign layout is a fragment, not a <main> wrapper", () => {
+    // Scan CODE, not the explanatory comment (which legitimately says "<main>").
+    const layout = readFileSync(join(APP, "(campaign)", "layout.tsx"), "utf8")
+      .replace(/\/\*[\s\S]*?\*\//g, " ")
+      .replace(/\/\/[^\n]*/g, " ");
+    expect(layout).not.toMatch(/<main/);
+    expect(layout).toMatch(/<>\{children\}<\/>/);
+  });
+
+  it("the sticky actions sit outside main, after the footer", () => {
+    expect(campaignDoc.indexOf('class="nb-sticky"')).toBeGreaterThan(campaignDoc.indexOf("</main>"));
+  });
+});
+
+describe("the mobile header-phone hide rule actually wins the cascade", () => {
+  const css = readFileSync(join(APP, "(campaign)", "napa", "botox", "napa-botox.css"), "utf8");
+
+  it("the hide selector outranks the generic anchor rule", () => {
+    // `.nb a` is 0-1-1 and sets display:inline-flex for every link. A bare
+    // `.nb-headertel` is 0-1-0 and LOSES, because media queries add no
+    // specificity. The hide rule must therefore be at least 0-2-1.
+    const hide = /@media \(max-width:\s*679px\)\s*\{([^}]*\{[^}]*\})/.exec(css)?.[1] ?? "";
+    expect(hide).toContain(".nb a.nb-headertel");
+    expect(hide).toMatch(/display:\s*none/);
+    // The defective bare form must not come back.
+    expect(css).not.toMatch(/@media \(max-width:\s*679px\)\s*\{\s*\.nb-headertel\s*\{/);
+  });
+
+  it("the generic anchor rule that caused it is still present and unchanged", () => {
+    expect(css).toMatch(/\.nb a\s*\{[^}]*display:\s*inline-flex/);
+  });
+
+  it("the breakpoint is 679/680, matching the accepted design", () => {
+    expect(css).toMatch(/@media \(max-width:\s*679px\)/);
+  });
+
+  it("no global overflow clipping is used to conceal layout defects", () => {
+    expect(css).not.toMatch(/overflow-x:\s*(hidden|clip)/);
+    expect(css).not.toMatch(/\.nb\s*\{[^}]*overflow/);
+  });
+
+  it("the mobile sticky Call action is retained", () => {
+    expect(campaignDoc).toMatch(/class="nb-sticky-call"/);
+    expect(campaignDoc).toMatch(/<a class="nb-sticky-call" href="tel:\+17073582928"/);
+  });
+});
+
 describe("ordinary marketing routes keep the global site chrome", () => {
   it("still renders the site header, nav, footer, and chat widget", () => {
     expect(siteDoc).toMatch(/aria-label="Main navigation"/);

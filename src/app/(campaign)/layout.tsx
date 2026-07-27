@@ -1,5 +1,5 @@
 /**
- * Campaign routes — the accepted focused B01 shell.
+ * Campaign routes — policy layout.
  *
  * Deliberately renders NO general-site navigation, hamburger menu, generic
  * footer, or floating chat widget. Three reasons this is a policy and not a
@@ -12,8 +12,12 @@
  *  3. The accepted B01 design is a focused campaign page: logo, phone, one
  *     primary action.
  *
- * Each campaign page supplies its own header, footer, and sticky actions.
+ * It is a FRAGMENT, not a `<main>` wrapper. The campaign header and footer are
+ * page-level landmarks and must be siblings of `<main>`, not descendants of it;
+ * wrapping here would nest them inside `<main>` and produce a document with no
+ * top-level banner or contentinfo. Each campaign page owns its own
+ * skip-link / header / main / footer / sticky-actions shell.
  */
 export default function CampaignLayout({ children }: Readonly<{ children: React.ReactNode }>) {
-  return <main id="main" className="flex-1">{children}</main>;
+  return <>{children}</>;
 }
