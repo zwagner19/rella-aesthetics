@@ -17,7 +17,7 @@
     "@boulevard/blvd-book-sdk": "^2.0.10",
     "@portabletext/react": "^6.0.3",
     "@sanity/image-url": "^2.1.1",
-    "next": "16.2.2",
+    "next": "16.2.12",
     "next-sanity": "^12.2.1",
     "next-sitemap": "^4.2.3",
     "react": "19.2.4",
@@ -30,9 +30,9 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
-    "eslint-config-next": "16.2.2",
+    "eslint-config-next": "16.2.12",
     "tailwindcss": "^4",
     "typescript": "^5",
-    "vitest": "^2.1.9"
+    "vitest": "4.1.10"
   }
 }

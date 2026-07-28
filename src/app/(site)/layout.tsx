@@ -2,6 +2,8 @@ import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { SkipNav } from "@/components/layout/SkipNav";
 import { GhlChatWidget } from "@/components/integrations/GhlChatWidget";
+import { GoogleAnalytics } from "@/components/integrations/GoogleAnalytics";
+import { MetaPixel } from "@/components/integrations/MetaPixel";
 
 /**
  * Global site chrome for every ordinary marketing route.
@@ -15,6 +17,10 @@ import { GhlChatWidget } from "@/components/integrations/GhlChatWidget";
 export default function SiteLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <>
+      {/* Direct GA + Meta belong to ordinary marketing routes ONLY. Moved here
+          from the root layout so the campaign group cannot inherit them. */}
+      <GoogleAnalytics />
+      <MetaPixel />
       <SkipNav />
       <Header />
       <main id="main" className="flex-1">

@@ -1,8 +1,6 @@
 import type { Metadata } from "next";
 import { Poppins } from "next/font/google";
 import "./globals.css";
-import { GoogleAnalytics } from "@/components/integrations/GoogleAnalytics";
-import { MetaPixel } from "@/components/integrations/MetaPixel";
 
 const poppins = Poppins({
   variable: "--font-poppins",
@@ -37,13 +35,14 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${poppins.variable} antialiased`}>
-      <head>
-        <GoogleAnalytics />
-        <MetaPixel />
-      </head>
       {/*
-        The root layout owns only the document, the font, and the
-        marketing-root analytics. Site chrome (SkipNav / Header / MobileNav /
+        The root layout owns ONLY the document and the font — no analytics.
+        Direct GA and Meta previously lived here, which meant campaign routes
+        INHERITED them. They rendered null only because the canonical project
+        has no corresponding environment variables; that is a coincidence of
+        configuration, not a contract. Analytics ownership is now structural:
+        direct GA/Meta belong to `(site)`, GTM belongs to `(campaign)`, and the
+        campaign route has exactly one possible delivery path. Site chrome (SkipNav / Header / MobileNav /
         Footer / GHL chat) lives in the `(site)` route group, so the `(campaign)`
         group can render the focused B01 shell instead of hiding chrome with CSS.
         Both groups keep their URLs unchanged — route groups are path-invisible.

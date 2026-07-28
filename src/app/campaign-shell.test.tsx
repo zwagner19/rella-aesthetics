@@ -190,14 +190,18 @@ describe("ordinary marketing routes keep the global site chrome", () => {
     expect(campaignRoutes).toEqual(["napa"]); // nothing else opted out
   });
 
-  it("the root layout owns only the document, font, and marketing analytics", () => {
+  it("the root layout owns the document and font — analytics moved to (site)", () => {
+    // SUPERSEDED CONTRACT. This previously required GoogleAnalytics and
+    // MetaPixel in the ROOT layout, which meant campaign routes inherited them;
+    // they rendered null only because the env vars happen to be unset. Ownership
+    // is now structural — see analytics-ownership.test.tsx.
     const root = readFileSync(join(APP, "layout.tsx"), "utf8");
-    for (const chrome of ["<Header", "<Footer", "<SkipNav", "<GhlChatWidget"]) {
-      expect(root, `${chrome} must live in (site), not the root`).not.toContain(chrome);
-    }
-    // Marketing-root analytics stay exactly where they were.
-    expect(root).toContain("<GoogleAnalytics />");
-    expect(root).toContain("<MetaPixel />");
+    expect(root).toMatch(/<html/);
+    expect(root).not.toContain("GoogleAnalytics");
+    expect(root).not.toContain("MetaPixel");
+    const site = readFileSync(join(APP, "(site)", "layout.tsx"), "utf8");
+    expect(site).toContain("<GoogleAnalytics />");
+    expect(site).toContain("<MetaPixel />");
   });
 
   it("the policy is expressed by the route tree, not by CSS hiding", () => {
@@ -271,10 +275,14 @@ describe("the campaign route adds no tracking of its own", () => {
     expect(campaignDoc).not.toMatch(/googletagmanager|gtag\(|fbq\(|clarity\.ms|hotjar|callrail/i);
   });
 
-  it("the root layout's analytics are untouched by this change", () => {
-    const rootSrc = readFileSync(join(APP, "layout.tsx"), "utf8");
-    expect(rootSrc).toContain("GoogleAnalytics");
-    expect(rootSrc).toContain("MetaPixel");
+  it("the site layout's analytics are untouched by the campaign work", () => {
+    const site = readFileSync(join(APP, "(site)", "layout.tsx"), "utf8");
+    expect(site).toContain("GoogleAnalytics");
+    expect(site).toContain("MetaPixel");
+    // And the campaign group gains none of them.
+    const campaign = readFileSync(join(APP, "(campaign)", "layout.tsx"), "utf8");
+    expect(campaign).not.toContain("GoogleAnalytics");
+    expect(campaign).not.toContain("MetaPixel");
   });
 });
 
