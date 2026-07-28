@@ -125,6 +125,25 @@ describe("campaign GTM: opt-in, campaign-only, never near the booking app", () =
     expect(code).not.toMatch(/dataLayer\.push\((?!\{'gtm\.start')/);
   });
 
+  it("rejects a malformed container ID — no script, no iframe", async () => {
+    const { GTM_ID_PATTERN } = await import("@/components/integrations/CampaignGtm");
+    for (const bad of ["", "  ", "GTM", "GTM-", "gtm-5D84LL73", "GTM_5D84LL73", "G-5D84LL73",
+                       "UA-12345-1", "GTM-ABC", "<script>alert(1)</script>", "GTM-5D84LL73; evil()"]) {
+      vi.resetModules();
+      process.env[CAMPAIGN_GTM_ENV_VAR] = bad;
+      const { CampaignGtm, CampaignGtmNoScript } = await import("@/components/integrations/CampaignGtm");
+      expect(CampaignGtm(), `malformed value rendered a script: ${JSON.stringify(bad)}`).toBeNull();
+      expect(renderToStaticMarkup(<CampaignGtmNoScript />), JSON.stringify(bad)).toBe("");
+      expect(GTM_ID_PATTERN.test(bad)).toBe(false);
+    }
+    delete process.env[CAMPAIGN_GTM_ENV_VAR];
+  });
+
+  it("accepts the confirmed production container ID format", async () => {
+    const { GTM_ID_PATTERN } = await import("@/components/integrations/CampaignGtm");
+    expect(GTM_ID_PATTERN.test("GTM-5D84LL73")).toBe(true);
+  });
+
   it("documents the duplicate-GA4 hazard next to the code", () => {
     const src = readFileSync(join(APP, "..", "components", "integrations", "CampaignGtm.tsx"), "utf8");
     expect(src).toMatch(/DUPLICATE GA4/);

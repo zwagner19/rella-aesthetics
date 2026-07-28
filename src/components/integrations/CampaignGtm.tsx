@@ -40,7 +40,18 @@ import Script from "next/script";
  * `MARKETING-MEASUREMENT-CONTRACT.md` for who sets `NEXT_PUBLIC_GTM_ID`, where,
  * and under what approvals.
  */
-const GTM_ID = process.env.NEXT_PUBLIC_GTM_ID;
+/**
+ * Strict GTM container-ID format. A malformed value must render NOTHING rather
+ * than emit a script tag pointing at a garbage container — a typo in a Vercel
+ * environment variable should fail visibly quiet, not inject a broken tag into
+ * every campaign page view.
+ *
+ * Confirmed future production value: GTM-5D84LL73 (NOT set in this change).
+ */
+export const GTM_ID_PATTERN = /^GTM-[A-Z0-9]{6,}$/;
+
+const RAW_GTM_ID = process.env.NEXT_PUBLIC_GTM_ID;
+const GTM_ID = RAW_GTM_ID && GTM_ID_PATTERN.test(RAW_GTM_ID.trim()) ? RAW_GTM_ID.trim() : undefined;
 
 /** Standard GTM container snippet. Renders null when unconfigured. */
 export function CampaignGtm() {
