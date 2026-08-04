@@ -3,7 +3,7 @@ export const services = [
     slug: "botox",
     title: "Botox & Dysport",
     category: "Injectables",
-    description: "Reduce fine lines and prevent wrinkles with expertly administered neuromodulators.",
+    description: "Temporarily soften the appearance of dynamic lines with consultation-led neuromodulator treatment.",
     image: "/images/service-botox.jpg",
   },
   {

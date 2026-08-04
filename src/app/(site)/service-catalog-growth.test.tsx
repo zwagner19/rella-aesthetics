@@ -3,7 +3,7 @@ import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it } from "vitest";
 import { TreatmentServicePage } from "@/components/pages/TreatmentServicePage";
 import { BOULEVARD_WIDGET_GENERIC, resolveBookingHref } from "@/lib/booking-routes";
-import { membershipTiers } from "@/lib/data";
+import { membershipTiers, services } from "@/lib/data";
 import { treatmentServiceSchema } from "@/lib/schemas";
 import { servicePages } from "@/lib/service-data";
 import { generateMetadata } from "./services/[slug]/page";
@@ -116,5 +116,33 @@ describe("public pricing and claims integrity", () => {
       const approved = expected[service.slug as keyof typeof expected] ?? [];
       expect(dollarAmounts, service.slug).toEqual([...approved]);
     }
+  });
+
+  it("keeps the Botox acquisition copy inside the approved temporary-improvement boundary", () => {
+    const botox = servicePages.find((service) => service.slug === "botox");
+    const listing = services.find((service) => service.slug === "botox");
+    const publicCopy = JSON.stringify({ botox, listing });
+
+    for (const unsupported of [
+      "prevent new wrinkles",
+      "prevent wrinkles",
+      "prevent expression lines",
+      "Preventive treatment",
+      "muscles adapt",
+      "spread slightly more",
+      "ideal for larger areas",
+      "Schedule a touch-up at 3–4 months",
+    ]) {
+      expect(publicCopy, unsupported).not.toContain(unsupported);
+    }
+
+    expect(botox?.metaDescription).toContain("Temporarily soften the appearance");
+    expect(botox?.whatItIs.body).toContain("temporarily reduce targeted muscle activity");
+    expect(botox?.whatToExpect.steps).toContain(
+      "Minimal downtime — most patients return to their daily routine immediately",
+    );
+    expect(botox?.faq.find((item) => item.question.includes("difference"))?.answer).toContain(
+      "non-interchangeable units",
+    );
   });
 });
