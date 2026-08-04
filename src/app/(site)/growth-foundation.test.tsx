@@ -97,7 +97,7 @@ describe("trust and indexation foundation", () => {
       "utf8",
     );
     expect(source).toContain("/images/dr-zachary-wagner.jpg");
-    expect(source).toContain("American Board of Obesity Medicine diplomate");
+    expect(source).toContain("ABOM-certified physician");
   });
 
   it("makes Dr. Wagner and his verified ABOM credential visible on About", () => {

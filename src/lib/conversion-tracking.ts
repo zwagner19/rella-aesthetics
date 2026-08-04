@@ -212,7 +212,7 @@ export function resolveMobileBookingDestination(
   if (currentPath === "/services/weight-loss") {
     return {
       href: "#consultation-options",
-      label: "See Consult Times",
+      label: "See Call Times",
       cta: "booking-flow-start",
     };
   }

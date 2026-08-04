@@ -56,7 +56,7 @@ describe("mobile booking bar routing", () => {
   it("keeps weight-loss visitors inside the city-choice funnel", () => {
     expect(resolveMobileBookingDestination("/services/weight-loss")).toEqual({
       href: "#consultation-options",
-      label: "See Consult Times",
+      label: "See Call Times",
       cta: "booking-flow-start",
     });
   });

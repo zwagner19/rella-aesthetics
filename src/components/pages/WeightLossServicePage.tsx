@@ -2,35 +2,8 @@ import Image from "next/image";
 import { Button } from "@/components/ui/Button";
 import { FaqAccordion, FaqSchema } from "@/components/blocks/FaqAccordion";
 import { TrustStrip } from "@/components/blocks/TrustStrip";
-import {
-  resolveBookingHref,
-  resolveWeightLossAssessmentHref,
-  type BookingLocation,
-} from "@/lib/booking-routes";
+import { resolveBookingHref, type BookingLocation } from "@/lib/booking-routes";
 import { medicalWeightLossServiceSchema } from "@/lib/schemas";
-
-const valueCards = [
-  {
-    number: "01",
-    title: "A real clinical starting point",
-    body: "Review your goals, health history, prior attempts, and questions with Dr. Wagner—not a promise of a prescription.",
-  },
-  {
-    number: "02",
-    title: "More than a medication decision",
-    body: "Understand the monitoring, habits, follow-up, and maintenance that can make a plan more sustainable.",
-  },
-  {
-    number: "03",
-    title: "Local care with virtual flexibility",
-    body: "Connect your phone consultation to the Rella clinic in Napa or Vacaville, with follow-up options explained clearly.",
-  },
-  {
-    number: "04",
-    title: "No-pressure clarity",
-    body: "Review the program, likely next steps, and applicable costs before deciding whether Rella fits.",
-  },
-] as const;
 
 const steps = [
   {
@@ -40,18 +13,18 @@ const steps = [
   },
   {
     label: "Talk",
-    title: "Have a 30-minute phone consultation",
-    body: "Discuss what you have tried, what is getting in the way, and the questions you want answered.",
+    title: "Complete your 30-minute qualification consultation",
+    body: "Dr. Wagner reviews the relevant history, goals, previous attempts, and safety considerations to determine whether you medically qualify.",
   },
   {
-    label: "Evaluate",
-    title: "Complete the appropriate clinical review",
-    body: "If you decide to continue, the medical team will explain any evaluation, labs, or in-person steps that may be appropriate.",
+    label: "Choose",
+    title: "Review the appropriate options",
+    body: "If you qualify, discuss the treatment paths that may fit—including medication only when medically appropriate—and the costs involved.",
   },
   {
     label: "Plan",
-    title: "Build the next step around you",
-    body: "Treatment, monitoring, support, and maintenance are individualized. A consultation does not guarantee a prescription.",
+    title: "Begin an individualized care plan",
+    body: "Complete any required labs or follow-up steps, then begin treatment, monitoring, support, and maintenance built around you.",
   },
 ] as const;
 
@@ -77,14 +50,14 @@ const weightLossReviews = [
 
 const faq = [
   {
-    question: "What happens during the first phone consultation?",
+    question: "Can I be medically qualified during the first phone consultation?",
     answer:
-      "During your phone consultation with Zachary Wagner, DO, you will discuss your goals, relevant history, what you have already tried, how Rella's program works, likely next steps, and cost questions. It is a starting-point conversation, not a medical intake or a guarantee of treatment.",
+      "Yes. The 30-minute phone consultation with Zachary Wagner, DO, is a medical qualification consultation. He reviews your relevant health history, goals, prior attempts, and safety considerations to determine whether you medically qualify to proceed. Additional information, labs, or follow-up may still be required before a medication is prescribed or treatment begins.",
   },
   {
-    question: "Do I need a card to see consultation times?",
+    question: "How much does medical weight-loss care cost?",
     answer:
-      "No. The weight-loss starting-point consultation does not require a card to view availability or reserve the consultation.",
+      "There is no single price that applies to every patient. Total cost can include visits, medication, labs, and follow-up, and it can vary with medication source, availability, and insurance coverage. Rella explains the applicable components and costs before you decide whether to proceed.",
   },
   {
     question: "Does a consultation guarantee a prescription?",
@@ -92,19 +65,34 @@ const faq = [
       "No. Prescription treatment is offered only when clinically appropriate after the required evaluation. The right next step may include additional history, an examination, labs, lifestyle support, medication, or another recommendation.",
   },
   {
-    question: "Does Rella offer semaglutide or other GLP-1 options?",
+    question: "Does Rella offer semaglutide, tirzepatide, or other GLP-1 options?",
     answer:
       "GLP-1 medications may be discussed when clinically appropriate, but the appropriate medication, source, dosing, and availability depend on your medical history and current clinical circumstances. Your clinician will explain the specific option being considered, its risks, and whether it is FDA approved or compounded.",
   },
   {
-    question: "What if I am not ready to book a consultation?",
+    question: "Does Rella use brand-name or compounded GLP-1 medications?",
     answer:
-      "Choose your nearest Rella clinic and take the short, nonmedical starting-point assessment. It is designed to help you organize your goals and decide whether a conversation is the right next step.",
+      "The appropriate option depends on your medical needs, medication availability, and the current clinical and regulatory circumstances. Your clinician will identify the source of any medication being considered. FDA-approved brand medications and compounded medications are not interchangeable; compounded medications are not FDA approved, and FDA does not review them for safety, effectiveness, or quality before marketing.",
+  },
+  {
+    question: "What side effects and monitoring should I expect?",
+    answer:
+      "Side effects and risks vary by medication and by patient. Gastrointestinal symptoms are among the concerns often discussed with GLP-1 treatment, but your clinician will review risks, contraindications, and warning signs that apply to the option being considered. Any monitoring plan is individualized to your history and treatment.",
+  },
+  {
+    question: "Will I be pushed into injections if they are not right for me?",
+    answer:
+      "No. Rella's goal is to determine what is medically appropriate, not to sell every patient the same treatment. If an injectable medication is not appropriate or not preferred, Dr. Wagner can discuss whether another medication, lifestyle-focused care, additional evaluation, or a different next step makes sense.",
   },
   {
     question: "Can I receive care virtually?",
     answer:
-      "The first consultation is by phone. Virtual follow-up may be available for California patients, while some evaluation or monitoring steps may need to occur through the Napa or Vacaville clinic. The team will explain what applies to you.",
+      "The medical qualification consultation is by phone. Virtual follow-up may be available for California patients, while some labs, evaluation, or monitoring steps may need to occur through the Napa or Vacaville clinic. The team will explain what applies to you.",
+  },
+  {
+    question: "What happens if I stop medication or worry about regaining weight?",
+    answer:
+      "Weight maintenance is part of the care conversation, not an afterthought. Individual responses vary, and no result can be guaranteed. Dr. Wagner can discuss follow-up, habits, monitoring, and the long-term plan appropriate to your treatment rather than treating medication as a stand-alone quick fix.",
   },
 ] as const;
 
@@ -135,7 +123,6 @@ function LocationCard({ option }: { option: LocationOption }) {
     location: option.slug,
     service: "weight-loss",
   });
-  const assessmentHref = resolveWeightLossAssessmentHref(option.slug);
 
   return (
     <article className="group rounded-[1.75rem] border border-rose-light/70 bg-white p-6 shadow-[0_18px_60px_rgba(90,94,98,0.08)] md:p-8">
@@ -152,27 +139,18 @@ function LocationCard({ option }: { option: LocationOption }) {
       </div>
       <p className="mb-2 text-sm font-medium text-silver-dark">{option.address}</p>
       <p className="mb-7 min-h-12 text-sm leading-relaxed text-silver">{option.detail}</p>
-      <div className="flex flex-col gap-3 sm:flex-row">
+      <div>
         <Button
           href={consultHref}
           className="w-full rounded-full px-6 sm:w-auto"
           data-cta="weight-loss-consult"
           data-location={option.slug}
         >
-          See {option.name} Times
-        </Button>
-        <Button
-          href={assessmentHref}
-          variant="ghost"
-          className="w-full rounded-full px-6 sm:w-auto"
-          data-cta="weight-loss-assessment"
-          data-location={option.slug}
-        >
-          Take Assessment
+          See {option.name} Call Times
         </Button>
       </div>
       <p className="mt-5 text-xs leading-relaxed text-silver">
-        30-minute phone consultation · No card required · No pressure
+        30-minute medical qualification consultation · No card required · No pressure
       </p>
     </article>
   );
@@ -193,24 +171,21 @@ export function WeightLossServicePage() {
         <div className="mx-auto grid max-w-[1200px] items-center gap-12 px-6 md:px-8 lg:grid-cols-[1.05fr_0.95fr] lg:px-12">
           <div className="relative z-10">
             <p className="mb-5 text-[0.6875rem] font-bold uppercase tracking-[0.22em] text-rose-dark">
-              Vacaville · Napa · Virtual follow-up in California
+              Vacaville · Napa · Physician-led care in California
             </p>
             <h1 className="mb-6 max-w-[760px] text-[clamp(2.65rem,6vw,4.4rem)] font-medium leading-[0.98] tracking-[-0.055em] text-ink">
-              Medical weight loss built around more than medication.
+              Talk with an obesity-medicine physician about GLP-1 options in Vacaville &amp; Napa.
             </h1>
             <p className="mb-8 max-w-[650px] text-lg font-light leading-relaxed text-silver-dark md:text-xl">
-              Start with a 30-minute phone consultation with Zachary Wagner, DO, an American Board of Obesity Medicine diplomate. Understand the program, the appropriate next step, and the costs before you decide.
+              In one 30-minute phone call, Zachary Wagner, DO, an ABOM-certified physician, will review your health history, goals, and treatment considerations; determine whether you medically qualify for options such as semaglutide or tirzepatide; and explain costs and next steps before you commit.
             </p>
-            <div className="mb-6 flex flex-col gap-3 sm:flex-row">
+            <div className="mb-6">
               <Button
                 href="#consultation-options"
                 className="rounded-full"
                 data-cta="booking-flow-start"
               >
-                See Consultation Times
-              </Button>
-              <Button href="#how-it-works" variant="ghost" className="rounded-full bg-white/70">
-                How Rella Works
+                See Available Call Times
               </Button>
             </div>
             <p className="flex flex-wrap gap-x-5 gap-y-2 text-sm font-medium text-silver">
@@ -219,6 +194,8 @@ export function WeightLossServicePage() {
               <span>No card required</span>
               <span aria-hidden="true" className="hidden text-rose sm:inline">•</span>
               <span>No pressure</span>
+              <span aria-hidden="true" className="hidden text-rose sm:inline">•</span>
+              <span>Medication only if medically appropriate</span>
             </p>
           </div>
 
@@ -233,8 +210,8 @@ export function WeightLossServicePage() {
                 sizes="(min-width: 1024px) 46vw, 92vw"
               />
               <div className="absolute inset-x-4 bottom-4 rounded-[1.4rem] bg-white/94 p-5 shadow-lg backdrop-blur md:inset-x-6 md:bottom-6 md:p-6">
-                <p className="mb-2 text-[0.625rem] font-bold uppercase tracking-[0.2em] text-rose-dark">Your starting point</p>
-                <p className="text-lg font-medium leading-snug text-ink">A clear conversation before any commitment.</p>
+                <p className="mb-2 text-[0.625rem] font-bold uppercase tracking-[0.2em] text-rose-dark">Weight-Loss Qualification Call</p>
+                <p className="text-lg font-medium leading-snug text-ink">A medical decision—not a sales pitch.</p>
               </div>
             </div>
             <div aria-hidden="true" className="absolute -right-16 -top-16 -z-10 h-56 w-56 rounded-full bg-rose-light/40 blur-3xl" />
@@ -244,8 +221,61 @@ export function WeightLossServicePage() {
 
       <TrustStrip
         ariaLabel="Rella weight-loss care principles"
-        items={["ABOM-certified physician", "Two local clinics", "Medication only when appropriate", "Transparent next steps"]}
+        items={["ABOM-certified physician", "4.9★ on Google · 219 reviews", "Napa & Vacaville clinics", "Medication only when appropriate"]}
       />
+
+      <section aria-labelledby="qualification-heading" className="border-b border-silver-pale bg-white py-16 md:py-20">
+        <div className="mx-auto grid max-w-[1200px] gap-10 px-6 md:px-8 lg:grid-cols-[0.8fr_1.2fr] lg:items-center lg:px-12">
+          <div className="grid gap-6 sm:grid-cols-[170px_1fr] lg:grid-cols-1">
+            <div className="relative aspect-[4/5] w-full max-w-[230px] overflow-hidden rounded-[1.5rem] bg-rose-blush shadow-[0_16px_50px_rgba(90,94,98,0.12)]">
+              <Image
+                src="/images/dr-zachary-wagner.jpg"
+                alt="Zachary Wagner, DO, ABOM-certified physician and owner of Rella Aesthetics"
+                fill
+                className="object-cover object-top"
+                sizes="(min-width: 1024px) 230px, 170px"
+              />
+            </div>
+            <div>
+              <p className="mb-2 text-lg font-medium text-ink">Zachary Wagner, DO</p>
+              <p className="text-sm font-medium leading-relaxed text-silver-dark">ABOM-certified physician · Owner of Rella Aesthetics</p>
+            </div>
+          </div>
+
+          <div>
+            <p className="mb-4 text-[0.6875rem] font-bold uppercase tracking-[0.2em] text-rose-dark">A real medical qualification consultation</p>
+            <h2 id="qualification-heading" className="mb-5 text-3xl font-medium leading-tight tracking-[-0.035em] text-ink md:text-5xl">
+              Get a medically grounded answer before choosing treatment.
+            </h2>
+            <p className="mb-7 text-lg font-light leading-relaxed text-silver">
+              This call is for people who want a physician to evaluate whether they medically qualify—not a rushed clinic or a one-size-fits-all medication sale.
+            </p>
+            <div className="mb-8 rounded-[1.25rem] bg-rose-blush p-5 md:p-6">
+              <h3 className="mb-4 text-base font-medium text-ink">This call may be right for you if:</h3>
+              <ul className="grid gap-3">
+                {["You have tried diets, programs, or other clinics without a sustainable path", "You want clear answers about eligibility, safety, side effects, and cost", "You want a physician's medical opinion without pressure or judgment"].map((item) => (
+                  <li key={item} className="flex gap-3 text-sm leading-relaxed text-silver-dark">
+                    <span aria-hidden="true" className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-rose-dark" />
+                    {item}
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <h3 className="mb-4 text-lg font-medium text-ink">In 30 minutes with Dr. Wagner, you will:</h3>
+            <ul className="grid gap-4 sm:grid-cols-2">
+              {["Review relevant health history and prior attempts", "Discuss GLP-1 eligibility and safety considerations", "Compare medication and non-medication paths", "Understand likely labs, monitoring, and follow-up", "Review how treatment costs are structured", "Know whether you qualify and what comes next"].map((item) => (
+                <li key={item} className="flex gap-3 text-sm leading-relaxed text-silver-dark">
+                  <span aria-hidden="true" className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-rose-dark" />
+                  {item}
+                </li>
+              ))}
+            </ul>
+            <p className="mt-7 text-sm leading-relaxed text-silver">
+              Qualification does not guarantee a prescription or a specific medication. Additional information, labs, or follow-up may be required before treatment begins.
+            </p>
+          </div>
+        </div>
+      </section>
 
       <section aria-labelledby="weight-loss-reviews-heading" className="border-b border-silver-pale bg-white py-16 md:py-20">
         <div className="mx-auto max-w-[1200px] px-6 md:px-8 lg:px-12">
@@ -323,29 +353,6 @@ export function WeightLossServicePage() {
         </div>
       </section>
 
-      <section id="program" className="scroll-mt-24 py-20 md:py-28">
-        <div className="mx-auto max-w-[1200px] px-6 md:px-8 lg:px-12">
-          <div className="mb-12 max-w-[780px] md:mb-16">
-            <p className="mb-4 text-[0.6875rem] font-bold uppercase tracking-[0.2em] text-rose-dark">The Rella difference</p>
-            <h2 className="mb-5 text-3xl font-medium leading-tight tracking-[-0.035em] text-ink md:text-5xl">
-              Your plan should fit your health—not a one-size-fits-all subscription.
-            </h2>
-            <p className="text-lg font-light leading-relaxed text-silver">
-              Rella begins with a clinical conversation. Depending on your history and goals, the next step may include an evaluation, labs when appropriate, lifestyle support, medication options when clinically appropriate, and a plan for follow-up and maintenance.
-            </p>
-          </div>
-          <div className="grid gap-5 md:grid-cols-2">
-            {valueCards.map((card) => (
-              <article key={card.number} className="rounded-[1.5rem] border border-silver-pale bg-rose-blush/50 p-6 md:p-8">
-                <p className="mb-8 text-xs font-bold tracking-[0.18em] text-rose-dark">{card.number}</p>
-                <h3 className="mb-3 text-xl font-medium tracking-[-0.02em] text-ink md:text-2xl">{card.title}</h3>
-                <p className="leading-relaxed text-silver">{card.body}</p>
-              </article>
-            ))}
-          </div>
-        </div>
-      </section>
-
       <section id="how-it-works" className="scroll-mt-24 bg-silver-pale/60 py-20 md:py-28">
         <div className="mx-auto max-w-[1200px] px-6 md:px-8 lg:px-12">
           <div className="mb-12 max-w-[700px]">
@@ -368,61 +375,6 @@ export function WeightLossServicePage() {
       </section>
 
       <section className="py-20 md:py-28">
-        <div className="mx-auto grid max-w-[1200px] gap-10 px-6 md:px-8 lg:grid-cols-[0.9fr_1.1fr] lg:px-12">
-          <div className="grid gap-6 sm:grid-cols-[180px_1fr] lg:grid-cols-1">
-            <div className="relative aspect-[4/5] w-full max-w-[240px] overflow-hidden rounded-[1.5rem] bg-rose-blush shadow-[0_16px_50px_rgba(90,94,98,0.12)]">
-              <Image
-                src="/images/dr-zachary-wagner.jpg"
-                alt="Zachary Wagner, DO, physician and owner of Rella Aesthetics"
-                fill
-                className="object-cover object-top"
-                sizes="(min-width: 1024px) 240px, 180px"
-              />
-            </div>
-            <div>
-              <p className="mb-4 text-[0.6875rem] font-bold uppercase tracking-[0.2em] text-rose-dark">Your first conversation</p>
-              <h2 className="mb-5 text-3xl font-medium tracking-[-0.035em] text-ink md:text-5xl">Know who you&apos;re talking with.</h2>
-              <p className="mb-3 text-lg font-light leading-relaxed text-silver">
-                Dr. Wagner&apos;s starting-point consultation is designed to give you useful clarity without forcing you through a long intake or asking for a card.
-              </p>
-              <p className="text-sm font-medium leading-relaxed text-silver-dark">
-                Zachary Wagner, DO · American Board of Obesity Medicine diplomate
-              </p>
-            </div>
-          </div>
-          <div className="rounded-[1.75rem] bg-ink p-7 text-white md:p-10">
-            <h3 className="mb-7 text-xl font-medium md:text-2xl">In 30 minutes with Dr. Wagner, discuss:</h3>
-            <ul className="grid gap-4 sm:grid-cols-2">
-              {["Your goals and prior attempts", "What may be getting in the way", "How the Rella program works", "Likely evaluation and next steps", "Monitoring and ongoing support", "Applicable cost questions"].map((item) => (
-                <li key={item} className="flex gap-3 text-sm leading-relaxed text-white/80">
-                  <span aria-hidden="true" className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-rose" />
-                  {item}
-                </li>
-              ))}
-            </ul>
-            <p className="mt-8 border-t border-white/15 pt-6 text-sm leading-relaxed text-white/65">
-              The consultation is not a guarantee of treatment or a prescription. Clinical recommendations require the appropriate evaluation.
-            </p>
-          </div>
-        </div>
-      </section>
-
-      <section id="consultation-options" className="scroll-mt-24 bg-rose-blush py-20 md:py-28">
-        <div className="mx-auto max-w-[1200px] px-6 md:px-8 lg:px-12">
-          <div className="mx-auto mb-12 max-w-[760px] text-center">
-            <p className="mb-4 text-[0.6875rem] font-bold uppercase tracking-[0.2em] text-rose-dark">Choose your clinic</p>
-            <h2 className="mb-5 text-3xl font-medium tracking-[-0.035em] text-ink md:text-5xl">Ready to talk—or still deciding?</h2>
-            <p className="text-lg font-light leading-relaxed text-silver">
-              Ready patients can go directly to live consultation times. If you are still deciding, take the short starting-point assessment for your nearest Rella clinic.
-            </p>
-          </div>
-          <div className="grid gap-6 lg:grid-cols-2">
-            {locationOptions.map((option) => <LocationCard key={option.slug} option={option} />)}
-          </div>
-        </div>
-      </section>
-
-      <section className="py-20 md:py-28">
         <div className="mx-auto grid max-w-[1200px] gap-8 px-6 md:px-8 lg:grid-cols-[0.85fr_1.15fr] lg:px-12">
           <div>
             <p className="mb-4 text-[0.6875rem] font-bold uppercase tracking-[0.2em] text-rose-dark">Clear expectations</p>
@@ -430,7 +382,7 @@ export function WeightLossServicePage() {
           </div>
           <div className="rounded-[1.5rem] border border-rose-light/70 bg-white p-7 md:p-9">
             <p className="mb-5 text-lg leading-relaxed text-silver-dark">
-              Program cost depends on the care plan, medication choice, labs, and follow-up needs. During your consultation, Rella will explain the applicable options and costs before you decide.
+              Program cost depends on the care plan, medication choice, labs, and follow-up needs. During your medical qualification consultation, Rella will explain the applicable options and costs before you decide.
             </p>
             <p className="text-sm leading-relaxed text-silver">
               Individual results vary. Prescription treatment is offered only when clinically appropriate after evaluation. Compounded medications are not FDA approved, and FDA does not review them for safety, effectiveness, or quality before marketing. Availability and treatment options may change.
@@ -449,10 +401,28 @@ export function WeightLossServicePage() {
         </div>
       </section>
 
+      <section id="consultation-options" className="scroll-mt-24 bg-rose-blush py-20 md:py-28">
+        <div className="mx-auto max-w-[1200px] px-6 md:px-8 lg:px-12">
+          <div className="mx-auto mb-12 max-w-[760px] text-center">
+            <p className="mb-4 text-[0.6875rem] font-bold uppercase tracking-[0.2em] text-rose-dark">Choose your clinic</p>
+            <h2 className="mb-5 text-3xl font-medium tracking-[-0.035em] text-ink md:text-5xl">Choose your clinic and book your qualification call.</h2>
+            <p className="text-lg font-light leading-relaxed text-silver">
+              Select Napa or Vacaville to see live times for your 30-minute phone consultation with Dr. Wagner. There is one clear next step and no card is required.
+            </p>
+          </div>
+          <div className="grid gap-6 lg:grid-cols-2">
+            {locationOptions.map((option) => <LocationCard key={option.slug} option={option} />)}
+          </div>
+          <p className="mx-auto mt-8 max-w-[760px] text-center text-sm leading-relaxed text-silver-dark">
+            If medication is not right for you, Dr. Wagner will tell you plainly and discuss other medically appropriate paths.
+          </p>
+        </div>
+      </section>
+
       <section className="bg-ink py-20 text-center text-white md:py-24">
         <div className="mx-auto max-w-[760px] px-6">
-          <p className="mb-4 text-[0.6875rem] font-bold uppercase tracking-[0.2em] text-rose">The next step is a conversation</p>
-          <h2 className="mb-5 text-3xl font-medium tracking-[-0.035em] md:text-5xl">Get clarity without committing today.</h2>
+          <p className="mb-4 text-[0.6875rem] font-bold uppercase tracking-[0.2em] text-rose">The next step is medical qualification</p>
+          <h2 className="mb-5 text-3xl font-medium tracking-[-0.035em] md:text-5xl">Find out if you medically qualify.</h2>
           <p className="mb-8 text-lg font-light leading-relaxed text-white/70">
             Choose the Rella clinic that is most convenient for your consultation and follow-up.
           </p>

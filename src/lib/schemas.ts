@@ -134,10 +134,10 @@ export function medicalWeightLossServiceSchema() {
     "@context": "https://schema.org",
     "@type": "Service",
     "@id": "https://experiencerella.com/services/weight-loss#service",
-    name: "Medical Weight-Loss Consultation",
+    name: "Medical Weight-Loss Qualification Consultation",
     serviceType: "Physician-led medical weight management",
     description:
-      "A 30-minute phone consultation to discuss medical weight-loss goals, the Rella program, appropriate next steps, and cost questions before deciding.",
+      "A 30-minute phone consultation with an ABOM-certified physician to determine whether a patient medically qualifies to proceed with individualized weight-loss treatment, including GLP-1 options when appropriate.",
     url: "https://experiencerella.com/services/weight-loss",
     provider: {
       "@type": "Organization",

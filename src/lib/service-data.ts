@@ -384,10 +384,10 @@ export const servicePages: ServicePageData[] = [
     slug: "weight-loss",
     title: "Medical Weight Loss",
     metaTitle: "Medical Weight Loss in Vacaville & Napa, CA",
-    metaDescription: "Start with a no-card, 30-minute phone consultation for physician-led medical weight management in Vacaville or Napa. Review goals, options, costs, and next steps.",
+    metaDescription: "Find out if you medically qualify for GLP-1 weight-loss treatment in a 30-minute phone consultation with an ABOM-certified physician serving Vacaville and Napa.",
     heroEyebrow: "Body & Wellness",
     heroTitle: "Medical Weight Loss",
-    heroDescription: "Start with Zachary Wagner, DO, an American Board of Obesity Medicine diplomate, for medical weight management built around your history, goals, monitoring needs, and the right next step.",
+    heroDescription: "Talk with Zachary Wagner, DO, an ABOM-certified physician, to determine whether you medically qualify for individualized weight-loss treatment, including GLP-1 options when appropriate.",
     whatItIs: {
       heading: "What Is Medical Weight Loss?",
       body: "Medical weight management begins with a clinical evaluation of your goals, history, prior attempts, and health needs. A personalized plan may include lifestyle support, monitoring, labs when appropriate, and medication only when clinically appropriate.",
@@ -405,10 +405,10 @@ export const servicePages: ServicePageData[] = [
     },
     whatToExpect: {
       heading: "What to Expect",
-      body: "The program begins with a starting-point phone consultation with Zachary Wagner, DO, followed by the appropriate clinical evaluation and support.",
+      body: "The program begins with a 30-minute medical qualification consultation with Zachary Wagner, DO, followed by the appropriate labs, treatment, monitoring, and support.",
       steps: [
-        "A 30-minute phone consultation to discuss goals and questions",
-        "The appropriate clinical evaluation and labs when indicated",
+        "A 30-minute phone consultation to determine whether you medically qualify",
+        "The appropriate additional information and labs when indicated",
         "An individualized treatment and monitoring plan",
         "Follow-up that may include lifestyle, nutrition, and medication support",
         "Maintenance planning based on progress and clinical needs",
@@ -417,12 +417,12 @@ export const servicePages: ServicePageData[] = [
     pricing: {
       heading: "Pricing",
       body: "Program cost depends on the care plan, medication choice, labs, and follow-up needs. Rella will explain the applicable options and costs before you decide.",
-      note: "The starting-point phone consultation requires no card and does not guarantee treatment or a prescription.",
+      note: "The medical qualification consultation requires no card and does not guarantee treatment, a prescription, or a specific medication.",
     },
     faq: [
-      { question: "What happens during the first consultation?", answer: "During your phone consultation with Zachary Wagner, DO, you will discuss your goals, relevant history, what you have tried, how the program works, likely next steps, and cost questions. It is not a guarantee of treatment or a prescription." },
+      { question: "What happens during the first consultation?", answer: "The 30-minute phone consultation with Zachary Wagner, DO, is used to review relevant history, goals, prior attempts, and safety considerations and determine whether you medically qualify to proceed. It does not guarantee a prescription or a specific medication." },
       { question: "Does Rella offer semaglutide or other GLP-1 options?", answer: "GLP-1 medications may be discussed when clinically appropriate. The appropriate medication, source, dosing, and availability depend on your history and current clinical circumstances." },
-      { question: "Do I need a card to see consultation times?", answer: "No. The 30-minute weight-loss starting-point phone consultation does not require a card." },
+      { question: "Do I need a card to see consultation times?", answer: "No. The 30-minute medical qualification phone consultation does not require a card." },
       { question: "How much weight can I lose?", answer: "Results vary by person, treatment plan, health factors, and follow-through. Rella does not promise a specific result and will discuss realistic expectations for the plan being considered." },
     ],
     image: "/images/service-weightloss.jpg",
