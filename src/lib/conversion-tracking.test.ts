@@ -98,4 +98,12 @@ describe("mobile booking bar routing", () => {
       cta: "service-booking",
     });
   });
+
+  it("keeps the Vacaville Botox local page on the Vacaville booking path", () => {
+    expect(resolveMobileBookingDestination("/vacaville/botox")).toEqual({
+      href: BOULEVARD_WIDGET_VACAVILLE,
+      label: "Book Vacaville",
+      cta: "service-booking",
+    });
+  });
 });

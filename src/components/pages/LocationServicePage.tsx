@@ -13,9 +13,9 @@ interface LocationServicePageProps {
 
 const popularServices = [
   {
-    href: "/services/botox",
+    href: "/vacaville/botox",
     title: "Botox & Dysport",
-    description: "Personalized neuromodulator planning based on your anatomy and goals.",
+    description: "Vacaville-specific pricing, visit details, and the location-pinned booking path.",
   },
   {
     href: "/services/dermal-fillers",

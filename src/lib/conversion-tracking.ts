@@ -114,6 +114,14 @@ export function resolveMobileBookingDestination(
     };
   }
 
+  if (currentPath === "/vacaville/botox") {
+    return {
+      href: resolveBookingHref({ location: "vacaville", service: "botox" }),
+      label: "Book Vacaville",
+      cta: "service-booking",
+    };
+  }
+
   if (currentPath === "/services/weight-loss") {
     return {
       href: "#consultation-options",

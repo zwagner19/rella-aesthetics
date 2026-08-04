@@ -57,6 +57,7 @@ Use a unique label such as `Rella Site Test 20260803-2215`; do not use a real pa
 - [ ] Every advertised service-location pairing is visible in that clinic's live booking menu; a service unavailable at one clinic does not render a booking CTA or structured-data claim for that city.
 - [ ] The treatment-page mobile action bar opens the same clinic chooser and does not cover it at 390 × 844.
 - [ ] Napa location booking reaches the verified Napa destination.
+- [ ] `/vacaville/botox` returns HTTP 200, uses its exact slashless canonical, and every booking action reaches the Vacaville menu rather than Napa or the generic chooser.
 - [ ] `/napa/`, `/napa/botox/`, `/napa/filler/`, `/napa/laser/`, `/napa/hydrafacial/`, and `/napa/hyperhidrosis/` all return HTTP 200 on the exact preview commit.
 - [ ] `/blog/botox-cost-napa` and `/images/og-botox-cost-napa.png` both return HTTP 200 on the exact preview commit.
 - [ ] The Botox pricing article canonical is the public article URL, and its Open Graph/X image resolves on the public domain.
