@@ -22,9 +22,13 @@ export function TreatmentServicePage({ service }: TreatmentServicePageProps) {
           ? "/vacaville/botox"
           : service.slug === "dermal-fillers"
             ? "/vacaville/filler"
+            : service.slug === "laser-treatments"
+              ? "/vacaville/laser"
             : "/locations/vacaville",
       detailsLabel:
-        service.slug === "botox" || service.slug === "dermal-fillers"
+        service.slug === "botox" ||
+        service.slug === "dermal-fillers" ||
+        service.slug === "laser-treatments"
           ? "View Vacaville pricing & visit guide"
           : "View Vacaville clinic details",
     },

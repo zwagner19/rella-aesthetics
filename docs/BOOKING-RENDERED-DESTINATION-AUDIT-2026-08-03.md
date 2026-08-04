@@ -18,6 +18,7 @@ Checked against the live Boulevard booking application in the in-app browser on 
 | Vacaville `/cart/menu/Peels` deep link | `#/not-found`; “things have moved” | Rejected; not shipped |
 | Location-pinned Napa `/cart/menu` | Live `Menu` screen | Used for generic Napa booking; repeat with a clean and returning browser at launch |
 | Location-pinned Vacaville `/cart/menu` | Live `Menu` screen | Used for generic Vacaville booking; repeat with a clean and returning browser at launch |
+| Vacaville Initial Laser Consult | Heading `Initial Laser Consult`; `Select a professional` | Kept; removes a menu step while honoring the live IPL consult requirement |
 | Napa Signature HydraFacial service | Heading `Signature Hydrafacial`; `Select a professional` | Kept |
 | Napa dermal-filler service | Heading `Dermal Fillers`; `Select a professional` | Kept |
 | Napa Laser category | Live `Laser` menu | Kept |
@@ -32,6 +33,7 @@ Boulevard retains active booking/cart state in a returning browser. During the a
 - Location-level Boulevard links must carry a `path` parameter.
 - Route tests require both clinic menus to use `/cart/menu`.
 - A regression test pins Vacaville chemical peels to the clinic menu and forbids the broken `Peels` deep link.
+- A regression test pins explicit Vacaville laser intent to the rendered Initial Laser Consult and forbids Napa or generic routing.
 - The external link checker now fails any rendered public Boulevard URL that omits `path`.
 - The link checker states its limit explicitly: redirect/HTTP success does not prove that the client-rendered booking screen works.
 - The production launch gate requires a real-browser check of every distinct external booking destination on the exact deployment.

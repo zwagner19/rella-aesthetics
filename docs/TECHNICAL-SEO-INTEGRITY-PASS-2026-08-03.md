@@ -6,10 +6,10 @@ Every indexable sitemap page now has one H1, a unique title, an exact canonical 
 
 The exact optimized preview passed:
 
-- 30 indexable sitemap pages;
-- 40 unique internal destinations;
+- 31 indexable sitemap pages;
+- 41 unique internal destinations;
 - 13 distinct social image URLs, all returning an image response;
-- 36 structured-data blocks, all valid JSON;
+- 39 structured-data blocks, all valid JSON;
 - no duplicate page titles;
 - no duplicate canonicals;
 - no sitemap page marked `noindex`;
@@ -66,12 +66,12 @@ This is a technical integrity gate, not a guarantee of ranking position. Search 
 
 ## Verification
 
-- 294 automated tests passed across 25 files.
+- 301 automated tests passed across 26 files.
 - Full ESLint pass completed with no findings.
 - TypeScript completed with no errors.
-- Next.js 16.2.12 optimized build completed and generated 41 routes including the two metadata-image endpoints, preserved giveaway record, and KML endpoint.
-- Sitemap regenerated with 30 indexable pages; the booking chooser and both media endpoints remain excluded.
-- Internal link crawl passed across 30 pages and 40 unique destinations.
-- Booking crawl passed across 11 unique external destinations.
-- SEO integrity crawl passed across all 30 indexable pages.
+- Next.js 16.2.12 optimized build completed and generated 42 routes including the two metadata-image endpoints, preserved giveaway record, and KML endpoint.
+- Sitemap regenerated with 31 indexable pages; the booking chooser, preserved noindex archive, KML, and both media endpoints remain excluded.
+- Internal link crawl passed across 31 pages and 41 unique destinations.
+- Booking crawl passed across 12 unique external destinations.
+- SEO integrity crawl passed across all 31 indexable pages.
 - The 1200 × 630 share card passed visual review.

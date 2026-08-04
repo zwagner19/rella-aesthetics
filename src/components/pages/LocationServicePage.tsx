@@ -23,9 +23,9 @@ const popularServices = [
     description: "Vacaville-specific pricing, treatment-plan factors, and the location-pinned booking path.",
   },
   {
-    href: "/services/laser-treatments",
+    href: "/vacaville/laser",
     title: "Laser Treatments",
-    description: "Explore IPL, resurfacing, hair removal, and vascular treatment options.",
+    description: "Compare verified laser options, current full-face pricing, and the initial-consult path.",
   },
   {
     href: "/services/weight-loss",

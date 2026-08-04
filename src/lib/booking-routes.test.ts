@@ -59,6 +59,18 @@ describe("resolveBookingHref — Vacaville never reaches Napa Tox", () => {
       expect(href).not.toContain("book.experiencerella.com");
     });
   }
+
+  it("routes Vacaville laser intent to the rendered Initial Laser Consult", () => {
+    const href = resolveBookingHref({
+      location: "vacaville",
+      service: "laser-treatments",
+    });
+
+    expect(href).toContain("s_1328674e-c793-4b3c-833e-9a3827c5769b");
+    expect(href).toContain("locationId=0f146f87-364e-4dfd-b938-61ba49528820");
+    expect(href).not.toContain("91eba843-57fb-49e9-8505-431d501ffec7");
+    expect(href).not.toContain("book.experiencerella.com");
+  });
 });
 
 describe("resolveBookingHref — generic (no location) never silently Napa Tox", () => {

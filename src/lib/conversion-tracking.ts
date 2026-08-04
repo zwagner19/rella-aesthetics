@@ -143,6 +143,17 @@ export function resolveMobileBookingDestination(
     };
   }
 
+  if (currentPath === "/vacaville/laser") {
+    return {
+      href: resolveBookingHref({
+        location: "vacaville",
+        service: "laser-treatments",
+      }),
+      label: "Book Laser Consult",
+      cta: "service-booking",
+    };
+  }
+
   if (currentPath === "/services/weight-loss") {
     return {
       href: "#consultation-options",

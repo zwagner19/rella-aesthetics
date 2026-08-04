@@ -120,4 +120,13 @@ describe("mobile booking bar routing", () => {
       cta: "service-booking",
     });
   });
+
+  it("keeps the Vacaville laser page on the rendered consult path", () => {
+    const booking = resolveMobileBookingDestination("/vacaville/laser");
+
+    expect(booking.label).toBe("Book Laser Consult");
+    expect(booking.cta).toBe("service-booking");
+    expect(booking.href).toContain("s_1328674e-c793-4b3c-833e-9a3827c5769b");
+    expect(booking.href).toContain("locationId=0f146f87-364e-4dfd-b938-61ba49528820");
+  });
 });

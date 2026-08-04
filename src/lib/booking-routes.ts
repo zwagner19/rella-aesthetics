@@ -61,6 +61,9 @@ export function resolveWeightLossConsultHref(location: BookingLocation): string 
 const deepLink = (menuPath: string) =>
   `${WIDGET_BASE}?path=${encodeURIComponent(`/cart/menu/${menuPath}`)}&locationId=${NAPA_LOCATION_ID}&visitType=SELF_VISIT`;
 
+const vacavilleDeepLink = (menuPath: string) =>
+  `${WIDGET_BASE}?path=${encodeURIComponent(`/cart/menu/${menuPath}`)}&locationId=${VACAVILLE_LOCATION_ID}&visitType=SELF_VISIT`;
+
 /**
  * VERIFIED Boulevard service deep links, by canonical service slug — Napa menu,
  * with the Napa locationId pinned (a service path alone is not sufficient). These
@@ -77,6 +80,18 @@ const VERIFIED_NAPA_SERVICE_DEEPLINKS: Readonly<Record<string, string>> = {
   // routing a sweating concern into the standard cosmetic-tox cart.
   hyperhidrosis: deepLink("Injectables/s_14029fc9-a8d2-441e-99de-52ca98cd3ae8"),
   // botox/tox intentionally NOT here — Napa Tox routes to the canonical app.
+};
+
+/**
+ * Rendered against the live Vacaville menu on 2026-08-03. The laser service
+ * explicitly requires the Initial Laser Consult before IPL, so the city page
+ * can remove a menu-selection step without guessing a treatment.
+ */
+const VERIFIED_VACAVILLE_SERVICE_DEEPLINKS: Readonly<Record<string, string>> = {
+  "laser-treatments": vacavilleDeepLink(
+    "Laser/s_1328674e-c793-4b3c-833e-9a3827c5769b",
+  ),
+  laser: vacavilleDeepLink("Laser/s_1328674e-c793-4b3c-833e-9a3827c5769b"),
 };
 
 export type BookingLocation = "napa" | "vacaville";
@@ -110,8 +125,14 @@ export function resolveBookingHref(intent: BookingIntent = {}): string {
     return resolveWeightLossConsultHref(intent.location);
   }
 
-  // Vacaville: always the Vacaville widget. No service ever escalates to Napa.
-  if (intent.location === "vacaville") return BOULEVARD_WIDGET_VACAVILLE;
+  // Vacaville: use only rendered, location-pinned paths; otherwise keep the
+  // verified clinic menu fallback. No service ever escalates to Napa.
+  if (intent.location === "vacaville") {
+    if (svc && VERIFIED_VACAVILLE_SERVICE_DEEPLINKS[svc]) {
+      return VERIFIED_VACAVILLE_SERVICE_DEEPLINKS[svc];
+    }
+    return BOULEVARD_WIDGET_VACAVILLE;
+  }
 
   if (intent.location === "napa") {
     if (TOX_SLUGS.has(svc)) return CANONICAL_NAPA_TOX;
