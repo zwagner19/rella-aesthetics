@@ -51,9 +51,11 @@ describe("homepage and catalog claim integrity", () => {
   });
 });
 
-describe("education fallback integrity", () => {
-  it("routes to real verified guides instead of nonexistent placeholder articles", async () => {
+describe("education library integrity", () => {
+  it("publishes a real local-search article and preserves verified service guides", async () => {
     const html = renderToStaticMarkup(await BlogPage());
+    expect(html).toContain('href="/blog/botox-cost-napa"');
+    expect(html).toContain("Botox in Napa: 2026 Pricing");
     expect(html).toContain('href="/services/botox"');
     expect(html).toContain('href="/services/weight-loss"');
     expect(html).toContain('href="/services/hydrafacial"');

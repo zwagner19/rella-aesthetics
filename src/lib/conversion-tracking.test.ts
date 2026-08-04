@@ -8,6 +8,7 @@ import {
   BOULEVARD_WIDGET_GENERIC,
   BOULEVARD_WIDGET_NAPA,
   BOULEVARD_WIDGET_VACAVILLE,
+  CANONICAL_NAPA_TOX,
 } from "./booking-routes";
 
 describe("conversion intent classification", () => {
@@ -22,6 +23,7 @@ describe("conversion intent classification", () => {
     expect(
       classifyConversionHref("#consultation-options", "booking-flow-start"),
     ).toBe("booking_flow_start");
+    expect(classifyConversionHref(CANONICAL_NAPA_TOX)).toBe("booking_intent");
   });
 
   it("measures direct calls, email, and contact without counting ordinary navigation", () => {
@@ -71,5 +73,13 @@ describe("mobile booking bar routing", () => {
     expect(resolveMobileBookingDestination("/services/iv-hydration").label).toBe(
       "Book IV Hydration",
     );
+  });
+
+  it("turns the Napa Botox pricing article into a Napa-specific booking path", () => {
+    expect(resolveMobileBookingDestination("/blog/botox-cost-napa")).toEqual({
+      href: CANONICAL_NAPA_TOX,
+      label: "Book Napa Botox",
+      cta: "service-booking",
+    });
   });
 });

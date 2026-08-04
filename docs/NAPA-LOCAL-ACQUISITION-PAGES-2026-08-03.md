@@ -138,13 +138,16 @@ The same August 3 log records legacy Vacaville and Napa weight-loss campaigns en
 
 ## Next revenue layer
 
-Once the billing and preview gates are closed, the highest-value next work is not another design pass. It is measurement and conversion operations:
+The first supporting local-education asset is now implemented at `/blog/botox-cost-napa`; see `docs/LOCAL-SEO-EDITORIAL-LAUNCH-2026-08-03.md`.
+
+Once the billing and preview gates are closed, the highest-value next work is measurement and conversion operations:
 
 - connect source → booking → arrival → collected revenue at an aggregate campaign/service level;
 - audit answer rate, missed-call text-back, and response time;
 - reconcile HighLevel website leads against accepted CRM records;
 - rebuild paid-search decisions around arrived-patient CAC rather than booking-button clicks;
-- then expand the proven service/location pages into supporting local education content.
+- measure the new Botox pricing guide against qualified calls, booked appointments, arrivals, and collected revenue;
+- then choose the next supporting local article from evidence rather than publishing a thin content batch.
 
 ## Source basis
 

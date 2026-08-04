@@ -18,6 +18,7 @@ export interface ConversionMeasurement {
 }
 
 const BOOKING_HOSTS = new Set([
+  "book.experiencerella.com",
   "book.rellaweightloss.com",
   "dashboard.boulevard.io",
   "rella-booking.vercel.app",
@@ -108,6 +109,14 @@ export function resolveMobileBookingDestination(
   pathname: string | null,
 ): MobileBookingDestination {
   const currentPath = pathname ?? "";
+
+  if (currentPath === "/blog/botox-cost-napa") {
+    return {
+      href: resolveBookingHref({ location: "napa", service: "botox" }),
+      label: "Book Napa Botox",
+      cta: "service-booking",
+    };
+  }
 
   if (currentPath === "/services/weight-loss") {
     return {

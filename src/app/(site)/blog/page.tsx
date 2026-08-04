@@ -6,11 +6,12 @@ import { urlFor } from "@/sanity/image";
 import { SectionHeader } from "@/components/ui/SectionHeader";
 import { BlogCard } from "@/components/blog/BlogCard";
 import { BlogSidebar } from "@/components/blog/BlogSidebar";
+import { LOCAL_EDITORIAL_POSTS } from "@/lib/local-editorial-posts";
 
 export const metadata: Metadata = {
   title: "Education & Blog",
   description:
-    "Expert insights on Botox, fillers, skin care, weight loss, and aesthetic treatments from the Rella Aesthetics team. Stay informed and empowered.",
+    "Transparent local guides to Botox pricing, fillers, skin care, laser treatments, and medical weight management from Rella Aesthetics in Napa and Vacaville.",
   alternates: { canonical: "/blog" },
 };
 
@@ -29,6 +30,16 @@ interface SanityCategory {
   _id: string;
   name: string;
   slug: { current: string };
+}
+
+interface BlogCardRecord {
+  id: string;
+  title: string;
+  slug: string;
+  publishedAt: string;
+  excerpt: string;
+  category: string;
+  image?: string;
 }
 
 const educationPaths = [
@@ -58,7 +69,6 @@ const educationPaths = [
 export default async function BlogPage() {
   let posts: SanityPost[] = [];
   let categories: SanityCategory[] = [];
-  let usingSanity = false;
 
   if (client) {
     try {
@@ -66,11 +76,54 @@ export default async function BlogPage() {
         client.fetch<SanityPost[]>(allBlogPostsQuery),
         client.fetch<SanityCategory[]>(allCategoriesQuery),
       ]);
-      usingSanity = true;
     } catch {
-      usingSanity = false;
+      posts = [];
+      categories = [];
     }
   }
+
+  const localCards: BlogCardRecord[] = LOCAL_EDITORIAL_POSTS.map((post) => ({
+    id: `local-${post.slug}`,
+    title: post.title,
+    slug: post.slug,
+    publishedAt: post.publishedAt,
+    excerpt: post.excerpt,
+    category: post.category,
+    image: post.coverImage,
+  }));
+
+  const localSlugs = new Set(localCards.map((post) => post.slug));
+  const sanityCards: BlogCardRecord[] = posts
+    .filter((post) => !localSlugs.has(post.slug.current))
+    .map((post) => ({
+      id: post._id,
+      title: post.title,
+      slug: post.slug.current,
+      publishedAt: post.publishedAt,
+      excerpt: post.excerpt,
+      category: post.categoryName ?? "Education",
+      image: post.coverImage
+        ? urlFor(post.coverImage).width(600).height(340).url()
+        : undefined,
+    }));
+
+  const publishedPosts = [...localCards, ...sanityCards].sort(
+    (a, b) =>
+      new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime(),
+  );
+
+  const categoryMap = new Map<string, { name: string; slug: string }>();
+  for (const category of categories) {
+    categoryMap.set(category.slug.current, {
+      name: category.name,
+      slug: category.slug.current,
+    });
+  }
+  for (const post of LOCAL_EDITORIAL_POSTS) {
+    const slug = post.category.toLowerCase().replace(/[^a-z0-9]+/g, "-");
+    categoryMap.set(slug, { name: post.category, slug });
+  }
+  const publishedCategories = [...categoryMap.values()];
 
   return (
     <>
@@ -84,7 +137,7 @@ export default async function BlogPage() {
             Insights &amp; Guides
           </h1>
           <p className="text-lg font-light text-silver max-w-[560px] leading-relaxed">
-            Expert knowledge to help you make informed decisions about your aesthetic journey.
+            Local facts, transparent pricing, and practical questions to help you make a more informed treatment decision.
           </p>
         </div>
       </section>
@@ -92,71 +145,66 @@ export default async function BlogPage() {
       {/* Posts */}
       <section className="py-20">
         <div className="mx-auto max-w-[1200px] px-6 md:px-8 lg:px-12">
-          {usingSanity && posts.length > 0 ? (
-            <div className="grid grid-cols-1 lg:grid-cols-[1fr_300px] gap-12">
-              <div>
-                <SectionHeader eyebrow="Latest Articles" title="From the Blog" />
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  {posts.map((post) => (
-                    <BlogCard
-                      key={post._id}
-                      slug={post.slug.current}
-                      title={post.title}
-                      excerpt={post.excerpt}
-                      date={post.publishedAt}
-                      category={post.categoryName ?? "Uncategorized"}
-                      image={
-                        post.coverImage
-                          ? urlFor(post.coverImage).width(600).height(340).url()
-                          : undefined
-                      }
-                    />
-                  ))}
-                </div>
-              </div>
-              <BlogSidebar
-                categories={categories.map((c) => ({
-                  name: c.name,
-                  slug: c.slug.current,
-                }))}
-                recentPosts={posts.slice(0, 5).map((p) => ({
-                  slug: p.slug.current,
-                  title: p.title,
-                  date: p.publishedAt,
-                }))}
-              />
-            </div>
-          ) : (
+          <div className="grid grid-cols-1 gap-12 lg:grid-cols-[1fr_300px]">
             <div>
               <SectionHeader
-                eyebrow="Start Here"
-                title="Useful guidance while the education library grows"
-                description="Rella's verified service guides are available now. New articles will appear here only after they are reviewed and published through the content system."
+                eyebrow="Latest Article"
+                title="Local answers that lead somewhere useful"
+                description="Each article is built from Rella's current public facts and connects to the relevant clinic, service, and booking path."
               />
-              <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
-                {educationPaths.map((path) => (
-                  <Link
-                    key={path.href}
-                    href={path.href}
-                    className="group flex min-h-[260px] flex-col rounded-[1.25rem] border border-silver-pale bg-white p-7 transition-all hover:-translate-y-1 hover:border-rose-light hover:shadow-md"
-                  >
-                    <p className="mb-8 text-[0.625rem] font-bold uppercase tracking-[0.2em] text-rose-dark">
-                      {path.category}
-                    </p>
-                    <h2 className="mb-3 text-xl font-medium leading-snug text-ink">
-                      {path.title}
-                    </h2>
-                    <p className="mb-6 flex-1 text-sm leading-relaxed text-silver">
-                      {path.description}
-                    </p>
-                    <span className="text-sm font-medium text-rose-text transition-colors group-hover:text-rose-dark">
-                      Read the verified guide →
-                    </span>
-                  </Link>
+              <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+                {publishedPosts.map((post) => (
+                  <BlogCard
+                    key={post.id}
+                    slug={post.slug}
+                    title={post.title}
+                    excerpt={post.excerpt}
+                    date={post.publishedAt}
+                    category={post.category}
+                    image={post.image}
+                  />
                 ))}
               </div>
             </div>
-          )}
+            <BlogSidebar
+              categories={publishedCategories}
+              recentPosts={publishedPosts.slice(0, 5).map((post) => ({
+                slug: post.slug,
+                title: post.title,
+                date: post.publishedAt,
+              }))}
+            />
+          </div>
+
+          <div className="mt-20 border-t border-silver-pale pt-16">
+            <SectionHeader
+              eyebrow="Verified Starting Points"
+              title="Go straight to the treatment guide"
+              description="Prefer the essentials? These service guides use the same current pricing and booking rules."
+            />
+            <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
+              {educationPaths.map((path) => (
+                <Link
+                  key={path.href}
+                  href={path.href}
+                  className="group flex min-h-[260px] flex-col rounded-[1.25rem] border border-silver-pale bg-white p-7 transition-all hover:-translate-y-1 hover:border-rose-light hover:shadow-md"
+                >
+                  <p className="mb-8 text-[0.625rem] font-bold uppercase tracking-[0.2em] text-rose-dark">
+                    {path.category}
+                  </p>
+                  <h2 className="mb-3 text-xl font-medium leading-snug text-ink">
+                    {path.title}
+                  </h2>
+                  <p className="mb-6 flex-1 text-sm leading-relaxed text-silver">
+                    {path.description}
+                  </p>
+                  <span className="text-sm font-medium text-rose-text transition-colors group-hover:text-rose-dark">
+                    Read the verified guide →
+                  </span>
+                </Link>
+              ))}
+            </div>
+          </div>
         </div>
       </section>
     </>

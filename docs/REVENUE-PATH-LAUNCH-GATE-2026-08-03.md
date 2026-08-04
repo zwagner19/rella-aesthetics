@@ -47,6 +47,9 @@ Use a unique label such as `Rella Site Test 20260803-2215`; do not use a real pa
 - [ ] Global booking opens the intended Rella Boulevard business.
 - [ ] Napa location booking reaches the verified Napa destination.
 - [ ] `/napa/`, `/napa/botox/`, `/napa/filler/`, `/napa/laser/`, `/napa/hydrafacial/`, and `/napa/hyperhidrosis/` all return HTTP 200 on the exact preview commit.
+- [ ] `/blog/botox-cost-napa` and `/images/og-botox-cost-napa.png` both return HTTP 200 on the exact preview commit.
+- [ ] The Botox pricing article canonical is the public article URL, and its Open Graph/X image resolves on the public domain.
+- [ ] Every Book action on the Botox pricing article reaches the hardened Napa Botox destination.
 - [ ] Each Napa service page keeps every Book action on its one approved service/location destination.
 - [ ] Each Napa booking click emits one `booking_start` signal with the correct service label and no personal or health information.
 - [ ] Vacaville location booking reaches the verified Vacaville destination.
@@ -62,6 +65,7 @@ Source verification note (2026-08-03): the live Rella Contact page matches `707.
 - [ ] The credential reads `American Board of Obesity Medicine diplomate`.
 - [ ] The authentic Dr. Wagner portrait renders clearly on desktop and mobile.
 - [ ] Public prices match the approved July 24, 2026 pricing canon or a newer explicitly approved source.
+- [ ] The Botox pricing article's membership commitment, deposit boundary, arithmetic disclaimer, visible FAQs, and structured data match the approved public facts.
 - [ ] Napa and Vacaville addresses, phone, and published hours are confirmed current.
 - [ ] Weight-management claims, medication wording, pricing, labs, monitoring cadence, and virtual-care boundaries have final clinical approval.
 
