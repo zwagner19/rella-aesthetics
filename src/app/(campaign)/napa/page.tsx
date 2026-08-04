@@ -8,12 +8,12 @@ const CANONICAL = "https://experiencerella.com/napa";
 export const metadata: Metadata = {
   title: "Napa Med Spa — Physician-Owned",
   description:
-    "Explore physician-owned aesthetic and wellness care at Rella Aesthetics Napa, 1541 3rd St, with direct booking for Botox, filler, laser, HydraFacial, and sweating care.",
+    "Explore physician-owned aesthetic and wellness care at Rella Aesthetics Napa, with focused paths for Botox, filler, laser, facials, HydraFacial, and sweating care.",
   alternates: { canonical: CANONICAL },
   openGraph: {
     title: "Rella Aesthetics — Napa",
     description:
-      "Physician-owned aesthetic and wellness care with direct booking paths and current public pricing in downtown Napa.",
+      "Physician-owned aesthetic and wellness care with focused local service and booking paths in downtown Napa.",
     url: CANONICAL,
     type: "website",
     images: [DEFAULT_SOCIAL_IMAGE],

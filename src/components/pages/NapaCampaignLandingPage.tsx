@@ -578,7 +578,7 @@ export function NapaCampaignHub() {
               style={{ marginTop: 16, maxWidth: "66ch" }}
             >
               Each page below keeps the Napa location, service intent, current
-              pricing, and booking destination aligned.
+              information, and booking destination aligned.
             </p>
             <div className="nb-grid nb-grid--2" style={{ marginTop: 24 }}>
               <a className="nb-card nb-service-card" href="/napa/botox">
@@ -586,6 +586,16 @@ export function NapaCampaignHub() {
                 <strong>Botox &amp; Dysport</strong>
                 <span className="nb-body">
                   Botox $18/unit · Dysport $6/unit · 30-minute new-patient visit
+                </span>
+                <span className="nb-service-arrow" aria-hidden="true">
+                  Explore →
+                </span>
+              </a>
+              <a className="nb-card nb-service-card" href="/napa/facials">
+                <span className="nb-kicker">Skin care</span>
+                <strong>Professional Facials</strong>
+                <span className="nb-body">
+                  Initial Skin Health Consult · current options reviewed first
                 </span>
                 <span className="nb-service-arrow" aria-hidden="true">
                   Explore →

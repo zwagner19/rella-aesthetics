@@ -35,7 +35,7 @@ The local page names the first five paths and routes HydraFacial comparison traf
 - Booking handoff: Napa location ID plus `/cart/menu/Facials/<Initial Skin Health Consult ID>`
 - Mobile action: `Book Skin Consult`, using the same verified destination
 
-The Napa clinic page now links to the local guide. The shared facial guide sends its Napa details action to this page while preserving the explicit Napa/Vacaville clinic-choice booking flow.
+The Napa campaign hub and clinic page now link to the local guide. The shared facial guide sends its Napa details action to this page while preserving the explicit Napa/Vacaville clinic-choice booking flow.
 
 ## Content, capacity, and ad boundaries
 

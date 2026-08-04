@@ -143,11 +143,12 @@ describe("Napa campaign hub", () => {
     expect(html).toContain('"@type":["MedicalBusiness","DaySpa"]');
   });
 
-  it("links all five high-intent Napa service pages", () => {
+  it("links all six high-intent Napa service pages", () => {
     for (const href of [
       "/napa/botox",
       "/napa/filler",
       "/napa/laser",
+      "/napa/facials",
       "/napa/hydrafacial",
       "/napa/hyperhidrosis",
     ]) {
