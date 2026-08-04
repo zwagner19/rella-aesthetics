@@ -27,6 +27,27 @@ if (plan.accountControls.conversionRoles.bookingCtaClick !== "SECONDARY") {
   fail("A booking CTA click must remain a secondary observation signal.");
 }
 
+const liveSnapshot = plan.liveReadOnlyAccountSnapshot;
+const observedEnabledBudget = liveSnapshot.enabledCampaigns.reduce(
+  (total, campaign) => total + campaign.dailyBudgetUsd,
+  0,
+);
+if (liveSnapshot.enabledCampaignCount !== liveSnapshot.enabledCampaigns.length) {
+  fail("The live enabled-campaign count does not match the captured campaign list.");
+}
+if (observedEnabledBudget !== liveSnapshot.enabledAverageDailyBudgetUsd) {
+  fail("The live enabled daily budget does not match the captured campaign sum.");
+}
+if (liveSnapshot.enabledAverageDailyBudgetUsd !== 207) {
+  fail("The August 4 live account snapshot must preserve the observed $207/day risk state.");
+}
+if (liveSnapshot.controlFailuresObserved.spendingAdsFinalUrlSuffix !== "BLANK") {
+  fail("The August 4 live snapshot must preserve the blank tracking-suffix finding.");
+}
+if (!liveSnapshot.controlFailuresObserved.bookingClickLocationMismatchObserved) {
+  fail("The August 4 live snapshot must preserve the booking-click location mismatch.");
+}
+
 const forbiddenAudiences = new Set([
   "CUSTOMER_MATCH",
   "YOUR_DATA_SEGMENTS",
@@ -132,5 +153,6 @@ if (failures.length) {
 console.log(
   `Paid-search recovery plan passed: ${plan.campaigns.length} campaigns remain paused, ` +
     `$${proposedDailyTotal}/day proposed after gates, exact/phrase Search only, ` +
-    "booking clicks secondary, and RSA limits/claims valid.",
+    `booking clicks secondary, RSA limits/claims valid, and the live $${observedEnabledBudget}/day ` +
+    "enabled-account risk is preserved for reconciliation.",
 );

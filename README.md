@@ -89,6 +89,8 @@ Start with [`docs/OVERNIGHT-EXECUTIVE-HANDOFF-2026-08-03.md`](docs/OVERNIGHT-EXE
 
 Use [`docs/PAID-ACQUISITION-CONTROL-PACK-2026-08-04.md`](docs/PAID-ACQUISITION-CONTROL-PACK-2026-08-04.md) before any Google Ads billing, status, budget, keyword, goal, audience, or final-URL change. Its machine-readable campaign plan must pass `npm run check:paid-search`, but a passing check is not authorization to activate ads.
 
+The current live risk evidence is in [`docs/GOOGLE-ADS-LIVE-READONLY-AUDIT-2026-08-04.md`](docs/GOOGLE-ADS-LIVE-READONLY-AUDIT-2026-08-04.md). It records seven enabled campaigns at `$207/day`, recent spend, conversion-routing and tracking failures, and the exact recommendation awaiting owner authorization.
+
 1. Build and test locally.
 2. Create a preview deployment.
 3. Complete every item in [`docs/REVENUE-PATH-LAUNCH-GATE-2026-08-03.md`](docs/REVENUE-PATH-LAUNCH-GATE-2026-08-03.md).

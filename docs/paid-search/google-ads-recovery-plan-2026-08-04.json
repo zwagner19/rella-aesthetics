@@ -15,6 +15,87 @@
     "paymentResolutionEmailFoundAfterWarning": false,
     "warning": "This is a historical control snapshot, not proof of the current Google Ads UI state. Verify billing, campaign status, budgets, and goals in the account before any change."
   },
+  "liveReadOnlyAccountSnapshot": {
+    "queriedAt": "2026-08-04T02:22:11-07:00",
+    "source": "Connected Google Ads reporting connector",
+    "billingUiVerified": false,
+    "billingUiBlocker": "The Google Ads billing page requires an interactive sign-in. No account login, payment, or billing action was authorized or performed.",
+    "enabledCampaignCount": 7,
+    "enabledAverageDailyBudgetUsd": 207,
+    "googleMostCampaignDailySpendingLimitUsd": 414,
+    "googleMonthlySpendingLimitUsd": 6292.8,
+    "enabledCampaigns": [
+      {
+        "id": "24028424075",
+        "name": "Rella | Napa | Brand | Search (Claude build)",
+        "dailyBudgetUsd": 5,
+        "campaignType": "SEARCH",
+        "locationOption": "PRESENCE"
+      },
+      {
+        "id": "24028426046",
+        "name": "Rella | Napa | Botox-Dysport | Search (Claude build)",
+        "dailyBudgetUsd": 40,
+        "campaignType": "SEARCH",
+        "locationOption": "PRESENCE"
+      },
+      {
+        "id": "24023435748",
+        "name": "Rella | Napa | Laser-Pigmentation | Search (Claude build)",
+        "dailyBudgetUsd": 25,
+        "campaignType": "SEARCH",
+        "locationOption": "PRESENCE"
+      },
+      {
+        "id": "24028432208",
+        "name": "Rella | Napa | Filler | Search (Claude build)",
+        "dailyBudgetUsd": 12,
+        "campaignType": "SEARCH",
+        "locationOption": "PRESENCE"
+      },
+      {
+        "id": "22574926787",
+        "name": "Rella | Vacaville | Medical Weight Loss | Search",
+        "dailyBudgetUsd": 75,
+        "campaignType": "SEARCH",
+        "locationOption": "PRESENCE"
+      },
+      {
+        "id": "21910161581",
+        "name": "Rella | Napa | Medical Weight Loss | Search",
+        "dailyBudgetUsd": 40,
+        "campaignType": "SEARCH",
+        "locationOption": "PRESENCE"
+      },
+      {
+        "id": "21094335050",
+        "name": "Rella Aesthetics | Vacaville | Branded Campaign",
+        "dailyBudgetUsd": 10,
+        "campaignType": "SEARCH",
+        "locationOption": "PRESENCE_OR_INTEREST"
+      }
+    ],
+    "observedPerformance": {
+      "windowStart": "2026-08-03",
+      "windowEnd": "2026-08-04_PARTIAL",
+      "currency": "USD",
+      "spend": 182.0691,
+      "clicks": 31,
+      "googleAdsConversions": 1,
+      "conversionAction": "Napa - Booking Click (Boulevard)",
+      "creditedCampaign": "Rella Aesthetics | Vacaville | Branded Campaign",
+      "completedAppointmentsProven": 0,
+      "arrivedPatientsProven": 0,
+      "collectedRevenueProven": 0
+    },
+    "controlFailuresObserved": {
+      "spendingAdsFinalUrlSuffix": "BLANK",
+      "broadMatchWeightLossSpendObserved": true,
+      "bookingClickLocationMismatchObserved": true,
+      "vacavilleBrandPresenceOrInterestObserved": true,
+      "restrictedDrugKeywordCertificationVerified": false
+    }
+  },
   "accountControls": {
     "network": "GOOGLE_SEARCH_ONLY",
     "searchPartners": false,
@@ -62,7 +143,9 @@
     "Owner confirms whether both weight-loss campaigns and the HydraFacial pause are intentional.",
     "Exact hosted-preview commit passes CRM, booking, analytics, mobile, legal, and clinical acceptance.",
     "Every campaign final URL resolves to the intended city and service on the approved public commit.",
+    "Every spending ad uses the approved privacy-safe final URL suffix; the live August 4 read found it blank.",
     "Booking CTA click is secondary and cannot drive bidding.",
+    "The Napa booking-click action cannot be credited as a Vacaville brand conversion and is removed from bidding until location-safe measurement is proved.",
     "At least one synthetic or approved test proves completed-booking measurement without patient or health data in analytics.",
     "Current provider capacity, public hours, staffed phone hours, and offer/pricing inventory are confirmed.",
     "Owner records a weekly cash-at-risk limit and an allowable cost per arrived patient by service."

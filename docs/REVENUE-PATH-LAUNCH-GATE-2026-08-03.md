@@ -122,6 +122,10 @@ Source verification note (2026-08-03): the approved July 15 Signature Menu and M
 
 - [ ] Google Ads past-due balance and suspension risk are confirmed resolved before any campaign expansion.
 - [ ] Enabled Napa, Vacaville, and weight-loss campaign states are reconciled against the owner's intended budget plan.
+- [ ] The August 4 live `$207/day` enabled state is explicitly approved or reduced; no nonbrand campaign remains enabled merely because it was already running.
+- [ ] `Napa - Booking Click (Boulevard)` is absent from the Vacaville campaign's bidding conversion column and booking-button clicks are secondary.
+- [ ] Every spending ad uses the approved privacy-safe Final URL suffix, and Vacaville brand uses presence-only location targeting.
+- [ ] Restricted-drug-term certification is verified before any medication keyword, including tirzepatide or semaglutide, serves.
 - [ ] HydraFacial paid traffic remains paused until the owner confirms current provider capacity, acceptable appointment lead time, and the intended campaign budget.
 - [ ] The preview has explicit owner approval.
 - [ ] A rollback target is identified before promotion.

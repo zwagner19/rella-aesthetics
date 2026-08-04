@@ -8,7 +8,7 @@ The website itself is no longer the main risk. The remaining blockers are owner-
 
 No deployment, push, merge, DNS change, CRM mutation, patient-data access, ad/account change, billing action, campaign mutation, or public cutover was performed.
 
-The imported Google Ads record is now packaged into a recovery control plan. Its last authoritative snapshot showed `$499.23` in seven-day Napa spend, five booking-CTA click credits, no confirmed attributed appointment/arrival/revenue, a `$893.82` past-due warning, and an additional `$115/day` in enabled medical-weight-loss campaigns whose intent was not confirmed. The current Google Ads interface must verify or supersede every one of those facts. All six recovery campaign builds remain paused in the plan; no activation is authorized.
+The imported Google Ads record is now packaged into a recovery control plan and reconciled to a live read-only reporting connection. At approximately 02:22 PT on August 4, seven campaigns were enabled at `$207/day`: the four Napa build campaigns at `$82/day`, the two medical-weight-loss campaigns at `$115/day`, and the separate Vacaville brand campaign at `$10/day`. From August 3 through partial August 4, the account reported `$182.07` spend, `31` clicks, and one conversion—the `Napa - Booking Click (Boulevard)` action incorrectly credited to the Vacaville brand campaign. Spending ads had no Final URL suffix. Billing still requires an interactive account sign-in and is not verified. All six recovery builds remain paused in the proposed plan; no account mutation or activation is authorized.
 
 ## Current release evidence
 
@@ -27,6 +27,7 @@ The imported Google Ads record is now packaged into a recovery control plan. Its
 | SEO integrity | 13 social images and 54 JSON-LD blocks; all passed |
 | Live booking UI | Distinct city/service routes rendered in Boulevard without completing a form or appointment |
 | Paid-search plan | 6 campaign builds paused; `$82/day` proposed stage-one total; exact/phrase Search only; RSA and control check passed |
+| Live Google Ads risk | 7 campaigns enabled at `$207/day`; `$182.07` recent spend; booking-click location mismatch; blank tracking suffix; billing unverified |
 
 The optimized preview used for the final checks ran locally on port 3010 from the current runtime code. The full production gate still must be repeated on the approved hosted preview and again immediately after cutover.
 
@@ -87,6 +88,7 @@ Fast owner review packets:
 - `docs/NAPA-ENTITY-CONSOLIDATION-PASS-2026-08-04.md`
 - `docs/CONVERSION-ACCESSIBILITY-PASS-2026-08-04.md`
 - `docs/PAID-ACQUISITION-CONTROL-PACK-2026-08-04.md`
+- `docs/GOOGLE-ADS-LIVE-READONLY-AUDIT-2026-08-04.md`
 
 ## Recommended activation order
 

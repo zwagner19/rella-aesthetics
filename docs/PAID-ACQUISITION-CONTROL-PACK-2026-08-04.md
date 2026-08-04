@@ -8,6 +8,8 @@ The current record proves spend and booking-button activity, not appointments or
 
 No Google Ads setting, campaign, budget, billing method, CRM record, booking record, deployment, domain, or public website was changed while preparing this packet.
 
+An August 4 live read-only account audit now supersedes the imported campaign-state assumptions. See [`docs/GOOGLE-ADS-LIVE-READONLY-AUDIT-2026-08-04.md`](GOOGLE-ADS-LIVE-READONLY-AUDIT-2026-08-04.md).
+
 ## What the imported record establishes
 
 The figures below are a historical control snapshot from the imported Napa campaign records, last updated August 3, 2026. They are not a substitute for the current Google Ads interface.
@@ -19,9 +21,15 @@ The figures below are a historical control snapshot from the imported Napa campa
 | Billing warning | `$893.82` past due; suspension-risk notice received August 3 at 06:49 PT | Resolve in the account before any campaign decision |
 | Napa build campaign budgets | Brand `$5`, Botox/Dysport `$40`, laser `$25`, filler `$12` per day | `$82/day` recorded enabled exposure |
 | Separately enabled, intent unconfirmed | Vacaville medical weight loss `$75/day`; Napa medical weight loss `$40/day` | `$115/day` must be confirmed or paused deliberately |
-| Combined recorded exposure | `$197/day`, excluding the separate Vacaville brand campaign | Unacceptable to leave ambiguous while measurement is unproven |
+| Combined imported exposure | `$197/day`, excluding the separate Vacaville brand campaign | Historical snapshot only; superseded by the live read below |
 
 A connected-email search found the August 3 past-due warning and no later payment receipt or resolution notice. That is not proof the balance remains unpaid; the current Google Ads billing screen and payment method are the source of truth.
+
+### August 4 live read-only update
+
+The connected Google Ads account reported seven enabled campaigns totaling `$207/day`: the four Napa build campaigns at `$82/day`, the two medical-weight-loss campaigns at `$115/day`, and the separate Vacaville brand campaign at `$10/day`. From August 3 through partial August 4 it reported `$182.07` spend and `31` clicks. Its sole Google Ads conversion was the `Napa - Booking Click (Boulevard)` action credited to the Vacaville brand campaign—not a proven appointment. Spending ads had a blank Final URL suffix, the Napa weight-loss campaign spent through broad match on low-intent terms, and the Vacaville brand campaign used `Presence or interest` location targeting.
+
+The billing balance remains unverified because the Google Ads billing page requires interactive sign-in. Serving and reporting activity do not prove that the prior balance or suspension warning is resolved.
 
 For most Search campaigns, Google says the daily spending limit can be twice the average daily budget and the monthly spending limit is 30.4 times the average daily budget. On the recorded campaign configuration, the cash exposure is therefore:
 
@@ -29,7 +37,8 @@ For most Search campaigns, Google says the daily spending limit can be twice the
 | --- | ---: | ---: | ---: |
 | Napa build | `$82` | `$2,492.80` | `$164` |
 | Unconfirmed weight-loss campaigns | `$115` | `$3,496.00` | `$230` |
-| Combined | `$197` | `$5,988.80` | `$394` |
+| Separate Vacaville brand campaign | `$10` | `$304.00` | `$20` |
+| **Live enabled total** | **`$207`** | **`$6,292.80`** | **`$414`** |
 
 Source: [Google Ads spending limits](https://support.google.com/google-ads/answer/10486637). Actual account charges, credits, campaign types, and serving state must be checked in the account.
 
@@ -40,7 +49,8 @@ Record every answer before an account operator touches campaign status or budget
 | Decision | Owner answer | Required evidence |
 | --- | --- | --- |
 | Is the `$893.82` balance resolved and the account free of suspension warnings? |  | Current billing-screen capture and active payment method |
-| Should the Napa and Vacaville medical-weight-loss campaigns be enabled, paused, or retired? |  | Exact campaign names, current budgets, program facts, certification/policy state, and current city capacity |
+| May the five enabled nonbrand campaigns be paused immediately, leaving only `$15/day` across the two brand campaigns while controls are repaired? |  | Explicit owner authorization naming the five campaigns |
+| Should the Napa and Vacaville medical-weight-loss campaigns later be enabled, paused, or retired? |  | Exact campaign names, current budgets, program facts, certification/policy state, and current city capacity |
 | May the four stage-one Napa campaigns be prepared at a combined `$82/day`? |  | Explicit budget authorization; this packet does not grant it |
 | What is the maximum weekly cash at risk before an arrived-patient review? |  | Dollar amount approved by Dr. Wagner |
 | What is the allowable cost per arrived patient for Brand, Botox/Dysport, laser, and filler? |  | 90-day contribution margin and approved acquisition fraction for each service |
@@ -93,6 +103,8 @@ utm_source=google&utm_medium=cpc&utm_campaign={campaignid}&utm_adgroup={adgroupi
 
 Do not place a visitor's name, email, phone, message, chosen provider, treatment detail, or other health information in a URL, event parameter, audience, or analytics property.
 
+The August 4 live report found the Final URL suffix blank on every spending ad row. Treat adding the approved suffix as a release gate, not a cosmetic cleanup.
+
 ## Measurement hierarchy
 
 The conversion ladder is deliberately strict:
@@ -104,6 +116,8 @@ The conversion ladder is deliberately strict:
 5. Collected revenue — operating source of truth.
 
 Google Ads uses primary actions for bidding and secondary actions for observation. Source: [Google Ads conversion goals](https://support.google.com/google-ads/answer/10995103).
+
+The August 4 live report found `Napa - Booking Click (Boulevard)` in the `Conversions` column for the Vacaville brand campaign. Remove that location-mismatched click action from bidding and prove a correct city-specific completed-booking event before any conversion-based optimization.
 
 Do not upload patient-level offline conversions, hashed customer lists, or enhanced-conversion data until Dr. Wagner has approved the privacy/compliance design and the exact data fields. Appointment and revenue reconciliation may be performed in a restricted operating report without feeding protected or sensitive data back to ad platforms.
 
@@ -170,11 +184,14 @@ Pause affected traffic and investigate immediately when any of the following occ
 
 - billing failure, suspension warning, or an unknown enabled campaign/budget;
 - campaign status, network, location option, final URL, or conversion role differs from this approved plan;
+- a Napa conversion action is credited to Vacaville traffic or any booking-button click appears in the bidding conversion column;
+- a spending ad has a blank or unapproved tracking suffix;
 - booking-click credits cannot be reconciled to completed bookings, arrivals, and revenue;
 - the wrong city, service, professional path, or booking inventory renders;
 - a stale price, offer, schedule, membership term, or medical/outcome promise appears;
 - patient, contact, provider, treatment, or health information reaches analytics or advertising systems;
 - material spend accumulates on irrelevant search terms;
+- restricted-drug keywords serve before certification is verified;
 - missed calls, slow response, unavailable calendars, or unacceptable appointment lead time prevent the practice from serving demand;
 - cost per arrived patient or weekly cash exposure breaches the owner-approved limit.
 
