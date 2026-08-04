@@ -81,6 +81,8 @@ Do not place names, emails, phone numbers, messages, provider selections, or hea
 
 ## Release process
 
+Start with [`docs/OVERNIGHT-EXECUTIVE-HANDOFF-2026-08-03.md`](docs/OVERNIGHT-EXECUTIVE-HANDOFF-2026-08-03.md) for the current readiness decision, owner approvals, activation order, and operating priorities.
+
 1. Build and test locally.
 2. Create a preview deployment.
 3. Complete every item in [`docs/REVENUE-PATH-LAUNCH-GATE-2026-08-03.md`](docs/REVENUE-PATH-LAUNCH-GATE-2026-08-03.md).
