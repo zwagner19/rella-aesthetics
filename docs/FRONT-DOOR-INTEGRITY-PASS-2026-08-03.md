@@ -57,6 +57,7 @@ No placeholder date, fake article, or broken blog slug remains.
 - TypeScript completed with no errors.
 - Final Next.js 16.2.12 production build generated all 27 routes.
 - Sitemap regenerated successfully.
+- Release crawl passed across 21 sitemap pages and 29 unique internal destinations.
 - Desktop homepage first-screen review passed.
 - Mobile homepage first-screen review passed at 390 × 844 with no horizontal overflow and an operable quick-action bar.
 - Desktop full-page education fallback review passed; all three cards point to real service guides.

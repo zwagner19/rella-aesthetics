@@ -13,6 +13,7 @@ No paid campaign should point to the site until one real test inquiry is visible
 - [ ] `npm test` passes with no skipped revenue-path suite.
 - [ ] `npm run lint` passes.
 - [ ] `npm run build` passes and regenerates the sitemap.
+- [ ] `npm run check:links` passes against the exact preview deployment.
 - [ ] The preview commit matches the commit that was reviewed.
 
 ### 2. Contact-form delivery

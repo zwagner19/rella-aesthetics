@@ -18,9 +18,13 @@ Before sharing a release:
 npm test
 npm run lint
 npm run build
+npm run start
+# In another terminal:
+npm run check:links
 ```
 
 The production build also regenerates `public/sitemap.xml` through `next-sitemap`.
+`check:links` reads the generated sitemap from `http://localhost:3000` by default and fails if a public page or internal destination returns an error. Set `SITE_URL` to run the same read-only check against another local port or an approved preview.
 
 ## Environment configuration
 
