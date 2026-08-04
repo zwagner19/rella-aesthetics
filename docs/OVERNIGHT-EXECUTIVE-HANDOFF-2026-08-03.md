@@ -76,6 +76,7 @@ Fast owner review packets:
 
 - `docs/PHYSICIAN-COPY-APPROVAL-PACKET-2026-08-03.md`
 - `docs/BOULEVARD-ADMIN-CLEANUP-PACKET-2026-08-03.md`
+- `docs/REVENUE-OPERATING-SCORECARD-2026-08-03.md`
 
 ## Recommended activation order
 
@@ -140,6 +141,6 @@ Optimize from arrived-patient economics, not clicks. HighLevel is the lead sourc
 2. Reconcile the final branch against the canonical ops/release branch after the owner identifies it.
 3. Complete the prepared physician-copy approval packet.
 4. Complete the prepared Boulevard admin cleanup packet.
-5. Prepare a source/service/location KPI scorecard definition for the first operating week.
+5. Confirm the owners and missing source fields identified in the prepared revenue operating scorecard.
 
 The correct next external move is an approved preview, not more paid traffic and not a blind production cutover.
