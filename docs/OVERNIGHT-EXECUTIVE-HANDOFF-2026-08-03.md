@@ -8,6 +8,8 @@ The website itself is no longer the main risk. The remaining blockers are owner-
 
 No deployment, push, merge, DNS change, CRM mutation, patient-data access, ad/account change, billing action, campaign mutation, or public cutover was performed.
 
+The imported Google Ads record is now packaged into a recovery control plan. Its last authoritative snapshot showed `$499.23` in seven-day Napa spend, five booking-CTA click credits, no confirmed attributed appointment/arrival/revenue, a `$893.82` past-due warning, and an additional `$115/day` in enabled medical-weight-loss campaigns whose intent was not confirmed. The current Google Ads interface must verify or supersede every one of those facts. All six recovery campaign builds remain paused in the plan; no activation is authorized.
+
 ## Current release evidence
 
 | Area | Current result |
@@ -24,6 +26,7 @@ No deployment, push, merge, DNS change, CRM mutation, patient-data access, ad/ac
 | Legacy migration | 31 moved WordPress URLs and 2 preserved records; all passed |
 | SEO integrity | 13 social images and 54 JSON-LD blocks; all passed |
 | Live booking UI | Distinct city/service routes rendered in Boulevard without completing a form or appointment |
+| Paid-search plan | 6 campaign builds paused; `$82/day` proposed stage-one total; exact/phrase Search only; RSA and control check passed |
 
 The optimized preview used for the final checks ran locally on port 3010 from the current runtime code. The full production gate still must be repeated on the approved hosted preview and again immediately after cutover.
 
@@ -83,6 +86,7 @@ Fast owner review packets:
 - `docs/PREVIEW-DEPLOYMENT-RUN-SHEET-2026-08-03.md`
 - `docs/NAPA-ENTITY-CONSOLIDATION-PASS-2026-08-04.md`
 - `docs/CONVERSION-ACCESSIBILITY-PASS-2026-08-04.md`
+- `docs/PAID-ACQUISITION-CONTROL-PACK-2026-08-04.md`
 
 ## Recommended activation order
 
@@ -104,14 +108,13 @@ Fast owner review packets:
 
 ### Phase 2 — measured demand generation
 
-Based on the imported Napa capacity map, prioritize only after current capacity and account state are reconfirmed:
+Follow the paid-acquisition control pack. Prioritize only after current capacity, billing, account state, conversion proof, unit economics, and explicit campaign/budget authorization are recorded:
 
-1. Napa Botox/Dysport and filler — highest documented open capacity and strategic value.
-2. Napa laser/pigmentation — next-highest documented capacity and value.
-3. Napa hyperhidrosis — controlled, low-volume intent.
-4. Napa facials/HydraFacial — capped expansion only while the single-provider calendar remains healthy.
-5. Keep IV promotion gated by the Boulevard clinical-label review.
-6. Keep medical-weight-loss paid expansion gated by program facts, privacy/compliance, platform policy, and current operating capacity.
+1. Stage one: Napa Brand, Botox/Dysport, laser/pigmentation, and filler at only the explicitly approved budgets.
+2. Stage two: HydraFacial only after a weekly provider-book capacity review.
+3. Stage three: hyperhidrosis only after policy, exact service mapping, and capacity review.
+4. Keep IV promotion gated by the Boulevard clinical-label review.
+5. Keep medical-weight-loss paid expansion gated by program facts, privacy/compliance, platform policy, current operating capacity, and explicit confirmation of the two imported campaign states.
 
 This is an activation order, not authorization to change campaigns or budgets.
 
@@ -148,5 +151,6 @@ Optimize from arrived-patient economics, not clicks. HighLevel is the lead sourc
 3. Complete the prepared physician-copy approval packet.
 4. Complete the prepared Boulevard admin cleanup packet.
 5. Confirm the owners and missing source fields identified in the prepared revenue operating scorecard.
+6. Complete the one-screen owner decision card in the paid-acquisition control pack and verify the current Google Ads interface.
 
 The correct next external move is an approved preview, not more paid traffic and not a blind production cutover.

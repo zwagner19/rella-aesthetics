@@ -83,6 +83,7 @@ From the exact release worktree:
 npm test
 npm run lint
 npm run build
+npm run check:paid-search
 ```
 
 Prepared checkpoint expectation:
@@ -197,6 +198,8 @@ Attach:
 - [ ] completed physician copy packet;
 - [ ] completed Boulevard cleanup packet;
 - [ ] counsel-approved Terms/privacy record;
+- [ ] completed paid-acquisition owner decision card and a passing `npm run check:paid-search` result;
+- [ ] current Google Ads billing, payment method, enabled-campaign, budget, network, location-option, final-URL, and conversion-role evidence;
 - [ ] rollback target.
 
 Final preview decision:
@@ -224,5 +227,6 @@ Stop the preview process and do not request production promotion when:
 - analytics contains form or health information;
 - a mobile visitor cannot operate the primary action;
 - counsel, clinical-owner, billing/capacity, or canonical infrastructure gates remain open.
+- booking CTA clicks are primary, an unapproved sensitive-health audience is configured, or a paid-search final URL differs from the approved public path.
 
 Passing this run sheet authorizes an owner decision about the production gate. It does not itself authorize production or paid traffic.

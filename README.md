@@ -18,6 +18,7 @@ Before sharing a release:
 npm test
 npm run lint
 npm run build
+npm run check:paid-search
 npm run start
 # In another terminal:
 npm run check:legacy-redirects
@@ -85,6 +86,8 @@ Do not place names, emails, phone numbers, messages, provider selections, or hea
 ## Release process
 
 Start with [`docs/OVERNIGHT-EXECUTIVE-HANDOFF-2026-08-03.md`](docs/OVERNIGHT-EXECUTIVE-HANDOFF-2026-08-03.md) for the current readiness decision, owner approvals, activation order, and operating priorities.
+
+Use [`docs/PAID-ACQUISITION-CONTROL-PACK-2026-08-04.md`](docs/PAID-ACQUISITION-CONTROL-PACK-2026-08-04.md) before any Google Ads billing, status, budget, keyword, goal, audience, or final-URL change. Its machine-readable campaign plan must pass `npm run check:paid-search`, but a passing check is not authorization to activate ads.
 
 1. Build and test locally.
 2. Create a preview deployment.

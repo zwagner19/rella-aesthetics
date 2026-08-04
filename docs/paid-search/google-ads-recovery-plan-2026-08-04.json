@@ -1,0 +1,401 @@
+{
+  "version": "2026-08-04",
+  "accountId": "686-891-8996",
+  "status": "PAUSED_PENDING_GATES",
+  "purpose": "Recover the existing Napa Search program without scaling unverified booking-click signals or carrying superseded offers into the rebuilt site.",
+  "sourceSnapshot": {
+    "asOf": "2026-08-03T07:00:00-07:00",
+    "napaBuildSpend7d": 499.23,
+    "napaBuildBookingCtaClicks7d": 5,
+    "costPerBookingCtaClick7d": 99.85,
+    "confirmedAppointmentsAttributed": 0,
+    "confirmedArrivalsAttributed": 0,
+    "confirmedRevenueAttributed": 0,
+    "pastDueWarningAmount": 893.82,
+    "paymentResolutionEmailFoundAfterWarning": false,
+    "warning": "This is a historical control snapshot, not proof of the current Google Ads UI state. Verify billing, campaign status, budgets, and goals in the account before any change."
+  },
+  "accountControls": {
+    "network": "GOOGLE_SEARCH_ONLY",
+    "searchPartners": false,
+    "displayNetwork": false,
+    "aiMax": false,
+    "performanceMax": false,
+    "demandGen": false,
+    "matchTypes": [
+      "EXACT",
+      "PHRASE"
+    ],
+    "location": {
+      "center": "1541 3rd St, Napa, CA 94559",
+      "radiusMiles": 15,
+      "presenceOnly": true,
+      "note": "Reconfirm actual patient draw and location report before expanding beyond the verified Napa radius."
+    },
+    "audienceExclusions": [
+      "CUSTOMER_MATCH",
+      "YOUR_DATA_SEGMENTS",
+      "WEBSITE_VISITOR_REMARKETING",
+      "LOOKALIKE_SEGMENTS",
+      "AUDIENCE_EXPANSION"
+    ],
+    "finalUrlSuffix": "utm_source=google&utm_medium=cpc&utm_campaign={campaignid}&utm_adgroup={adgroupid}&utm_term={keyword}&utm_content={creative}&utm_matchtype={matchtype}&utm_device={device}",
+    "conversionRoles": {
+      "bookingCtaClick": "SECONDARY",
+      "qualifiedCall": "SECONDARY_UNTIL_CALL_QUALITY_IS_VERIFIED",
+      "completedBooking": "PRIMARY_ONLY_AFTER_END_TO_END_VALIDATION",
+      "arrivedPatient": "OPERATING_SOURCE_OF_TRUTH",
+      "collectedRevenue": "OPERATING_SOURCE_OF_TRUTH",
+      "patientLevelUpload": "DISABLED_PENDING_PRIVACY_AND_COMPLIANCE_APPROVAL"
+    },
+    "budgetControls": {
+      "proposedNapaCeilingDaily": 100,
+      "noIncreaseWithoutArrivedPatientEvidence": true,
+      "maximumIncreasePercent": 20,
+      "minimumHoursBetweenIncreases": 72,
+      "googleDailySpendCanReachBudgetMultiple": 2,
+      "googleMonthlyAverageDays": 30.4
+    }
+  },
+  "releaseGates": [
+    "Billing UI shows no past-due balance, an active payment method, and no suspension banner.",
+    "Owner confirms whether both weight-loss campaigns and the HydraFacial pause are intentional.",
+    "Exact hosted-preview commit passes CRM, booking, analytics, mobile, legal, and clinical acceptance.",
+    "Every campaign final URL resolves to the intended city and service on the approved public commit.",
+    "Booking CTA click is secondary and cannot drive bidding.",
+    "At least one synthetic or approved test proves completed-booking measurement without patient or health data in analytics.",
+    "Current provider capacity, public hours, staffed phone hours, and offer/pricing inventory are confirmed.",
+    "Owner records a weekly cash-at-risk limit and an allowable cost per arrived patient by service."
+  ],
+  "campaigns": [
+    {
+      "name": "Rella | Napa | Brand | Search",
+      "recommendedStatus": "PAUSED_PENDING_GATES",
+      "activationStage": 1,
+      "proposedDailyBudget": 5,
+      "finalUrl": "https://experiencerella.com/napa",
+      "adGroups": [
+        {
+          "name": "Rella Brand",
+          "keywords": [
+            { "text": "rella aesthetics", "matchType": "EXACT" },
+            { "text": "rella aesthetics napa", "matchType": "EXACT" },
+            { "text": "rella napa", "matchType": "PHRASE" },
+            { "text": "rella med spa", "matchType": "EXACT" },
+            { "text": "experience rella", "matchType": "EXACT" }
+          ]
+        }
+      ],
+      "headlines": [
+        "Rella Aesthetics Napa",
+        "Official Rella Napa Site",
+        "Downtown Napa Med Spa",
+        "Physician-Owned Med Spa",
+        "Book Rella Napa Online",
+        "1541 3rd St in Napa",
+        "Aesthetic Care in Napa",
+        "Clear Pricing Before Care"
+      ],
+      "descriptions": [
+        "Visit Rella Aesthetics at 1541 3rd St in downtown Napa. Explore care and book online.",
+        "Physician-owned aesthetic and wellness care with direct Napa booking and visit details.",
+        "Compare injectable, laser, facial, and consultation paths at Rella Aesthetics Napa.",
+        "Choose the service that fits your goal, then open the verified Napa booking path."
+      ],
+      "campaignNegatives": [
+        "vacaville",
+        "fairfield"
+      ]
+    },
+    {
+      "name": "Rella | Napa | Botox-Dysport | Search",
+      "recommendedStatus": "PAUSED_PENDING_GATES",
+      "activationStage": 1,
+      "proposedDailyBudget": 40,
+      "finalUrl": "https://experiencerella.com/napa/botox",
+      "adGroups": [
+        {
+          "name": "Botox Napa",
+          "keywords": [
+            { "text": "botox napa", "matchType": "EXACT" },
+            { "text": "botox napa", "matchType": "PHRASE" },
+            { "text": "botox napa ca", "matchType": "EXACT" },
+            { "text": "botox in napa", "matchType": "EXACT" },
+            { "text": "botox appointment napa", "matchType": "PHRASE" }
+          ]
+        },
+        {
+          "name": "Tox Near Me",
+          "keywords": [
+            { "text": "botox near me", "matchType": "EXACT" },
+            { "text": "botox near me", "matchType": "PHRASE" },
+            { "text": "dysport near me", "matchType": "PHRASE" },
+            { "text": "dysport napa", "matchType": "EXACT" }
+          ]
+        },
+        {
+          "name": "Med Spa Napa",
+          "keywords": [
+            { "text": "med spa napa", "matchType": "EXACT" },
+            { "text": "medical spa napa", "matchType": "PHRASE" },
+            { "text": "med spa near me", "matchType": "EXACT" }
+          ]
+        }
+      ],
+      "headlines": [
+        "Botox & Dysport in Napa",
+        "Napa New Patient Tox Visit",
+        "Physician-Owned Med Spa",
+        "Clear Per-Unit Pricing",
+        "Downtown Napa at 1541 3rd",
+        "Consultation-Led Planning",
+        "Book Your Napa Visit Online",
+        "Plans Built Around Your Goals",
+        "Botox and Dysport Options"
+      ],
+      "descriptions": [
+        "Explore current Botox and Dysport pricing, visit details, and direct Napa booking.",
+        "Physician-owned care in downtown Napa. Your provider reviews the plan and total first.",
+        "Book the verified Napa new-patient tox visit at Rella Aesthetics, 1541 3rd St.",
+        "Individual results vary. Treatment eligibility and dosing are reviewed in person."
+      ],
+      "campaignNegatives": [
+        "hair removal",
+        "laser eye",
+        "jobs",
+        "training",
+        "wholesale",
+        "at home"
+      ]
+    },
+    {
+      "name": "Rella | Napa | Laser-Pigmentation | Search",
+      "recommendedStatus": "PAUSED_PENDING_GATES",
+      "activationStage": 1,
+      "proposedDailyBudget": 25,
+      "finalUrl": "https://experiencerella.com/napa/laser",
+      "adGroups": [
+        {
+          "name": "IPL Napa",
+          "keywords": [
+            { "text": "ipl napa", "matchType": "EXACT" },
+            { "text": "ipl photofacial napa", "matchType": "EXACT" },
+            { "text": "photofacial napa", "matchType": "PHRASE" }
+          ]
+        },
+        {
+          "name": "CoolPeel and CO2",
+          "keywords": [
+            { "text": "coolpeel napa", "matchType": "EXACT" },
+            { "text": "co2 laser napa", "matchType": "EXACT" },
+            { "text": "laser skin resurfacing napa", "matchType": "PHRASE" }
+          ]
+        },
+        {
+          "name": "Pigment and Sun Spots",
+          "keywords": [
+            { "text": "sun spot treatment napa", "matchType": "EXACT" },
+            { "text": "pigmentation treatment napa", "matchType": "PHRASE" },
+            { "text": "brown spot treatment napa", "matchType": "PHRASE" }
+          ]
+        }
+      ],
+      "headlines": [
+        "Laser Skin Care in Napa",
+        "Napa IPL & CoolPeel Options",
+        "Pigment & Texture Consults",
+        "Physician-Owned Med Spa",
+        "Full-Face Pricing Available",
+        "Plan Around Sun & Downtime",
+        "Downtown Napa Laser Care",
+        "Book a Napa Laser Visit"
+      ],
+      "descriptions": [
+        "Compare IPL and CoolPeel options, current full-face pricing, and Napa booking.",
+        "Skin type, sun exposure, goals, and downtime guide the treatment recommendation.",
+        "Visit physician-owned Rella Aesthetics at 1541 3rd St in downtown Napa.",
+        "Individual results vary. Device, settings, timing, and eligibility require assessment."
+      ],
+      "campaignNegatives": [
+        "lasik",
+        "eye surgery",
+        "vision",
+        "tattoo removal",
+        "at home",
+        "diy",
+        "serum",
+        "cream",
+        "patches",
+        "ingredients"
+      ]
+    },
+    {
+      "name": "Rella | Napa | Filler | Search",
+      "recommendedStatus": "PAUSED_PENDING_GATES",
+      "activationStage": 1,
+      "proposedDailyBudget": 12,
+      "finalUrl": "https://experiencerella.com/napa/filler",
+      "adGroups": [
+        {
+          "name": "Lip Filler Napa",
+          "keywords": [
+            { "text": "lip filler napa", "matchType": "EXACT" },
+            { "text": "lip filler near me", "matchType": "PHRASE" },
+            { "text": "lip injections napa", "matchType": "EXACT" }
+          ]
+        },
+        {
+          "name": "Dermal and Facial Filler",
+          "keywords": [
+            { "text": "dermal filler napa", "matchType": "EXACT" },
+            { "text": "cheek filler napa", "matchType": "PHRASE" },
+            { "text": "facial filler napa", "matchType": "PHRASE" },
+            { "text": "filler consultation napa", "matchType": "PHRASE" }
+          ]
+        }
+      ],
+      "headlines": [
+        "Lip & Dermal Filler in Napa",
+        "Napa Filler Consultation",
+        "Physician-Owned Med Spa",
+        "Plan Before Product",
+        "Current Filler Pricing",
+        "Downtown Napa at 1541 3rd",
+        "Book Napa Filler Online",
+        "Facial Balancing Consults"
+      ],
+      "descriptions": [
+        "Review current filler pricing, product choices, and direct Napa booking at Rella.",
+        "Your provider assesses anatomy and reviews the proposed product, amount, and total.",
+        "Physician-owned aesthetic care at 1541 3rd St in downtown Napa.",
+        "Individual results vary. Product selection and eligibility are determined in person."
+      ],
+      "campaignNegatives": [
+        "hyaluron pen",
+        "purchase filler",
+        "wholesale filler",
+        "fat transfer",
+        "at home",
+        "diy"
+      ]
+    },
+    {
+      "name": "Rella | Napa | HydraFacial | Search",
+      "recommendedStatus": "PAUSED_CAPACITY_HOLD",
+      "activationStage": 2,
+      "proposedDailyBudget": 0,
+      "existingConfiguredDailyBudget": 10,
+      "finalUrl": "https://experiencerella.com/napa/hydrafacial",
+      "adGroups": [
+        {
+          "name": "HydraFacial Napa",
+          "keywords": [
+            { "text": "hydrafacial napa", "matchType": "EXACT" },
+            { "text": "hydrafacial near me", "matchType": "PHRASE" },
+            { "text": "hydrafacial downtown napa", "matchType": "EXACT" }
+          ]
+        }
+      ],
+      "headlines": [
+        "HydraFacial in Napa",
+        "Three Current Service Tiers",
+        "Signature HydraFacial",
+        "Downtown Napa Skin Care",
+        "Compare Current Pricing",
+        "Book Rella Napa Online"
+      ],
+      "descriptions": [
+        "Compare Signature, Deluxe, and Platinum HydraFacial pricing at Rella Napa.",
+        "The booking path opens the current Napa Signature service and next available times.",
+        "Review recent skin treatments and timing with the esthetic provider before your visit."
+      ],
+      "campaignNegatives": [
+        "salmon sperm",
+        "jobs",
+        "training",
+        "at home",
+        "diy"
+      ]
+    },
+    {
+      "name": "Rella | Napa | Hyperhidrosis | Search",
+      "recommendedStatus": "PAUSED_POLICY_AND_CAPACITY_HOLD",
+      "activationStage": 3,
+      "proposedDailyBudget": 0,
+      "existingConfiguredDailyBudget": 8,
+      "finalUrl": "https://experiencerella.com/napa/hyperhidrosis",
+      "adGroups": [
+        {
+          "name": "Excessive Sweating Napa",
+          "keywords": [
+            { "text": "hyperhidrosis treatment napa", "matchType": "EXACT" },
+            { "text": "excessive sweating treatment napa", "matchType": "PHRASE" },
+            { "text": "underarm sweat treatment napa", "matchType": "PHRASE" }
+          ]
+        }
+      ],
+      "headlines": [
+        "Excessive Sweating Care Napa",
+        "Private Napa Consultation",
+        "Physician-Owned Med Spa",
+        "Review Available Options",
+        "Current MiraDry Information",
+        "Book a Consult in Napa"
+      ],
+      "descriptions": [
+        "Start with a private consultation to review the concern and available care paths.",
+        "See current MiraDry service information and consult-first booking at Rella Napa.",
+        "Eligibility and treatment choice require an in-person review with a licensed provider."
+      ],
+      "campaignNegatives": [
+        "deodorant",
+        "antiperspirant coupon",
+        "home remedy",
+        "diy",
+        "jobs",
+        "training"
+      ]
+    }
+  ],
+  "accountNegativeCandidatesReadyForApproval": [
+    "jobs",
+    "careers",
+    "hiring",
+    "salary",
+    "school",
+    "classes",
+    "training",
+    "certification",
+    "course",
+    "how to become",
+    "wholesale",
+    "supplies",
+    "machine for sale",
+    "used equipment",
+    "at home",
+    "diy",
+    "veterinary",
+    "dog",
+    "cat"
+  ],
+  "pendingNegativeDecisions": {
+    "competitors": [
+      "amp napa",
+      "paradigm medical napa",
+      "paradigm aesthetics napa",
+      "destination aesthetics napa",
+      "skin laundry"
+    ],
+    "serviceAvailability": [
+      "laser hair removal",
+      "microneedling",
+      "rf microneedling",
+      "filler dissolving",
+      "xerf",
+      "fotona",
+      "bbl moxi",
+      "laser genesis"
+    ],
+    "rule": "Do not add these account-wide. Confirm conquest strategy and current service/device availability first; use campaign-level negatives when routing is the real problem."
+  }
+}
