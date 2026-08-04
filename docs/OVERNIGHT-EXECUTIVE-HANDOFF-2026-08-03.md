@@ -77,6 +77,7 @@ Fast owner review packets:
 - `docs/PHYSICIAN-COPY-APPROVAL-PACKET-2026-08-03.md`
 - `docs/BOULEVARD-ADMIN-CLEANUP-PACKET-2026-08-03.md`
 - `docs/REVENUE-OPERATING-SCORECARD-2026-08-03.md`
+- `docs/PREVIEW-DEPLOYMENT-RUN-SHEET-2026-08-03.md`
 
 ## Recommended activation order
 
@@ -137,7 +138,7 @@ Optimize from arrived-patient economics, not clicks. HighLevel is the lead sourc
 
 ## Next safe work if owner inputs are not yet available
 
-1. Prepare the hosted-preview run sheet without executing deployment.
+1. Execute the prepared hosted-preview run sheet only after the owner identifies and authorizes the deployment target.
 2. Reconcile the final branch against the canonical ops/release branch after the owner identifies it.
 3. Complete the prepared physician-copy approval packet.
 4. Complete the prepared Boulevard admin cleanup packet.
