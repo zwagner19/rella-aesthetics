@@ -185,6 +185,27 @@ describe("public pricing and claims integrity", () => {
     ]);
   });
 
+  it("keeps microneedling scoped to the verified Vacaville inventory", () => {
+    const microneedling = servicePages.find(
+      (service) => service.slug === "microneedling",
+    );
+    expect(microneedling?.availableLocations).toEqual(["vacaville"]);
+    expect(microneedling?.metaTitle).toBe("Microneedling in Vacaville, CA");
+
+    const html = renderToStaticMarkup(
+      <TreatmentServicePage service={microneedling!} />,
+    );
+    expect(html).toContain("Book in Vacaville");
+    expect(html).toContain(
+      "This service is currently listed in the Vacaville booking menu.",
+    );
+    expect(html).toContain('href="/vacaville/microneedling"');
+    expect(html).not.toContain("Book in Napa");
+    expect(treatmentServiceSchema(microneedling!).areaServed.map((area) => area.name)).toEqual([
+      "Vacaville",
+    ]);
+  });
+
   it("keeps shared service copy free of universal outcomes and fixed recovery promises", () => {
     const publicCopy = JSON.stringify(servicePages);
 

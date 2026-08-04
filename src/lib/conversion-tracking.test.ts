@@ -97,6 +97,14 @@ describe("mobile booking bar routing", () => {
     });
   });
 
+  it("does not present a false city choice for Vacaville-only microneedling", () => {
+    expect(resolveMobileBookingDestination("/services/microneedling")).toEqual({
+      href: "#book-service",
+      label: "Book Vacaville",
+      cta: "booking-flow-start",
+    });
+  });
+
   it("turns the Napa Botox pricing article into a Napa-specific booking path", () => {
     expect(resolveMobileBookingDestination("/blog/botox-cost-napa")).toEqual({
       href: CANONICAL_NAPA_TOX,

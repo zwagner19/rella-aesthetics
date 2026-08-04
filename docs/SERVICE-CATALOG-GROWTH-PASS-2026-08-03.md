@@ -93,3 +93,5 @@ The follow-on service-claims integrity pass removed the remaining universal outc
 3. Confirm current provider capacity before launching or expanding paid campaigns by service.
 4. Confirm the public prices in Boulevard immediately before production release; the July 24 canon remains the controlling website source until deliberately superseded.
 5. Approve a preview deployment before production cutover.
+
+Microneedling is now an explicit Vacaville-only website journey because the imported Napa capacity map holds that service pending provider/device confirmation, while the Vacaville menu and consult route were directly verified. Chemical peels are likewise explicitly Vacaville-only based on the current live menus. Re-enable either city only with current inventory evidence and owner approval.

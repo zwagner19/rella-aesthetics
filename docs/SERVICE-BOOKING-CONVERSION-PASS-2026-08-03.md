@@ -38,16 +38,16 @@ That introduced unnecessary ambiguity at the point of highest intent and made it
 | --- | --- | --- |
 | Botox & Dysport | hardened Napa Botox app | Vacaville Boulevard menu |
 | Dermal Fillers | verified Napa filler service | Vacaville Boulevard menu |
-| HydraFacial | verified Napa Signature HydraFacial service | Vacaville Boulevard menu |
-| Laser Treatments | verified Napa Laser category | Vacaville Boulevard menu |
-| Chemical Peels | Napa Boulevard menu | Vacaville Boulevard menu |
+| HydraFacial | verified Napa Signature HydraFacial service | verified Vacaville Signature HydraFacial service |
+| Laser Treatments | verified Napa Laser category | verified Vacaville Initial Laser Consult |
+| Chemical Peels | Not advertised; no current Napa peel inventory | verified Vacaville clinic menu with visible Peels category |
 | Facials | Napa Boulevard menu | Vacaville Boulevard menu |
-| Microneedling | Napa Boulevard menu | Vacaville Boulevard menu |
+| Microneedling | Not advertised pending Napa provider/device confirmation | Verified Vacaville Initial Microneedling Consult |
 | IV Hydration | Napa Boulevard menu | Vacaville Boulevard menu |
 
 Every URL is produced by the existing typed booking resolver. No service ID, location ID, or booking URL was invented in this pass.
 
-The four rendered external booking actions on each page resolve to exactly two unique destinations: the approved Napa route and the approved Vacaville route. The generic business-level widget is absent from all eight rendered treatment pages.
+Services with verified two-clinic availability render four external booking actions resolving to the approved Napa and Vacaville destinations. Chemical peels and microneedling now render only the verified Vacaville path. The generic business-level widget is absent from all eight rendered treatment pages.
 
 ## Measurement behavior
 
@@ -81,5 +81,4 @@ On the exact preview deployment:
 
 ## Remaining boundary
 
-Vacaville service-specific deep links were not available in the binding local source set. Vacaville therefore uses the verified clinic-scoped menu, which is safer than inventing service IDs. Add a deeper link only after it is verified directly against the current Boulevard inventory and contract-tested in the typed resolver.
-
+Vacaville laser, HydraFacial, and microneedling now use service-specific destinations verified in Boulevard's rendered booking application. Chemical peels deliberately retain the verified clinic-menu fallback because the attempted category shortcut rendered a not-found state. Botox, fillers, facials, and IV hydration retain the clinic-scoped menu where a deeper service path has not been separately approved. Add or replace a route only after rendered inventory verification and a typed resolver contract test.

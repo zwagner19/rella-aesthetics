@@ -249,7 +249,7 @@ export const servicePages: ServicePageData[] = [
   {
     slug: "microneedling",
     title: "Microneedling",
-    metaTitle: "Microneedling in Vacaville & Napa CA",
+    metaTitle: "Microneedling in Vacaville, CA",
     metaDescription: "Explore clinician-guided microneedling at Rella Aesthetics, with candidacy, device settings, recovery, and treatment planning reviewed first.",
     heroEyebrow: "Skin Care",
     heroTitle: "Microneedling",
@@ -290,6 +290,7 @@ export const servicePages: ServicePageData[] = [
       { question: "When will I see results?", answer: "Response and timing vary, and the desired cosmetic outcome is not guaranteed. Your provider will explain what can reasonably be assessed after recovery and whether another procedure should be considered." },
     ],
     image: "/images/service-microneedling.jpg",
+    availableLocations: ["vacaville"],
   },
   {
     slug: "iv-hydration",

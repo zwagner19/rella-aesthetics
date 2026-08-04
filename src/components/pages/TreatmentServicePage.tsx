@@ -195,7 +195,7 @@ export function TreatmentServicePage({ service }: TreatmentServicePageProps) {
             <p className="text-lg font-light leading-relaxed text-silver">
               {hasMultipleLocations
                 ? "Select Vacaville or Napa here so your booking journey opens with the correct clinic context."
-                : `${service.title} are currently listed in the ${locationLabel} booking menu. Contact Rella before planning around another clinic.`}
+                : `This service is currently listed in the ${locationLabel} booking menu. Contact Rella before planning around another clinic.`}
             </p>
           </div>
           <div className="grid gap-5 sm:grid-cols-2">
