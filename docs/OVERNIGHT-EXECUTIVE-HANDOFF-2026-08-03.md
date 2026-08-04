@@ -14,7 +14,7 @@ No deployment, push, merge, DNS change, CRM mutation, patient-data access, ad/ac
 | --- | --- |
 | Branch | `codex/weight-loss-conversion-foundation` |
 | Runtime checkpoint | `908326a` — `feat: connect city IV booking paths`; this handoff adds documentation only |
-| Distance from local `main` | 34 commits including this handoff |
+| Branch scope | Multi-commit release branch; deploy only an exact reviewed head |
 | Production build | Passed; 47 routes generated |
 | Automated suite | 345 checks across 31 files; all passed |
 | Lint and TypeScript | Passed with no findings |
@@ -71,6 +71,11 @@ The optimized preview used for the final checks ran locally on port 3010 from th
 | 9 | Reconfirm the separately gated infrastructure/Phase F state in the canonical ops repo | The imported handoff explicitly says public cutover remains closed and requires phase-specific authorization |
 
 Use `docs/REVENUE-PATH-LAUNCH-GATE-2026-08-03.md` as the binding checklist. A check is complete only when it passes on the exact hosted preview commit.
+
+Fast owner review packets:
+
+- `docs/PHYSICIAN-COPY-APPROVAL-PACKET-2026-08-03.md`
+- `docs/BOULEVARD-ADMIN-CLEANUP-PACKET-2026-08-03.md`
 
 ## Recommended activation order
 
@@ -133,8 +138,8 @@ Optimize from arrived-patient economics, not clicks. HighLevel is the lead sourc
 
 1. Prepare the hosted-preview run sheet without executing deployment.
 2. Reconcile the final branch against the canonical ops/release branch after the owner identifies it.
-3. Package the clinical-copy approval pages into one concise physician review list.
-4. Package the Boulevard defects into one admin cleanup list with exact screens and expected corrections.
+3. Complete the prepared physician-copy approval packet.
+4. Complete the prepared Boulevard admin cleanup packet.
 5. Prepare a source/service/location KPI scorecard definition for the first operating week.
 
 The correct next external move is an approved preview, not more paid traffic and not a blind production cutover.
