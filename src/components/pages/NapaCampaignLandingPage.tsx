@@ -9,6 +9,7 @@ import {
   NAPA_CAMPAIGN_SERVICES,
   type NapaCampaignService,
 } from "@/lib/napa-campaign-services";
+import { LOCATION_ENTITY_IDS } from "@/lib/schemas";
 
 const LOGO = "/brand/rella-logo-black.svg";
 const DIRECTIONS_HREF =
@@ -190,8 +191,9 @@ function campaignSchema(service: NapaCampaignService) {
         url: canonical,
         provider: {
           "@type": "MedicalBusiness",
-          "@id": "https://experiencerella.com/napa#location",
+          "@id": LOCATION_ENTITY_IDS.napa,
           name: "Rella Aesthetics — Napa",
+          url: "https://experiencerella.com/locations/napa",
           telephone: "+17073582928",
           address: {
             "@type": "PostalAddress",
@@ -495,9 +497,9 @@ function hubSchema() {
   return {
     "@context": "https://schema.org",
     "@type": ["MedicalBusiness", "DaySpa"],
-    "@id": "https://experiencerella.com/napa#location",
+    "@id": LOCATION_ENTITY_IDS.napa,
     name: "Rella Aesthetics — Napa",
-    url: "https://experiencerella.com/napa",
+    url: "https://experiencerella.com/locations/napa",
     telephone: "+17073582928",
     address: {
       "@type": "PostalAddress",

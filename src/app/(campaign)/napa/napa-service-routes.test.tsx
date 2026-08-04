@@ -11,6 +11,7 @@ import NapaHyperhidrosisPage, {
 } from "./hyperhidrosis/page";
 import { resolveBookingHref } from "@/lib/booking-routes";
 import { NAPA_CAMPAIGN_SERVICES } from "@/lib/napa-campaign-services";
+import { LOCATION_ENTITY_IDS } from "@/lib/schemas";
 
 const decode = (html: string) =>
   html
@@ -115,6 +116,13 @@ describe("Napa paid + local-search route preservation", () => {
     const body = /<script type="application\/ld\+json"[^>]*>([\s\S]*?)<\/script>/.exec(html)?.[1];
     expect(body).toBeTruthy();
     const schema = JSON.parse(body!.replace(/&quot;/g, '"'));
+    const service = schema["@graph"].find(
+      (node: { "@type": string }) => node["@type"] === "Service",
+    );
+    expect(service.provider["@id"]).toBe(LOCATION_ENTITY_IDS.napa);
+    expect(service.provider.url).toBe(
+      "https://experiencerella.com/locations/napa",
+    );
     const faq = schema["@graph"].find(
       (node: { "@type": string }) => node["@type"] === "FAQPage",
     );
@@ -137,10 +145,18 @@ describe("Napa campaign hub", () => {
     expect(hubMetadata.alternates?.canonical).toBe(
       "https://experiencerella.com/napa",
     );
+    expect(hubMetadata.title).toBe("Napa Med Spa Services | Rella Aesthetics");
     expect(text).toContain("Rella Aesthetics — Napa");
     expect(text).toContain("American Board of Obesity Medicine diplomate");
     expect(text).toContain("1541 3rd St");
     expect(html).toContain('"@type":["MedicalBusiness","DaySpa"]');
+    expect(html).toContain(`"@id":"${LOCATION_ENTITY_IDS.napa}"`);
+    expect(html).toContain(
+      '"url":"https://experiencerella.com/locations/napa"',
+    );
+    expect(html).not.toContain(
+      '"@id":"https://experiencerella.com/napa#location"',
+    );
   });
 
   it("links all six high-intent Napa service pages", () => {

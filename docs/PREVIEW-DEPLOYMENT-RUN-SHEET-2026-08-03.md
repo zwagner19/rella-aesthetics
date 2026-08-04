@@ -119,6 +119,7 @@ Prepared checkpoint expectation:
 - zero orphaned indexed pages and maximum homepage crawl depth no greater than three;
 - 20 unique external booking destinations on approved hosts;
 - 13 social images and 54 JSON-LD blocks.
+- Napa campaign provider schemas use the canonical `https://experiencerella.com/locations/napa#location` clinic entity, never `/napa#location`.
 
 Record actual results and attach the output. HTTP success does not replace rendered-browser booking checks.
 

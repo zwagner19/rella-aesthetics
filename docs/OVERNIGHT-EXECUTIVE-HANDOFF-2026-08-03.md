@@ -46,6 +46,7 @@ The optimized preview used for the final checks ran locally on port 3010 from th
 - Local editorial foundation and Napa Botox cost article with a valid public social image.
 - Canonicals, metadata, FAQ schema, service schema, clinic schema, XML sitemap, robots behavior, and redirect coverage.
 - Enforced indexed-page inlinks and homepage reachability; the Napa acquisition hub and hyperhidrosis path are now discoverable within two clicks.
+- One canonical Napa clinic entity across the clinic page, service hub, and focused service schemas; the clinic page and hub carry distinct logistics and service-discovery titles.
 - Preserved giveaway terms record and generated two-clinic KML for local migration integrity.
 
 ### Trust and conversion quality
@@ -79,6 +80,7 @@ Fast owner review packets:
 - `docs/BOULEVARD-ADMIN-CLEANUP-PACKET-2026-08-03.md`
 - `docs/REVENUE-OPERATING-SCORECARD-2026-08-03.md`
 - `docs/PREVIEW-DEPLOYMENT-RUN-SHEET-2026-08-03.md`
+- `docs/NAPA-ENTITY-CONSOLIDATION-PASS-2026-08-04.md`
 
 ## Recommended activation order
 

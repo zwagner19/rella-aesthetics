@@ -1,5 +1,10 @@
 import { locations } from "@/lib/data";
 
+export const LOCATION_ENTITY_IDS = {
+  napa: "https://experiencerella.com/locations/napa#location",
+  vacaville: "https://experiencerella.com/locations/vacaville#location",
+} as const;
+
 export function medicalBusinessSchema() {
   const locationNodes = [locations.vacaville, locations.napa].map((location) =>
     localBusinessNode(location),
@@ -74,10 +79,14 @@ type LocalBusinessInput = {
 
 function localBusinessNode(location: LocalBusinessInput) {
   const slug = location.name.toLowerCase();
+  const entityId =
+    slug in LOCATION_ENTITY_IDS
+      ? LOCATION_ENTITY_IDS[slug as keyof typeof LOCATION_ENTITY_IDS]
+      : `https://experiencerella.com/locations/${slug}#location`;
 
   return {
     "@type": ["MedicalBusiness", "DaySpa"],
-    "@id": `https://experiencerella.com/locations/${slug}#location`,
+    "@id": entityId,
     name: `Rella Aesthetics — ${location.name}`,
     url: `https://experiencerella.com/locations/${slug}`,
     image: "https://experiencerella.com/images/service-botox.jpg",

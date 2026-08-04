@@ -5,13 +5,13 @@ import { localBusinessSchema } from "@/lib/schemas";
 import { DEFAULT_SOCIAL_IMAGE } from "@/lib/social-card";
 
 export const metadata: Metadata = {
-  title: "Napa Med Spa",
+  title: "Rella Aesthetics Napa | Hours, Address & Booking",
   description:
-    "Physician-owned med spa in downtown Napa at 1541 3rd St. Explore Botox, fillers, laser treatments, skin care, and medical weight management.",
+    "Find Rella Aesthetics Napa at 1541 3rd St. View Tuesday–Saturday hours, directions, phone, service guides, and city-pinned booking.",
   alternates: { canonical: "/locations/napa" },
   openGraph: {
-    title: "Napa Med Spa | Rella Aesthetics",
-    description: "Physician-owned aesthetic and wellness care in downtown Napa, California.",
+    title: "Rella Aesthetics Napa | Hours, Address & Booking",
+    description: "Clinic details, directions, hours, and booking for Rella Aesthetics in downtown Napa.",
     url: "/locations/napa",
     images: [DEFAULT_SOCIAL_IMAGE],
   },

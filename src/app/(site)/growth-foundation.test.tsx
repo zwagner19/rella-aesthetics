@@ -6,7 +6,7 @@ import VacavillePage, {
   metadata as vacavilleMetadata,
 } from "./locations/vacaville/page";
 import { locations } from "@/lib/data";
-import { localBusinessSchema } from "@/lib/schemas";
+import { LOCATION_ENTITY_IDS, localBusinessSchema } from "@/lib/schemas";
 import GalleryPage, { metadata as galleryMetadata } from "./gallery/page";
 import AboutPage, { metadata as aboutMetadata } from "./about/page";
 import { physicianOwnerSchema } from "@/lib/schemas";
@@ -24,6 +24,9 @@ describe("local-search location pages", () => {
     expect(html).toContain('href="/napa/hyperhidrosis"');
     expect(html).toContain("Excessive Sweating Care");
     expect(html).not.toContain('class="aspect-[4/3] bg-silver-pale rounded-lg"');
+    expect(napaMetadata.title).toBe(
+      "Rella Aesthetics Napa | Hours, Address & Booking",
+    );
     expect(napaMetadata.alternates).toEqual({ canonical: "/locations/napa" });
   });
 
@@ -39,6 +42,7 @@ describe("local-search location pages", () => {
   it("publishes a location-specific medical-business entity", () => {
     const napaSchema = localBusinessSchema(locations.napa);
     expect(napaSchema["@type"]).toEqual(["MedicalBusiness", "DaySpa"]);
+    expect(napaSchema["@id"]).toBe(LOCATION_ENTITY_IDS.napa);
     expect(napaSchema.url).toBe("https://experiencerella.com/locations/napa");
     expect(napaSchema.hasMap).toBe(locations.napa.mapUrl);
     expect(napaSchema.address.streetAddress).toBe("1541 3rd St");
