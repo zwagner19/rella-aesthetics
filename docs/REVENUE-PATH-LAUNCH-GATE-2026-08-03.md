@@ -63,6 +63,7 @@ Use a unique label such as `Rella Site Test 20260803-2215`; do not use a real pa
 - [ ] `/vacaville/laser` returns HTTP 200, uses its exact slashless canonical, and every booking action reaches the Vacaville `Initial Laser Consult` with `Select a professional` rather than Napa, the generic menu, or a treatment that bypasses the required consult.
 - [ ] `/vacaville/hydrafacial` returns HTTP 200, uses its exact slashless canonical, and every booking action reaches the Vacaville `Signature Hydrafacial` with `Select a professional` rather than Napa or the generic menu.
 - [ ] `/vacaville/chemical-peels` returns HTTP 200, uses its exact slashless canonical, and every booking action reaches the Vacaville menu where Peels renders the four options published on the page.
+- [ ] `/vacaville/microneedling` returns HTTP 200, uses its exact slashless canonical, and every booking action reaches the Vacaville `Initial Microneedling Consult` with `Select a professional`; remove the stray `right but` text from Boulevard's service description before paid traffic.
 - [ ] `/napa/`, `/napa/botox/`, `/napa/filler/`, `/napa/laser/`, `/napa/hydrafacial/`, and `/napa/hyperhidrosis/` all return HTTP 200 on the exact preview commit.
 - [ ] `/blog/botox-cost-napa` and `/images/og-botox-cost-napa.png` both return HTTP 200 on the exact preview commit.
 - [ ] The Botox pricing article canonical is the public article URL, and its Open Graph/X image resolves on the public domain.

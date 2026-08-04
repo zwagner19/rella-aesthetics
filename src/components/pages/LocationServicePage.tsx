@@ -38,6 +38,11 @@ const popularServices = [
     description: "Compare the four current Vacaville options, recovery planning, and the safe clinic-menu handoff.",
   },
   {
+    href: "/vacaville/microneedling",
+    title: "Microneedling",
+    description: "Compare Skin Stylus and RF options, review candidacy and recovery, and open the initial consult.",
+  },
+  {
     href: "/services/weight-loss",
     title: "Medical Weight Loss",
     description: "Start with a phone consultation with Zachary Wagner, DO.",

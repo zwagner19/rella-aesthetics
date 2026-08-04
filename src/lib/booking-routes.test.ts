@@ -83,6 +83,18 @@ describe("resolveBookingHref — Vacaville never reaches Napa Tox", () => {
     expect(href).not.toContain("91eba843-57fb-49e9-8505-431d501ffec7");
     expect(href).not.toContain("book.experiencerella.com");
   });
+
+  it("routes Vacaville microneedling intent to the rendered initial consult", () => {
+    const href = resolveBookingHref({
+      location: "vacaville",
+      service: "microneedling",
+    });
+
+    expect(href).toContain("s_762959b6-0015-4904-be74-78d563b5651a");
+    expect(href).toContain("locationId=0f146f87-364e-4dfd-b938-61ba49528820");
+    expect(href).not.toContain("91eba843-57fb-49e9-8505-431d501ffec7");
+    expect(href).not.toContain("book.experiencerella.com");
+  });
 });
 
 describe("resolveBookingHref — generic (no location) never silently Napa Tox", () => {

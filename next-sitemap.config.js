@@ -43,6 +43,7 @@ module.exports = {
       "/vacaville/laser": 0.9,
       "/vacaville/hydrafacial": 0.9,
       "/vacaville/chemical-peels": 0.9,
+      "/vacaville/microneedling": 0.9,
       "/contact": 0.8,
       "/about": 0.8,
       "/membership": 0.8,

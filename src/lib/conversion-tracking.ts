@@ -176,6 +176,17 @@ export function resolveMobileBookingDestination(
     };
   }
 
+  if (currentPath === "/vacaville/microneedling") {
+    return {
+      href: resolveBookingHref({
+        location: "vacaville",
+        service: "microneedling",
+      }),
+      label: "Book Initial Consult",
+      cta: "service-booking",
+    };
+  }
+
   if (currentPath === "/services/weight-loss") {
     return {
       href: "#consultation-options",

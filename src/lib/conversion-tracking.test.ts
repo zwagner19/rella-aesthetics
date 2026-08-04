@@ -146,4 +146,13 @@ describe("mobile booking bar routing", () => {
       cta: "service-booking",
     });
   });
+
+  it("keeps the Vacaville microneedling page on the rendered initial consult", () => {
+    const booking = resolveMobileBookingDestination("/vacaville/microneedling");
+
+    expect(booking.label).toBe("Book Initial Consult");
+    expect(booking.cta).toBe("service-booking");
+    expect(booking.href).toContain("s_762959b6-0015-4904-be74-78d563b5651a");
+    expect(booking.href).toContain("locationId=0f146f87-364e-4dfd-b938-61ba49528820");
+  });
 });

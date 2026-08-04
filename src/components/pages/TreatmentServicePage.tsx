@@ -28,15 +28,19 @@ export function TreatmentServicePage({ service }: TreatmentServicePageProps) {
                 ? "/vacaville/hydrafacial"
                 : service.slug === "chemical-peels"
                   ? "/vacaville/chemical-peels"
+                  : service.slug === "microneedling"
+                    ? "/vacaville/microneedling"
             : "/locations/vacaville",
       detailsLabel:
-        service.slug === "botox" ||
-        service.slug === "dermal-fillers" ||
-        service.slug === "laser-treatments" ||
-        service.slug === "hydrafacial" ||
-        service.slug === "chemical-peels"
-          ? "View Vacaville pricing & visit guide"
-          : "View Vacaville clinic details",
+        service.slug === "microneedling"
+          ? "View Vacaville options & visit guide"
+          : service.slug === "botox" ||
+              service.slug === "dermal-fillers" ||
+              service.slug === "laser-treatments" ||
+              service.slug === "hydrafacial" ||
+              service.slug === "chemical-peels"
+            ? "View Vacaville pricing & visit guide"
+            : "View Vacaville clinic details",
     },
     {
       location: "napa" as const,

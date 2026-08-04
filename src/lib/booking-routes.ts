@@ -84,8 +84,10 @@ const VERIFIED_NAPA_SERVICE_DEEPLINKS: Readonly<Record<string, string>> = {
 
 /**
  * Rendered against the live Vacaville menu on 2026-08-03. The laser service
- * explicitly requires the Initial Laser Consult before IPL, so the city page
- * can remove a menu-selection step without guessing a treatment.
+ * explicitly requires the Initial Laser Consult before IPL. The microneedling
+ * menu likewise provides a modality-neutral Initial Microneedling Consult.
+ * These city pages can therefore remove a menu-selection step without guessing
+ * a treatment.
  */
 const VERIFIED_VACAVILLE_SERVICE_DEEPLINKS: Readonly<Record<string, string>> = {
   hydrafacial: vacavilleDeepLink(
@@ -95,6 +97,9 @@ const VERIFIED_VACAVILLE_SERVICE_DEEPLINKS: Readonly<Record<string, string>> = {
     "Laser/s_1328674e-c793-4b3c-833e-9a3827c5769b",
   ),
   laser: vacavilleDeepLink("Laser/s_1328674e-c793-4b3c-833e-9a3827c5769b"),
+  microneedling: vacavilleDeepLink(
+    "Microneedling/s_762959b6-0015-4904-be74-78d563b5651a",
+  ),
 };
 
 export type BookingLocation = "napa" | "vacaville";
