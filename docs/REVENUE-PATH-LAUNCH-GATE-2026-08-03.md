@@ -61,6 +61,7 @@ Use a unique label such as `Rella Site Test 20260803-2215`; do not use a real pa
 - [ ] `/vacaville/botox` returns HTTP 200, uses its exact slashless canonical, and every booking action reaches the Vacaville menu rather than Napa or the generic chooser.
 - [ ] `/vacaville/filler` returns HTTP 200, uses its exact slashless canonical, and every booking action reaches the Vacaville menu with an Injectables next step rather than Napa or the generic chooser.
 - [ ] `/vacaville/laser` returns HTTP 200, uses its exact slashless canonical, and every booking action reaches the Vacaville `Initial Laser Consult` with `Select a professional` rather than Napa, the generic menu, or a treatment that bypasses the required consult.
+- [ ] `/vacaville/hydrafacial` returns HTTP 200, uses its exact slashless canonical, and every booking action reaches the Vacaville `Signature Hydrafacial` with `Select a professional` rather than Napa or the generic menu.
 - [ ] `/napa/`, `/napa/botox/`, `/napa/filler/`, `/napa/laser/`, `/napa/hydrafacial/`, and `/napa/hyperhidrosis/` all return HTTP 200 on the exact preview commit.
 - [ ] `/blog/botox-cost-napa` and `/images/og-botox-cost-napa.png` both return HTTP 200 on the exact preview commit.
 - [ ] The Botox pricing article canonical is the public article URL, and its Open Graph/X image resolves on the public domain.
@@ -112,6 +113,7 @@ Source verification note (2026-08-03): the approved July 15 Signature Menu and M
 
 - [ ] Google Ads past-due balance and suspension risk are confirmed resolved before any campaign expansion.
 - [ ] Enabled Napa, Vacaville, and weight-loss campaign states are reconciled against the owner's intended budget plan.
+- [ ] HydraFacial paid traffic remains paused until the owner confirms current provider capacity, acceptable appointment lead time, and the intended campaign budget.
 - [ ] The preview has explicit owner approval.
 - [ ] A rollback target is identified before promotion.
 - [ ] Production environment values match the verified preview values.

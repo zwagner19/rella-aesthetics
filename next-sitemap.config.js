@@ -41,6 +41,7 @@ module.exports = {
       "/vacaville/botox": 0.9,
       "/vacaville/filler": 0.9,
       "/vacaville/laser": 0.9,
+      "/vacaville/hydrafacial": 0.9,
       "/contact": 0.8,
       "/about": 0.8,
       "/membership": 0.8,

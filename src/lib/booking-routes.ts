@@ -88,6 +88,9 @@ const VERIFIED_NAPA_SERVICE_DEEPLINKS: Readonly<Record<string, string>> = {
  * can remove a menu-selection step without guessing a treatment.
  */
 const VERIFIED_VACAVILLE_SERVICE_DEEPLINKS: Readonly<Record<string, string>> = {
+  hydrafacial: vacavilleDeepLink(
+    "Facials/s_68b27f62-4a04-4f9f-953e-ec4b2918ad3d",
+  ),
   "laser-treatments": vacavilleDeepLink(
     "Laser/s_1328674e-c793-4b3c-833e-9a3827c5769b",
   ),

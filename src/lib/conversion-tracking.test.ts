@@ -129,4 +129,13 @@ describe("mobile booking bar routing", () => {
     expect(booking.href).toContain("s_1328674e-c793-4b3c-833e-9a3827c5769b");
     expect(booking.href).toContain("locationId=0f146f87-364e-4dfd-b938-61ba49528820");
   });
+
+  it("keeps the Vacaville HydraFacial page on the rendered Signature service", () => {
+    const booking = resolveMobileBookingDestination("/vacaville/hydrafacial");
+
+    expect(booking.label).toBe("Book Signature");
+    expect(booking.cta).toBe("service-booking");
+    expect(booking.href).toContain("s_68b27f62-4a04-4f9f-953e-ec4b2918ad3d");
+    expect(booking.href).toContain("locationId=0f146f87-364e-4dfd-b938-61ba49528820");
+  });
 });

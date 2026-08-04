@@ -154,6 +154,17 @@ export function resolveMobileBookingDestination(
     };
   }
 
+  if (currentPath === "/vacaville/hydrafacial") {
+    return {
+      href: resolveBookingHref({
+        location: "vacaville",
+        service: "hydrafacial",
+      }),
+      label: "Book Signature",
+      cta: "service-booking",
+    };
+  }
+
   if (currentPath === "/services/weight-loss") {
     return {
       href: "#consultation-options",

@@ -28,6 +28,11 @@ const popularServices = [
     description: "Compare verified laser options, current full-face pricing, and the initial-consult path.",
   },
   {
+    href: "/vacaville/hydrafacial",
+    title: "HydraFacial",
+    description: "Compare Signature, Deluxe, and Platinum pricing with direct Signature booking.",
+  },
+  {
     href: "/services/weight-loss",
     title: "Medical Weight Loss",
     description: "Start with a phone consultation with Zachary Wagner, DO.",
