@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { resolveBookingHref } from "@/lib/booking-routes";
 import { useState } from "react";
 import { MobileNav } from "./MobileNav";
@@ -16,6 +17,10 @@ const navLinks = [
 
 export function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const pathname = usePathname();
+  const isWeightLossPage = pathname === "/services/weight-loss";
+  const bookingHref = isWeightLossPage ? "#consultation-options" : resolveBookingHref({});
+  const bookingLabel = isWeightLossPage ? "See Call Times" : "Book Consultation";
 
   return (
     <>
@@ -43,10 +48,11 @@ export function Header() {
           </nav>
 
           <Link
-            href={resolveBookingHref({})}
+            href={bookingHref}
+            data-cta={isWeightLossPage ? "booking-flow-start" : undefined}
             className="hidden lg:inline-flex items-center justify-center font-bold text-[0.6875rem] tracking-[0.18em] uppercase bg-rose text-white px-7 py-3 hover:bg-rose-dark transition-colors duration-150"
           >
-            Book Consultation
+            {bookingLabel}
           </Link>
 
           <button
