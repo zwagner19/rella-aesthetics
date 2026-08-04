@@ -214,6 +214,8 @@ describe("public pricing and claims integrity", () => {
 
     expect(html).toContain('href="/vacaville/facials"');
     expect(html).toContain("View Vacaville options &amp; visit guide");
+    expect(html).toContain('href="/napa/facials"');
+    expect(html).toContain("View Napa options &amp; visit guide");
     expect(html).toContain("Book in Vacaville");
     expect(html).toContain("Book in Napa");
   });

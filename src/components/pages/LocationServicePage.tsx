@@ -71,6 +71,11 @@ const napaPopularServices = [
     description: "Compare IPL and CO2 CoolPeel pricing, candidacy, timing, and recovery considerations.",
   },
   {
+    href: "/napa/facials",
+    title: "Professional Facials",
+    description: "Compare current Napa facial options and start with the Initial Skin Health Consult.",
+  },
+  {
     href: "/napa/hydrafacial",
     title: "HydraFacial",
     description: "Signature, Deluxe, and Platinum tiers with the Napa Signature service preselected.",

@@ -198,6 +198,17 @@ export function resolveMobileBookingDestination(
     };
   }
 
+  if (currentPath === "/napa/facials") {
+    return {
+      href: resolveBookingHref({
+        location: "napa",
+        service: "facials",
+      }),
+      label: "Book Skin Consult",
+      cta: "service-booking",
+    };
+  }
+
   if (currentPath === "/services/weight-loss") {
     return {
       href: "#consultation-options",

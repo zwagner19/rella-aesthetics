@@ -32,6 +32,13 @@ describe("resolveBookingHref — Napa non-Tox", () => {
     expect(href).toContain("locationId=91eba843-57fb-49e9-8505-431d501ffec7");
     expect(href).not.toBe(CANONICAL_NAPA_TOX);
   });
+  it("napa + facials → rendered Initial Skin Health Consult, NOT the Tox app", () => {
+    const href = resolveBookingHref({ location: "napa", service: "facials" });
+    expect(href).toContain("s_3ae8bab0-f23c-45d2-b265-3836289df3a1");
+    expect(href).toContain("locationId=91eba843-57fb-49e9-8505-431d501ffec7");
+    expect(href).not.toBe(CANONICAL_NAPA_TOX);
+    expect(href).not.toContain("0f146f87-364e-4dfd-b938-61ba49528820");
+  });
   it("napa + unspecified service → Napa widget, NOT the Tox app", () => {
     const href = resolveBookingHref({ location: "napa" });
     expect(href).toBe(BOULEVARD_WIDGET_NAPA);

@@ -72,6 +72,7 @@ const vacavilleDeepLink = (menuPath: string) =>
  */
 const VERIFIED_NAPA_SERVICE_DEEPLINKS: Readonly<Record<string, string>> = {
   hydrafacial: deepLink("Facials/s_68b27f62-4a04-4f9f-953e-ec4b2918ad3d"),
+  facials: deepLink("Facials/s_3ae8bab0-f23c-45d2-b265-3836289df3a1"),
   "dermal-fillers": deepLink("Injectables/s_e3564b2f-c00d-47c2-8ca0-665b6d6f25e4"),
   filler: deepLink("Injectables/s_e3564b2f-c00d-47c2-8ca0-665b6d6f25e4"),
   "laser-treatments": deepLink("Laser"),

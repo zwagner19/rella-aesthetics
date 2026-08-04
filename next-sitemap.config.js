@@ -36,6 +36,7 @@ module.exports = {
       "/napa": 0.9,
       "/napa/filler": 0.9,
       "/napa/laser": 0.9,
+      "/napa/facials": 0.9,
       "/napa/hydrafacial": 0.9,
       "/napa/hyperhidrosis": 0.9,
       "/vacaville/botox": 0.9,

@@ -53,10 +53,14 @@ export function TreatmentServicePage({ service }: TreatmentServicePageProps) {
           ? "/napa/botox"
           : service.slug === "dermal-fillers"
             ? "/napa/filler"
+            : service.slug === "facials"
+              ? "/napa/facials"
             : "/locations/napa",
       detailsLabel:
-        service.slug === "botox" || service.slug === "dermal-fillers"
-          ? "View Napa pricing & visit guide"
+        service.slug === "facials"
+          ? "View Napa options & visit guide"
+          : service.slug === "botox" || service.slug === "dermal-fillers"
+            ? "View Napa pricing & visit guide"
           : "View Napa clinic details",
     },
   ]

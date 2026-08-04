@@ -24,6 +24,7 @@ Checked against the live Boulevard booking application in the in-app browser on 
 | `/vacaville/facials` → Vacaville Initial Skin Health Consult | Heading `Initial Skin Health Consult`; `Select a professional` | Kept; begins with assessment and planning instead of guessing a facial |
 | Vacaville Initial Microneedling Consult | Heading `Initial Microneedling Consult`; `Select a professional` | Kept; starts before modality selection. Owner should remove stray `right but` text from Boulevard's service description |
 | Napa Signature HydraFacial service | Heading `Signature Hydrafacial`; `Select a professional` | Kept |
+| `/napa/facials` → Napa Initial Skin Health Consult | Heading `Initial Skin Health Consult`; `Select a professional` | Kept; begins with assessment and planning instead of guessing a facial |
 | Napa dermal-filler service | Heading `Dermal Fillers`; `Select a professional` | Kept |
 | Napa Laser category | Live `Laser` menu | Kept |
 | Napa hyperhidrosis consult-first route | Heading `New Patient Consult`; `Select a professional` | Kept |
@@ -42,6 +43,7 @@ Boulevard retains active booking/cart state in a returning browser. During the a
 - A regression test pins explicit Vacaville HydraFacial intent to the rendered Signature service and forbids Napa or generic routing.
 - A regression test pins explicit Vacaville facial intent to the rendered Initial Skin Health Consult and forbids Napa or generic routing.
 - A regression test pins explicit Vacaville microneedling intent to the rendered Initial Microneedling Consult and forbids Napa or generic routing.
+- A regression test pins explicit Napa facial intent to the rendered Initial Skin Health Consult and forbids Vacaville or Napa Tox routing.
 - The external link checker now fails any rendered public Boulevard URL that omits `path`.
 - The link checker states its limit explicitly: redirect/HTTP success does not prove that the client-rendered booking screen works.
 - The production launch gate requires a real-browser check of every distinct external booking destination on the exact deployment.

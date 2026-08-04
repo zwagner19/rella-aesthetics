@@ -172,4 +172,13 @@ describe("mobile booking bar routing", () => {
     expect(booking.href).toContain("s_762959b6-0015-4904-be74-78d563b5651a");
     expect(booking.href).toContain("locationId=0f146f87-364e-4dfd-b938-61ba49528820");
   });
+
+  it("keeps the Napa facials page on the rendered skin consult", () => {
+    const booking = resolveMobileBookingDestination("/napa/facials");
+
+    expect(booking.label).toBe("Book Skin Consult");
+    expect(booking.cta).toBe("service-booking");
+    expect(booking.href).toContain("s_3ae8bab0-f23c-45d2-b265-3836289df3a1");
+    expect(booking.href).toContain("locationId=91eba843-57fb-49e9-8505-431d501ffec7");
+  });
 });
