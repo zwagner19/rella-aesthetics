@@ -15,7 +15,7 @@ This pass strengthens the path from a search result or ad click to a measurable 
   - the Napa location page uses the verified Napa Boulevard destination;
   - the Vacaville location page uses the verified Vacaville Boulevard destination;
   - treatment pages now open an on-page Vacaville/Napa chooser and then use a clinic-specific booking destination;
-  - other ordinary pages use the safe business-level Boulevard widget when no location or service context is available.
+  - other ordinary pages use the first-party `/book` clinic chooser when no location or service context is available, avoiding Boulevard's tested-broken legacy business-level URL.
 - Campaign pages retain their separate focused shell and do not inherit this bar.
 
 ### Revenue-intent measurement

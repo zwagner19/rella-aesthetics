@@ -2,11 +2,16 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { resolveMobileBookingDestination } from "@/lib/conversion-tracking";
+import {
+  resolveMobileBookingDestination,
+  shouldShowMobileConversionBar,
+} from "@/lib/conversion-tracking";
 
 export function MobileConversionBar() {
   const pathname = usePathname();
   const booking = resolveMobileBookingDestination(pathname);
+
+  if (!shouldShowMobileConversionBar(pathname)) return null;
 
   return (
     <nav

@@ -2,7 +2,7 @@ import { describe, it, expect } from "vitest";
 import {
   resolveBookingHref,
   CANONICAL_NAPA_TOX,
-  BOULEVARD_WIDGET_GENERIC,
+  BOOKING_LOCATION_CHOOSER,
   BOULEVARD_WIDGET_NAPA,
   BOULEVARD_WIDGET_VACAVILLE,
   WEIGHT_LOSS_BOOKING_ORIGIN,
@@ -69,17 +69,17 @@ describe("resolveBookingHref — generic (no location) never silently Napa Tox",
       expect(href).not.toContain("book.experiencerella.com");
     });
   }
-  it("no-location + hydrafacial → generic widget (never assumes Napa, even for a known service)", () => {
-    expect(resolveBookingHref({ service: "hydrafacial" })).toBe(BOULEVARD_WIDGET_GENERIC);
+  it("no-location + hydrafacial → clinic chooser (never assumes Napa, even for a known service)", () => {
+    expect(resolveBookingHref({ service: "hydrafacial" })).toBe(BOOKING_LOCATION_CHOOSER);
   });
-  it("no-location, no service → generic business widget", () => {
-    expect(resolveBookingHref({})).toBe(BOULEVARD_WIDGET_GENERIC);
+  it("no-location, no service → first-party clinic chooser", () => {
+    expect(resolveBookingHref({})).toBe(BOOKING_LOCATION_CHOOSER);
   });
 });
 
 describe("resolveBookingHref — dedicated medical-weight-loss funnel", () => {
   it("requires an explicit city before entering the dedicated booking app", () => {
-    expect(resolveBookingHref({ service: "weight-loss" })).toBe(BOULEVARD_WIDGET_GENERIC);
+    expect(resolveBookingHref({ service: "weight-loss" })).toBe(BOOKING_LOCATION_CHOOSER);
   });
 
   for (const location of ["napa", "vacaville"] as const) {
@@ -107,5 +107,21 @@ describe("resolveBookingHref — dedicated medical-weight-loss funnel", () => {
       expect(href).not.toContain("/book/weight-loss-consult/");
       expect(href).not.toContain("/assessment/weight-loss");
     }
+  });
+});
+
+describe("resolveBookingHref — rendered Boulevard menu safety", () => {
+  it.each([
+    ["napa", BOULEVARD_WIDGET_NAPA],
+    ["vacaville", BOULEVARD_WIDGET_VACAVILLE],
+  ] as const)("%s generic clinic route carries the live menu path", (_location, href) => {
+    expect(href).toContain("path=%2Fcart%2Fmenu");
+    expect(href).toContain("visitType=SELF_VISIT");
+  });
+
+  it("keeps chemical peels on the verified Vacaville menu instead of the broken Peels deep link", () => {
+    const href = resolveBookingHref({ location: "vacaville", service: "chemical-peels" });
+    expect(href).toBe(BOULEVARD_WIDGET_VACAVILLE);
+    expect(href).not.toContain("%2Fcart%2Fmenu%2FPeels");
   });
 });

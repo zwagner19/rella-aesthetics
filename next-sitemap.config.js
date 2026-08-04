@@ -3,7 +3,7 @@ module.exports = {
   siteUrl: process.env.NEXT_PUBLIC_SITE_URL || "https://experiencerella.com",
   generateRobotsTxt: true,
   sitemapSize: 5000,
-  exclude: ["/studio", "/studio/**", "/booking"],
+  exclude: ["/studio", "/studio/**", "/book", "/booking"],
   changefreq: "weekly",
   priority: 0.7,
   robotsTxtOptions: {

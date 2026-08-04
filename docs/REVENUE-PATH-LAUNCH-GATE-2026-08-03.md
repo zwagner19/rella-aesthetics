@@ -15,6 +15,7 @@ No paid campaign should point to the site until one real test inquiry is visible
 - [ ] `npm run build` passes and regenerates the sitemap.
 - [ ] `npm run check:links` passes against the exact preview deployment.
 - [ ] `npm run check:booking-links` passes against the exact preview deployment with outbound network access.
+- [ ] Every distinct external booking URL is opened in a real browser on the exact preview; HTTP 200 alone does not pass this gate.
 - [ ] The preview commit matches the commit that was reviewed.
 
 ### 2. Contact-form delivery
@@ -47,7 +48,9 @@ Use a unique label such as `Rella Site Test 20260803-2215`; do not use a real pa
 
 ### 4. Booking path
 
-- [ ] Global booking opens the intended Rella Boulevard business.
+- [ ] Global booking opens `/book`, presents exactly Napa and Vacaville, and never calls Boulevard's broken legacy business-level URL.
+- [ ] Each `/book` clinic action renders Boulevard's live `Menu` screen and never `#/not-found`, “things have moved,” or an empty booking shell.
+- [ ] Repeat both `/book` clinic actions after beginning a journey at the opposite clinic; Boulevard's returning-browser cart state must not leave the patient in the wrong clinic.
 - [ ] Every ordinary treatment page opens the Vacaville/Napa chooser instead of a generic booking destination.
 - [ ] Each treatment page's Napa and Vacaville actions preserve the selected clinic and never cross-route into the other clinic.
 - [ ] Every advertised service-location pairing is visible in that clinic's live booking menu; a service unavailable at one clinic does not render a booking CTA or structured-data claim for that city.
@@ -60,6 +63,7 @@ Use a unique label such as `Rella Site Test 20260803-2215`; do not use a real pa
 - [ ] Each Napa service page keeps every Book action on its one approved service/location destination.
 - [ ] Each Napa booking click emits one `booking_start` signal with the correct service label and no personal or health information.
 - [ ] Vacaville location booking reaches the verified Vacaville destination.
+- [ ] The Vacaville chemical-peel action opens the live Vacaville menu; do not reinstate the tested-broken `/cart/menu/Peels` handoff without a new rendered-browser pass.
 - [ ] Medical weight-loss visitors can choose Napa or Vacaville before leaving the page.
 - [ ] The sticky mobile action bar does not cover form controls or legal copy at 390 × 844.
 - [ ] Booking clicks are tracked as intent, not completed appointments.

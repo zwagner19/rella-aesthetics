@@ -8,8 +8,8 @@
  *  - A Napa CTA with no specific service → the Napa-scoped Boulevard widget
  *    (NOT Tox — never silently assume the service).
  *  - Vacaville → the Vacaville-scoped Boulevard widget. NEVER Napa Tox.
- *  - A generic CTA with no location → the business-level Boulevard widget.
- *    NEVER silently Napa Tox.
+ *  - A generic CTA with no location → Rella's first-party clinic chooser.
+ *    NEVER silently chooses a city or Napa Tox.
  *
  * The Napa campaign service routes below are verified from the Boulevard
  * inventory and the live campaign handoff. Any other service intentionally
@@ -24,10 +24,21 @@ const WIDGET_BASE =
 const NAPA_LOCATION_ID = "91eba843-57fb-49e9-8505-431d501ffec7";
 const VACAVILLE_LOCATION_ID = "0f146f87-364e-4dfd-b938-61ba49528820";
 
-/** Business-level generic widget (safe fallback; visitor picks location/service). */
-export const BOULEVARD_WIDGET_GENERIC = WIDGET_BASE;
-export const BOULEVARD_WIDGET_NAPA = `${WIDGET_BASE}?locationId=${NAPA_LOCATION_ID}`;
-export const BOULEVARD_WIDGET_VACAVILLE = `${WIDGET_BASE}?locationId=${VACAVILLE_LOCATION_ID}`;
+/** First-party clinic chooser used whenever location intent is not explicit. */
+export const BOOKING_LOCATION_CHOOSER = "/book";
+
+/**
+ * Location-pinned Boulevard menus.
+ *
+ * Boulevard's old widget URL without `path` rendered its live `#/not-found`
+ * screen when checked in a real browser on 2026-08-03, even though the HTTP
+ * response was 200. Supplying the menu path is required for a usable handoff.
+ */
+const locationMenu = (locationId: string) =>
+  `${WIDGET_BASE}?path=${encodeURIComponent("/cart/menu")}&locationId=${locationId}&visitType=SELF_VISIT`;
+
+export const BOULEVARD_WIDGET_NAPA = locationMenu(NAPA_LOCATION_ID);
+export const BOULEVARD_WIDGET_VACAVILLE = locationMenu(VACAVILLE_LOCATION_ID);
 
 /**
  * Dedicated medical-weight-loss funnel.
@@ -109,7 +120,7 @@ export function resolveBookingHref(intent: BookingIntent = {}): string {
   }
 
   // No explicit location: never assume Napa — not even for a known service slug
-  // like hydrafacial. Route to the generic widget so the visitor selects a
+  // like hydrafacial. Route to the clinic chooser so the visitor selects a
   // location before any location-specific menu/deep link is used.
-  return BOULEVARD_WIDGET_GENERIC;
+  return BOOKING_LOCATION_CHOOSER;
 }

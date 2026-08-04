@@ -3,9 +3,10 @@ import {
   classifyConversionHref,
   conversionMeasurement,
   resolveMobileBookingDestination,
+  shouldShowMobileConversionBar,
 } from "./conversion-tracking";
 import {
-  BOULEVARD_WIDGET_GENERIC,
+  BOOKING_LOCATION_CHOOSER,
   BOULEVARD_WIDGET_NAPA,
   BOULEVARD_WIDGET_VACAVILLE,
   CANONICAL_NAPA_TOX,
@@ -13,7 +14,7 @@ import {
 
 describe("conversion intent classification", () => {
   it("separates booking, assessment, and funnel-start intent", () => {
-    expect(classifyConversionHref(BOULEVARD_WIDGET_GENERIC)).toBe("booking_intent");
+    expect(classifyConversionHref(BOOKING_LOCATION_CHOOSER)).toBe("booking_flow_start");
     expect(
       classifyConversionHref(
         "https://book.rellaweightloss.com/assessment/napa",
@@ -41,6 +42,11 @@ describe("conversion intent classification", () => {
 });
 
 describe("mobile booking bar routing", () => {
+  it("stays out of the way while the visitor chooses a clinic", () => {
+    expect(shouldShowMobileConversionBar("/book")).toBe(false);
+    expect(shouldShowMobileConversionBar("/")).toBe(true);
+  });
+
   it("keeps weight-loss visitors inside the city-choice funnel", () => {
     expect(resolveMobileBookingDestination("/services/weight-loss")).toEqual({
       href: "#consultation-options",
@@ -58,9 +64,9 @@ describe("mobile booking bar routing", () => {
     );
   });
 
-  it("uses the safe generic widget elsewhere", () => {
+  it("uses the first-party clinic chooser elsewhere", () => {
     expect(resolveMobileBookingDestination("/").href).toBe(
-      BOULEVARD_WIDGET_GENERIC,
+      BOOKING_LOCATION_CHOOSER,
     );
   });
 

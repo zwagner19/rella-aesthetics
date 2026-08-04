@@ -2,7 +2,7 @@ import { existsSync } from "node:fs";
 import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it } from "vitest";
 import { TreatmentServicePage } from "@/components/pages/TreatmentServicePage";
-import { BOULEVARD_WIDGET_GENERIC, resolveBookingHref } from "@/lib/booking-routes";
+import { BOOKING_LOCATION_CHOOSER, resolveBookingHref } from "@/lib/booking-routes";
 import { membershipTiers, services } from "@/lib/data";
 import { treatmentServiceSchema } from "@/lib/schemas";
 import { servicePages } from "@/lib/service-data";
@@ -49,7 +49,7 @@ describe("polished service catalog", () => {
 
       expect(bookingHrefs, service.slug).toHaveLength(availableLocations.length * 2);
       expect(new Set(bookingHrefs), service.slug).toEqual(new Set(expectedHrefs));
-      expect(bookingHrefs, service.slug).not.toContain(BOULEVARD_WIDGET_GENERIC);
+      expect(bookingHrefs, service.slug).not.toContain(BOOKING_LOCATION_CHOOSER);
       expect(existsSync(`public${service.image}`), service.image).toBe(true);
     }
   });

@@ -80,6 +80,12 @@ for (const pageUrl of sitemapUrls) {
       failures.push(`Non-HTTPS booking link on ${pageUrl}: ${target}`);
       continue;
     }
+    if (target.hostname === "dashboard.boulevard.io" && !target.searchParams.has("path")) {
+      failures.push(
+        `Boulevard link is missing a rendered route path and may land on #/not-found: ${target} (referenced by ${new URL(pageUrl).pathname})`,
+      );
+      continue;
+    }
 
     target.hash = "";
     const normalized = target.toString();
@@ -154,4 +160,7 @@ if (failures.length > 0) {
   for (const [route, count] of hostSummary) {
     console.log(`- ${count} ${route}`);
   }
+  console.log(
+    "- HTTP reachability and Boulevard route shape passed; rendered booking-screen verification remains a separate launch gate.",
+  );
 }

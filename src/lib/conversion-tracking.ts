@@ -1,4 +1,4 @@
-import { resolveBookingHref } from "@/lib/booking-routes";
+import { BOOKING_LOCATION_CHOOSER, resolveBookingHref } from "@/lib/booking-routes";
 
 export const CONVERSION_EVENT_NAME = "rella:conversion";
 
@@ -41,6 +41,9 @@ export function classifyConversionHref(
   if (href.startsWith("mailto:")) return "email_intent";
 
   const url = new URL(href, "https://experiencerella.com");
+  if (url.hostname === "experiencerella.com" && url.pathname === "/book") {
+    return "booking_flow_start";
+  }
   if (BOOKING_HOSTS.has(url.hostname)) {
     return url.pathname.includes("/assessment/")
       ? "assessment_intent"
@@ -92,6 +95,10 @@ export interface MobileBookingDestination {
   href: string;
   label: string;
   cta: string;
+}
+
+export function shouldShowMobileConversionBar(pathname: string | null): boolean {
+  return pathname !== BOOKING_LOCATION_CHOOSER;
 }
 
 export function resolveMobileBookingDestination(

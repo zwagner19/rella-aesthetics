@@ -258,7 +258,7 @@ describe("FULL-DOCUMENT booking and call destination matrix", () => {
   });
 
   it("generic and Vacaville routing behaviour is unchanged", () => {
-    expect(resolveBookingHref({})).toMatch(/dashboard\.boulevard\.io/);
+    expect(resolveBookingHref({})).toBe("/book");
     expect(resolveBookingHref({ location: "vacaville" })).toMatch(/locationId=0f146f87/);
     expect(resolveBookingHref({ location: "vacaville", service: "botox" })).not.toBe(CANONICAL_NAPA_TOX);
   });
