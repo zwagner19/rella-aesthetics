@@ -43,7 +43,7 @@ That introduced unnecessary ambiguity at the point of highest intent and made it
 | Chemical Peels | Not advertised; no current Napa peel inventory | verified Vacaville clinic menu with visible Peels category |
 | Facials | verified Napa Initial Skin Health Consult | verified Vacaville Initial Skin Health Consult |
 | Microneedling | Not advertised pending Napa provider/device confirmation | Verified Vacaville Initial Microneedling Consult |
-| IV Hydration | Napa Boulevard menu | Vacaville Boulevard menu |
+| IV Hydration | verified Napa IV Hydration category | verified Vacaville IV Hydration category |
 
 Every URL is produced by the existing typed booking resolver. No service ID, location ID, or booking URL was invented in this pass.
 
@@ -81,4 +81,4 @@ On the exact preview deployment:
 
 ## Remaining boundary
 
-Vacaville laser, HydraFacial, facials, microneedling, Botox, and filler plus Napa facials now use service-specific destinations verified in Boulevard's rendered booking application. Chemical peels deliberately retain the verified clinic-menu fallback because the attempted category shortcut rendered a not-found state. IV hydration retains the clinic-scoped menu where a deeper service path has not been separately approved. Add or replace a route only after rendered inventory verification and a typed resolver contract test.
+Vacaville laser, HydraFacial, facials, microneedling, Botox, and filler plus Napa facials now use service-specific destinations verified in Boulevard's rendered booking application. IV Hydration uses each clinic's verified category because the visitor must still choose a formulation after clinical screening. Chemical peels are the remaining service family that deliberately retains the verified clinic-menu fallback because the attempted category shortcut rendered a not-found state. Add or replace a route only after rendered inventory verification and a typed resolver contract test.

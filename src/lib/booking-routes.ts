@@ -4,10 +4,10 @@
  * Single source of truth for where every booking CTA sends a visitor. Hard
  * safety rules encoded here + proven by booking-routes.test.ts:
  *  - Napa New Patient Tox / Botox → the canonical hardened booking app.
- *  - Other Napa services → their VERIFIED Boulevard deep link.
+ *  - Other verified city/service pairs → their rendered Boulevard deep link.
  *  - A Napa CTA with no specific service → the Napa-scoped Boulevard widget
  *    (NOT Tox — never silently assume the service).
- *  - Vacaville → the Vacaville-scoped Boulevard widget. NEVER Napa Tox.
+ *  - Unverified Vacaville service intent → the Vacaville-scoped menu. NEVER Napa Tox.
  *  - A generic CTA with no location → Rella's first-party clinic chooser.
  *    NEVER silently chooses a city or Napa Tox.
  *
@@ -73,6 +73,7 @@ const vacavilleDeepLink = (menuPath: string) =>
 const VERIFIED_NAPA_SERVICE_DEEPLINKS: Readonly<Record<string, string>> = {
   hydrafacial: deepLink("Facials/s_68b27f62-4a04-4f9f-953e-ec4b2918ad3d"),
   facials: deepLink("Facials/s_3ae8bab0-f23c-45d2-b265-3836289df3a1"),
+  "iv-hydration": deepLink("IV Hydration"),
   "dermal-fillers": deepLink("Injectables/s_e3564b2f-c00d-47c2-8ca0-665b6d6f25e4"),
   filler: deepLink("Injectables/s_e3564b2f-c00d-47c2-8ca0-665b6d6f25e4"),
   "laser-treatments": deepLink("Laser"),
@@ -88,6 +89,8 @@ const VERIFIED_NAPA_SERVICE_DEEPLINKS: Readonly<Record<string, string>> = {
  * explicitly requires the Initial Laser Consult before IPL. The microneedling
  * and facial menus likewise provide modality-neutral initial consultations.
  * New Patient Tox and Dermal Fillers also render with selectable professionals.
+ * The IV Hydration category renders the current formula list at both clinics;
+ * the visitor still chooses the formula after the clinic has been pinned.
  * These city pages can therefore remove a menu-selection step without guessing
  * a treatment.
  */
@@ -116,6 +119,7 @@ const VERIFIED_VACAVILLE_SERVICE_DEEPLINKS: Readonly<Record<string, string>> = {
   facials: vacavilleDeepLink(
     "Facials/s_3ae8bab0-f23c-45d2-b265-3836289df3a1",
   ),
+  "iv-hydration": vacavilleDeepLink("IV Hydration"),
   "laser-treatments": vacavilleDeepLink(
     "Laser/s_1328674e-c793-4b3c-833e-9a3827c5769b",
   ),

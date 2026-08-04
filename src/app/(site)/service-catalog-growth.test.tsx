@@ -111,6 +111,27 @@ describe("public pricing and claims integrity", () => {
     }
   });
 
+  it("hands IV visitors to the rendered city-pinned category without adopting vendor claims", () => {
+    const ivHydration = servicePages.find(
+      (service) => service.slug === "iv-hydration",
+    );
+    const html = renderToStaticMarkup(
+      <TreatmentServicePage service={ivHydration!} />,
+    );
+
+    expect(html).toContain("%2Fcart%2Fmenu%2FIV%20Hydration");
+    expect(html).toContain("locationId=91eba843-57fb-49e9-8505-431d501ffec7");
+    expect(html).toContain("locationId=0f146f87-364e-4dfd-b938-61ba49528820");
+
+    for (const unsafeVendorLabel of [
+      "Hangover Cure",
+      "Immunity Blend",
+      "Migraine/Pain Relief",
+    ]) {
+      expect(html).not.toContain(unsafeVendorLabel);
+    }
+  });
+
   it("uses only canon-backed exact pricing on the remaining catalog", () => {
     const expected = {
       botox: ["$18/unit", "$6/unit", "$30/month", "$13/unit", "$4.40/unit"],

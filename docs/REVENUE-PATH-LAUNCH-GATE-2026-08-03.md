@@ -67,6 +67,8 @@ Use a unique label such as `Rella Site Test 20260803-2215`; do not use a real pa
 - [ ] `/vacaville/chemical-peels` returns HTTP 200, uses its exact slashless canonical, and every booking action reaches the Vacaville menu where Peels renders the four options published on the page.
 - [ ] `/vacaville/microneedling` returns HTTP 200, uses its exact slashless canonical, and every booking action reaches the Vacaville `Initial Microneedling Consult` with `Select a professional`; remove the stray `right but` text from Boulevard's service description before paid traffic.
 - [ ] `/services/microneedling` names Vacaville only, emits Vacaville-only service schema, and offers no Napa booking action until the Napa provider, device, service inventory, and capacity are confirmed.
+- [ ] `/services/iv-hydration` sends Napa and Vacaville actions to the city-pinned live `IV Hydration` category rather than the broad clinic menu, the other clinic, or a preselected formula.
+- [ ] Dr. Wagner reviews the current Boulevard IV names and descriptions—including `Hangover Cure`, `Immunity Blend`, and `Migraine/Pain Relief`—before IV promotion; the website must not inherit unapproved outcome or symptom-relief claims.
 - [ ] `/napa/facials` returns HTTP 200, uses its exact slashless canonical, and every booking action reaches the Napa `Initial Skin Health Consult` with `Select a professional` rather than Vacaville, Napa Tox, or the generic menu.
 - [ ] `/napa/`, `/napa/botox/`, `/napa/filler/`, `/napa/laser/`, `/napa/facials/`, `/napa/hydrafacial/`, and `/napa/hyperhidrosis/` all return HTTP 200 on the exact preview commit.
 - [ ] `/blog/botox-cost-napa` and `/images/og-botox-cost-napa.png` both return HTTP 200 on the exact preview commit.

@@ -47,6 +47,7 @@ describe("resolveBookingHref — Napa non-Tox", () => {
 
   it.each([
     ["dermal-fillers", "s_e3564b2f"],
+    ["iv-hydration", "%2Fcart%2Fmenu%2FIV%20Hydration"],
     ["laser-treatments", "%2Fcart%2Fmenu%2FLaser"],
     ["hyperhidrosis", "s_14029fc9"],
   ])("napa + %s → verified Napa acquisition path", (service, expected) => {
@@ -134,6 +135,18 @@ describe("resolveBookingHref — Vacaville never reaches Napa Tox", () => {
     });
 
     expect(href).toContain("s_762959b6-0015-4904-be74-78d563b5651a");
+    expect(href).toContain("locationId=0f146f87-364e-4dfd-b938-61ba49528820");
+    expect(href).not.toContain("91eba843-57fb-49e9-8505-431d501ffec7");
+    expect(href).not.toContain("book.experiencerella.com");
+  });
+
+  it("routes Vacaville IV hydration intent to the rendered clinic-pinned category", () => {
+    const href = resolveBookingHref({
+      location: "vacaville",
+      service: "iv-hydration",
+    });
+
+    expect(href).toContain("%2Fcart%2Fmenu%2FIV%20Hydration");
     expect(href).toContain("locationId=0f146f87-364e-4dfd-b938-61ba49528820");
     expect(href).not.toContain("91eba843-57fb-49e9-8505-431d501ffec7");
     expect(href).not.toContain("book.experiencerella.com");

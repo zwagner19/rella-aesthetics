@@ -30,10 +30,14 @@ Checked against the live Boulevard booking application in the in-app browser on 
 | Napa dermal-filler service | Heading `Dermal Fillers`; `Select a professional` | Kept |
 | Napa Laser category | Live `Laser` menu | Kept |
 | Napa hyperhidrosis consult-first route | Heading `New Patient Consult`; `Select a professional` | Kept |
+| `/services/iv-hydration` → Napa IV Hydration category | Heading `IV Hydration`; six current formula choices | Kept; removes the broad clinic-menu step while preserving formula choice |
+| `/services/iv-hydration` → Vacaville IV Hydration category | Heading `IV Hydration`; the same six current formula choices | Kept; removes the broad clinic-menu step while preserving formula choice |
 
 The separate Napa Botox and medical-weight-loss booking applications were already verified in their dedicated route audits and remain outside Boulevard's migrated widget handoff.
 
 Both rendered Vacaville injectable screens currently contain a Boulevard-side ProNox price conflict: the service description says the add-on may be added at checkout for `$50`, while the selectable add-on displays `+$60.00`. The website does not repeat either amount as a public promise. The owner must correct or deliberately approve the Boulevard source before paid traffic is sent to these destinations, then repeat the rendered-browser gate.
+
+Both city-pinned IV categories render the current vendor labels `Myers' Cocktail`, `Hangover Cure`, `Immunity Blend`, `Beauty/Glow Blend`, `Migraine/Pain Relief`, and `NAD + Therapy`. The website deliberately does not repeat the symptom/outcome-oriented labels in acquisition or structured-data copy. Dr. Wagner should clinically review the Boulevard names and descriptions before IV promotion; a working route is not approval of vendor claims.
 
 Boulevard retains active booking/cart state in a returning browser. During the audit, a menu-only handoff could display the previously active clinic's inventory after a service-specific journey. This is a vendor-state behavior that repository tests cannot prove away. The site uses Boulevard's official multi-location URL shape, but production validation must cover both a clean browser and a browser that first began a journey at the other clinic.
 
@@ -50,10 +54,12 @@ Boulevard retains active booking/cart state in a returning browser. During the a
 - A regression test pins explicit Vacaville facial intent to the rendered Initial Skin Health Consult and forbids Napa or generic routing.
 - A regression test pins explicit Vacaville microneedling intent to the rendered Initial Microneedling Consult and forbids Napa or generic routing.
 - A regression test pins explicit Napa facial intent to the rendered Initial Skin Health Consult and forbids Vacaville or Napa Tox routing.
+- Regression tests pin IV Hydration intent to the rendered category at the explicitly selected city and forbid cross-city routing.
+- The shared IV page test requires both city-specific category destinations and forbids the three highest-risk vendor labels from website copy.
 - The external link checker now fails any rendered public Boulevard URL that omits `path`.
 - The link checker states its limit explicitly: redirect/HTTP success does not prove that the client-rendered booking screen works.
 - The production launch gate requires a real-browser check of every distinct external booking destination on the exact deployment.
 
 ## Production gate
 
-Before paid traffic or cutover, open both `/book` clinic actions in a clean browser session and confirm the intended clinic inventory. Repeat after starting (but not completing) a booking journey at the other clinic. Then repeat every distinct external booking URL and fail the launch if Boulevard renders `#/not-found`, “things have moved,” the wrong clinic, or no selectable next step. For the injectable paths, also fail the gate until the `$50` versus `+$60.00` ProNox conflict is corrected or explicitly approved in Boulevard.
+Before paid traffic or cutover, open both `/book` clinic actions in a clean browser session and confirm the intended clinic inventory. Repeat after starting (but not completing) a booking journey at the other clinic. Then repeat every distinct external booking URL and fail the launch if Boulevard renders `#/not-found`, “things have moved,” the wrong clinic, or no selectable next step. For the injectable paths, also fail the gate until the `$50` versus `+$60.00` ProNox conflict is corrected or explicitly approved in Boulevard. Do not promote IV Hydration until Dr. Wagner has reviewed the current Boulevard service names and descriptions.

@@ -95,3 +95,7 @@ The follow-on service-claims integrity pass removed the remaining universal outc
 5. Approve a preview deployment before production cutover.
 
 Microneedling is now an explicit Vacaville-only website journey because the imported Napa capacity map holds that service pending provider/device confirmation, while the Vacaville menu and consult route were directly verified. Chemical peels are likewise explicitly Vacaville-only based on the current live menus. Re-enable either city only with current inventory evidence and owner approval.
+
+## Current IV booking-path update
+
+The August 3 booking-friction follow-on verified that both city-pinned `IV Hydration` category routes render the current formula list. The shared IV page now uses those categories after the visitor selects Napa or Vacaville instead of returning them to the broad clinic menu. Website copy remains screening-led and omits Boulevard's `Hangover Cure`, `Immunity Blend`, and `Migraine/Pain Relief` labels pending Dr. Wagner's clinical review. See `docs/IV-HYDRATION-BOOKING-FRICTION-PASS-2026-08-03.md`.
