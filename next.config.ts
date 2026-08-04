@@ -67,6 +67,8 @@ const nextConfig: NextConfig = {
       { source: "/iv-hydration", destination: "/services/iv-hydration", permanent: true },
       { source: "/laser-treatments/", destination: "/services/laser-treatments", permanent: true },
       { source: "/laser-treatments", destination: "/services/laser-treatments", permanent: true },
+      { source: "/hydrafacial/", destination: "/services/hydrafacial", permanent: true },
+      { source: "/hydrafacial", destination: "/services/hydrafacial", permanent: true },
       { source: "/membership/", destination: "/membership", permanent: true },
       { source: "/upcoming-events/", destination: "/", permanent: true },
       { source: "/upcoming-events", destination: "/", permanent: true },
@@ -77,6 +79,8 @@ const nextConfig: NextConfig = {
       { source: "/about/", destination: "/about", permanent: true },
       { source: "/contact/", destination: "/contact", permanent: true },
       { source: "/privacy-policy/", destination: "/privacy-policy", permanent: true },
+      { source: "/terms-and-conditions/", destination: "/terms", permanent: true },
+      { source: "/terms-and-conditions", destination: "/terms", permanent: true },
     ];
   },
 };

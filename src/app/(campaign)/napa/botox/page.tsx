@@ -81,7 +81,7 @@ const faqSchema = {
 };
 
 function BookCta({ children = "Book an appointment", className = "nb-btn nb-btn--primary" }: { children?: string; className?: string }) {
-  return <a className={className} href={BOOKING_HREF} data-cta="book">{children}</a>;
+  return <a className={className} href={BOOKING_HREF} data-cta="book" data-gtm="booking_start" data-service="botox">{children}</a>;
 }
 function CallCta({ children = `Call ${MARKETING_PHONE.display}`, className = "nb-btn nb-btn--secondary" }: { children?: string; className?: string }) {
   return <a className={className} href={MARKETING_PHONE.href} data-cta="call">{children}</a>;
@@ -320,7 +320,7 @@ export default function NapaBotoxLandingPage() {
 
       {/* ── Mobile sticky actions — hidden at >=1024px per the B01 spec ────── */}
       <div className="nb-sticky" role="group" aria-label="Book or call Rella Napa">
-        <a className="nb-sticky-book" href={BOOKING_HREF} data-cta="book">Book an appointment</a>
+        <a className="nb-sticky-book" href={BOOKING_HREF} data-cta="book" data-gtm="booking_start" data-service="botox">Book an appointment</a>
         <a className="nb-sticky-call" href={MARKETING_PHONE.href} data-cta="call">Call Rella</a>
       </div>
     </div>

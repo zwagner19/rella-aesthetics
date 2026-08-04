@@ -11,9 +11,9 @@
  *  - A generic CTA with no location → the business-level Boulevard widget.
  *    NEVER silently Napa Tox.
  *
- * Only the two service deep links below are verified (Admin-read + live); any
- * other service intentionally falls back to a location/business widget. Do not
- * invent Boulevard ids.
+ * The Napa campaign service routes below are verified from the Boulevard
+ * inventory and the live campaign handoff. Any other service intentionally
+ * falls back to a location/business widget. Do not invent Boulevard ids.
  */
 
 /** Canonical, hardened New Patient Tox booking (rella-booking). */
@@ -58,6 +58,13 @@ const deepLink = (menuPath: string) =>
  */
 const VERIFIED_NAPA_SERVICE_DEEPLINKS: Readonly<Record<string, string>> = {
   hydrafacial: deepLink("Facials/s_68b27f62-4a04-4f9f-953e-ec4b2918ad3d"),
+  "dermal-fillers": deepLink("Injectables/s_e3564b2f-c00d-47c2-8ca0-665b6d6f25e4"),
+  filler: deepLink("Injectables/s_e3564b2f-c00d-47c2-8ca0-665b6d6f25e4"),
+  "laser-treatments": deepLink("Laser"),
+  laser: deepLink("Laser"),
+  // Consult-first: avoids hard-linking a rotating MiraDry special or silently
+  // routing a sweating concern into the standard cosmetic-tox cart.
+  hyperhidrosis: deepLink("Injectables/s_14029fc9-a8d2-441e-99de-52ca98cd3ae8"),
   // botox/tox intentionally NOT here — Napa Tox routes to the canonical app.
 };
 

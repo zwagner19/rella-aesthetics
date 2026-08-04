@@ -46,6 +46,9 @@ Use a unique label such as `Rella Site Test 20260803-2215`; do not use a real pa
 
 - [ ] Global booking opens the intended Rella Boulevard business.
 - [ ] Napa location booking reaches the verified Napa destination.
+- [ ] `/napa/`, `/napa/botox/`, `/napa/filler/`, `/napa/laser/`, `/napa/hydrafacial/`, and `/napa/hyperhidrosis/` all return HTTP 200 on the exact preview commit.
+- [ ] Each Napa service page keeps every Book action on its one approved service/location destination.
+- [ ] Each Napa booking click emits one `booking_start` signal with the correct service label and no personal or health information.
 - [ ] Vacaville location booking reaches the verified Vacaville destination.
 - [ ] Medical weight-loss visitors can choose Napa or Vacaville before leaving the page.
 - [ ] The sticky mobile action bar does not cover form controls or legal copy at 390 × 844.
@@ -72,6 +75,8 @@ Source verification note (2026-08-03): the live Rella Contact page matches `707.
 
 ## Production cutover
 
+- [ ] Google Ads past-due balance and suspension risk are confirmed resolved before any campaign expansion.
+- [ ] Enabled Napa, Vacaville, and weight-loss campaign states are reconciled against the owner's intended budget plan.
 - [ ] The preview has explicit owner approval.
 - [ ] A rollback target is identified before promotion.
 - [ ] Production environment values match the verified preview values.

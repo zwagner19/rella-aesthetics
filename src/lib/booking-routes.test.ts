@@ -37,6 +37,17 @@ describe("resolveBookingHref — Napa non-Tox", () => {
     expect(href).toBe(BOULEVARD_WIDGET_NAPA);
     expect(href).not.toBe(CANONICAL_NAPA_TOX);
   });
+
+  it.each([
+    ["dermal-fillers", "s_e3564b2f"],
+    ["laser-treatments", "%2Fcart%2Fmenu%2FLaser"],
+    ["hyperhidrosis", "s_14029fc9"],
+  ])("napa + %s → verified Napa acquisition path", (service, expected) => {
+    const href = resolveBookingHref({ location: "napa", service });
+    expect(href).toContain(expected);
+    expect(href).toContain("locationId=91eba843-57fb-49e9-8505-431d501ffec7");
+    expect(href).not.toBe(CANONICAL_NAPA_TOX);
+  });
 });
 
 describe("resolveBookingHref — Vacaville never reaches Napa Tox", () => {

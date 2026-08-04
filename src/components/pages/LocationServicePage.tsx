@@ -15,7 +15,7 @@ const popularServices = [
   {
     href: "/services/botox",
     title: "Botox & Dysport",
-    description: "Personalized neuromodulator treatment with medical oversight.",
+    description: "Personalized neuromodulator planning based on your anatomy and goals.",
   },
   {
     href: "/services/dermal-fillers",
@@ -34,9 +34,38 @@ const popularServices = [
   },
 ] as const;
 
+const napaPopularServices = [
+  {
+    href: "/napa/botox",
+    title: "Botox & Dysport",
+    description: "Napa-specific pricing, visit details, and the dedicated new-patient booking path.",
+  },
+  {
+    href: "/napa/filler",
+    title: "Dermal Fillers",
+    description: "Consultation-led filler planning with current public pricing and direct Napa booking.",
+  },
+  {
+    href: "/napa/laser",
+    title: "Laser Treatments",
+    description: "Compare IPL and CO2 CoolPeel pricing, candidacy, timing, and recovery considerations.",
+  },
+  {
+    href: "/napa/hydrafacial",
+    title: "HydraFacial",
+    description: "Signature, Deluxe, and Platinum tiers with the Napa Signature service preselected.",
+  },
+  {
+    href: "/services/weight-loss",
+    title: "Medical Weight Loss",
+    description: "Start with a phone consultation with Zachary Wagner, DO and choose the Napa pathway.",
+  },
+] as const;
+
 export function LocationServicePage({ location, slug }: LocationServicePageProps) {
   const bookingHref = resolveBookingHref({ location: slug });
   const fullAddress = `${location.address}, ${location.city}, ${location.state} ${location.zip}`;
+  const displayedServices = slug === "napa" ? napaPopularServices : popularServices;
 
   return (
     <>
@@ -50,7 +79,7 @@ export function LocationServicePage({ location, slug }: LocationServicePageProps
               Med spa care in {location.name}, California.
             </h1>
             <p className="mb-8 max-w-[650px] text-lg font-light leading-relaxed text-silver-dark md:text-xl">
-              Aesthetic and wellness care with medical oversight, honest guidance, and a plan built around your goals—right in downtown {location.name}.
+              Consultation-led aesthetic and wellness care, honest guidance, and a plan built around your goals—right in downtown {location.name}.
             </p>
             <div className="flex flex-col gap-3 sm:flex-row">
               <Button href={bookingHref} data-cta="location-booking" className="rounded-full">
@@ -88,7 +117,7 @@ export function LocationServicePage({ location, slug }: LocationServicePageProps
 
       <TrustStrip
         ariaLabel={`Why patients choose Rella Aesthetics ${location.name}`}
-        items={["Physician-owned", "Medical oversight", "Personalized plans", "Downtown location"]}
+        items={["Physician-owned", "Clear guidance", "Personalized plans", "Downtown location"]}
       />
 
       <section className="py-20 md:py-28">
@@ -103,7 +132,7 @@ export function LocationServicePage({ location, slug }: LocationServicePageProps
             </p>
           </div>
           <div className="grid gap-5 sm:grid-cols-2">
-            {popularServices.map((service, index) => (
+            {displayedServices.map((service, index) => (
               <Link
                 key={service.href}
                 href={service.href}
