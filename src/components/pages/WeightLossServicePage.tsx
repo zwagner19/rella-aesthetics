@@ -294,11 +294,11 @@ export function WeightLossServicePage() {
       </section>
 
       <section aria-labelledby="weight-loss-story-heading" className="border-b border-silver-pale bg-rose-blush/35 py-16 md:py-20">
-        <div className="mx-auto grid max-w-[1200px] gap-8 px-6 md:px-8 lg:grid-cols-[1.15fr_0.85fr] lg:items-center lg:px-12">
-          <div className="overflow-hidden rounded-[1.75rem] border border-rose-light/80 bg-ink shadow-[0_20px_60px_rgba(40,42,44,0.14)]">
+        <div className="mx-auto grid max-w-[1050px] gap-10 px-6 md:px-8 lg:grid-cols-[0.75fr_1.25fr] lg:items-center lg:px-12">
+          <div className="mx-auto w-full max-w-[420px] overflow-hidden rounded-[1.75rem] border border-rose-light/80 bg-ink shadow-[0_20px_60px_rgba(40,42,44,0.14)]">
             <video
               aria-label="Rella semaglutide patient story"
-              className="aspect-video w-full bg-ink object-contain"
+              className="aspect-[9/16] w-full bg-ink object-cover"
               controls
               playsInline
               preload="metadata"
