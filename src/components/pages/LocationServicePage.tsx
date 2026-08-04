@@ -28,6 +28,11 @@ const popularServices = [
     description: "Compare verified laser options, current full-face pricing, and the initial-consult path.",
   },
   {
+    href: "/vacaville/facials",
+    title: "Professional Facials",
+    description: "Compare current facial options and start with the Initial Skin Health Consult.",
+  },
+  {
     href: "/vacaville/hydrafacial",
     title: "HydraFacial",
     description: "Compare Signature, Deluxe, and Platinum pricing with direct Signature booking.",

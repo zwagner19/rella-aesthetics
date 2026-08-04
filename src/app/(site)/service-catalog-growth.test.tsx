@@ -206,6 +206,18 @@ describe("public pricing and claims integrity", () => {
     ]);
   });
 
+  it("connects the shared facial guide to the Vacaville acquisition page", () => {
+    const facials = servicePages.find((service) => service.slug === "facials");
+    const html = renderToStaticMarkup(
+      <TreatmentServicePage service={facials!} />,
+    );
+
+    expect(html).toContain('href="/vacaville/facials"');
+    expect(html).toContain("View Vacaville options &amp; visit guide");
+    expect(html).toContain("Book in Vacaville");
+    expect(html).toContain("Book in Napa");
+  });
+
   it("keeps shared service copy free of universal outcomes and fixed recovery promises", () => {
     const publicCopy = JSON.stringify(servicePages);
 

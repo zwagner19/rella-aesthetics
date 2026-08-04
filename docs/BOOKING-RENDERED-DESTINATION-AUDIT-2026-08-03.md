@@ -21,6 +21,7 @@ Checked against the live Boulevard booking application in the in-app browser on 
 | `/vacaville/chemical-peels` → Vacaville menu → visible `Peels` category | `Peels` rendered MicroPeel Sensitive, MicroPeel Plus 20, TCA Peel, and Universal Peel | Kept as a two-step handoff; the externally loaded category shortcut remains rejected |
 | Vacaville Initial Laser Consult | Heading `Initial Laser Consult`; `Select a professional` | Kept; removes a menu step while honoring the live IPL consult requirement |
 | Vacaville Signature HydraFacial | Heading `Signature Hydrafacial`; `Select a professional` | Kept; removes a menu step while preserving the Signature starting tier |
+| `/vacaville/facials` → Vacaville Initial Skin Health Consult | Heading `Initial Skin Health Consult`; `Select a professional` | Kept; begins with assessment and planning instead of guessing a facial |
 | Vacaville Initial Microneedling Consult | Heading `Initial Microneedling Consult`; `Select a professional` | Kept; starts before modality selection. Owner should remove stray `right but` text from Boulevard's service description |
 | Napa Signature HydraFacial service | Heading `Signature Hydrafacial`; `Select a professional` | Kept |
 | Napa dermal-filler service | Heading `Dermal Fillers`; `Select a professional` | Kept |
@@ -39,6 +40,7 @@ Boulevard retains active booking/cart state in a returning browser. During the a
 - The dedicated Vacaville chemical-peel page requires all three booking actions and its mobile bar to use that same clinic-menu fallback.
 - A regression test pins explicit Vacaville laser intent to the rendered Initial Laser Consult and forbids Napa or generic routing.
 - A regression test pins explicit Vacaville HydraFacial intent to the rendered Signature service and forbids Napa or generic routing.
+- A regression test pins explicit Vacaville facial intent to the rendered Initial Skin Health Consult and forbids Napa or generic routing.
 - A regression test pins explicit Vacaville microneedling intent to the rendered Initial Microneedling Consult and forbids Napa or generic routing.
 - The external link checker now fails any rendered public Boulevard URL that omits `path`.
 - The link checker states its limit explicitly: redirect/HTTP success does not prove that the client-rendered booking screen works.

@@ -85,13 +85,16 @@ const VERIFIED_NAPA_SERVICE_DEEPLINKS: Readonly<Record<string, string>> = {
 /**
  * Rendered against the live Vacaville menu on 2026-08-03. The laser service
  * explicitly requires the Initial Laser Consult before IPL. The microneedling
- * menu likewise provides a modality-neutral Initial Microneedling Consult.
+ * and facial menus likewise provide modality-neutral initial consultations.
  * These city pages can therefore remove a menu-selection step without guessing
  * a treatment.
  */
 const VERIFIED_VACAVILLE_SERVICE_DEEPLINKS: Readonly<Record<string, string>> = {
   hydrafacial: vacavilleDeepLink(
     "Facials/s_68b27f62-4a04-4f9f-953e-ec4b2918ad3d",
+  ),
+  facials: vacavilleDeepLink(
+    "Facials/s_3ae8bab0-f23c-45d2-b265-3836289df3a1",
   ),
   "laser-treatments": vacavilleDeepLink(
     "Laser/s_1328674e-c793-4b3c-833e-9a3827c5769b",

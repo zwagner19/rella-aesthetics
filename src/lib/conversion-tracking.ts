@@ -165,6 +165,17 @@ export function resolveMobileBookingDestination(
     };
   }
 
+  if (currentPath === "/vacaville/facials") {
+    return {
+      href: resolveBookingHref({
+        location: "vacaville",
+        service: "facials",
+      }),
+      label: "Book Skin Consult",
+      cta: "service-booking",
+    };
+  }
+
   if (currentPath === "/vacaville/chemical-peels") {
     return {
       href: resolveBookingHref({

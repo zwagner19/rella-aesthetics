@@ -147,6 +147,15 @@ describe("mobile booking bar routing", () => {
     expect(booking.href).toContain("locationId=0f146f87-364e-4dfd-b938-61ba49528820");
   });
 
+  it("keeps the Vacaville facials page on the rendered skin consult", () => {
+    const booking = resolveMobileBookingDestination("/vacaville/facials");
+
+    expect(booking.label).toBe("Book Skin Consult");
+    expect(booking.cta).toBe("service-booking");
+    expect(booking.href).toContain("s_3ae8bab0-f23c-45d2-b265-3836289df3a1");
+    expect(booking.href).toContain("locationId=0f146f87-364e-4dfd-b938-61ba49528820");
+  });
+
   it("keeps the Vacaville chemical-peel page on the working clinic menu", () => {
     expect(resolveMobileBookingDestination("/vacaville/chemical-peels")).toEqual({
       href: BOULEVARD_WIDGET_VACAVILLE,

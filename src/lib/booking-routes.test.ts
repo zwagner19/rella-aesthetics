@@ -72,6 +72,18 @@ describe("resolveBookingHref — Vacaville never reaches Napa Tox", () => {
     expect(href).not.toContain("book.experiencerella.com");
   });
 
+  it("routes Vacaville facial intent to the rendered Initial Skin Health Consult", () => {
+    const href = resolveBookingHref({
+      location: "vacaville",
+      service: "facials",
+    });
+
+    expect(href).toContain("s_3ae8bab0-f23c-45d2-b265-3836289df3a1");
+    expect(href).toContain("locationId=0f146f87-364e-4dfd-b938-61ba49528820");
+    expect(href).not.toContain("91eba843-57fb-49e9-8505-431d501ffec7");
+    expect(href).not.toContain("book.experiencerella.com");
+  });
+
   it("routes Vacaville laser intent to the rendered Initial Laser Consult", () => {
     const href = resolveBookingHref({
       location: "vacaville",
