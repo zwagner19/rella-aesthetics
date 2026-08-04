@@ -50,6 +50,7 @@ Use a unique label such as `Rella Site Test 20260803-2215`; do not use a real pa
 - [ ] Global booking opens the intended Rella Boulevard business.
 - [ ] Every ordinary treatment page opens the Vacaville/Napa chooser instead of a generic booking destination.
 - [ ] Each treatment page's Napa and Vacaville actions preserve the selected clinic and never cross-route into the other clinic.
+- [ ] Every advertised service-location pairing is visible in that clinic's live booking menu; a service unavailable at one clinic does not render a booking CTA or structured-data claim for that city.
 - [ ] The treatment-page mobile action bar opens the same clinic chooser and does not cover it at 390 × 844.
 - [ ] Napa location booking reaches the verified Napa destination.
 - [ ] `/napa/`, `/napa/botox/`, `/napa/filler/`, `/napa/laser/`, `/napa/hydrafacial/`, and `/napa/hyperhidrosis/` all return HTTP 200 on the exact preview commit.

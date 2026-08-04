@@ -11,6 +11,7 @@ interface TreatmentServicePageProps {
 }
 
 export function TreatmentServicePage({ service }: TreatmentServicePageProps) {
+  const availableLocations = service.availableLocations ?? ["vacaville", "napa"];
   const bookingOptions = [
     {
       location: "vacaville" as const,
@@ -24,13 +25,17 @@ export function TreatmentServicePage({ service }: TreatmentServicePageProps) {
       address: "1541 3rd St",
       detailsHref: "/locations/napa",
     },
-  ].map((option) => ({
-    ...option,
-    bookingHref: resolveBookingHref({
-      location: option.location,
-      service: service.slug,
-    }),
-  }));
+  ]
+    .filter((option) => availableLocations.includes(option.location))
+    .map((option) => ({
+      ...option,
+      bookingHref: resolveBookingHref({
+        location: option.location,
+        service: service.slug,
+      }),
+    }));
+  const locationLabel = bookingOptions.map((option) => option.name).join(" & ");
+  const hasMultipleLocations = bookingOptions.length > 1;
 
   return (
     <>
@@ -38,7 +43,7 @@ export function TreatmentServicePage({ service }: TreatmentServicePageProps) {
         <div className="mx-auto grid max-w-[1200px] items-center gap-12 px-6 md:px-8 lg:grid-cols-[1.02fr_0.98fr] lg:px-12">
           <div className="relative z-10">
             <p className="mb-5 text-[0.6875rem] font-bold uppercase tracking-[0.22em] text-rose-dark">
-              {service.heroEyebrow} · Vacaville & Napa
+              {service.heroEyebrow} · {locationLabel}
             </p>
             <h1 className="mb-6 text-[clamp(2.75rem,6vw,4.75rem)] font-medium leading-[0.98] tracking-[-0.055em] text-ink">
               {service.heroTitle}
@@ -48,7 +53,7 @@ export function TreatmentServicePage({ service }: TreatmentServicePageProps) {
             </p>
             <div className="flex flex-col gap-3 sm:flex-row">
               <Button href="#book-service" data-cta="booking-flow-start" className="rounded-full">
-                Choose Your Clinic
+                {hasMultipleLocations ? "Choose Your Clinic" : `Book in ${locationLabel}`}
               </Button>
               <Button href="#what-to-expect" variant="ghost" className="rounded-full bg-white/70">
                 What to Expect
@@ -77,7 +82,12 @@ export function TreatmentServicePage({ service }: TreatmentServicePageProps) {
 
       <TrustStrip
         ariaLabel={`Rella ${service.title} care principles`}
-        items={["Physician-owned", "Two local clinics", "Personalized consultation", "Clear next steps"]}
+        items={[
+          "Physician-owned",
+          hasMultipleLocations ? "Two local clinics" : `${locationLabel} booking`,
+          "Personalized consultation",
+          "Clear next steps",
+        ]}
       />
 
       <section className="py-20 md:py-28">
@@ -131,7 +141,7 @@ export function TreatmentServicePage({ service }: TreatmentServicePageProps) {
             <p className="mb-4 text-lg leading-relaxed text-silver-dark">{service.pricing.body}</p>
             {service.pricing.note && <p className="mb-7 text-sm leading-relaxed text-silver">{service.pricing.note}</p>}
             <Button href="#book-service" data-cta="booking-flow-start" className="rounded-full">
-              Choose a Clinic
+              {hasMultipleLocations ? "Choose a Clinic" : `Book in ${locationLabel}`}
             </Button>
           </div>
         </div>
@@ -144,9 +154,17 @@ export function TreatmentServicePage({ service }: TreatmentServicePageProps) {
       >
         <div className="mx-auto max-w-[1000px] px-6 md:px-8">
           <div className="mb-10 max-w-[720px]">
-            <p className="mb-4 text-[0.6875rem] font-bold uppercase tracking-[0.2em] text-rose-dark">Two locations</p>
-            <h2 id="book-service-heading" className="mb-4 text-3xl font-medium tracking-[-0.035em] text-ink md:text-5xl">Choose your clinic before you book.</h2>
-            <p className="text-lg font-light leading-relaxed text-silver">Select Vacaville or Napa here so your booking journey opens with the correct clinic context.</p>
+            <p className="mb-4 text-[0.6875rem] font-bold uppercase tracking-[0.2em] text-rose-dark">
+              {hasMultipleLocations ? "Two locations" : "Current booking location"}
+            </p>
+            <h2 id="book-service-heading" className="mb-4 text-3xl font-medium tracking-[-0.035em] text-ink md:text-5xl">
+              {hasMultipleLocations ? "Choose your clinic before you book." : `Book ${service.title} in ${locationLabel}.`}
+            </h2>
+            <p className="text-lg font-light leading-relaxed text-silver">
+              {hasMultipleLocations
+                ? "Select Vacaville or Napa here so your booking journey opens with the correct clinic context."
+                : `${service.title} are currently listed in the ${locationLabel} booking menu. Contact Rella before planning around another clinic.`}
+            </p>
           </div>
           <div className="grid gap-5 sm:grid-cols-2">
             {bookingOptions.map((location, index) => (

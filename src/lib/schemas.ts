@@ -30,7 +30,10 @@ export function treatmentServiceSchema(service: {
   title: string;
   metaDescription: string;
   image: string;
+  availableLocations?: readonly ("vacaville" | "napa")[];
 }) {
+  const availableLocations = service.availableLocations ?? ["vacaville", "napa"];
+
   return {
     "@context": "https://schema.org",
     "@type": "Service",
@@ -46,10 +49,11 @@ export function treatmentServiceSchema(service: {
       name: "Rella Aesthetics",
       telephone: "+17073582928",
     },
-    areaServed: [
-      { "@type": "City", name: "Vacaville", containedInPlace: { "@type": "State", name: "California" } },
-      { "@type": "City", name: "Napa", containedInPlace: { "@type": "State", name: "California" } },
-    ],
+    areaServed: availableLocations.map((location) => ({
+      "@type": "City",
+      name: location === "vacaville" ? "Vacaville" : "Napa",
+      containedInPlace: { "@type": "State", name: "California" },
+    })),
   };
 }
 

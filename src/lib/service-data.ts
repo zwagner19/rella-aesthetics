@@ -12,6 +12,7 @@ export interface ServicePageData {
   pricing: { heading: string; body: string; note?: string };
   faq: { question: string; answer: string }[];
   image: string;
+  availableLocations?: readonly ("vacaville" | "napa")[];
 }
 
 export const servicePages: ServicePageData[] = [
@@ -112,21 +113,21 @@ export const servicePages: ServicePageData[] = [
   {
     slug: "chemical-peels",
     title: "Chemical Peels",
-    metaTitle: "Chemical Peels in Vacaville & Napa CA",
-    metaDescription: "Reveal smoother, brighter skin with medical-grade chemical peels at Rella Aesthetics. Customized treatments for acne, pigmentation, and aging skin.",
+    metaTitle: "Chemical Peels in Vacaville, CA",
+    metaDescription: "Explore consultation-led MicroPeel and TCA peel options currently listed at Rella Aesthetics in Vacaville. Review selection, downtime, and pricing before treatment.",
     heroEyebrow: "Skin Care",
     heroTitle: "Chemical Peels",
-    heroDescription: "Medical-grade peels that reveal smoother, brighter skin by removing damaged outer layers and stimulating cell renewal.",
+    heroDescription: "Consultation-led peel options in Vacaville, selected around your skin, goals, and expected recovery.",
     whatItIs: {
       heading: "What Is a Chemical Peel?",
-      body: "Chemical peels use controlled acid solutions to exfoliate damaged skin layers, revealing fresh, rejuvenated skin beneath. We offer light, medium, and deep peel options customized to your skin type, concerns, and desired downtime. Peels effectively address hyperpigmentation, acne scars, fine lines, and uneven texture.",
+      body: "Chemical peels use controlled solutions to exfoliate the skin. Rella's current Vacaville booking menu lists MicroPeel Sensitive, MicroPeel Plus 20, TCA Peel, and Universal Peel. The appropriate option depends on your skin, concerns, recent treatments, and expected recovery.",
     },
     whoItsFor: {
       heading: "Who Is It For?",
-      body: "Chemical peels benefit a wide range of skin concerns and types.",
+      body: "A peel may be considered after a skin assessment when the available formulation and recovery profile fit your goals.",
       bullets: [
         "Sun damage and hyperpigmentation",
-        "Acne scars and active breakouts",
+        "The appearance of post-acne marks and uneven texture",
         "Fine lines and early signs of aging",
         "Uneven skin tone and texture",
         "Dull or lackluster complexion",
@@ -134,25 +135,26 @@ export const servicePages: ServicePageData[] = [
     },
     whatToExpect: {
       heading: "What to Expect",
-      body: "Treatment takes 30–45 minutes. Downtime varies by peel depth.",
+      body: "Appointment length and downtime vary by the selected peel and your individual skin response.",
       steps: [
         "Skin analysis and peel selection based on your concerns",
         "Gentle cleansing and prep of the treatment area",
-        "Application of the peel solution — a tingling or warm sensation is normal",
+        "Application of the selected peel with comfort and skin response monitored",
         "Neutralization and soothing post-treatment care",
-        "Light peels: no downtime. Medium peels: 3–7 days of peeling",
+        "Product-specific aftercare and recovery guidance before you leave",
       ],
     },
     pricing: {
       heading: "Pricing",
-      body: "Peel pricing depends on the selected product, depth, and whether a single treatment or series is appropriate. Rella will review the current price before you book or treat.",
+      body: "Peel pricing depends on the selected product and whether a single treatment or series is appropriate. Rella will review the current Vacaville option and total before you book or treat.",
     },
     faq: [
-      { question: "How many peels do I need?", answer: "Most patients see significant improvement after 3–6 treatments spaced 4–6 weeks apart. Your provider will recommend a series based on your goals." },
-      { question: "Is there downtime?", answer: "Light peels have no downtime. Medium and deep peels involve 3–7 days of visible peeling and redness." },
-      { question: "Can I wear makeup after a peel?", answer: "For light peels, makeup can be applied the next day. For deeper peels, wait until peeling has resolved — typically 5–7 days." },
+      { question: "How many peels do I need?", answer: "That depends on the selected product, your skin response, and your goals. The team will explain whether a single treatment or series is appropriate before you decide." },
+      { question: "Is there downtime?", answer: "Downtime varies by product and individual response. Temporary redness, sensitivity, flaking, or peeling can occur; review the expected recovery for the exact peel before treatment." },
+      { question: "Can I wear makeup after a peel?", answer: "Follow the aftercare instructions for the exact peel and your skin response. Ask your provider when makeup and active skin-care products can be resumed." },
     ],
     image: "/images/service-peels.jpg",
+    availableLocations: ["vacaville"],
   },
   {
     slug: "facials",

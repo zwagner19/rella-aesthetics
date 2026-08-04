@@ -17,7 +17,7 @@ export const services = [
     slug: "chemical-peels",
     title: "Chemical Peels",
     category: "Skin Care",
-    description: "Reveal smoother, brighter skin by removing damaged outer layers with medical-grade peels.",
+    description: "Consultation-led MicroPeel and TCA options currently available for Vacaville booking.",
     image: "/images/service-peels.jpg",
   },
   {

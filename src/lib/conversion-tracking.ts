@@ -131,6 +131,14 @@ export function resolveMobileBookingDestination(
     };
   }
 
+  if (currentPath === "/services/chemical-peels") {
+    return {
+      href: "#book-service",
+      label: "Book Vacaville",
+      cta: "booking-flow-start",
+    };
+  }
+
   const serviceSlug = currentPath.match(/^\/services\/([^/]+)$/)?.[1];
   if (serviceSlug) {
     return {

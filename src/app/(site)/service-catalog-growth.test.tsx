@@ -28,8 +28,12 @@ describe("polished service catalog", () => {
       expect(decoded, service.slug).toContain(service.heroTitle);
       expect(decoded, service.slug).toContain(service.whatItIs.heading);
       expect(decoded, service.slug).toContain(service.pricing.body);
-      expect(decoded, service.slug).toContain("Vacaville");
-      expect(decoded, service.slug).toContain("Napa");
+      const availableLocations = service.availableLocations ?? ["vacaville", "napa"];
+      for (const location of availableLocations) {
+        expect(decoded, service.slug).toContain(
+          location === "vacaville" ? "Vacaville" : "Napa",
+        );
+      }
       expect(html, service.slug).toContain('id="book-service"');
       expect(html.match(/data-cta="booking-flow-start"/g), service.slug).toHaveLength(2);
 
@@ -39,11 +43,11 @@ describe("polished service catalog", () => {
       const bookingHrefs = bookingAnchors.map(
         (match) => /href="([^"]+)"/.exec(match[0])?.[1],
       );
-      const expectedHrefs = (["vacaville", "napa"] as const).map((location) =>
+      const expectedHrefs = availableLocations.map((location) =>
         resolveBookingHref({ location, service: service.slug }).replaceAll("&", "&amp;"),
       );
 
-      expect(bookingHrefs, service.slug).toHaveLength(4);
+      expect(bookingHrefs, service.slug).toHaveLength(availableLocations.length * 2);
       expect(new Set(bookingHrefs), service.slug).toEqual(new Set(expectedHrefs));
       expect(bookingHrefs, service.slug).not.toContain(BOULEVARD_WIDGET_GENERIC);
       expect(existsSync(`public${service.image}`), service.image).toBe(true);
@@ -63,7 +67,11 @@ describe("polished service catalog", () => {
       const schema = treatmentServiceSchema(service);
       expect(schema.url).toBe(`https://experiencerella.com/services/${service.slug}`);
       expect(schema.provider["@id"]).toBe("https://experiencerella.com/#organization");
-      expect(schema.areaServed.map((area) => area.name)).toEqual(["Vacaville", "Napa"]);
+      expect(schema.areaServed.map((area) => area.name)).toEqual(
+        (service.availableLocations ?? ["vacaville", "napa"]).map((location) =>
+          location === "vacaville" ? "Vacaville" : "Napa",
+        ),
+      );
     }
   });
 });
@@ -144,5 +152,36 @@ describe("public pricing and claims integrity", () => {
     expect(botox?.faq.find((item) => item.question.includes("difference"))?.answer).toContain(
       "non-interchangeable units",
     );
+  });
+
+  it("scopes the current chemical-peel journey to the live Vacaville menu", () => {
+    const peels = servicePages.find((service) => service.slug === "chemical-peels");
+    expect(peels?.availableLocations).toEqual(["vacaville"]);
+    expect(peels?.metaTitle).toBe("Chemical Peels in Vacaville, CA");
+
+    const publicCopy = JSON.stringify(peels);
+    for (const currentService of [
+      "MicroPeel Sensitive",
+      "MicroPeel Plus 20",
+      "TCA Peel",
+      "Universal Peel",
+    ]) {
+      expect(publicCopy).toContain(currentService);
+    }
+    for (const unsupported of [
+      "We offer light, medium, and deep",
+      "Deep peels",
+      "3–7 days of visible peeling",
+      "significant improvement after 3–6 treatments",
+    ]) {
+      expect(publicCopy, unsupported).not.toContain(unsupported);
+    }
+
+    const html = renderToStaticMarkup(<TreatmentServicePage service={peels!} />);
+    expect(html).toContain("Book in Vacaville");
+    expect(html).not.toContain("Book in Napa");
+    expect(treatmentServiceSchema(peels!).areaServed.map((area) => area.name)).toEqual([
+      "Vacaville",
+    ]);
   });
 });
