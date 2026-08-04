@@ -8,6 +8,7 @@ export const metadata: Metadata = {
   title: "Contact Us",
   description:
     "Get in touch with Rella Aesthetics in Vacaville or Napa. Call, email, or submit a contact form. We're here to help you begin your aesthetic journey.",
+  alternates: { canonical: "/contact" },
 };
 
 export default function ContactPage() {

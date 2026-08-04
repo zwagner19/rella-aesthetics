@@ -42,7 +42,7 @@ export function Footer() {
             </p>
             <ul className="space-y-2">
               <li><Link href="/about" className="text-sm hover:text-rose-light transition-colors">About</Link></li>
-              <li><Link href="/gallery" className="text-sm hover:text-rose-light transition-colors">Gallery</Link></li>
+              <li><Link href="/gallery" className="text-sm hover:text-rose-light transition-colors">Results</Link></li>
               <li><Link href="/blog" className="text-sm hover:text-rose-light transition-colors">Education</Link></li>
               <li><Link href="/membership" className="text-sm hover:text-rose-light transition-colors">VIP Membership</Link></li>
             </ul>

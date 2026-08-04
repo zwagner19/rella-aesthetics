@@ -7,6 +7,7 @@ export const metadata: Metadata = {
   title: "About Rella Aesthetics",
   description:
     "Meet the Rella Aesthetics team — physician-led luxury med spa in Vacaville and Napa, CA. Our mission, values, and approach.",
+  alternates: { canonical: "/about" },
 };
 
 const values = [

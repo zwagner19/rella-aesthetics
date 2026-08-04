@@ -36,9 +36,11 @@ export async function generateMetadata({ params }: BlogPostPageProps): Promise<M
   return {
     title,
     description,
+    alternates: { canonical: `/blog/${slug}` },
     openGraph: {
       title,
       description,
+      url: `/blog/${slug}`,
       type: "article",
       publishedTime: post.publishedAt,
       ...(post.coverImage && {

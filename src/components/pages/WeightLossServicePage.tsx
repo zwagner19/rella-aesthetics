@@ -182,7 +182,11 @@ export function WeightLossServicePage() {
               Start with a 30-minute phone consultation with Zachary Wagner, DO, an American Board of Obesity Medicine diplomate. Understand the program, the appropriate next step, and the costs before you decide.
             </p>
             <div className="mb-6 flex flex-col gap-3 sm:flex-row">
-              <Button href="#consultation-options" className="rounded-full">
+              <Button
+                href="#consultation-options"
+                className="rounded-full"
+                data-cta="booking-flow-start"
+              >
                 See Consultation Times
               </Button>
               <Button href="#how-it-works" variant="ghost" className="rounded-full bg-white/70">
@@ -269,12 +273,26 @@ export function WeightLossServicePage() {
 
       <section className="py-20 md:py-28">
         <div className="mx-auto grid max-w-[1200px] gap-10 px-6 md:px-8 lg:grid-cols-[0.9fr_1.1fr] lg:px-12">
-          <div>
-            <p className="mb-4 text-[0.6875rem] font-bold uppercase tracking-[0.2em] text-rose-dark">Your first conversation</p>
-            <h2 className="mb-5 text-3xl font-medium tracking-[-0.035em] text-ink md:text-5xl">Know what happens before you book.</h2>
-            <p className="text-lg font-light leading-relaxed text-silver">
-              Dr. Wagner&apos;s starting-point consultation is designed to give you useful clarity without forcing you through a long intake or asking for a card.
-            </p>
+          <div className="grid gap-6 sm:grid-cols-[180px_1fr] lg:grid-cols-1">
+            <div className="relative aspect-[4/5] w-full max-w-[240px] overflow-hidden rounded-[1.5rem] bg-rose-blush shadow-[0_16px_50px_rgba(90,94,98,0.12)]">
+              <Image
+                src="/images/dr-zachary-wagner.jpg"
+                alt="Zachary Wagner, DO, physician and owner of Rella Aesthetics"
+                fill
+                className="object-cover object-top"
+                sizes="(min-width: 1024px) 240px, 180px"
+              />
+            </div>
+            <div>
+              <p className="mb-4 text-[0.6875rem] font-bold uppercase tracking-[0.2em] text-rose-dark">Your first conversation</p>
+              <h2 className="mb-5 text-3xl font-medium tracking-[-0.035em] text-ink md:text-5xl">Know who you&apos;re talking with.</h2>
+              <p className="mb-3 text-lg font-light leading-relaxed text-silver">
+                Dr. Wagner&apos;s starting-point consultation is designed to give you useful clarity without forcing you through a long intake or asking for a card.
+              </p>
+              <p className="text-sm font-medium leading-relaxed text-silver-dark">
+                Zachary Wagner, DO · American Board of Obesity Medicine diplomate
+              </p>
+            </div>
           </div>
           <div className="rounded-[1.75rem] bg-ink p-7 text-white md:p-10">
             <h3 className="mb-7 text-xl font-medium md:text-2xl">In 30 minutes with Dr. Wagner, discuss:</h3>
@@ -342,7 +360,11 @@ export function WeightLossServicePage() {
           <p className="mb-8 text-lg font-light leading-relaxed text-white/70">
             Choose the Rella clinic that is most convenient for your consultation and follow-up.
           </p>
-          <Button href="#consultation-options" className="rounded-full bg-rose text-white hover:bg-rose-dark">
+          <Button
+            href="#consultation-options"
+            className="rounded-full bg-rose text-white hover:bg-rose-dark"
+            data-cta="booking-flow-start"
+          >
             Choose Napa or Vacaville
           </Button>
         </div>

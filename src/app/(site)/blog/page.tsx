@@ -10,6 +10,7 @@ export const metadata: Metadata = {
   title: "Education & Blog",
   description:
     "Expert insights on Botox, fillers, skin care, weight loss, and aesthetic treatments from the Rella Aesthetics team. Stay informed and empowered.",
+  alternates: { canonical: "/blog" },
 };
 
 interface SanityPost {

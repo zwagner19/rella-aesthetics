@@ -7,6 +7,7 @@ export const metadata: Metadata = {
   title: "Our Services",
   description:
     "Explore Rella Aesthetics' full range of treatments — injectables, skin care, laser, IV hydration, and medical weight loss in Vacaville and Napa.",
+  alternates: { canonical: "/services" },
 };
 
 const categories = ["Injectables", "Skin Care", "Body & Wellness"] as const;

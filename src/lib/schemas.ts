@@ -54,13 +54,26 @@ export function localBusinessSchema(location: {
   state: string;
   zip: string;
   phone: string;
+  mapUrl: string;
 }) {
+  const slug = location.name.toLowerCase();
+
   return {
     "@context": "https://schema.org",
-    "@type": "LocalBusiness",
-    "@id": `https://experiencerella.com/locations/${location.name.toLowerCase()}`,
+    "@type": ["MedicalBusiness", "DaySpa"],
+    "@id": `https://experiencerella.com/locations/${slug}#location`,
     name: `Rella Aesthetics — ${location.name}`,
+    url: `https://experiencerella.com/locations/${slug}`,
+    image: "https://experiencerella.com/images/service-botox.jpg",
     telephone: `+1${location.phone.replace(/\D/g, "")}`,
+    priceRange: "$$",
+    hasMap: location.mapUrl,
+    parentOrganization: {
+      "@type": "Organization",
+      "@id": "https://experiencerella.com/#organization",
+      name: "Rella Aesthetics",
+      url: "https://experiencerella.com",
+    },
     address: {
       "@type": "PostalAddress",
       streetAddress: location.address,
@@ -68,6 +81,11 @@ export function localBusinessSchema(location: {
       addressRegion: location.state,
       postalCode: location.zip,
       addressCountry: "US",
+    },
+    areaServed: {
+      "@type": "City",
+      name: location.city,
+      containedInPlace: { "@type": "State", name: "California" },
     },
     openingHoursSpecification: [
       {

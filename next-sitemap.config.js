@@ -20,6 +20,10 @@ module.exports = {
     const priorityMap = {
       "/": 1.0,
       "/services": 0.9,
+      "/services/weight-loss": 0.9,
+      "/locations/napa": 0.9,
+      "/locations/vacaville": 0.9,
+      "/napa/botox": 0.9,
       "/contact": 0.8,
       "/about": 0.8,
       "/membership": 0.8,

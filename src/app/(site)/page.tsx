@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Image from "next/image";
 import { Hero } from "@/components/blocks/Hero";
 import { TrustStrip } from "@/components/blocks/TrustStrip";
@@ -10,6 +11,18 @@ import { SectionHeader } from "@/components/ui/SectionHeader";
 import { Button } from "@/components/ui/Button";
 import { services, testimonials, locations } from "@/lib/data";
 import { medicalBusinessSchema } from "@/lib/schemas";
+
+export const metadata: Metadata = {
+  title: { absolute: "Rella Aesthetics Med Spa | Vacaville & Napa CA" },
+  description:
+    "Physician-owned med spa offering aesthetic and wellness care in Vacaville and Napa, California. Explore services or book a consultation.",
+  alternates: { canonical: "/" },
+  openGraph: {
+    title: "Rella Aesthetics Med Spa | Vacaville & Napa CA",
+    description: "Physician-owned aesthetic and wellness care in Vacaville and Napa, California.",
+    url: "/",
+  },
+};
 
 export default function HomePage() {
   return (

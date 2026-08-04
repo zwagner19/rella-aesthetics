@@ -3,6 +3,7 @@
 import { useState, type FormEvent } from "react";
 import { Button } from "@/components/ui/Button";
 import { services } from "@/lib/data";
+import { dispatchConversion } from "@/lib/conversion-tracking";
 
 export function ContactForm() {
   const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">("idle");
@@ -21,6 +22,7 @@ export function ContactForm() {
       });
       if (!res.ok) throw new Error("Failed to send");
       setStatus("sent");
+      dispatchConversion("contact_form_success");
       form.reset();
     } catch {
       setStatus("error");

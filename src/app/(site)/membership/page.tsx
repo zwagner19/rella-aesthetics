@@ -9,6 +9,7 @@ export const metadata: Metadata = {
   title: "VIP Membership",
   description:
     "Join Rella Aesthetics' VIP Membership for preferred pricing on Botox, fillers, and skincare products. Three tiers to fit your aesthetic goals.",
+  alternates: { canonical: "/membership" },
 };
 
 const faq = [
