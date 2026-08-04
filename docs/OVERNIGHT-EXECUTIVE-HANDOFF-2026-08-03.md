@@ -13,13 +13,13 @@ No deployment, push, merge, DNS change, CRM mutation, patient-data access, ad/ac
 | Area | Current result |
 | --- | --- |
 | Branch | `codex/weight-loss-conversion-foundation` |
-| Runtime checkpoint | `908326a` — `feat: connect city IV booking paths`; this handoff adds documentation only |
+| Runtime checkpoint | Record and deploy only the exact reviewed branch head from the preview run sheet |
 | Branch scope | Multi-commit release branch; deploy only an exact reviewed head |
 | Production build | Passed; 47 routes generated |
 | Automated suite | 345 checks across 31 files; all passed |
 | Lint and TypeScript | Passed with no findings |
 | Indexable crawl | 36 pages; all passed |
-| Internal destinations | 46; all passed |
+| Internal destinations | 47; all passed; zero orphaned indexed pages; maximum homepage crawl depth 2 |
 | External booking destinations | 20; all passed HTTP and approved-host checks |
 | Legacy migration | 31 moved WordPress URLs and 2 preserved records; all passed |
 | SEO integrity | 13 social images and 54 JSON-LD blocks; all passed |
@@ -45,6 +45,7 @@ The optimized preview used for the final checks ran locally on port 3010 from th
 - Dedicated Napa campaign hub plus Botox, filler, laser, HydraFacial, hyperhidrosis, and facial pages.
 - Local editorial foundation and Napa Botox cost article with a valid public social image.
 - Canonicals, metadata, FAQ schema, service schema, clinic schema, XML sitemap, robots behavior, and redirect coverage.
+- Enforced indexed-page inlinks and homepage reachability; the Napa acquisition hub and hyperhidrosis path are now discoverable within two clicks.
 - Preserved giveaway terms record and generated two-clinic KML for local migration integrity.
 
 ### Trust and conversion quality

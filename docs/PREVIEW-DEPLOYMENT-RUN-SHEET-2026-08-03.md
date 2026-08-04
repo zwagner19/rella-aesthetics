@@ -115,7 +115,8 @@ SITE_URL='https://approved-preview.example' npm run check:seo
 Prepared checkpoint expectation:
 
 - 31 moved legacy routes and 2 preserved records;
-- 36 sitemap pages and 46 unique internal destinations;
+- 36 sitemap pages and 47 unique internal destinations;
+- zero orphaned indexed pages and maximum homepage crawl depth no greater than three;
 - 20 unique external booking destinations on approved hosts;
 - 13 social images and 54 JSON-LD blocks.
 

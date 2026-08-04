@@ -81,6 +81,11 @@ const napaPopularServices = [
     description: "Signature, Deluxe, and Platinum tiers with the Napa Signature service preselected.",
   },
   {
+    href: "/napa/hyperhidrosis",
+    title: "Excessive Sweating Care",
+    description: "A consult-first path to review sweating concerns before choosing an appropriate option.",
+  },
+  {
     href: "/services/weight-loss",
     title: "Medical Weight Loss",
     description: "Start with a phone consultation with Zachary Wagner, DO and choose the Napa pathway.",
@@ -171,7 +176,12 @@ export function LocationServicePage({ location, slug }: LocationServicePageProps
               </Link>
             ))}
           </div>
-          <div className="mt-8 text-center">
+          <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
+            {slug === "napa" && (
+              <Button href="/napa" className="rounded-full">
+                Explore the Napa Service Hub
+              </Button>
+            )}
             <Button href="/services" variant="ghost" className="rounded-full">View All Services</Button>
           </div>
         </div>

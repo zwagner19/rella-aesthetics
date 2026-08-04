@@ -64,6 +64,10 @@ The check fails for:
 
 This is a technical integrity gate, not a guarantee of ranking position. Search demand, Google Business Profile accuracy, content quality, links, reviews, page experience, and competitive conditions still affect organic acquisition.
 
+## Current internal-discoverability follow-on
+
+The August 4 follow-on extends `check:links` beyond HTTP reachability. It now fails when an indexed page has no internal inlink, cannot be reached from homepage links, or sits more than three clicks from the homepage. The first run exposed the indexable `/napa` hub as orphaned and therefore left `/napa/hyperhidrosis` unreachable. The Napa clinic page now links to the hub and directly includes the consult-first sweating-care path. The exact optimized preview passes with 36 indexed pages, 47 unique internal destinations, zero orphaned pages, and maximum homepage crawl depth 2. See `docs/INTERNAL-LINK-DISCOVERABILITY-PASS-2026-08-04.md`.
+
 ## Verification
 
 - 321 automated tests passed across 29 files.

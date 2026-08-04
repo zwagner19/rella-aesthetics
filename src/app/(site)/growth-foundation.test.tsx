@@ -19,6 +19,10 @@ describe("local-search location pages", () => {
     expect(html).toContain("Book at Napa");
     expect(html).toContain("Get Directions");
     expect(html).toContain("Medical Weight Loss");
+    expect(html).toContain('href="/napa"');
+    expect(html).toContain("Explore the Napa Service Hub");
+    expect(html).toContain('href="/napa/hyperhidrosis"');
+    expect(html).toContain("Excessive Sweating Care");
     expect(html).not.toContain('class="aspect-[4/3] bg-silver-pale rounded-lg"');
     expect(napaMetadata.alternates).toEqual({ canonical: "/locations/napa" });
   });

@@ -13,7 +13,7 @@ No paid campaign should point to the site until one real test inquiry is visible
 - [ ] `npm test` passes with no skipped revenue-path suite.
 - [ ] `npm run lint` passes.
 - [ ] `npm run build` passes and regenerates the sitemap.
-- [ ] `npm run check:links` passes against the exact preview deployment.
+- [ ] `npm run check:links` passes against the exact preview deployment with zero orphaned indexed pages and maximum homepage crawl depth no greater than three.
 - [ ] `npm run check:legacy-redirects` passes against the exact preview deployment for every audited WordPress URL and preserved public record.
 - [ ] `npm run check:booking-links` passes against the exact preview deployment with outbound network access.
 - [ ] `npm run check:seo` passes against the exact preview deployment.
