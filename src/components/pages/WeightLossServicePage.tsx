@@ -17,7 +17,7 @@ const steps = [
     body: "Dr. Wagner reviews the relevant history, goals, previous attempts, and safety considerations to determine whether you medically qualify.",
   },
   {
-    label: "Choose",
+    label: "Options",
     title: "Review the appropriate options",
     body: "If you qualify, discuss the treatment paths that may fit—including medication only when medically appropriate—and the costs involved.",
   },
@@ -167,13 +167,13 @@ export function WeightLossServicePage() {
         }}
       />
 
-      <section className="relative overflow-hidden bg-[linear-gradient(135deg,#fff_0%,#FDF7F5_58%,#FBE7E3_100%)] py-16 md:py-24 lg:py-28">
-        <div className="mx-auto grid max-w-[1200px] items-center gap-12 px-6 md:px-8 lg:grid-cols-[1.05fr_0.95fr] lg:px-12">
+      <section className="relative overflow-hidden bg-[linear-gradient(135deg,#fff_0%,#FDF7F5_58%,#FBE7E3_100%)] py-12 md:py-16">
+        <div className="mx-auto grid max-w-[1200px] items-center gap-10 px-6 md:px-8 lg:grid-cols-[1.2fr_0.8fr] lg:px-12">
           <div className="relative z-10">
             <p className="mb-5 text-[0.6875rem] font-bold uppercase tracking-[0.22em] text-rose-dark">
               Vacaville · Napa · Physician-led care in California
             </p>
-            <h1 className="mb-6 max-w-[760px] text-[clamp(2.65rem,6vw,4.4rem)] font-medium leading-[0.98] tracking-[-0.055em] text-ink">
+            <h1 className="mb-6 max-w-[760px] text-[clamp(2.55rem,5vw,3.5rem)] font-medium leading-[0.98] tracking-[-0.055em] text-ink">
               Talk with an obesity-medicine physician about GLP-1 options in Vacaville &amp; Napa.
             </h1>
             <p className="mb-8 max-w-[650px] text-lg font-light leading-relaxed text-silver-dark md:text-xl">
@@ -200,7 +200,7 @@ export function WeightLossServicePage() {
           </div>
 
           <div className="relative mx-auto w-full max-w-[560px] lg:mx-0">
-            <div className="relative min-h-[390px] overflow-hidden rounded-[2rem] shadow-[0_24px_80px_rgba(90,94,98,0.18)] md:min-h-[520px]">
+            <div className="relative min-h-[390px] overflow-hidden rounded-[2rem] shadow-[0_24px_80px_rgba(90,94,98,0.18)] md:min-h-[460px]">
               <Image
                 src="/images/service-weightloss.jpg"
                 alt="A patient having a supportive medical weight-loss consultation"
