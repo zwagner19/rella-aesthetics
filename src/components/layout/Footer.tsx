@@ -3,7 +3,7 @@ import { resolveBookingHref } from "@/lib/booking-routes";
 
 export function Footer() {
   return (
-    <footer className="bg-ink text-white/60 pt-16 pb-8">
+    <footer className="bg-ink text-white/60 pt-16 pb-28 lg:pb-8">
       <div className="mx-auto max-w-[1200px] px-6 md:px-8 lg:px-12">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
           {/* Brand */}
@@ -63,8 +63,9 @@ export function Footer() {
 
         <div className="border-t border-white/10 pt-6 flex flex-col md:flex-row md:justify-between md:items-center gap-4 text-[0.8125rem]">
           <p>&copy; {new Date().getFullYear()} Rella Aesthetics. All rights reserved.</p>
-          <div className="flex gap-4">
+          <div className="flex flex-wrap gap-x-4 gap-y-2">
             <Link href="/privacy-policy" className="text-white/40 hover:text-rose-light transition-colors">Privacy Policy</Link>
+            <Link href="/cancellation-policy" className="text-white/40 hover:text-rose-light transition-colors">Cancellation Policy</Link>
             <Link href="/terms" className="text-white/40 hover:text-rose-light transition-colors">Terms &amp; Conditions</Link>
           </div>
         </div>

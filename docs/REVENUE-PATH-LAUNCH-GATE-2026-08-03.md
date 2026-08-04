@@ -79,6 +79,10 @@ Source verification note (2026-08-03): the approved July 15 Signature Menu and M
 
 ### 6. Measurement and privacy
 
+- [ ] Counsel supplies Rella Aesthetics-specific Terms and a website/privacy policy covering the actual data stack; publish that text verbatim and record the approval date.
+- [ ] `/terms` contains no Rella Weight Loss language, unsupported 24-hour policy, or unapproved fee promise.
+- [ ] `/cancellation-policy` states the approved 48-hour policy and keeps the Napa $50 booking deposit separate from per-unit treatment pricing.
+- [ ] Footer, booking, and consent links resolve to the approved legal and cancellation pages on the exact production host.
 - [ ] GA4 property ownership and `NEXT_PUBLIC_GA_MEASUREMENT_ID` are confirmed.
 - [ ] `generate_lead` is marked as a conversion only after a successful test.
 - [ ] Meta Pixel and GHL chat are enabled on health-service pages only after the privacy/compliance decision.

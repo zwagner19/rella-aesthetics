@@ -32,6 +32,7 @@ module.exports = {
       "/contact": 0.8,
       "/about": 0.8,
       "/membership": 0.8,
+      "/cancellation-policy": 0.7,
     };
 
     return {
