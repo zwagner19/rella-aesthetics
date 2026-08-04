@@ -2,10 +2,27 @@ import { describe, expect, it } from "vitest";
 import { renderToStaticMarkup } from "react-dom/server";
 import { WeightLossServicePage } from "@/components/pages/WeightLossServicePage";
 import { resolveWeightLossConsultHref } from "@/lib/booking-routes";
+import {
+  MEDICAL_WEIGHT_LOSS_CANONICAL_URL,
+  medicalWeightLossServiceSchema,
+} from "@/lib/schemas";
+import { generateMetadata } from "@/app/(site)/services/[slug]/page";
 
 const weightLossHtml = renderToStaticMarkup(<WeightLossServicePage />);
 
 describe("medical-weight-loss conversion foundation", () => {
+  it("publishes the branded subdomain as the canonical campaign URL", async () => {
+    const metadata = await generateMetadata({
+      params: Promise.resolve({ slug: "weight-loss" }),
+    });
+    const serviceSchema = medicalWeightLossServiceSchema();
+
+    expect(metadata.alternates?.canonical).toBe(MEDICAL_WEIGHT_LOSS_CANONICAL_URL);
+    expect(metadata.openGraph?.url).toBe(MEDICAL_WEIGHT_LOSS_CANONICAL_URL);
+    expect(serviceSchema.url).toBe(MEDICAL_WEIGHT_LOSS_CANONICAL_URL);
+    expect(serviceSchema["@id"]).toBe(`${MEDICAL_WEIGHT_LOSS_CANONICAL_URL}#service`);
+  });
+
   it("leads with a clear local, physician-led offer", () => {
     expect(weightLossHtml).toContain("Talk with an obesity-medicine physician about GLP-1 options in Vacaville &amp; Napa.");
     expect(weightLossHtml).toContain("Vacaville");

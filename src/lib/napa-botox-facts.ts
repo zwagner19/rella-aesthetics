@@ -52,6 +52,13 @@ export const CANCELLATION_POLICY =
 
 export const CANCELLATION_POLICY_URL = "https://experiencerella.com/cancellation-policy/";
 
+/** Verified public destinations used by the campaign page footer. */
+export const PUBLIC_LINKS = {
+  treatments: "https://experiencerella.com/botox/",
+  privacy: "https://experiencerella.com/privacy-policy/",
+  terms: "https://experiencerella.com/terms-and-conditions/",
+} as const;
+
 /** Approved credential + trust lines (D5). Nothing further may be claimed. */
 export const TRUST = {
   ownerCredential: "Zachary Wagner, DO — Owner",
