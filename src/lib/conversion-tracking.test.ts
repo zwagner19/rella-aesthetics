@@ -26,7 +26,7 @@ describe("conversion intent classification", () => {
 
   it("measures direct calls, email, and contact without counting ordinary navigation", () => {
     expect(classifyConversionHref("tel:+17073582928")).toBe("phone_intent");
-    expect(classifyConversionHref("mailto:hello@experiencerella.com")).toBe("email_intent");
+    expect(classifyConversionHref("mailto:info@experiencerella.com")).toBe("email_intent");
     expect(classifyConversionHref("/contact")).toBe("contact_intent");
     expect(classifyConversionHref("/services/botox")).toBeNull();
   });

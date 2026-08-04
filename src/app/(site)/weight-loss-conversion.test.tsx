@@ -55,8 +55,7 @@ describe("medical-weight-loss conversion foundation", () => {
 
 describe("homepage conversion foundation", () => {
   it("replaces the generic beauty headline with clear positioning", () => {
-    expect(homeHtml).toContain("Care Built Around You");
-    expect(homeHtml).toContain("Physician-owned");
+    expect(homeHtml).toContain("Physician-Owned Aesthetic Care");
     expect(homeHtml).toContain("Vacaville &amp; Napa");
     expect(homeHtml).not.toContain("Ageless Beauty");
   });

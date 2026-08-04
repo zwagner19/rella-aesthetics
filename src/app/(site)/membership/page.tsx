@@ -6,7 +6,7 @@ import { FaqAccordion, FaqSchema } from "@/components/blocks/FaqAccordion";
 import { membershipTiers } from "@/lib/data";
 
 export const metadata: Metadata = {
-  title: "VIP Membership",
+  title: "2026 Tox Membership",
   description:
     "Join the 2026 Rella Tox Membership for $30/month with preferred Botox and Dysport pricing and a one-year commitment.",
   alternates: { canonical: "/membership" },
@@ -29,10 +29,10 @@ export default function MembershipPage() {
       <section className="py-24 bg-rose-blush">
         <div className="mx-auto max-w-[1200px] px-6 md:px-8 lg:px-12">
           <p className="font-bold text-[0.6875rem] tracking-[0.2em] uppercase text-silver mb-4">
-            VIP Membership
+            Membership
           </p>
           <h1 className="font-bold text-4xl md:text-5xl tracking-[0.08em] uppercase text-rose-text mb-4 leading-[1.1]">
-            Elevated Care, Every Month
+            2026 Tox Membership
           </h1>
           <p className="text-lg font-light text-silver max-w-[560px] leading-relaxed">
             Straightforward 2026 member pricing for patients who plan to maintain Botox or Dysport treatment over the year.

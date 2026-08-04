@@ -44,8 +44,8 @@ export default function TermsPage() {
           <h2 className="font-medium text-xl text-silver-dark mt-8">Contact</h2>
           <p>
             Questions about these terms? Contact us at{" "}
-            <a href="mailto:hello@experiencerella.com" className="text-rose-text hover:underline">
-              hello@experiencerella.com
+            <a href="mailto:info@experiencerella.com" className="text-rose-text hover:underline">
+              info@experiencerella.com
             </a>.
           </p>
         </div>

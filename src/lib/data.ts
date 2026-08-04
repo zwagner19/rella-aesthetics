@@ -66,17 +66,17 @@ export const services = [
 
 export const testimonials = [
   {
-    quote: "The team here is wonderful at their craft. They take the time to listen and make sure you are comfortable. I always leave feeling refreshed and confident.",
-    name: "Emika Freeman",
+    quote: "I decided to get my mom a birthday present — a little pampering at Rella Aesthetics. She absolutely loved it! The staff was warm and professional, and the results were beautiful. We will definitely be back.",
+    name: "Mrs. Fout",
     source: "Google Review",
   },
   {
-    quote: "I have been getting Botox for the last 14 years. The team here is knowledgeable, skilled, and genuinely cares about their patients. Best results I have ever had.",
+    quote: "I have been getting Botox for the last 14 years. I am so happy I found Rella Aesthetics. The team here is knowledgeable, skilled, and genuinely cares about their patients. Best results I have ever had.",
     name: "Jenya Khranilov",
     source: "Google Review",
   },
   {
-    quote: "The entire experience at Rella Aesthetics was top-notch. From the moment I walked in, the staff was welcoming and attentive. I could not be happier with my results.",
+    quote: "The entire experience at Rella Aesthetics was top-notch. From the moment I walked in, the staff was welcoming and attentive. I could not be happier with my treatment results.",
     name: "Diamond Bolton",
     source: "Google Review",
   },

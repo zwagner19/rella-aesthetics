@@ -48,8 +48,8 @@ export default function ContactPage() {
                 </p>
                 <p className="text-silver">
                   <strong className="text-silver-dark">Email: </strong>
-                  <a href="mailto:hello@experiencerella.com" className="hover:text-rose-text transition-colors">
-                    hello@experiencerella.com
+                  <a href="mailto:info@experiencerella.com" className="hover:text-rose-text transition-colors">
+                    info@experiencerella.com
                   </a>
                 </p>
               </div>

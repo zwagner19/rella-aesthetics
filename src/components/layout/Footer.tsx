@@ -15,8 +15,8 @@ export function Footer() {
               </span>
             </div>
             <p className="text-sm leading-relaxed">
-              Northern California&apos;s luxury med spa. Physician-led aesthetic treatments in
-              Vacaville and Napa.
+              Physician-owned med spa serving Vacaville and Napa with aesthetic, skin, wellness,
+              and medical weight-management care.
             </p>
           </div>
 
@@ -44,7 +44,7 @@ export function Footer() {
               <li><Link href="/about" className="text-sm hover:text-rose-light transition-colors">About</Link></li>
               <li><Link href="/gallery" className="text-sm hover:text-rose-light transition-colors">Results</Link></li>
               <li><Link href="/blog" className="text-sm hover:text-rose-light transition-colors">Education</Link></li>
-              <li><Link href="/membership" className="text-sm hover:text-rose-light transition-colors">VIP Membership</Link></li>
+              <li><Link href="/membership" className="text-sm hover:text-rose-light transition-colors">Tox Membership</Link></li>
             </ul>
           </div>
 

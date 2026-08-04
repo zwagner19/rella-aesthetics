@@ -20,7 +20,7 @@ export default function ServicesPage() {
           <SectionHeader
             eyebrow="Treatments"
             title="Our Services"
-            description="Physician-led aesthetic and wellness treatments designed around your goals. Every service follows a personalized treatment plan for natural, lasting results."
+            description="Explore consultation-led aesthetic, skin, wellness, and medical weight-management options available through Rella in Vacaville and Napa."
           />
 
           {categories.map((category) => {

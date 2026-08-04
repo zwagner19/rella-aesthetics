@@ -36,9 +36,9 @@ export default function HomePage() {
 
       {/* Hero */}
       <Hero
-        eyebrow="Physician-owned · Vacaville & Napa"
-        title="Care Built Around You"
-        description="Aesthetic and wellness care grounded in medical expertise, honest guidance, and treatment plans designed around your goals."
+        eyebrow="Med spa care · Vacaville & Napa"
+        title="Physician-Owned Aesthetic Care"
+        description="Personalized aesthetic and wellness care with honest guidance, thoughtful recommendations, and a clear next step."
         ctaText="Book Consultation"
         ctaHref={resolveBookingHref({})}
         secondaryCta={{ text: "Explore Services", href: "/services" }}
@@ -47,7 +47,7 @@ export default function HomePage() {
 
       <TrustStrip
         ariaLabel="Why patients choose Rella Aesthetics"
-        items={["Physician-owned", "Vacaville & Napa", "Medical oversight", "Personalized treatment plans"]}
+        items={["Physician-owned", "Two local clinics", "Clear guidance", "Personalized plans"]}
       />
 
       {/* Services Grid */}
@@ -56,7 +56,7 @@ export default function HomePage() {
           <SectionHeader
             eyebrow="Treatments"
             title="Our Services"
-            description="Expert aesthetic and wellness treatments tailored to your unique needs."
+            description="Explore aesthetic, skin, wellness, and medical weight-management options available through Rella."
           />
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {services.map((service) => (
@@ -115,18 +115,32 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* About teaser */}
-      <section className="py-24">
-        <div className="mx-auto max-w-[1200px] px-6 md:px-8 lg:px-12">
-          <div className="max-w-[700px]">
-            <SectionHeader
-              eyebrow="Why Rella"
-              title="Physician-Led, Patient-Centered"
-              description="Rella Aesthetics combines medical expertise with an artist's eye. Every treatment is physician-supervised and designed for naturally beautiful outcomes."
+      {/* Physician-owner trust */}
+      <section className="bg-ink py-20 text-white md:py-24">
+        <div className="mx-auto grid max-w-[1100px] items-center gap-10 px-6 md:grid-cols-[260px_1fr] md:px-8 lg:gap-16 lg:px-12">
+          <div className="relative mx-auto aspect-[4/5] w-full max-w-[260px] overflow-hidden rounded-[1.5rem] bg-white/5">
+            <Image
+              src="/images/dr-zachary-wagner.jpg"
+              alt="Zachary Wagner, DO, physician owner of Rella Aesthetics"
+              fill
+              className="object-cover object-top"
+              sizes="260px"
             />
-            <Button href="/about" variant="ghost">
-              Meet Our Team
-            </Button>
+          </div>
+          <div className="max-w-[680px]">
+            <p className="mb-4 text-[0.6875rem] font-bold uppercase tracking-[0.2em] text-rose-light">
+              Meet the physician owner
+            </p>
+            <h2 className="mb-5 text-3xl font-medium leading-tight tracking-[-0.035em] md:text-5xl">
+              Know the person behind the practice.
+            </h2>
+            <p className="mb-4 text-lg font-light leading-relaxed text-white/75">
+              Zachary Wagner, DO is Rella&apos;s physician owner and an American Board of Obesity Medicine diplomate. His approach begins with listening, explaining the options clearly, and helping each patient choose an appropriate next step.
+            </p>
+            <p className="mb-8 text-sm font-medium text-white/60">
+              Zachary Wagner, DO · Physician Owner
+            </p>
+            <Button href="/about">Meet Dr. Wagner</Button>
           </div>
         </div>
       </section>
@@ -160,7 +174,7 @@ export default function HomePage() {
           <SectionHeader
             eyebrow="Two Locations"
             title="Visit Us"
-            description="Serving Vacaville and Napa with the same level of luxury care."
+            description="Explore clinic details, directions, and booking paths for Vacaville and Napa."
           />
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <LocationCard

@@ -47,8 +47,8 @@ export default function PrivacyPolicyPage() {
           <h2 className="font-medium text-xl text-silver-dark mt-8">Contact Us</h2>
           <p>
             If you have questions about this Privacy Policy, contact us at{" "}
-            <a href="mailto:hello@experiencerella.com" className="text-rose-text hover:underline">
-              hello@experiencerella.com
+            <a href="mailto:info@experiencerella.com" className="text-rose-text hover:underline">
+              info@experiencerella.com
             </a>{" "}
             or call <a href="tel:+17073582928" className="text-rose-text hover:underline">707.358.2928</a>.
           </p>

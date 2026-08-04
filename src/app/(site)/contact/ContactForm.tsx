@@ -117,6 +117,9 @@ export function ContactForm() {
           rows={4}
           className="w-full border border-silver-light rounded px-4 py-3 text-silver-dark bg-white focus:border-rose focus:ring-2 focus:ring-rose/20 transition-colors resize-y"
         />
+        <p className="mt-2 text-xs leading-relaxed text-silver">
+          Please do not include sensitive medical information. This form is for general questions and is not monitored for urgent or emergency care.
+        </p>
       </div>
 
       {status === "error" && (
@@ -128,8 +131,8 @@ export function ContactForm() {
               707.358.2928
             </a>
             , or email{" "}
-            <a className="font-medium underline underline-offset-2" href="mailto:hello@experiencerella.com">
-              hello@experiencerella.com
+            <a className="font-medium underline underline-offset-2" href="mailto:info@experiencerella.com">
+              info@experiencerella.com
             </a>
             .
           </p>

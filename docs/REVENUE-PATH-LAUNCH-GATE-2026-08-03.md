@@ -37,7 +37,7 @@ Use a unique label such as `Rella Site Test 20260803-2215`; do not use a real pa
 ### 3. Failure and fallback behavior
 
 - [ ] On a non-production test deployment with the CRM key intentionally absent, submission does not show success.
-- [ ] The error state shows clickable `707.358.2928` and `hello@experiencerella.com` alternatives.
+- [ ] The error state shows clickable `707.358.2928` and `info@experiencerella.com` alternatives.
 - [ ] Application logs contain no submitted name, email, phone, service, or message.
 - [ ] A filled hidden `website` honeypot returns no CRM record and no lead conversion.
 
@@ -51,6 +51,8 @@ Use a unique label such as `Rella Site Test 20260803-2215`; do not use a real pa
 - [ ] Booking clicks are tracked as intent, not completed appointments.
 
 ### 5. Trust, claims, and local accuracy
+
+Source verification note (2026-08-03): the live Rella Contact page matches `707.358.2928`, both published addresses, Monday–Friday 9am–5pm, Saturday 9am–1pm, and `info@experiencerella.com`. Reconfirm on the approved preview immediately before cutover.
 
 - [ ] About displays Zachary Wagner, DO as Physician Owner.
 - [ ] The credential reads `American Board of Obesity Medicine diplomate`.

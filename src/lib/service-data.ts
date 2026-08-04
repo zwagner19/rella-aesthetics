@@ -25,7 +25,7 @@ export const servicePages: ServicePageData[] = [
     heroDescription: "Expertly administered neuromodulators to smooth fine lines, prevent new wrinkles, and refresh your natural appearance.",
     whatItIs: {
       heading: "What Is Botox?",
-      body: "Botox and Dysport are neuromodulators that temporarily relax targeted facial muscles, smoothing dynamic wrinkles caused by repeated expressions. Results appear within 3–7 days and typically last 3–4 months. Our physician-led approach ensures precise placement for natural, refreshed results — never frozen.",
+      body: "Botox and Dysport are neuromodulators that temporarily relax targeted facial muscles, smoothing dynamic wrinkles caused by repeated expressions. Results appear within 3–7 days and typically last 3–4 months. Your provider will assess your facial movement, goals, and treatment history before recommending product and placement.",
     },
     whoItsFor: {
       heading: "Who Is It For?",
@@ -67,7 +67,7 @@ export const servicePages: ServicePageData[] = [
     slug: "dermal-fillers",
     title: "Dermal Fillers",
     metaTitle: "Dermal Fillers in Vacaville & Napa CA",
-    metaDescription: "Restore facial volume, define contours, and enhance lips with premium dermal fillers at Rella Aesthetics. Physician-led treatments in Vacaville and Napa.",
+    metaDescription: "Explore consultation-led dermal filler treatments for facial volume, contour, and lips at Rella Aesthetics in Vacaville and Napa.",
     heroEyebrow: "Injectables",
     heroTitle: "Dermal Fillers",
     heroDescription: "Restore lost volume, define contours, and enhance your natural features with premium hyaluronic acid fillers.",
