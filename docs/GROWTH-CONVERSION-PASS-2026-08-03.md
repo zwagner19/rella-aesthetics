@@ -14,7 +14,8 @@ This pass strengthens the path from a search result or ad click to a measurable 
   - the medical-weight-loss page stays inside its Napa/Vacaville consultation funnel;
   - the Napa location page uses the verified Napa Boulevard destination;
   - the Vacaville location page uses the verified Vacaville Boulevard destination;
-  - all other ordinary pages use the safe business-level Boulevard widget.
+  - treatment pages now open an on-page Vacaville/Napa chooser and then use a clinic-specific booking destination;
+  - other ordinary pages use the safe business-level Boulevard widget when no location or service context is available.
 - Campaign pages retain their separate focused shell and do not inherit this bar.
 
 ### Revenue-intent measurement

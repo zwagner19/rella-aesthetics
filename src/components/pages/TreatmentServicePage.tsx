@@ -11,7 +11,26 @@ interface TreatmentServicePageProps {
 }
 
 export function TreatmentServicePage({ service }: TreatmentServicePageProps) {
-  const bookingHref = resolveBookingHref({ service: service.slug });
+  const bookingOptions = [
+    {
+      location: "vacaville" as const,
+      name: "Vacaville",
+      address: "542 Main St",
+      detailsHref: "/locations/vacaville",
+    },
+    {
+      location: "napa" as const,
+      name: "Napa",
+      address: "1541 3rd St",
+      detailsHref: "/locations/napa",
+    },
+  ].map((option) => ({
+    ...option,
+    bookingHref: resolveBookingHref({
+      location: option.location,
+      service: service.slug,
+    }),
+  }));
 
   return (
     <>
@@ -28,8 +47,8 @@ export function TreatmentServicePage({ service }: TreatmentServicePageProps) {
               {service.heroDescription}
             </p>
             <div className="flex flex-col gap-3 sm:flex-row">
-              <Button href={bookingHref} data-cta="service-booking" className="rounded-full">
-                Book {service.title}
+              <Button href="#book-service" data-cta="booking-flow-start" className="rounded-full">
+                Choose Your Clinic
               </Button>
               <Button href="#what-to-expect" variant="ghost" className="rounded-full bg-white/70">
                 What to Expect
@@ -111,33 +130,49 @@ export function TreatmentServicePage({ service }: TreatmentServicePageProps) {
           <div className="rounded-[1.5rem] border border-rose-light/70 bg-white p-7 md:p-9">
             <p className="mb-4 text-lg leading-relaxed text-silver-dark">{service.pricing.body}</p>
             {service.pricing.note && <p className="mb-7 text-sm leading-relaxed text-silver">{service.pricing.note}</p>}
-            <Button href={bookingHref} data-cta="service-booking" className="rounded-full">
-              See Booking Options
+            <Button href="#book-service" data-cta="booking-flow-start" className="rounded-full">
+              Choose a Clinic
             </Button>
           </div>
         </div>
       </section>
 
-      <section className="bg-rose-blush py-20 md:py-24">
+      <section
+        id="book-service"
+        aria-labelledby="book-service-heading"
+        className="scroll-mt-24 bg-rose-blush py-20 md:py-24"
+      >
         <div className="mx-auto max-w-[1000px] px-6 md:px-8">
           <div className="mb-10 max-w-[720px]">
             <p className="mb-4 text-[0.6875rem] font-bold uppercase tracking-[0.2em] text-rose-dark">Two locations</p>
-            <h2 className="mb-4 text-3xl font-medium tracking-[-0.035em] text-ink md:text-5xl">Choose the Rella clinic that fits your day.</h2>
-            <p className="text-lg font-light leading-relaxed text-silver">Review location details, then choose the correct clinic when you book.</p>
+            <h2 id="book-service-heading" className="mb-4 text-3xl font-medium tracking-[-0.035em] text-ink md:text-5xl">Choose your clinic before you book.</h2>
+            <p className="text-lg font-light leading-relaxed text-silver">Select Vacaville or Napa here so your booking journey opens with the correct clinic context.</p>
           </div>
           <div className="grid gap-5 sm:grid-cols-2">
-            {[
-              { href: "/locations/vacaville", name: "Vacaville", address: "542 Main St" },
-              { href: "/locations/napa", name: "Napa", address: "1541 3rd St" },
-            ].map((location) => (
-              <Link key={location.name} href={location.href} className="group rounded-[1.5rem] border border-rose-light/70 bg-white p-6 md:p-8">
+            {bookingOptions.map((location, index) => (
+              <div key={location.name} className="rounded-[1.5rem] border border-rose-light/70 bg-white p-6 md:p-8">
                 <div className="mb-8 flex items-start justify-between gap-4">
                   <p className="text-[0.6875rem] font-bold uppercase tracking-[0.2em] text-rose-dark">Rella Aesthetics</p>
-                  <span aria-hidden="true" className="text-2xl font-light text-rose transition-transform group-hover:translate-x-1">→</span>
+                  <span aria-hidden="true" className="text-2xl font-light text-rose">0{index + 1}</span>
                 </div>
                 <h3 className="mb-2 text-2xl font-medium tracking-[-0.025em] text-ink">{location.name}</h3>
-                <p className="text-sm text-silver">{location.address}</p>
-              </Link>
+                <p className="mb-6 text-sm text-silver">{location.address}</p>
+                <div className="flex flex-col items-start gap-4">
+                  <Button
+                    href={location.bookingHref}
+                    data-cta="service-booking"
+                    className="w-full rounded-full px-5"
+                  >
+                    Book in {location.name}
+                  </Button>
+                  <Link
+                    href={location.detailsHref}
+                    className="text-sm font-medium text-rose-text underline decoration-rose-light underline-offset-4 hover:text-rose-dark"
+                  >
+                    View {location.name} clinic details
+                  </Link>
+                </div>
+              </div>
             ))}
           </div>
         </div>
@@ -155,9 +190,18 @@ export function TreatmentServicePage({ service }: TreatmentServicePageProps) {
         <div className="mx-auto max-w-[680px] px-6">
           <h2 className="mb-4 text-3xl font-medium tracking-[-0.035em] md:text-5xl">Ready for a clear next step?</h2>
           <p className="mb-8 text-lg font-light leading-relaxed text-white/85">Book a consultation to review your goals, the appropriate plan, and the current total before treatment.</p>
-          <Button href={bookingHref} data-cta="service-booking" className="rounded-full bg-white !text-rose hover:bg-white/90 hover:!text-rose-dark">
-            Book {service.title}
-          </Button>
+          <div className="flex flex-col justify-center gap-3 sm:flex-row">
+            {bookingOptions.map((location) => (
+              <Button
+                key={location.name}
+                href={location.bookingHref}
+                data-cta="service-booking"
+                className="rounded-full bg-white !text-rose hover:bg-white/90 hover:!text-rose-dark"
+              >
+                Book in {location.name}
+              </Button>
+            ))}
+          </div>
         </div>
       </section>
     </>

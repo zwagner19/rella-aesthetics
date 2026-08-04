@@ -94,17 +94,6 @@ export interface MobileBookingDestination {
   cta: string;
 }
 
-const SERVICE_BOOKING_LABELS: Record<string, string> = {
-  botox: "Book Botox",
-  "dermal-fillers": "Book Fillers",
-  "chemical-peels": "Book a Peel",
-  facials: "Book a Facial",
-  hydrafacial: "Book HydraFacial",
-  microneedling: "Book Microneedling",
-  "iv-hydration": "Book IV Hydration",
-  "laser-treatments": "Book Laser Consult",
-};
-
 export function resolveMobileBookingDestination(
   pathname: string | null,
 ): MobileBookingDestination {
@@ -143,11 +132,11 @@ export function resolveMobileBookingDestination(
   }
 
   const serviceSlug = currentPath.match(/^\/services\/([^/]+)$/)?.[1];
-  if (serviceSlug && SERVICE_BOOKING_LABELS[serviceSlug]) {
+  if (serviceSlug) {
     return {
-      href: resolveBookingHref({ service: serviceSlug }),
-      label: SERVICE_BOOKING_LABELS[serviceSlug],
-      cta: "service-booking",
+      href: "#book-service",
+      label: "Choose a Clinic",
+      cta: "booking-flow-start",
     };
   }
 

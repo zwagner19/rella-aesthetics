@@ -64,15 +64,17 @@ describe("mobile booking bar routing", () => {
     );
   });
 
-  it("keeps the mobile action aligned with the service being viewed", () => {
+  it("keeps service-page visitors in the explicit clinic-choice flow", () => {
     expect(resolveMobileBookingDestination("/services/botox")).toEqual({
-      href: BOULEVARD_WIDGET_GENERIC,
-      label: "Book Botox",
-      cta: "service-booking",
+      href: "#book-service",
+      label: "Choose a Clinic",
+      cta: "booking-flow-start",
     });
-    expect(resolveMobileBookingDestination("/services/iv-hydration").label).toBe(
-      "Book IV Hydration",
-    );
+    expect(resolveMobileBookingDestination("/services/iv-hydration")).toEqual({
+      href: "#book-service",
+      label: "Choose a Clinic",
+      cta: "booking-flow-start",
+    });
   });
 
   it("turns the Napa Botox pricing article into a Napa-specific booking path", () => {

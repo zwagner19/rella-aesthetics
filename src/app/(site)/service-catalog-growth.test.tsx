@@ -2,7 +2,7 @@ import { existsSync } from "node:fs";
 import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it } from "vitest";
 import { TreatmentServicePage } from "@/components/pages/TreatmentServicePage";
-import { BOULEVARD_WIDGET_GENERIC } from "@/lib/booking-routes";
+import { BOULEVARD_WIDGET_GENERIC, resolveBookingHref } from "@/lib/booking-routes";
 import { membershipTiers } from "@/lib/data";
 import { treatmentServiceSchema } from "@/lib/schemas";
 import { servicePages } from "@/lib/service-data";
@@ -30,8 +30,22 @@ describe("polished service catalog", () => {
       expect(decoded, service.slug).toContain(service.pricing.body);
       expect(decoded, service.slug).toContain("Vacaville");
       expect(decoded, service.slug).toContain("Napa");
-      expect(html, service.slug).toContain(BOULEVARD_WIDGET_GENERIC.replace(/&/g, "&amp;"));
-      expect(html.match(/data-cta="service-booking"/g), service.slug).toHaveLength(3);
+      expect(html, service.slug).toContain('id="book-service"');
+      expect(html.match(/data-cta="booking-flow-start"/g), service.slug).toHaveLength(2);
+
+      const bookingAnchors = [
+        ...html.matchAll(/<a[^>]*data-cta="service-booking"[^>]*>/g),
+      ];
+      const bookingHrefs = bookingAnchors.map(
+        (match) => /href="([^"]+)"/.exec(match[0])?.[1],
+      );
+      const expectedHrefs = (["vacaville", "napa"] as const).map((location) =>
+        resolveBookingHref({ location, service: service.slug }).replaceAll("&", "&amp;"),
+      );
+
+      expect(bookingHrefs, service.slug).toHaveLength(4);
+      expect(new Set(bookingHrefs), service.slug).toEqual(new Set(expectedHrefs));
+      expect(bookingHrefs, service.slug).not.toContain(BOULEVARD_WIDGET_GENERIC);
       expect(existsSync(`public${service.image}`), service.image).toBe(true);
     }
   });
