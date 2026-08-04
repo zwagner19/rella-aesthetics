@@ -26,12 +26,15 @@ export function TreatmentServicePage({ service }: TreatmentServicePageProps) {
               ? "/vacaville/laser"
               : service.slug === "hydrafacial"
                 ? "/vacaville/hydrafacial"
+                : service.slug === "chemical-peels"
+                  ? "/vacaville/chemical-peels"
             : "/locations/vacaville",
       detailsLabel:
         service.slug === "botox" ||
         service.slug === "dermal-fillers" ||
         service.slug === "laser-treatments" ||
-        service.slug === "hydrafacial"
+        service.slug === "hydrafacial" ||
+        service.slug === "chemical-peels"
           ? "View Vacaville pricing & visit guide"
           : "View Vacaville clinic details",
     },

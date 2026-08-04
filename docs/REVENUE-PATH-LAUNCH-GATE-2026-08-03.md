@@ -62,6 +62,7 @@ Use a unique label such as `Rella Site Test 20260803-2215`; do not use a real pa
 - [ ] `/vacaville/filler` returns HTTP 200, uses its exact slashless canonical, and every booking action reaches the Vacaville menu with an Injectables next step rather than Napa or the generic chooser.
 - [ ] `/vacaville/laser` returns HTTP 200, uses its exact slashless canonical, and every booking action reaches the Vacaville `Initial Laser Consult` with `Select a professional` rather than Napa, the generic menu, or a treatment that bypasses the required consult.
 - [ ] `/vacaville/hydrafacial` returns HTTP 200, uses its exact slashless canonical, and every booking action reaches the Vacaville `Signature Hydrafacial` with `Select a professional` rather than Napa or the generic menu.
+- [ ] `/vacaville/chemical-peels` returns HTTP 200, uses its exact slashless canonical, and every booking action reaches the Vacaville menu where Peels renders the four options published on the page.
 - [ ] `/napa/`, `/napa/botox/`, `/napa/filler/`, `/napa/laser/`, `/napa/hydrafacial/`, and `/napa/hyperhidrosis/` all return HTTP 200 on the exact preview commit.
 - [ ] `/blog/botox-cost-napa` and `/images/og-botox-cost-napa.png` both return HTTP 200 on the exact preview commit.
 - [ ] The Botox pricing article canonical is the public article URL, and its Open Graph/X image resolves on the public domain.
@@ -69,7 +70,7 @@ Use a unique label such as `Rella Site Test 20260803-2215`; do not use a real pa
 - [ ] Each Napa service page keeps every Book action on its one approved service/location destination.
 - [ ] Each Napa booking click emits one `booking_start` signal with the correct service label and no personal or health information.
 - [ ] Vacaville location booking reaches the verified Vacaville destination.
-- [ ] The Vacaville chemical-peel action opens the live Vacaville menu; do not reinstate the tested-broken `/cart/menu/Peels` handoff without a new rendered-browser pass.
+- [ ] The Vacaville chemical-peel actions open the live Vacaville menu; do not reinstate the externally tested-broken `/cart/menu/Peels` shortcut without a new rendered-browser pass.
 - [ ] Medical weight-loss visitors can choose Napa or Vacaville before leaving the page.
 - [ ] The sticky mobile action bar does not cover form controls or legal copy at 390 × 844.
 - [ ] Booking clicks are tracked as intent, not completed appointments.

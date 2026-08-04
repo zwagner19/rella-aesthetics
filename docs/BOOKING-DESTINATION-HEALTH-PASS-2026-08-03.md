@@ -32,13 +32,13 @@ The final-host rule matters because Boulevard currently redirects its dashboard 
 
 The August 3 production-mode preview passed with:
 
-- 32 sitemap pages inspected;
+- 33 sitemap pages inspected;
 - 13 unique external booking destinations;
 - 1 `book.experiencerella.com` destination returning 200 on the same host;
 - 4 `book.rellaweightloss.com` destinations returning 200 on the same host;
 - 8 `dashboard.boulevard.io` destinations redirecting to `www.joinblvd.com` and returning 200.
 
-This covers the hardened Napa Botox path, both city-specific weight-loss assessments, both city-specific weight-loss consultations, both clinic-scoped Boulevard menus, the verified Napa service/category paths, the rendered Vacaville Initial Laser Consult, and the rendered Vacaville Signature HydraFacial. Generic booking now stays first-party long enough to choose a clinic at `/book`, so the broken business-level Boulevard URL is absent.
+This covers the hardened Napa Botox path, both city-specific weight-loss assessments, both city-specific weight-loss consultations, both clinic-scoped Boulevard menus, the verified Napa service/category paths, the rendered Vacaville Initial Laser Consult, the rendered Vacaville Signature HydraFacial, and the Vacaville chemical-peel menu fallback. Generic booking now stays first-party long enough to choose a clinic at `/book`, so the broken business-level Boulevard URL is absent.
 
 ## Release usage
 
@@ -70,4 +70,4 @@ Resolve or deliberately replace the affected route in the typed booking resolver
 - 277 automated checks passed across 21 test files.
 - Full ESLint pass completed with no findings.
 - TypeScript completed with no errors.
-- The command passed against the optimized preview's 32 sitemap pages and all 13 currently rendered external destinations.
+- The command passed against the optimized preview's 33 sitemap pages and all 13 currently rendered external destinations.

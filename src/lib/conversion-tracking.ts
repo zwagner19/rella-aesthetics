@@ -165,6 +165,17 @@ export function resolveMobileBookingDestination(
     };
   }
 
+  if (currentPath === "/vacaville/chemical-peels") {
+    return {
+      href: resolveBookingHref({
+        location: "vacaville",
+        service: "chemical-peels",
+      }),
+      label: "Open Peel Menu",
+      cta: "service-booking",
+    };
+  }
+
   if (currentPath === "/services/weight-loss") {
     return {
       href: "#consultation-options",

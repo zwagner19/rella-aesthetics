@@ -33,6 +33,11 @@ const popularServices = [
     description: "Compare Signature, Deluxe, and Platinum pricing with direct Signature booking.",
   },
   {
+    href: "/vacaville/chemical-peels",
+    title: "Chemical Peels",
+    description: "Compare the four current Vacaville options, recovery planning, and the safe clinic-menu handoff.",
+  },
+  {
     href: "/services/weight-loss",
     title: "Medical Weight Loss",
     description: "Start with a phone consultation with Zachary Wagner, DO.",

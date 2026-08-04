@@ -138,4 +138,12 @@ describe("mobile booking bar routing", () => {
     expect(booking.href).toContain("s_68b27f62-4a04-4f9f-953e-ec4b2918ad3d");
     expect(booking.href).toContain("locationId=0f146f87-364e-4dfd-b938-61ba49528820");
   });
+
+  it("keeps the Vacaville chemical-peel page on the working clinic menu", () => {
+    expect(resolveMobileBookingDestination("/vacaville/chemical-peels")).toEqual({
+      href: BOULEVARD_WIDGET_VACAVILLE,
+      label: "Open Peel Menu",
+      cta: "service-booking",
+    });
+  });
 });

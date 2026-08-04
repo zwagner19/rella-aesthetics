@@ -24,12 +24,15 @@ The page previously advertised chemical peels in both Vacaville and Napa and ren
 - The educational copy names the four currently visible Vacaville services.
 - Unsupported claims that Rella offers deep peels, fixed recovery windows, and a standard 3–6 treatment result pattern were removed.
 - Pricing remains consultation-led because the available sources do not establish a single current public price that is safe to publish across all four peel options.
+- A follow-on local acquisition page now exists at `/vacaville/chemical-peels`, with all booking actions kept on the working location-pinned Vacaville menu. See `docs/VACAVILLE-CHEMICAL-PEELS-ACQUISITION-PASS-2026-08-03.md`.
 
 ## Reusable location contract
 
 `ServicePageData.availableLocations` now provides a source-of-truth boundary for services that are not bookable at every clinic. The ordinary treatment-page component and Service schema both consume it, so visible CTAs and search claims cannot drift apart.
 
 The default remains both clinics for services with verified two-location availability; chemical peels explicitly opt into Vacaville only.
+
+The shared guide's clinic-detail action and the Vacaville location page now link to the dedicated local guide, so visitors can see the verified menu names and booking instructions without introducing a false Napa path.
 
 ## Regression coverage
 
