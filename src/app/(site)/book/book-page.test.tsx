@@ -28,4 +28,18 @@ describe("first-party clinic booking chooser", () => {
     expect(html).not.toMatch(/<form|<input|<textarea|<select/);
     expect(html).toContain("707.358.2928");
   });
+
+  it("puts each live-times action before the lower-priority clinic hours", () => {
+    const vacavilleCard = /data-booking-location="vacaville"([\s\S]*?)<\/article>/.exec(html)?.[1] ?? "";
+    const napaCard = /data-booking-location="napa"([\s\S]*?)<\/article>/.exec(html)?.[1] ?? "";
+
+    expect(vacavilleCard.indexOf('data-cta="location-booking"')).toBeGreaterThanOrEqual(0);
+    expect(vacavilleCard.indexOf('data-cta="location-booking"')).toBeLessThan(
+      vacavilleCard.indexOf("Wednesday–Saturday"),
+    );
+    expect(napaCard.indexOf('data-cta="location-booking"')).toBeGreaterThanOrEqual(0);
+    expect(napaCard.indexOf('data-cta="location-booking"')).toBeLessThan(
+      napaCard.indexOf("Tuesday–Saturday"),
+    );
+  });
 });

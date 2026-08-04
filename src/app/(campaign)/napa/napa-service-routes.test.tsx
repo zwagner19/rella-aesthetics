@@ -64,6 +64,13 @@ const routes = [
 ] as const;
 
 describe("Napa paid + local-search route preservation", () => {
+  it("lets the root metadata template append the brand only once", () => {
+    expect(hubMetadata.title).toBe("Napa Med Spa Services");
+    expect(hubMetadata.openGraph?.title).toBe(
+      "Napa Med Spa Services | Rella Aesthetics",
+    );
+  });
+
   it.each(routes)("/$slug exists with unique indexable metadata", (route) => {
     expect(route.metadata.alternates?.canonical).toBe(route.canonical);
     expect(route.metadata.robots).toEqual({ index: true, follow: true });
@@ -145,7 +152,7 @@ describe("Napa campaign hub", () => {
     expect(hubMetadata.alternates?.canonical).toBe(
       "https://experiencerella.com/napa",
     );
-    expect(hubMetadata.title).toBe("Napa Med Spa Services | Rella Aesthetics");
+    expect(hubMetadata.title).toBe("Napa Med Spa Services");
     expect(text).toContain("Rella Aesthetics — Napa");
     expect(text).toContain("American Board of Obesity Medicine diplomate");
     expect(text).toContain("1541 3rd St");

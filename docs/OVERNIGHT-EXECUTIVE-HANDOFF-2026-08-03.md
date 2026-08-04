@@ -18,7 +18,7 @@ The imported Google Ads record is now packaged into a recovery control plan and 
 | Runtime checkpoint | Record and deploy only the exact reviewed branch head from the preview run sheet |
 | Branch scope | Multi-commit release branch; deploy only an exact reviewed head |
 | Production build | Passed; 47 routes generated |
-| Automated suite | 349 checks across 32 files; all passed |
+| Automated suite | 351 checks across 32 files; all passed |
 | Lint and TypeScript | Passed with no findings |
 | Indexable crawl | 36 pages; all passed |
 | Internal destinations | 47; all passed; zero orphaned indexed pages; maximum homepage crawl depth 2 |
@@ -89,6 +89,7 @@ Fast owner review packets:
 - `docs/CONVERSION-ACCESSIBILITY-PASS-2026-08-04.md`
 - `docs/PAID-ACQUISITION-CONTROL-PACK-2026-08-04.md`
 - `docs/GOOGLE-ADS-LIVE-READONLY-AUDIT-2026-08-04.md`
+- `docs/BOOKING-CHOOSER-CONVERSION-PASS-2026-08-04.md`
 
 ## Recommended activation order
 

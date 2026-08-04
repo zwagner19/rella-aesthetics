@@ -6,7 +6,7 @@ import "./botox/napa-botox.css";
 const CANONICAL = "https://experiencerella.com/napa";
 
 export const metadata: Metadata = {
-  title: "Napa Med Spa Services | Rella Aesthetics",
+  title: "Napa Med Spa Services",
   description:
     "Explore physician-owned aesthetic and wellness care at Rella Aesthetics Napa, with focused paths for Botox, filler, laser, facials, HydraFacial, and sweating care.",
   alternates: { canonical: CANONICAL },

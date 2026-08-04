@@ -88,7 +88,7 @@ npm run check:paid-search
 
 Prepared checkpoint expectation:
 
-- 32 test files and 349 tests pass;
+- 32 test files and 351 tests pass;
 - Next.js 16.2.12 generates 47 routes;
 - sitemap generation completes.
 
