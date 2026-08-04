@@ -14,6 +14,7 @@ function configureGhl() {
   vi.stubEnv("GHL_API_KEY", "test-token");
   vi.stubEnv("GHL_LOCATION_ID", "location-123");
   vi.stubEnv("GHL_CUSTOM_FIELD_SERVICE_ID", "service-field");
+  vi.stubEnv("GHL_CUSTOM_FIELD_LOCATION_ID", "location-field");
   vi.stubEnv("GHL_CUSTOM_FIELD_MESSAGE_ID", "message-field");
 }
 
@@ -99,6 +100,7 @@ describe("contact lead delivery", () => {
         email: "TEST@EXAMPLE.COM",
         phone: "(707) 555-0100",
         service: "Medical Weight Loss",
+        location: "Napa",
         message: "Please call after 3pm.",
       }) as never,
     );
@@ -118,6 +120,7 @@ describe("contact lead delivery", () => {
       source: "Rella Website — Contact Form",
       customFields: [
         { id: "service-field", fieldValue: "Medical Weight Loss" },
+        { id: "location-field", fieldValue: "Napa" },
         { id: "message-field", fieldValue: "Please call after 3pm." },
       ],
     });
@@ -129,8 +132,56 @@ describe("contact lead delivery", () => {
       "https://services.leadconnectorhq.com/contacts/contact-456/tags",
     );
     expect(JSON.parse(String(tagOptions.body))).toEqual({
-      tags: ["website-lead", "interest-medical-weight-loss"],
+      tags: ["website-lead", "interest-medical-weight-loss", "location-napa"],
     });
+  });
+
+  it("preserves clinic preference as a tag when its optional custom field is absent", async () => {
+    configureGhl();
+    vi.stubEnv("GHL_CUSTOM_FIELD_LOCATION_ID", "");
+    const fetchMock = vi
+      .fn()
+      .mockResolvedValueOnce(
+        new Response(JSON.stringify({ contact: { id: "contact-456" } }), {
+          status: 200,
+        }),
+      )
+      .mockResolvedValueOnce(new Response("{}", { status: 200 }));
+    vi.stubGlobal("fetch", fetchMock);
+
+    const response = await POST(
+      leadRequest({
+        name: "Test Person",
+        email: "test@example.com",
+        location: "Vacaville",
+      }) as never,
+    );
+
+    expect(response.status).toBe(200);
+    const upsertBody = JSON.parse(String(fetchMock.mock.calls[0][1].body));
+    expect(upsertBody.customFields).toBeUndefined();
+    const tagBody = JSON.parse(String(fetchMock.mock.calls[1][1].body));
+    expect(tagBody.tags).toEqual(["website-lead", "location-vacaville"]);
+  });
+
+  it("rejects an unrecognized clinic value before contacting the CRM", async () => {
+    configureGhl();
+    const fetchMock = vi.fn();
+    vi.stubGlobal("fetch", fetchMock);
+
+    const response = await POST(
+      leadRequest({
+        name: "Test Person",
+        email: "test@example.com",
+        location: "Somewhere Else",
+      }) as never,
+    );
+
+    expect(response.status).toBe(400);
+    expect(await response.json()).toEqual({
+      error: "Select a valid clinic preference",
+    });
+    expect(fetchMock).not.toHaveBeenCalled();
   });
 
   it("never claims acceptance when the CRM rejects the contact", async () => {

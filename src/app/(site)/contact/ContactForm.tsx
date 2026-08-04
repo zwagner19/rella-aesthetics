@@ -108,6 +108,24 @@ export function ContactForm() {
         </select>
       </div>
       <div>
+        <label htmlFor="location" className="block text-sm font-medium text-silver-dark mb-1">
+          Preferred Clinic <span className="font-normal text-silver">(optional)</span>
+        </label>
+        <select
+          id="location"
+          name="location"
+          className="w-full border border-silver-light rounded px-4 py-3 text-silver-dark bg-white focus:border-rose focus:ring-2 focus:ring-rose/20 transition-colors"
+        >
+          <option value="">Select a clinic</option>
+          <option value="Vacaville">Vacaville — 542 Main St</option>
+          <option value="Napa">Napa — 1541 3rd St</option>
+          <option value="No preference">No preference — help me choose</option>
+        </select>
+        <p className="mt-2 text-xs leading-relaxed text-silver">
+          This helps the team route your question to the right clinic. You can still change locations later.
+        </p>
+      </div>
+      <div>
         <label htmlFor="message" className="block text-sm font-medium text-silver-dark mb-1">
           Message
         </label>

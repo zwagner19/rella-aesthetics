@@ -81,9 +81,10 @@ The tracking components remain inert when their existing environment variables a
 1. `NEXT_PUBLIC_GA_MEASUREMENT_ID` is set to the correct GA4 property.
 2. `NEXT_PUBLIC_META_PIXEL_ID` is set only after the privacy/compliance decision for health-service pages.
 3. `GHL_API_KEY`, `GHL_LOCATION_ID`, and `GHL_CUSTOM_FIELD_MESSAGE_ID` are set so contact submissions create real CRM contacts and preserve the full inquiry.
-4. The production domain is tested in GA4 DebugView and Meta Test Events.
-5. Only successful `generate_lead` events are marked as lead conversions initially.
-6. A later Boulevard completion or approved thank-you-page integration supplies the authoritative completed-appointment event. Booking-click intent must not be treated as a completed appointment.
+4. `GHL_CUSTOM_FIELD_SERVICE_ID` and `GHL_CUSTOM_FIELD_LOCATION_ID` are set for clean service and clinic routing; the tag fallback remains available if the location field is deliberately omitted.
+5. The production domain is tested in GA4 DebugView and Meta Test Events.
+6. Only successful `generate_lead` events are marked as lead conversions initially.
+7. A later Boulevard completion or approved thank-you-page integration supplies the authoritative completed-appointment event. Booking-click intent must not be treated as a completed appointment.
 
 ## Remaining launch approvals
 

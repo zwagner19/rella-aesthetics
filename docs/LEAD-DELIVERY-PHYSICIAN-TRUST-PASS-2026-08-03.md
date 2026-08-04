@@ -27,6 +27,10 @@ The corrected behavior:
 
 The form does not claim a one-business-day response time because that service level has not been confirmed.
 
+## Clinic-routing follow-on
+
+The contact form now also captures an optional, allowlisted clinic preference and preserves it as a non-destructive HighLevel location tag. When `GHL_CUSTOM_FIELD_LOCATION_ID` is configured, the same value is stored in a dedicated contact field for staff visibility and reporting. See `docs/CONTACT-CLINIC-ROUTING-PASS-2026-08-03.md`.
+
 ## Physician trust page
 
 `/about` now presents:
@@ -69,6 +73,7 @@ Before production approval, configure and verify:
 - `GHL_LOCATION_ID`
 - `GHL_CUSTOM_FIELD_MESSAGE_ID`
 - `GHL_CUSTOM_FIELD_SERVICE_ID` (strongly recommended)
+- `GHL_CUSTOM_FIELD_LOCATION_ID` (strongly recommended)
 
 Then submit a synthetic inquiry on the exact preview build and confirm the complete record in the intended HighLevel sub-account. Paid traffic must remain off until that check and the two clinic booking checks pass.
 

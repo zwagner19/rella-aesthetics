@@ -22,13 +22,15 @@ No paid campaign should point to the site until one real test inquiry is visible
 - [ ] `GHL_LOCATION_ID` points to the intended Rella sub-account.
 - [ ] `GHL_CUSTOM_FIELD_MESSAGE_ID` points to a dedicated large-text contact field.
 - [ ] `GHL_CUSTOM_FIELD_SERVICE_ID` is configured for clean service reporting.
-- [ ] Submit a unique preview lead from `/contact` with name, email, phone, service, and a recognizable test message.
+- [ ] `GHL_CUSTOM_FIELD_LOCATION_ID` is configured for clean clinic routing, or the owner has deliberately approved the location-tag fallback.
+- [ ] Submit a unique preview lead from `/contact` with name, email, phone, service, clinic preference, and a recognizable test message.
 - [ ] The website shows success only after submission completes.
 - [ ] The contact is visible in HighLevel under the intended location.
 - [ ] The record contains the exact email and normalized phone.
 - [ ] `source` is `Rella Website — Contact Form`.
 - [ ] The message appears intact in the dedicated message field.
 - [ ] The service appears in its custom field and as an `interest-*` tag.
+- [ ] The clinic preference appears in its custom field when configured and as the correct `location-*` tag.
 - [ ] `website-lead` is present without deleting any existing tags on a repeat-contact test.
 - [ ] The browser records one `generate_lead`/Lead event only for the CRM-accepted submission.
 - [ ] Delete or clearly label the test contact after verification.

@@ -57,6 +57,9 @@ describe("sitewide conversion foundation", () => {
     expect(source).toContain("result.accepted === true");
     expect(source).toContain('href="tel:+17073582928"');
     expect(source).toContain('href="mailto:info@experiencerella.com"');
+    expect(source).toContain('name="location"');
+    expect(source).toContain("Preferred Clinic");
+    expect(source).toContain("No preference — help me choose");
     expect(source).toContain("Please do not include sensitive medical information");
   });
 });

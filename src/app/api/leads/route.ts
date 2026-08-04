@@ -10,6 +10,7 @@ interface LeadPayload {
   email?: string;
   phone?: string;
   service?: string;
+  location?: string;
   message?: string;
   website?: string;
 }
@@ -19,8 +20,15 @@ const limits = {
   email: 254,
   phone: 40,
   service: 120,
+  location: 40,
   message: 2_000,
 } as const;
+
+const CLINIC_PREFERENCES: ReadonlyMap<string, string> = new Map([
+  ["napa", "Napa"],
+  ["vacaville", "Vacaville"],
+  ["no preference", "No preference"],
+] as const);
 
 function clean(value: unknown, maxLength: number) {
   return typeof value === "string" ? value.trim().slice(0, maxLength) : "";
@@ -34,6 +42,17 @@ function interestTag(service: string) {
   return slug ? `interest-${slug}` : "";
 }
 
+function clinicPreference(value: string) {
+  return CLINIC_PREFERENCES.get(value.toLowerCase()) ?? "";
+}
+
+function clinicTag(location: string) {
+  if (location === "Napa") return "location-napa";
+  if (location === "Vacaville") return "location-vacaville";
+  if (location === "No preference") return "location-flexible";
+  return "";
+}
+
 export async function POST(req: NextRequest) {
   try {
     const rawBody: unknown = await req.json();
@@ -43,6 +62,8 @@ export async function POST(req: NextRequest) {
     const email = clean(body.email, limits.email).toLowerCase();
     const phone = clean(body.phone, limits.phone);
     const service = clean(body.service, limits.service);
+    const rawLocation = clean(body.location, limits.location);
+    const location = clinicPreference(rawLocation);
     const message = clean(body.message, limits.message);
     const website = clean(body.website, 200);
 
@@ -63,9 +84,17 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Enter a valid email address" }, { status: 400 });
     }
 
+    if (rawLocation && !location) {
+      return NextResponse.json(
+        { error: "Select a valid clinic preference" },
+        { status: 400 },
+      );
+    }
+
     const GHL_API_KEY = process.env.GHL_API_KEY ?? "";
     const GHL_LOCATION_ID = process.env.GHL_LOCATION_ID ?? "";
     const GHL_CF_SERVICE = process.env.GHL_CUSTOM_FIELD_SERVICE_ID ?? "";
+    const GHL_CF_LOCATION = process.env.GHL_CUSTOM_FIELD_LOCATION_ID ?? "";
     const GHL_CF_MESSAGE = process.env.GHL_CUSTOM_FIELD_MESSAGE_ID ?? "";
 
     // FAIL CLOSED. A prospect must never see a success state unless their
@@ -94,6 +123,9 @@ export async function POST(req: NextRequest) {
     const customFields: { id: string; fieldValue: string }[] = [];
     if (GHL_CF_SERVICE && service) {
       customFields.push({ id: GHL_CF_SERVICE, fieldValue: service });
+    }
+    if (GHL_CF_LOCATION && location) {
+      customFields.push({ id: GHL_CF_LOCATION, fieldValue: location });
     }
     if (GHL_CF_MESSAGE && message) {
       customFields.push({ id: GHL_CF_MESSAGE, fieldValue: message });
@@ -151,7 +183,11 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const tags = ["website-lead", interestTag(service)].filter(Boolean);
+    const tags = [
+      "website-lead",
+      interestTag(service),
+      clinicTag(location),
+    ].filter(Boolean);
     const tagRes = await fetch(`${GHL_API_BASE}/contacts/${contactId}/tags`, {
       method: "POST",
       headers,

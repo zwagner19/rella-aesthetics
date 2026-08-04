@@ -40,7 +40,7 @@ Never commit real credentials. `.env.local` and hosted environment values stay o
 | `GHL_LOCATION_ID` | Places the contact in the correct HighLevel sub-account | Contact form fails closed |
 | `GHL_CUSTOM_FIELD_MESSAGE_ID` | Stores the prospect's message in a dedicated HighLevel field | Contact form fails closed; messages are never hidden in logs or `source` |
 
-`GHL_CUSTOM_FIELD_SERVICE_ID` is strongly recommended for reporting. Without it, service interest is still added as a contact tag.
+`GHL_CUSTOM_FIELD_SERVICE_ID` and `GHL_CUSTOM_FIELD_LOCATION_ID` are strongly recommended for reporting and routing. Without them, service interest and an optional clinic preference are still preserved as non-destructive contact tags.
 
 The HighLevel token must be a sub-account/private integration token with `contacts.write` access. Use the `2021-07-28` API version configured in `src/lib/ghl.ts`.
 
@@ -70,6 +70,7 @@ Do not place names, emails, phone numbers, messages, provider selections, or hea
 
 - Missing CRM configuration returns an error, never a fake success.
 - A free-text message is stored only in the configured message custom field.
+- Clinic preference accepts only Napa, Vacaville, or no preference; it is stored in the configured field when available and preserved as a routing tag either way.
 - Form contents are never printed to application logs.
 - Browser lead conversions fire only when the API returns `accepted: true`.
 - The form provides direct phone and email fallback whenever delivery fails.
