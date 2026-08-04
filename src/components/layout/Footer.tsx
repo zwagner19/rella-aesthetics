@@ -18,6 +18,26 @@ export function Footer() {
               Physician-owned med spa serving Vacaville and Napa with aesthetic, skin, wellness,
               and medical weight-management care.
             </p>
+            <div className="mt-5 flex flex-wrap gap-3">
+              <a
+                aria-label="Rella Aesthetics on Instagram, @experiencerella"
+                className="rounded-full border border-white/15 px-3 py-2 text-xs font-semibold text-white/75 transition-colors hover:border-rose-light hover:text-rose-light"
+                href="https://www.instagram.com/experiencerella/"
+                rel="noreferrer"
+                target="_blank"
+              >
+                Instagram · @experiencerella
+              </a>
+              <a
+                aria-label="Rella Aesthetics on Facebook"
+                className="rounded-full border border-white/15 px-3 py-2 text-xs font-semibold text-white/75 transition-colors hover:border-rose-light hover:text-rose-light"
+                href="https://www.facebook.com/rellaaesthetics/"
+                rel="noreferrer"
+                target="_blank"
+              >
+                Facebook
+              </a>
+            </div>
           </div>
 
           {/* Services */}

@@ -57,6 +57,8 @@ describe("public cancellation-policy integrity", () => {
   it("keeps the policy discoverable from the ordinary-site footer", () => {
     const footerHtml = renderToStaticMarkup(<Footer />);
     expect(footerHtml).toContain('href="/cancellation-policy"');
+    expect(footerHtml).toContain('href="https://www.instagram.com/experiencerella/"');
+    expect(footerHtml).toContain('href="https://www.facebook.com/rellaaesthetics/"');
     expect(footerHtml).toContain("pb-28 lg:pb-8");
   });
 });
