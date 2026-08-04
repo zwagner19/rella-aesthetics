@@ -74,4 +74,3 @@ Before cutover:
 5. update any remaining public WordPress hours during the controlled cutover so search, GBP, and the new site do not conflict.
 
 If operating hours have changed since the July 15 public documents, update the central location data, its contract tests, visible copy, and schema together from a newly approved source.
-

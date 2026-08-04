@@ -81,4 +81,3 @@ On the exact preview deployment with the intended HighLevel configuration:
 7. Delete or clearly label the synthetic contacts after verification.
 
 Paid traffic should not rely on the form until this production-like CRM acceptance test passes.
-

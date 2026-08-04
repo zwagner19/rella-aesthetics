@@ -1,7 +1,7 @@
 # Rella Weight-Loss Conversion Foundation
 
-Date: August 3, 2026  
-Branch: `codex/weight-loss-conversion-foundation`  
+Date: August 3, 2026
+Branch: `codex/weight-loss-conversion-foundation`
 Status: implemented and verified locally; not deployed
 
 ## Outcome

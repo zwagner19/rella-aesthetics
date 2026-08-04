@@ -107,4 +107,3 @@ The next immediate revenue step is not publishing all three at once. It is deplo
 - `Marketing/Landing System Design Handoff/BOULEVARD-URL-WIRING.md`
 - `Website Revamp/reference/RELLA-PUBLIC-PRICING-CANON-2026-07-24.md`
 - approved Napa tox operating decisions dated 2026-07-26
-

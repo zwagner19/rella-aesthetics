@@ -66,4 +66,3 @@ This page covers injectable aesthetic memberships only. Separately reviewed medi
 3. Submit one synthetic `Membership Questions` inquiry on the production-like preview and confirm its HighLevel service field and interest tag.
 4. Confirm staff know the included HydraFacial timing and do not promise immediate redemption unless the full year is prepaid.
 5. Confirm the current agreement shown at enrollment matches the one-year and benefit terms on the page.
-
