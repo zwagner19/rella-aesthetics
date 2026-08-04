@@ -5,7 +5,7 @@ import { FaqAccordion, FaqSchema } from "@/components/blocks/FaqAccordion";
 import { Button } from "@/components/ui/Button";
 import { resolveBookingHref } from "@/lib/booking-routes";
 import { WeightLossServicePage } from "@/components/pages/WeightLossServicePage";
-import { MEDICAL_WEIGHT_LOSS_CANONICAL_URL } from "@/lib/schemas";
+import { getServiceMetadata } from "@/lib/service-metadata";
 
 interface ServicePageProps {
   params: Promise<{ slug: string }>;
@@ -17,38 +17,7 @@ export async function generateStaticParams() {
 
 export async function generateMetadata({ params }: ServicePageProps): Promise<Metadata> {
   const { slug } = await params;
-  const service = servicePages.find((s) => s.slug === slug);
-  if (!service) return {};
-  const canonicalUrl =
-    service.slug === "weight-loss"
-      ? MEDICAL_WEIGHT_LOSS_CANONICAL_URL
-      : `/services/${service.slug}`;
-  return {
-    title: service.metaTitle,
-    description: service.metaDescription,
-    alternates: {
-      canonical: canonicalUrl,
-    },
-    ...(service.slug === "weight-loss"
-      ? {
-          keywords: [
-            "medical weight loss Vacaville",
-            "medical weight loss Napa",
-            "semaglutide consultation Vacaville",
-            "semaglutide consultation Napa",
-            "physician-led weight management",
-          ],
-        }
-      : {}),
-    openGraph: {
-      title: service.metaTitle,
-      description: service.metaDescription,
-      url: canonicalUrl,
-      ...(service.slug === "weight-loss"
-        ? { images: [{ url: service.image, alt: service.title }] }
-        : {}),
-    },
-  };
+  return getServiceMetadata(slug);
 }
 
 export default async function ServicePage({ params }: ServicePageProps) {
