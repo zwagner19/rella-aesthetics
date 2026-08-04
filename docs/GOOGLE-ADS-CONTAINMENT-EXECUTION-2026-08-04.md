@@ -4,7 +4,7 @@
 
 At approximately 5:30 AM PDT, Dr. Wagner authorized scaling Google Ads down because spend was not producing trustworthy conversions. Five nonbrand Search campaigns were paused. The account's enabled daily campaign budgets fell from **$207/day to $15/day**, a reduction of **$192/day (92.8%)**.
 
-No payment, payment-method, conversion-action, bidding, keyword, ad, landing-page, or other account changes were made in this execution.
+No payment, payment-method, bidding, keyword, ad, landing-page, or other account changes were made during the initial campaign-containment step. Dr. Wagner subsequently authorized the focused conversion-action corrections recorded below.
 
 ## Campaign changes
 
@@ -64,3 +64,17 @@ No payment or payment-method action was taken.
 5. Correct the Vacaville brand location setting to presence-only.
 6. Resolve billing separately with explicit owner approval.
 7. Relaunch one tightly controlled service/location test only after measurement is validated and an allowable cost per arrived patient is approved.
+
+## Authorized conversion correction — approximately 5:57 AM PDT
+
+Dr. Wagner explicitly authorized fixing the conversion setup. The following focused changes were made and verified in the signed-in Google Ads account:
+
+| Conversion action | Prior state | Corrected state |
+|---|---|---|
+| `Napa - Booking Click (Boulevard)` (`7684358335`) | Primary `Book appointment`; $450 per click | **Secondary**; **no value** |
+| `Napa - Appointment Booked` (`7692310986`) | Secondary; no value | **Primary** `Book appointment`; no value |
+| `Napa - Qualified Call` (`7684358338`) | Primary 60-second call; $1 placeholder value | **Primary** 60-second call; **no value** |
+
+The booked-appointment action uses `Import from clicks`. Google Ads showed **no upload history and no upload schedules**, so promoting the action establishes the truthful optimization hierarchy but does not activate the data feed. It will remain inactive until a privacy-approved process sends verified booked appointments with the required ad-click attribution. No patient data or test conversions were uploaded.
+
+The two brand campaigns remained the only enabled campaigns after these conversion changes, with $15/day in total enabled budgets.
