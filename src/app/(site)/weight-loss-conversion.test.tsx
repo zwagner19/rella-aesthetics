@@ -51,6 +51,22 @@ describe("medical-weight-loss conversion foundation", () => {
     expect(parsed.map((item) => item["@type"])).toEqual(["FAQPage", "Service"]);
     expect(weightLossHtml).not.toMatch(/aggregateRating|ratingValue|reviewCount/);
   });
+
+  it("uses current, attributable Google weight-loss social proof without review schema", () => {
+    expect(weightLossHtml).toContain("4.9 on Google · 219 reviews");
+    expect(weightLossHtml).toContain("23 Google reviews mention weight loss");
+    expect(weightLossHtml).toContain("Georgia Javaras");
+    expect(weightLossHtml).toContain("Paige Kiehn");
+    expect(weightLossHtml).toContain("J N");
+    expect(weightLossHtml).toContain("Reviews reflect individual experiences. Results vary.");
+    expect(weightLossHtml).not.toMatch(/aggregateRating|ratingValue|reviewCount/);
+  });
+
+  it("includes the Rella semaglutide patient-story video", () => {
+    expect(weightLossHtml).toContain("Hear the experience in a patient&#x27;s own words.");
+    expect(weightLossHtml).toContain('src="/media/semaglutide-story.mp4"');
+    expect(weightLossHtml).toContain("Individual results vary.");
+  });
 });
 
 describe("homepage conversion foundation", () => {

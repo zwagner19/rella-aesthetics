@@ -55,6 +55,26 @@ const steps = [
   },
 ] as const;
 
+const googleReviewUrl = "https://www.google.com/maps?cid=10820799198475906076";
+
+const weightLossReviews = [
+  {
+    quote: "They genuinely care about how your treatments are going.",
+    name: "Georgia Javaras",
+    context: "Google review · Weight-loss patient",
+  },
+  {
+    quote: "My concerns are always heard and addressed.",
+    name: "Paige Kiehn",
+    context: "Google review · Weight-loss medication care",
+  },
+  {
+    quote: "Very easy to reach Dr. Wagner with a question.",
+    name: "J N",
+    context: "Google review · Weight-loss patient",
+  },
+] as const;
+
 const faq = [
   {
     question: "What happens during the first phone consultation?",
@@ -226,6 +246,82 @@ export function WeightLossServicePage() {
         ariaLabel="Rella weight-loss care principles"
         items={["ABOM-certified physician", "Two local clinics", "Medication only when appropriate", "Transparent next steps"]}
       />
+
+      <section aria-labelledby="weight-loss-reviews-heading" className="border-b border-silver-pale bg-white py-16 md:py-20">
+        <div className="mx-auto max-w-[1200px] px-6 md:px-8 lg:px-12">
+          <div className="mb-10 grid gap-7 lg:grid-cols-[1fr_auto] lg:items-end">
+            <div className="max-w-[760px]">
+              <p className="mb-4 text-[0.6875rem] font-bold uppercase tracking-[0.2em] text-rose-dark">
+                Real local patient experiences
+              </p>
+              <h2 id="weight-loss-reviews-heading" className="mb-4 text-3xl font-medium leading-tight tracking-[-0.035em] text-ink md:text-5xl">
+                Care that patients describe as personal, responsive, and supportive.
+              </h2>
+              <p className="text-base font-light leading-relaxed text-silver md:text-lg">
+                Short excerpts from Rella&apos;s public Google reviews that specifically discuss weight-loss care.
+              </p>
+            </div>
+            <a
+              href={googleReviewUrl}
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex w-fit items-center gap-3 rounded-full border border-rose-light bg-rose-blush px-5 py-3 text-sm font-semibold text-ink transition-colors hover:bg-rose-light/60"
+            >
+              <span aria-hidden="true" className="text-rose-dark">★★★★★</span>
+              <span>4.9 on Google · 219 reviews</span>
+            </a>
+          </div>
+
+          <div className="grid gap-5 md:grid-cols-3">
+            {weightLossReviews.map((review) => (
+              <figure key={review.name} className="flex min-h-[230px] flex-col justify-between rounded-[1.5rem] border border-silver-pale bg-[linear-gradient(145deg,#fff_0%,#FDF7F5_100%)] p-6 shadow-[0_14px_45px_rgba(90,94,98,0.06)] md:p-7">
+                <blockquote className="text-xl font-medium leading-relaxed tracking-[-0.02em] text-ink">
+                  &ldquo;{review.quote}&rdquo;
+                </blockquote>
+                <figcaption className="mt-8 border-t border-rose-light/70 pt-5">
+                  <p className="text-sm font-semibold text-ink">{review.name}</p>
+                  <p className="mt-1 text-xs leading-relaxed text-silver">{review.context}</p>
+                </figcaption>
+              </figure>
+            ))}
+          </div>
+
+          <div className="mt-7 flex flex-col gap-3 text-sm text-silver md:flex-row md:items-center md:justify-between">
+            <p>23 Google reviews mention weight loss. Profile checked August 4, 2026.</p>
+            <p>Reviews reflect individual experiences. Results vary.</p>
+          </div>
+        </div>
+      </section>
+
+      <section aria-labelledby="weight-loss-story-heading" className="border-b border-silver-pale bg-rose-blush/35 py-16 md:py-20">
+        <div className="mx-auto grid max-w-[1200px] gap-8 px-6 md:px-8 lg:grid-cols-[1.15fr_0.85fr] lg:items-center lg:px-12">
+          <div className="overflow-hidden rounded-[1.75rem] border border-rose-light/80 bg-ink shadow-[0_20px_60px_rgba(40,42,44,0.14)]">
+            <video
+              aria-label="Rella semaglutide patient story"
+              className="aspect-video w-full bg-ink object-contain"
+              controls
+              playsInline
+              preload="metadata"
+            >
+              <source src="/media/semaglutide-story.mp4" type="video/mp4" />
+              Your browser does not support embedded video.
+            </video>
+          </div>
+
+          <div className="max-w-[520px]">
+            <p className="mb-4 text-[0.6875rem] font-bold uppercase tracking-[0.2em] text-rose-dark">A real Rella patient story</p>
+            <h2 id="weight-loss-story-heading" className="mb-5 text-3xl font-medium leading-tight tracking-[-0.035em] text-ink md:text-5xl">
+              Hear the experience in a patient&apos;s own words.
+            </h2>
+            <p className="text-base font-light leading-relaxed text-silver md:text-lg">
+              This short video shares one patient&apos;s personal experience with Rella&apos;s semaglutide program. Your care plan and results will be individual to you.
+            </p>
+            <p className="mt-5 text-sm leading-relaxed text-silver">
+              Individual results vary. Prescription treatment is offered only when clinically appropriate after evaluation.
+            </p>
+          </div>
+        </div>
+      </section>
 
       <section id="program" className="scroll-mt-24 py-20 md:py-28">
         <div className="mx-auto max-w-[1200px] px-6 md:px-8 lg:px-12">
