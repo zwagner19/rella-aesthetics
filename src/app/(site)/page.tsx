@@ -1,3 +1,5 @@
+import type { Metadata } from "next";
+import { headers } from "next/headers";
 import { Hero } from "@/components/blocks/Hero";
 import { resolveBookingHref } from "@/lib/booking-routes";
 import { ServiceCard } from "@/components/blocks/ServiceCard";
@@ -8,8 +10,18 @@ import { SectionHeader } from "@/components/ui/SectionHeader";
 import { Button } from "@/components/ui/Button";
 import { services, testimonials, locations } from "@/lib/data";
 import { medicalBusinessSchema } from "@/lib/schemas";
+import { WeightLossServicePage } from "@/components/pages/WeightLossServicePage";
+import { getServiceMetadata } from "@/lib/service-metadata";
+import { isWeightLossHost } from "@/lib/site-hosts";
 
-export default function HomePage() {
+export async function generateMetadata(): Promise<Metadata> {
+  const host = (await headers()).get("host");
+  return isWeightLossHost(host) ? getServiceMetadata("weight-loss") : {};
+}
+
+function HomePageContent({ isWeightLoss }: { isWeightLoss: boolean }) {
+  if (isWeightLoss) return <WeightLossServicePage />;
+
   return (
     <>
       <script
@@ -141,4 +153,9 @@ export default function HomePage() {
       </section>
     </>
   );
+}
+
+export default async function HomePage() {
+  const host = (await headers()).get("host");
+  return <HomePageContent isWeightLoss={isWeightLossHost(host)} />;
 }

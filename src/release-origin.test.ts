@@ -1,5 +1,7 @@
 import { describe, it, expect } from "vitest";
 import { NextRequest } from "next/server";
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
 import {
   proxy,
   isReleaseOriginHost,
@@ -39,11 +41,15 @@ describe("medical weight-loss subdomain", () => {
     }
   });
 
-  it("rewrites only the subdomain root to the qualification funnel", () => {
+  it("does not rewrite the subdomain root during hydration", () => {
     const response = proxy(req("/?utm_source=google&gclid=test-click", WEIGHT_LOSS));
-    expect(response.headers.get("x-middleware-rewrite")).toBe(
-      `https://${WEIGHT_LOSS}/services/weight-loss?utm_source=google&gclid=test-click`,
-    );
+    expect(response.headers.get("x-middleware-rewrite")).toBeNull();
+  });
+
+  it("renders the qualification funnel from the real root page for that host", () => {
+    const rootPage = readFileSync(join(__dirname, "app", "(site)", "page.tsx"), "utf8");
+    expect(rootPage).toContain("isWeightLossHost(host)");
+    expect(rootPage).toContain("<WeightLossServicePage />");
   });
 
   it("does not rewrite paths or the main domains", () => {
