@@ -14,6 +14,7 @@ No paid campaign should point to the site until one real test inquiry is visible
 - [ ] `npm run lint` passes.
 - [ ] `npm run build` passes and regenerates the sitemap.
 - [ ] `npm run check:links` passes against the exact preview deployment.
+- [ ] `npm run check:booking-links` passes against the exact preview deployment with outbound network access.
 - [ ] The preview commit matches the commit that was reviewed.
 
 ### 2. Contact-form delivery

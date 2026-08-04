@@ -21,10 +21,13 @@ npm run build
 npm run start
 # In another terminal:
 npm run check:links
+npm run check:booking-links
 ```
 
 The production build also regenerates `public/sitemap.xml` through `next-sitemap`.
 `check:links` reads the generated sitemap from `http://localhost:3000` by default and fails if a public page or internal destination returns an error. Set `SITE_URL` to run the same read-only check against another local port or an approved preview.
+
+`check:booking-links` discovers the external booking URLs actually rendered by the sitemap pages, requires the three approved booking hosts, follows each destination without submitting a form, and fails on unreachable responses, non-HTTPS links, or redirects outside the approved Rella/JoinBLVD host set. It requires outbound network access. Set `SITE_URL` the same way when the preview uses another port.
 
 ## Environment configuration
 
