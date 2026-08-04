@@ -61,7 +61,7 @@ const faqs = [
   {
     question: "What happens when I select the booking button?",
     answer:
-      "The button opens Rella's Vacaville booking menu. Choose the appropriate injectables option, review the live appointment details, and confirm only after Boulevard shows the current booking terms.",
+      "The button opens Rella Vacaville's live New Patient Tox service and displays Select a professional. Review the appointment details and current booking terms before confirming.",
   },
 ] as const;
 
@@ -144,14 +144,14 @@ export default function VacavilleBotoxPage() {
             </p>
             <div className="flex flex-col gap-3 sm:flex-row">
               <Button href={BOOKING_HREF} data-cta="service-booking" className="rounded-full">
-                Open Vacaville Booking
+                Book New Patient Tox
               </Button>
               <Button href="tel:+17073582928" data-cta="phone" variant="ghost" className="rounded-full bg-white/75">
                 Call 707.358.2928
               </Button>
             </div>
             <p className="mt-5 text-xs leading-6 text-silver">
-              The booking button opens the live Vacaville menu; select the appropriate injectables option there.
+              Opens Rella Vacaville&apos;s live New Patient Tox service with Select a professional as the next step.
             </p>
           </div>
 
@@ -271,7 +271,7 @@ export default function VacavilleBotoxPage() {
             <p className="text-silver">Wednesday–Saturday: 9am–5pm · Sunday–Tuesday: Closed</p>
           </div>
           <div className="flex flex-col gap-3">
-            <Button href={BOOKING_HREF} data-cta="service-booking" className="rounded-full">Open Vacaville Booking</Button>
+            <Button href={BOOKING_HREF} data-cta="service-booking" className="rounded-full">Book New Patient Tox</Button>
             <Button href={clinic.mapUrl} variant="ghost" className="rounded-full bg-white">Get Directions</Button>
           </div>
         </div>
@@ -293,11 +293,11 @@ export default function VacavilleBotoxPage() {
             Ready for a clear Vacaville next step?
           </h2>
           <p className="mb-8 text-lg font-light leading-relaxed text-white/85">
-            Open the Vacaville menu, review the live booking terms, or call Rella if you want help choosing the appropriate injectables option.
+            Open the live New Patient Tox service, review the current booking terms, or call Rella if you have a question before choosing a visit.
           </p>
           <div className="flex flex-col justify-center gap-3 sm:flex-row">
             <Button href={BOOKING_HREF} data-cta="service-booking" className="rounded-full bg-white !text-rose hover:bg-white/90 hover:!text-rose-dark">
-              Open Vacaville Booking
+              Book New Patient Tox
             </Button>
             <Button href="tel:+17073582928" data-cta="phone" variant="ghost" className="rounded-full border-white/70 !text-white hover:border-white hover:!text-white">
               Call Rella

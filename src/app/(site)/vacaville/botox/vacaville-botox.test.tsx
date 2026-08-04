@@ -23,7 +23,7 @@ describe("Vacaville Botox local-acquisition page", () => {
     expect(String(metadata.description).length).toBeLessThanOrEqual(180);
   });
 
-  it("keeps every booking action on the one Vacaville menu", () => {
+  it("keeps every booking action on the rendered Vacaville New Patient Tox service", () => {
     const expected = resolveBookingHref({
       location: "vacaville",
       service: "botox",
@@ -39,6 +39,7 @@ describe("Vacaville Botox local-acquisition page", () => {
 
     expect(bookingHrefs).toHaveLength(3);
     expect(new Set(bookingHrefs)).toEqual(new Set([expected]));
+    expect(expected).toContain("s_2fee10b1-1831-4c00-83e9-9c05a7071b15");
     expect(expected).toContain("locationId=0f146f87-364e-4dfd-b938-61ba49528820");
     expect(expected).not.toContain("91eba843-57fb-49e9-8505-431d501ffec7");
     expect(expected).not.toContain("book.experiencerella.com");
@@ -52,6 +53,8 @@ describe("Vacaville Botox local-acquisition page", () => {
       "$4.40/unit",
       "$30/month",
       "one-year commitment",
+      "New Patient Tox",
+      "Select a professional",
       "542 Main St",
       "Vacaville, CA 95688",
       "Wednesday–Saturday: 9am–5pm",

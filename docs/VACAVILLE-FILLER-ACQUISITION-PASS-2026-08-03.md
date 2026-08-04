@@ -15,8 +15,8 @@ The page closes that high-intent local gap with substantive clinic, pricing, pla
 - Canonical: `https://experiencerella.com/vacaville/filler`
 - Clinic: Rella Aesthetics, 542 Main St, Vacaville, CA 95688
 - Published hours: Wednesday–Saturday 9am–5pm
-- Primary handoff: the official location-pinned Vacaville `/cart/menu` URL
-- Mobile action: `Book Vacaville`, using the same Vacaville destination
+- Primary handoff: the official location-pinned Vacaville `Injectables/Dermal Fillers` service URL
+- Mobile action: `Book Dermal Fillers`, using the same exact Vacaville service destination
 - Supporting links: the general dermal-filler guide, injectable membership comparison, Vacaville clinic page, directions, phone, and cancellation policy
 
 The Vacaville location page now links directly to this guide. The general dermal-filler page links to the Vacaville guide and the existing Napa filler page from its city-choice cards. The shared treatment guide also sends Botox visitors to the appropriate city-specific Botox page.
@@ -55,8 +55,12 @@ It emits no rating, review, aggregate rating, offer, or availability promise.
 - SEO crawl passed across 30 pages, 13 social images, and 36 structured-data blocks.
 - Desktop QA passed at 1280 × 900 with one H1, no browser errors, and no horizontal overflow.
 - Mobile QA passed at 390 × 844 with one H1, no browser errors, no horizontal overflow, and the city-correct fixed booking action.
-- A real preview click reached Boulevard's live `Menu` screen with `Injectables` available and did not render `#/not-found` or “things have moved.”
+- A real preview click reached Boulevard's live `Dermal Fillers` screen, displayed `Select a professional`, and did not render `#/not-found` or “things have moved.”
+
+## Current booking-path update
+
+The August 3 booking-friction pass replaced the clinic-menu handoff with Boulevard service `s_e3564b2f-c00d-47c2-8ca0-665b6d6f25e4` at Vacaville location `0f146f87-364e-4dfd-b938-61ba49528820`. All three page CTAs and the mobile action bar use that verified destination. The website retains the approved `$840` base and `$540–$960` active-product range instead of importing broader vendor copy. Boulevard currently describes ProNox as `$50` while displaying the selectable add-on as `+$60.00`; correct or deliberately approve that vendor-side conflict before paid traffic.
 
 ## Production gate
 
-Before cutover or paid traffic, repeat the Vacaville filler booking click on the exact deployment in a clean browser and in a browser that previously began a Napa journey. Fail the launch if Boulevard shows Napa inventory, `#/not-found`, an empty shell, or no selectable Injectables next step.
+Before cutover or paid traffic, repeat the Vacaville filler booking click on the exact deployment in a clean browser and in a browser that previously began a Napa journey. Fail the launch if Boulevard shows Napa inventory, `#/not-found`, an empty shell, anything other than `Dermal Fillers`, or no `Select a professional` next step. The ProNox price conflict must also be resolved or explicitly approved.

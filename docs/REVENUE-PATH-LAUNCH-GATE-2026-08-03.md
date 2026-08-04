@@ -58,8 +58,9 @@ Use a unique label such as `Rella Site Test 20260803-2215`; do not use a real pa
 - [ ] Every advertised service-location pairing is visible in that clinic's live booking menu; a service unavailable at one clinic does not render a booking CTA or structured-data claim for that city.
 - [ ] The treatment-page mobile action bar opens the same clinic chooser and does not cover it at 390 × 844.
 - [ ] Napa location booking reaches the verified Napa destination.
-- [ ] `/vacaville/botox` returns HTTP 200, uses its exact slashless canonical, and every booking action reaches the Vacaville menu rather than Napa or the generic chooser.
-- [ ] `/vacaville/filler` returns HTTP 200, uses its exact slashless canonical, and every booking action reaches the Vacaville menu with an Injectables next step rather than Napa or the generic chooser.
+- [ ] `/vacaville/botox` returns HTTP 200, uses its exact slashless canonical, and every booking action reaches Vacaville `New Patient Tox` with `Select a professional` rather than Napa, the generic chooser, or the clinic menu.
+- [ ] `/vacaville/filler` returns HTTP 200, uses its exact slashless canonical, and every booking action reaches Vacaville `Dermal Fillers` with `Select a professional` rather than Napa, the generic chooser, or the clinic menu.
+- [ ] Correct or deliberately approve Boulevard's injectable ProNox mismatch—the description says `$50` while the selectable add-on displays `+$60.00`—and repeat both injectable rendered-browser checks before paid traffic.
 - [ ] `/vacaville/laser` returns HTTP 200, uses its exact slashless canonical, and every booking action reaches the Vacaville `Initial Laser Consult` with `Select a professional` rather than Napa, the generic menu, or a treatment that bypasses the required consult.
 - [ ] `/vacaville/hydrafacial` returns HTTP 200, uses its exact slashless canonical, and every booking action reaches the Vacaville `Signature Hydrafacial` with `Select a professional` rather than Napa or the generic menu.
 - [ ] `/vacaville/facials` returns HTTP 200, uses its exact slashless canonical, and every booking action reaches the Vacaville `Initial Skin Health Consult` with `Select a professional` rather than Napa or the generic menu.

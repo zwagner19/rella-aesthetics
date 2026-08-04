@@ -58,7 +58,7 @@ describe("resolveBookingHref — Napa non-Tox", () => {
 });
 
 describe("resolveBookingHref — Vacaville never reaches Napa Tox", () => {
-  for (const service of [undefined, "botox", "new-patient-tox", "anything"]) {
+  for (const service of [undefined, "anything"]) {
     it(`vacaville + ${service ?? "(none)"} → Vacaville widget`, () => {
       const href = resolveBookingHref({ location: "vacaville", service });
       expect(href).toBe(BOULEVARD_WIDGET_VACAVILLE);
@@ -66,6 +66,30 @@ describe("resolveBookingHref — Vacaville never reaches Napa Tox", () => {
       expect(href).not.toContain("book.experiencerella.com");
     });
   }
+
+  it.each(["botox", "tox", "new-patient-tox", "new-patient-botox"])(
+    "routes Vacaville %s intent to the rendered New Patient Tox service",
+    (service) => {
+      const href = resolveBookingHref({ location: "vacaville", service });
+
+      expect(href).toContain("s_2fee10b1-1831-4c00-83e9-9c05a7071b15");
+      expect(href).toContain("locationId=0f146f87-364e-4dfd-b938-61ba49528820");
+      expect(href).not.toContain("91eba843-57fb-49e9-8505-431d501ffec7");
+      expect(href).not.toContain("book.experiencerella.com");
+    },
+  );
+
+  it.each(["dermal-fillers", "filler"])(
+    "routes Vacaville %s intent to the rendered Dermal Fillers service",
+    (service) => {
+      const href = resolveBookingHref({ location: "vacaville", service });
+
+      expect(href).toContain("s_e3564b2f-c00d-47c2-8ca0-665b6d6f25e4");
+      expect(href).toContain("locationId=0f146f87-364e-4dfd-b938-61ba49528820");
+      expect(href).not.toContain("91eba843-57fb-49e9-8505-431d501ffec7");
+      expect(href).not.toContain("book.experiencerella.com");
+    },
+  );
 
   it("routes Vacaville HydraFacial intent to the rendered Signature service", () => {
     const href = resolveBookingHref({

@@ -113,20 +113,22 @@ describe("mobile booking bar routing", () => {
     });
   });
 
-  it("keeps the Vacaville Botox local page on the Vacaville booking path", () => {
-    expect(resolveMobileBookingDestination("/vacaville/botox")).toEqual({
-      href: BOULEVARD_WIDGET_VACAVILLE,
-      label: "Book Vacaville",
-      cta: "service-booking",
-    });
+  it("keeps the Vacaville Botox page on the rendered New Patient Tox service", () => {
+    const booking = resolveMobileBookingDestination("/vacaville/botox");
+
+    expect(booking.label).toBe("Book New Patient Tox");
+    expect(booking.cta).toBe("service-booking");
+    expect(booking.href).toContain("s_2fee10b1-1831-4c00-83e9-9c05a7071b15");
+    expect(booking.href).toContain("locationId=0f146f87-364e-4dfd-b938-61ba49528820");
   });
 
-  it("keeps the Vacaville filler local page on the Vacaville booking path", () => {
-    expect(resolveMobileBookingDestination("/vacaville/filler")).toEqual({
-      href: BOULEVARD_WIDGET_VACAVILLE,
-      label: "Book Vacaville",
-      cta: "service-booking",
-    });
+  it("keeps the Vacaville filler page on the rendered Dermal Fillers service", () => {
+    const booking = resolveMobileBookingDestination("/vacaville/filler");
+
+    expect(booking.label).toBe("Book Dermal Fillers");
+    expect(booking.cta).toBe("service-booking");
+    expect(booking.href).toContain("s_e3564b2f-c00d-47c2-8ca0-665b6d6f25e4");
+    expect(booking.href).toContain("locationId=0f146f87-364e-4dfd-b938-61ba49528820");
   });
 
   it("keeps the Vacaville laser page on the rendered consult path", () => {

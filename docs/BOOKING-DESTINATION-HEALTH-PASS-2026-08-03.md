@@ -33,12 +33,12 @@ The final-host rule matters because Boulevard currently redirects its dashboard 
 The August 3 production-mode preview passed with:
 
 - 36 sitemap pages inspected;
-- 16 unique external booking destinations;
+- 18 unique external booking destinations;
 - 1 `book.experiencerella.com` destination returning 200 on the same host;
 - 4 `book.rellaweightloss.com` destinations returning 200 on the same host;
-- 11 `dashboard.boulevard.io` destinations redirecting to `www.joinblvd.com` and returning 200.
+- 13 `dashboard.boulevard.io` destinations redirecting to `www.joinblvd.com` and returning 200.
 
-This covers the hardened Napa Botox path, both city-specific weight-loss assessments, both city-specific weight-loss consultations, both clinic-scoped Boulevard menus, the verified Napa service/category paths, the rendered Vacaville Initial Laser Consult, both city-pinned Initial Skin Health Consults, Signature HydraFacial, Initial Microneedling Consult, and the Vacaville chemical-peel menu fallback. Generic booking now stays first-party long enough to choose a clinic at `/book`, so the broken business-level Boulevard URL is absent.
+This covers the hardened Napa Botox path, both city-specific weight-loss assessments, both city-specific weight-loss consultations, both clinic-scoped Boulevard menus, the verified Napa service/category paths, the rendered Vacaville New Patient Tox, Dermal Fillers, Initial Laser Consult, both city-pinned Initial Skin Health Consults, Signature HydraFacial, Initial Microneedling Consult, and the Vacaville chemical-peel menu fallback. Generic booking now stays first-party long enough to choose a clinic at `/book`, so the broken business-level Boulevard URL is absent.
 
 ## Release usage
 
@@ -67,7 +67,7 @@ Resolve or deliberately replace the affected route in the typed booking resolver
 ## Verification
 
 - Script syntax check passed.
-- 338 automated checks passed across 31 test files.
+- 342 automated checks passed across 31 test files.
 - Full ESLint pass completed with no findings.
 - TypeScript completed with no errors.
-- The command passed against the optimized preview's 36 sitemap pages and all 16 currently rendered external destinations.
+- The command passed against the optimized preview's 36 sitemap pages and all 18 currently rendered external destinations.

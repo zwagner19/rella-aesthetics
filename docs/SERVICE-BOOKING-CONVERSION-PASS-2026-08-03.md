@@ -36,8 +36,8 @@ That introduced unnecessary ambiguity at the point of highest intent and made it
 
 | Service | Napa booking destination | Vacaville booking destination |
 | --- | --- | --- |
-| Botox & Dysport | hardened Napa Botox app | Vacaville Boulevard menu |
-| Dermal Fillers | verified Napa filler service | Vacaville Boulevard menu |
+| Botox & Dysport | hardened Napa Botox app | verified Vacaville New Patient Tox service |
+| Dermal Fillers | verified Napa filler service | verified Vacaville Dermal Fillers service |
 | HydraFacial | verified Napa Signature HydraFacial service | verified Vacaville Signature HydraFacial service |
 | Laser Treatments | verified Napa Laser category | verified Vacaville Initial Laser Consult |
 | Chemical Peels | Not advertised; no current Napa peel inventory | verified Vacaville clinic menu with visible Peels category |
@@ -81,4 +81,4 @@ On the exact preview deployment:
 
 ## Remaining boundary
 
-Vacaville laser, HydraFacial, facials, and microneedling plus Napa facials now use service-specific destinations verified in Boulevard's rendered booking application. Chemical peels deliberately retain the verified clinic-menu fallback because the attempted category shortcut rendered a not-found state. Botox, fillers, and IV hydration retain the clinic-scoped menu where a deeper service path has not been separately approved. Add or replace a route only after rendered inventory verification and a typed resolver contract test.
+Vacaville laser, HydraFacial, facials, microneedling, Botox, and filler plus Napa facials now use service-specific destinations verified in Boulevard's rendered booking application. Chemical peels deliberately retain the verified clinic-menu fallback because the attempted category shortcut rendered a not-found state. IV hydration retains the clinic-scoped menu where a deeper service path has not been separately approved. Add or replace a route only after rendered inventory verification and a typed resolver contract test.

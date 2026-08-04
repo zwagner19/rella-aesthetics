@@ -17,8 +17,8 @@ Search results change and do not guarantee ranking. This snapshot informed prior
 - Canonical: `https://experiencerella.com/vacaville/botox`
 - Clinic: Rella Aesthetics, 542 Main St, Vacaville, CA 95688
 - Published hours: Wednesday–Saturday 9am–5pm
-- Primary handoff: the official location-pinned Vacaville `/cart/menu` URL
-- Mobile action: `Book Vacaville`, using the same Vacaville destination
+- Primary handoff: the official location-pinned Vacaville `Injectables/New Patient Tox` service URL
+- Mobile action: `Book New Patient Tox`, using the same exact Vacaville service destination
 - Supporting links: the general Botox/Dysport guide, injectable membership comparison, Vacaville clinic page, directions, phone, and cancellation policy
 
 The Vacaville location page now links directly to this guide. The general Botox page links to this Vacaville guide and the existing Napa guide from its city-choice cards, creating a clean general-service → city-specific path.
@@ -57,8 +57,12 @@ It emits no rating, review, aggregate rating, offer, or availability promise.
 - SEO crawl passed across 29 pages, 13 social images, and 33 structured-data blocks.
 - Desktop QA passed at 1280 × 900 with no browser errors or horizontal overflow.
 - Mobile QA passed at 390 × 844 with one H1, no browser errors or horizontal overflow, and the city-correct fixed booking action.
-- A real preview click reached Boulevard's live `Menu` screen and did not render `#/not-found` or “things have moved.”
+- A real preview click reached Boulevard's live `New Patient Tox` screen, displayed `Select a professional`, and did not render `#/not-found` or “things have moved.”
+
+## Current booking-path update
+
+The August 3 booking-friction pass replaced the clinic-menu handoff with Boulevard service `s_2fee10b1-1831-4c00-83e9-9c05a7071b15` at Vacaville location `0f146f87-364e-4dfd-b938-61ba49528820`. All three page CTAs and the mobile action bar use that verified destination. The page makes no add-on price promise. Boulevard currently describes ProNox as `$50` while displaying the selectable add-on as `+$60.00`; correct or deliberately approve that vendor-side conflict before paid traffic.
 
 ## Production gate
 
-Before cutover or paid traffic, repeat the Vacaville booking click on the exact deployment in a clean browser and in a browser that previously began a Napa journey. Fail the launch if Boulevard shows Napa inventory, `#/not-found`, an empty shell, or no selectable injectables next step.
+Before cutover or paid traffic, repeat the Vacaville booking click on the exact deployment in a clean browser and in a browser that previously began a Napa journey. Fail the launch if Boulevard shows Napa inventory, `#/not-found`, an empty shell, anything other than `New Patient Tox`, or no `Select a professional` next step. The ProNox price conflict must also be resolved or explicitly approved.

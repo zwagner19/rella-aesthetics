@@ -127,7 +127,7 @@ export function resolveMobileBookingDestination(
   if (currentPath === "/vacaville/botox") {
     return {
       href: resolveBookingHref({ location: "vacaville", service: "botox" }),
-      label: "Book Vacaville",
+      label: "Book New Patient Tox",
       cta: "service-booking",
     };
   }
@@ -138,7 +138,7 @@ export function resolveMobileBookingDestination(
         location: "vacaville",
         service: "dermal-fillers",
       }),
-      label: "Book Vacaville",
+      label: "Book Dermal Fillers",
       cta: "service-booking",
     };
   }

@@ -19,6 +19,8 @@ Checked against the live Boulevard booking application in the in-app browser on 
 | Location-pinned Napa `/cart/menu` | Live `Menu` screen | Used for generic Napa booking; repeat with a clean and returning browser at launch |
 | Location-pinned Vacaville `/cart/menu` | Live `Menu` screen | Used for generic Vacaville booking; repeat with a clean and returning browser at launch |
 | `/vacaville/chemical-peels` → Vacaville menu → visible `Peels` category | `Peels` rendered MicroPeel Sensitive, MicroPeel Plus 20, TCA Peel, and Universal Peel | Kept as a two-step handoff; the externally loaded category shortcut remains rejected |
+| `/vacaville/botox` → Vacaville New Patient Tox | Heading `New Patient Tox`; `Select a professional` | Kept; removes the Injectables-menu step and pins the Vacaville clinic |
+| `/vacaville/filler` → Vacaville Dermal Fillers | Heading `Dermal Fillers`; `Select a professional` | Kept; removes the Injectables-menu step and pins the Vacaville clinic |
 | Vacaville Initial Laser Consult | Heading `Initial Laser Consult`; `Select a professional` | Kept; removes a menu step while honoring the live IPL consult requirement |
 | Vacaville Signature HydraFacial | Heading `Signature Hydrafacial`; `Select a professional` | Kept; removes a menu step while preserving the Signature starting tier |
 | `/vacaville/facials` → Vacaville Initial Skin Health Consult | Heading `Initial Skin Health Consult`; `Select a professional` | Kept; begins with assessment and planning instead of guessing a facial |
@@ -31,6 +33,8 @@ Checked against the live Boulevard booking application in the in-app browser on 
 
 The separate Napa Botox and medical-weight-loss booking applications were already verified in their dedicated route audits and remain outside Boulevard's migrated widget handoff.
 
+Both rendered Vacaville injectable screens currently contain a Boulevard-side ProNox price conflict: the service description says the add-on may be added at checkout for `$50`, while the selectable add-on displays `+$60.00`. The website does not repeat either amount as a public promise. The owner must correct or deliberately approve the Boulevard source before paid traffic is sent to these destinations, then repeat the rendered-browser gate.
+
 Boulevard retains active booking/cart state in a returning browser. During the audit, a menu-only handoff could display the previously active clinic's inventory after a service-specific journey. This is a vendor-state behavior that repository tests cannot prove away. The site uses Boulevard's official multi-location URL shape, but production validation must cover both a clean browser and a browser that first began a journey at the other clinic.
 
 ## Guardrails added
@@ -39,6 +43,8 @@ Boulevard retains active booking/cart state in a returning browser. During the a
 - Route tests require both clinic menus to use `/cart/menu`.
 - A regression test pins Vacaville chemical peels to the clinic menu and forbids the broken `Peels` deep link.
 - The dedicated Vacaville chemical-peel page requires all three booking actions and its mobile bar to use that same clinic-menu fallback.
+- Regression tests pin explicit Vacaville Botox intent to New Patient Tox and explicit Vacaville filler intent to Dermal Fillers, each at the Vacaville location.
+- The dedicated Vacaville Botox and filler pages require all page-level booking actions and their mobile bars to use their exact verified services.
 - A regression test pins explicit Vacaville laser intent to the rendered Initial Laser Consult and forbids Napa or generic routing.
 - A regression test pins explicit Vacaville HydraFacial intent to the rendered Signature service and forbids Napa or generic routing.
 - A regression test pins explicit Vacaville facial intent to the rendered Initial Skin Health Consult and forbids Napa or generic routing.
@@ -50,4 +56,4 @@ Boulevard retains active booking/cart state in a returning browser. During the a
 
 ## Production gate
 
-Before paid traffic or cutover, open both `/book` clinic actions in a clean browser session and confirm the intended clinic inventory. Repeat after starting (but not completing) a booking journey at the other clinic. Then repeat every distinct external booking URL and fail the launch if Boulevard renders `#/not-found`, “things have moved,” the wrong clinic, or no selectable next step.
+Before paid traffic or cutover, open both `/book` clinic actions in a clean browser session and confirm the intended clinic inventory. Repeat after starting (but not completing) a booking journey at the other clinic. Then repeat every distinct external booking URL and fail the launch if Boulevard renders `#/not-found`, “things have moved,” the wrong clinic, or no selectable next step. For the injectable paths, also fail the gate until the `$50` versus `+$60.00` ProNox conflict is corrected or explicitly approved in Boulevard.

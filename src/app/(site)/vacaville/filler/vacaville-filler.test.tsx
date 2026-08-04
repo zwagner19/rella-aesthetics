@@ -25,7 +25,7 @@ describe("Vacaville filler local-acquisition page", () => {
     expect(String(metadata.description).length).toBeLessThanOrEqual(180);
   });
 
-  it("keeps every booking action on the one Vacaville menu", () => {
+  it("keeps every booking action on the rendered Vacaville Dermal Fillers service", () => {
     const expected = resolveBookingHref({
       location: "vacaville",
       service: "dermal-fillers",
@@ -41,6 +41,7 @@ describe("Vacaville filler local-acquisition page", () => {
 
     expect(bookingHrefs).toHaveLength(3);
     expect(new Set(bookingHrefs)).toEqual(new Set([expected]));
+    expect(expected).toContain("s_e3564b2f-c00d-47c2-8ca0-665b6d6f25e4");
     expect(expected).toContain("locationId=0f146f87-364e-4dfd-b938-61ba49528820");
     expect(expected).not.toContain("91eba843-57fb-49e9-8505-431d501ffec7");
     expect(expected).not.toContain("book.experiencerella.com");
@@ -52,6 +53,8 @@ describe("Vacaville filler local-acquisition page", () => {
       "$540–$960",
       "$40/month",
       "one-year commitment",
+      "Dermal Fillers",
+      "Select a professional",
       "542 Main St",
       "Vacaville, CA 95688",
       "Wednesday–Saturday: 9am–5pm",
