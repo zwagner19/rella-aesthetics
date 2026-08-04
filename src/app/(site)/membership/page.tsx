@@ -8,16 +8,16 @@ import { membershipTiers } from "@/lib/data";
 export const metadata: Metadata = {
   title: "VIP Membership",
   description:
-    "Join Rella Aesthetics' VIP Membership for preferred pricing on Botox, fillers, and skincare products. Three tiers to fit your aesthetic goals.",
+    "Join the 2026 Rella Tox Membership for $30/month with preferred Botox and Dysport pricing and a one-year commitment.",
   alternates: { canonical: "/membership" },
 };
 
 const faq = [
-  { question: "How does the membership work?", answer: "Choose your tier and pay a low monthly fee. Your membership unlocks preferred pricing on treatments and products. There is no minimum commitment — cancel anytime after 3 months." },
-  { question: "Can I switch tiers?", answer: "Yes. You can upgrade or downgrade your membership tier at any time. Changes take effect on your next billing cycle." },
-  { question: "Is there a contract?", answer: "We ask for a 3-month minimum commitment to ensure you experience the full benefits. After that, you can cancel anytime with 30 days' notice." },
-  { question: "Do membership benefits stack with promotions?", answer: "Membership pricing is already our best rate. Promotional discounts may not be combined with membership benefits unless explicitly stated." },
-  { question: "Can I share my membership?", answer: "Memberships are individual and non-transferable. Each household member would need their own membership." },
+  { question: "How does the 2026 Tox Membership work?", answer: "The membership is $30/month with a one-year commitment. It provides the approved member rates for Botox and Dysport." },
+  { question: "What are the member rates?", answer: "Members pay $13/unit for Botox and $4.40/unit for Dysport. Standard pricing is $18/unit for Botox and $6/unit for Dysport." },
+  { question: "Is there a commitment?", answer: "Yes. The 2026 aesthetic membership has a one-year commitment. Review the complete membership terms before enrolling." },
+  { question: "Is a booking deposit part of the membership price?", answer: "No. A booking deposit and per-unit treatment prices are separate. Boulevard will show any booking requirement before you confirm an appointment." },
+  { question: "What if I already have a different Rella membership?", answer: "Legacy memberships may have different terms. Contact Rella so the team can review the plan attached to your account rather than assuming the 2026 new-member terms apply." },
 ];
 
 export default function MembershipPage() {
@@ -35,8 +35,7 @@ export default function MembershipPage() {
             Elevated Care, Every Month
           </h1>
           <p className="text-lg font-light text-silver max-w-[560px] leading-relaxed">
-            Become a Rella VIP and access preferred pricing, exclusive perks, and a membership
-            designed around your aesthetic journey.
+            Straightforward 2026 member pricing for patients who plan to maintain Botox or Dysport treatment over the year.
           </p>
         </div>
       </section>
@@ -45,11 +44,11 @@ export default function MembershipPage() {
       <section className="py-20">
         <div className="mx-auto max-w-[1200px] px-6 md:px-8 lg:px-12">
           <SectionHeader
-            eyebrow="Choose Your Tier"
-            title="Membership Plans"
-            description="Select the plan that matches your treatment goals. All memberships include preferred pricing and skincare product discounts."
+            eyebrow="2026 Public Plan"
+            title="Tox Membership"
+            description="One current new-patient membership, published with the same pricing used across Rella's website and Napa Tox campaign."
           />
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="mx-auto grid max-w-[560px] grid-cols-1 gap-6">
             {membershipTiers.map((tier) => (
               <TierCard
                 key={tier.name}
@@ -57,8 +56,9 @@ export default function MembershipPage() {
                 price={tier.price}
                 period={tier.period}
                 benefits={[...tier.benefits]}
-                featured={"featured" in tier && tier.featured === true}
-                ctaHref={resolveBookingHref({})}
+                featured={false}
+                ctaHref={resolveBookingHref({ service: "botox" })}
+                ctaText="Book a Tox Consultation"
               />
             ))}
           </div>

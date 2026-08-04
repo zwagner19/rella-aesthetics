@@ -2,6 +2,7 @@ export function medicalBusinessSchema() {
   return {
     "@context": "https://schema.org",
     "@type": "MedicalBusiness",
+    "@id": "https://experiencerella.com/#organization",
     name: "Rella Aesthetics",
     description:
       "Northern California's luxury med spa offering Botox, dermal fillers, medical weight loss, laser treatments, and advanced skin care.",
@@ -44,6 +45,34 @@ export function medicalBusinessSchema() {
     // were not traceable to a verifiable source, and star ratings in structured
     // data are a representation to both search engines and patients. Rating
     // markup may return only when the numbers come from an auditable feed.
+  };
+}
+
+export function treatmentServiceSchema(service: {
+  slug: string;
+  title: string;
+  metaDescription: string;
+  image: string;
+}) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "Service",
+    "@id": `https://experiencerella.com/services/${service.slug}#service`,
+    name: service.title,
+    serviceType: service.title,
+    description: service.metaDescription,
+    url: `https://experiencerella.com/services/${service.slug}`,
+    image: `https://experiencerella.com${service.image}`,
+    provider: {
+      "@type": "MedicalBusiness",
+      "@id": "https://experiencerella.com/#organization",
+      name: "Rella Aesthetics",
+      telephone: "+17073582928",
+    },
+    areaServed: [
+      { "@type": "City", name: "Vacaville", containedInPlace: { "@type": "State", name: "California" } },
+      { "@type": "City", name: "Napa", containedInPlace: { "@type": "State", name: "California" } },
+    ],
   };
 }
 

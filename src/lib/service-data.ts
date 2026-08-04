@@ -51,8 +51,8 @@ export const servicePages: ServicePageData[] = [
     },
     pricing: {
       heading: "Pricing",
-      body: "Botox: $13/unit | Dysport: $4.33/unit. VIP Members receive preferred pricing.",
-      note: "Most patients use 20–40 units per treatment area.",
+      body: "Botox is $18/unit and Dysport is $6/unit. The 2026 Tox Membership is $30/month with a one-year commitment; members pay $13/unit for Botox and $4.40/unit for Dysport.",
+      note: "Your provider will map the recommended units and total before treatment. Any booking deposit is separate from per-unit treatment pricing.",
     },
     faq: [
       { question: "Does Botox hurt?", answer: "Most patients describe a slight pinch. No anesthesia is needed, and the procedure takes about 15 minutes." },
@@ -73,7 +73,7 @@ export const servicePages: ServicePageData[] = [
     heroDescription: "Restore lost volume, define contours, and enhance your natural features with premium hyaluronic acid fillers.",
     whatItIs: {
       heading: "What Are Dermal Fillers?",
-      body: "Dermal fillers are injectable gels — typically hyaluronic acid — used to restore volume, smooth deep lines, and enhance facial contours. We carry a full range of premium fillers to address specific areas including cheeks, lips, jawline, under-eyes, and nasolabial folds. Results are immediate and last 6–18 months depending on the product and treatment area.",
+      body: "Dermal fillers are injectable gels — typically hyaluronic acid — used to restore volume, smooth deep lines, and enhance facial contours. Rella carries multiple filler products for areas such as the cheeks, lips, and facial folds. The appropriate area, product, and expected duration depend on your anatomy and treatment plan.",
     },
     whoItsFor: {
       heading: "Who Is It For?",
@@ -81,8 +81,7 @@ export const servicePages: ServicePageData[] = [
       bullets: [
         "Cheek and midface volume restoration",
         "Lip enhancement and definition",
-        "Jawline contouring and chin projection",
-        "Under-eye hollows and tear troughs",
+        "Facial balancing when clinically appropriate",
         "Nasolabial folds and marionette lines",
       ],
     },
@@ -99,8 +98,8 @@ export const servicePages: ServicePageData[] = [
     },
     pricing: {
       heading: "Pricing",
-      body: "Filler starts at $600/syringe. VIP Members receive preferred pricing starting at $450/syringe.",
-      note: "Most patients require 1–3 syringes depending on treatment goals.",
+      body: "The current dermal-filler base service amount is $840. Active product prices range from $540 to $960, and the appropriate product and total depend on the treatment plan.",
+      note: "Your provider will review the recommendation and expected total before treatment.",
     },
     faq: [
       { question: "How long do fillers last?", answer: "Most fillers last 6–18 months depending on the product and treatment area. Lip filler typically lasts 6–9 months, while cheek filler can last 12–18 months." },
@@ -146,7 +145,7 @@ export const servicePages: ServicePageData[] = [
     },
     pricing: {
       heading: "Pricing",
-      body: "Chemical peels start at $150. Package pricing available for series treatments.",
+      body: "Peel pricing depends on the selected product, depth, and whether a single treatment or series is appropriate. Rella will review the current price before you book or treat.",
     },
     faq: [
       { question: "How many peels do I need?", answer: "Most patients see significant improvement after 3–6 treatments spaced 4–6 weeks apart. Your provider will recommend a series based on your goals." },
@@ -191,7 +190,7 @@ export const servicePages: ServicePageData[] = [
     },
     pricing: {
       heading: "Pricing",
-      body: "Facials start at $120. Ask about our facial series packages for ongoing skin care.",
+      body: "Facial pricing depends on the selected treatment and any appropriate enhancements. Review the current service options and total before booking.",
     },
     faq: [
       { question: "How often should I get a facial?", answer: "We recommend monthly facials for optimal skin health. Your provider may suggest a different frequency based on your skin concerns and treatment plan." },
@@ -236,7 +235,7 @@ export const servicePages: ServicePageData[] = [
     },
     pricing: {
       heading: "Pricing",
-      body: "HydraFacial starts at $199. Add-on boosters available for customization.",
+      body: "Signature HydraFacial is $240, Deluxe HydraFacial is $300, and Platinum HydraFacial is $390. Your provider can help you choose the appropriate tier.",
     },
     faq: [
       { question: "How is a HydraFacial different from a regular facial?", answer: "HydraFacial uses patented vortex technology to deeply cleanse, extract, and hydrate simultaneously. Traditional facials rely on manual techniques. HydraFacial is more consistent and delivers serums more effectively." },
@@ -274,14 +273,14 @@ export const servicePages: ServicePageData[] = [
       steps: [
         "Cleanse and apply topical numbing cream (20–30 minutes)",
         "Microneedling with customized depth settings for each area",
-        "Application of growth factor serum during treatment for enhanced results",
+        "Application of the appropriate topical products during treatment",
         "Calming mask and SPF applied post-treatment",
         "Redness subsides within 48–72 hours; new collagen develops over 4–6 weeks",
       ],
     },
     pricing: {
       heading: "Pricing",
-      body: "Microneedling starts at $300/session. Series of 3 recommended for best results.",
+      body: "Microneedling pricing depends on the treatment area, selected modality, and whether a series is recommended. Rella will review the current total before treatment.",
     },
     faq: [
       { question: "How many sessions do I need?", answer: "Most patients see optimal results after 3–6 sessions spaced 4–6 weeks apart. Maintenance treatments are recommended every 3–6 months." },
@@ -294,44 +293,42 @@ export const servicePages: ServicePageData[] = [
     slug: "iv-hydration",
     title: "IV Hydration",
     metaTitle: "IV Hydration Therapy in Vacaville & Napa CA",
-    metaDescription: "Vitamin-infused IV therapy for energy, immunity, and recovery at Rella Aesthetics. Medical-grade IV drips in Vacaville and Napa.",
+    metaDescription: "Clinician-guided IV hydration with health screening, monitored administration, and individualized formulation at Rella Aesthetics in Vacaville and Napa.",
     heroEyebrow: "Body & Wellness",
     heroTitle: "IV Hydration",
-    heroDescription: "Medical-grade vitamin infusions delivered directly to your bloodstream for maximum absorption and immediate wellness benefits.",
+    heroDescription: "Clinician-guided IV hydration with screening, monitored administration, and ingredients selected for the plan being considered.",
     whatItIs: {
       heading: "What Is IV Hydration?",
-      body: "IV hydration therapy delivers vitamins, minerals, and fluids directly into your bloodstream, bypassing the digestive system for 100% absorption. Our custom IV formulas target energy, immunity, recovery, and skin radiance. Treatments are administered by licensed medical professionals in a comfortable, relaxing setting.",
+      body: "IV hydration delivers fluids and selected ingredients intravenously, bypassing digestive absorption. Suitability, formulation, and frequency depend on your history, goals, current symptoms, and clinical screening. Treatments are administered by licensed medical professionals in a monitored setting.",
     },
     whoItsFor: {
       heading: "Who Is It For?",
-      body: "IV therapy benefits patients seeking targeted wellness support.",
+      body: "IV hydration may be considered for adults seeking clinician-guided hydration support after an appropriate screening.",
       bullets: [
-        "Low energy or chronic fatigue",
-        "Immune support during cold and flu season",
-        "Post-workout or athletic recovery",
-        "Hangover relief and dehydration",
-        "Skin radiance and anti-aging from within",
+        "Review of hydration and wellness goals",
+        "Screening for ingredient and health-history considerations",
+        "A monitored alternative when a clinician considers IV delivery appropriate",
+        "Clear guidance on formulation and follow-up",
       ],
     },
     whatToExpect: {
       heading: "What to Expect",
-      body: "Sessions take 30–60 minutes. Relax in a comfortable setting while your drip works.",
+      body: "Sessions typically take 30–60 minutes, with monitoring throughout the infusion.",
       steps: [
         "Brief health screening and IV formula selection",
         "Small IV catheter placed in the arm (quick, minimal discomfort)",
-        "Relax while your custom drip infuses over 30–60 minutes",
-        "Many patients feel energized immediately after treatment",
-        "No downtime — resume your normal activities right away",
+        "Monitored infusion over the time appropriate for the selected formula",
+        "Post-infusion guidance and follow-up instructions",
       ],
     },
     pricing: {
       heading: "Pricing",
-      body: "IV drips start at $175. Add-on boosters available for customization.",
+      body: "IV pricing depends on the selected formulation and any clinically appropriate additions. Rella will review the current ingredients and total before treatment.",
     },
     faq: [
-      { question: "How often should I get an IV drip?", answer: "For general wellness, monthly treatments are popular. For specific goals like immune support or athletic recovery, weekly sessions may be recommended for a short period." },
-      { question: "Is IV therapy safe?", answer: "Yes. All treatments are administered by licensed medical professionals using sterile, medical-grade supplies. A brief health screening ensures the treatment is appropriate for you." },
-      { question: "Will I feel the effects immediately?", answer: "Most patients feel more hydrated and energized within hours. Some benefits, like immune support and skin radiance, build with consistent treatments." },
+      { question: "How often should I get an IV drip?", answer: "Frequency should be individualized. A clinician can review your history, goals, formulation, and whether repeat treatment is appropriate." },
+      { question: "Is IV therapy appropriate for everyone?", answer: "No. IV hydration requires screening, and some health conditions, medications, symptoms, or ingredient considerations may make it inappropriate. The team will review what applies to you." },
+      { question: "Will I feel an effect immediately?", answer: "Experiences vary by person, hydration status, formulation, and underlying circumstances. Rella does not promise a specific or immediate result." },
     ],
     image: "/images/service-iv.jpg",
   },
@@ -371,12 +368,12 @@ export const servicePages: ServicePageData[] = [
     },
     pricing: {
       heading: "Pricing",
-      body: "IPL starts at $250/session. Laser hair removal from $100/area. Erbium resurfacing from $500. Contact us for package pricing.",
+      body: "IPL Full Face is $420 and CO2 CoolPeel Full Face is $1,440. Pricing for other laser services depends on the treatment area, device, and plan; Rella will review the current total before treatment.",
     },
     faq: [
       { question: "How many laser sessions do I need?", answer: "IPL typically requires 3–5 sessions. Laser hair removal needs 6–8 sessions. Erbium resurfacing may require 1–3 sessions. Your provider will create a customized plan." },
       { question: "Does laser treatment hurt?", answer: "Sensation varies by treatment type. Most patients describe IPL as a rubber band snap. Topical numbing is available for more intensive treatments." },
-      { question: "Can laser treatments be done on all skin types?", answer: "Most lasers work best on lighter skin tones. During your consultation, we will assess your skin type and recommend the safest, most effective approach." },
+      { question: "Can laser treatments be done on all skin types?", answer: "Safety and suitability depend on the device, wavelength, settings, treatment goal, and your skin type. A consultation is required to identify the appropriate option." },
     ],
     image: "/images/service-laser.jpg",
   },

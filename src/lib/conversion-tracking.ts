@@ -93,10 +93,23 @@ export interface MobileBookingDestination {
   cta: string;
 }
 
+const SERVICE_BOOKING_LABELS: Record<string, string> = {
+  botox: "Book Botox",
+  "dermal-fillers": "Book Fillers",
+  "chemical-peels": "Book a Peel",
+  facials: "Book a Facial",
+  hydrafacial: "Book HydraFacial",
+  microneedling: "Book Microneedling",
+  "iv-hydration": "Book IV Hydration",
+  "laser-treatments": "Book Laser Consult",
+};
+
 export function resolveMobileBookingDestination(
-  pathname: string,
+  pathname: string | null,
 ): MobileBookingDestination {
-  if (pathname === "/services/weight-loss") {
+  const currentPath = pathname ?? "";
+
+  if (currentPath === "/services/weight-loss") {
     return {
       href: "#consultation-options",
       label: "See Consult Times",
@@ -104,7 +117,7 @@ export function resolveMobileBookingDestination(
     };
   }
 
-  if (pathname === "/locations/napa") {
+  if (currentPath === "/locations/napa") {
     return {
       href: resolveBookingHref({ location: "napa" }),
       label: "Book Napa",
@@ -112,11 +125,20 @@ export function resolveMobileBookingDestination(
     };
   }
 
-  if (pathname === "/locations/vacaville") {
+  if (currentPath === "/locations/vacaville") {
     return {
       href: resolveBookingHref({ location: "vacaville" }),
       label: "Book Vacaville",
       cta: "location-booking",
+    };
+  }
+
+  const serviceSlug = currentPath.match(/^\/services\/([^/]+)$/)?.[1];
+  if (serviceSlug && SERVICE_BOOKING_LABELS[serviceSlug]) {
+    return {
+      href: resolveBookingHref({ service: serviceSlug }),
+      label: SERVICE_BOOKING_LABELS[serviceSlug],
+      cta: "service-booking",
     };
   }
 

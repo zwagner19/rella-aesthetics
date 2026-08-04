@@ -7,9 +7,10 @@ interface TierCardProps {
   benefits: string[];
   featured?: boolean;
   ctaHref: string;
+  ctaText?: string;
 }
 
-export function TierCard({ name, price, period, benefits, featured = false, ctaHref }: TierCardProps) {
+export function TierCard({ name, price, period, benefits, featured = false, ctaHref, ctaText = "Get Started" }: TierCardProps) {
   return (
     <div
       className={`relative flex flex-col bg-white border rounded-lg p-8 ${
@@ -38,7 +39,7 @@ export function TierCard({ name, price, period, benefits, featured = false, ctaH
         ))}
       </ul>
       <Button href={ctaHref} variant={featured ? "primary" : "ghost"} className="w-full">
-        Get Started
+        {ctaText}
       </Button>
     </div>
   );

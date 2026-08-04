@@ -61,4 +61,15 @@ describe("mobile booking bar routing", () => {
       BOULEVARD_WIDGET_GENERIC,
     );
   });
+
+  it("keeps the mobile action aligned with the service being viewed", () => {
+    expect(resolveMobileBookingDestination("/services/botox")).toEqual({
+      href: BOULEVARD_WIDGET_GENERIC,
+      label: "Book Botox",
+      cta: "service-booking",
+    });
+    expect(resolveMobileBookingDestination("/services/iv-hydration").label).toBe(
+      "Book IV Hydration",
+    );
+  });
 });

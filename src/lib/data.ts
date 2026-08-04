@@ -45,7 +45,7 @@ export const services = [
     slug: "iv-hydration",
     title: "IV Hydration",
     category: "Body & Wellness",
-    description: "Vitamin-infused IV therapy for energy, immunity, and recovery.",
+    description: "Clinician-guided IV hydration with screening, monitored administration, and an individualized formulation.",
     image: "/images/service-iv.jpg",
   },
   {
@@ -107,34 +107,14 @@ export const locations = {
 
 export const membershipTiers = [
   {
-    name: "Tox Membership",
-    price: "$20",
-    period: "month",
-    benefits: [
-      "Botox at $10/unit",
-      "Dysport at $3.33/unit",
-      "10% off all Rella Skincare Products",
-    ],
-  },
-  {
-    name: "Filler Membership",
+    name: "2026 Tox Membership",
     price: "$30",
     period: "month",
     benefits: [
-      "Filler at $500/syringe",
-      "10% off all Rella Skincare Products",
-    ],
-  },
-  {
-    name: "Filler & Tox Membership",
-    price: "$40",
-    period: "month",
-    featured: true,
-    benefits: [
-      "Botox at $10/unit",
-      "Dysport at $3.33/unit",
-      "Filler at $450/syringe",
-      "15% off Rella Skincare Products",
+      "Botox at $13/unit",
+      "Dysport at $4.40/unit",
+      "One-year membership commitment",
+      "Treatment plan and total reviewed before treatment",
     ],
   },
 ] as const;
