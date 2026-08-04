@@ -17,19 +17,19 @@ Those statements were removed because they were not established by the binding R
 - Botox softening may begin in 4–7 days and Dysport in 2–5 days;
 - full effect is assessed around two weeks;
 - results typically last 3–4 months and individual response varies;
-- treatment generally has minimal downtime, with most patients able to return to their daily routine immediately;
+- comfort, possible temporary effects, aftercare, and return to normal activities are reviewed for the individual plan;
 - the repeat-treatment interval should be discussed with the provider rather than described as a touch-up schedule.
 
 ## Evidence boundary
 
 - Binding Rella Napa tox facts supply the product-specific onset, two-week assessment, typical 3–4 month duration, and current pricing.
 - Current FDA labeling describes BOTOX Cosmetic as providing temporary improvement in the appearance of indicated lines.
-- Official BOTOX Cosmetic patient guidance supports minimal downtime and return to a daily routine immediately after leaving the specialist's office.
+- The broader service-claims pass replaced blanket downtime and activity-return language with individualized guidance while preserving the approved product-specific onset and duration boundaries.
 - No new efficacy percentage, ranking, prevention, safety guarantee, or product-superiority claim was added.
 
 ## Regression coverage
 
-The service-catalog integrity suite now blocks the removed prevention, muscle-adaptation, spread, and touch-up-schedule phrases. It also requires the temporary-improvement framing, minimal-downtime boundary, and non-interchangeable-unit disclosure.
+The service-catalog integrity suite now blocks the removed prevention, muscle-adaptation, spread, touch-up-schedule, immediate routine-return, and no-anesthesia phrases. It also requires the temporary-improvement framing, individualized aftercare boundary, and non-interchangeable-unit disclosure.
 
 ## Remaining clinical gate
 

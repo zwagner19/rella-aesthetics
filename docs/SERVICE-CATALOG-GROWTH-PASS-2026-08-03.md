@@ -74,6 +74,8 @@ The page initially narrowed itself to Tox while the full public-membership sourc
 - Removed an unverified microneedling growth-factor step.
 - Replaced the broad laser skin-type statement with device-, setting-, goal-, and skin-type-specific suitability language.
 
+The follow-on service-claims integrity pass removed the remaining universal outcome, candidacy, recovery, and fixed-series language across the shared catalog while preserving approved pricing and booking paths. See `docs/SERVICE-CLAIMS-INTEGRITY-PASS-2026-08-03.md`.
+
 ## Verification
 
 - Automated catalog tests cover all eight pages, all service images, booking actions, canon pricing, prohibited legacy figures, metadata, and structured data.
@@ -86,7 +88,7 @@ The page initially narrowed itself to Tox while the full public-membership sourc
 
 ## Remaining approvals
 
-1. Confirm all non-price clinical descriptions, candidacy language, timing, downtime, and expected-duration statements with the clinical owner.
+1. Dr. Wagner reviews and approves the finished consultation-led clinical copy documented in the service-claims integrity pass.
 2. Confirm whether each service is offered at both locations or whether service/location overrides are needed.
 3. Confirm current provider capacity before launching or expanding paid campaigns by service.
 4. Confirm the public prices in Boulevard immediately before production release; the July 24 canon remains the controlling website source until deliberately superseded.

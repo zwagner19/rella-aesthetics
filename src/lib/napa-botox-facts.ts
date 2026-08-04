@@ -98,7 +98,7 @@ export const FAQS: readonly Faq[] = [
   },
   {
     q: "Does it hurt?",
-    a: "Most patients describe it as a quick pinch — the needles are very fine and the visit is fast. You can return to your day right after, with a few simple aftercare guidelines.",
+    a: "Sensation varies by person and treatment area. The injections use fine needles, and your provider will review comfort needs, possible temporary effects, aftercare, and when normal activities can resume.",
   },
   {
     q: "How long do results last?",

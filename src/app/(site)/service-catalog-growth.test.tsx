@@ -147,7 +147,7 @@ describe("public pricing and claims integrity", () => {
     expect(botox?.metaDescription).toContain("Temporarily soften the appearance");
     expect(botox?.whatItIs.body).toContain("temporarily reduce targeted muscle activity");
     expect(botox?.whatToExpect.steps).toContain(
-      "Minimal downtime — most patients return to their daily routine immediately",
+      "Review of possible temporary effects, aftercare, and when normal activities can resume",
     );
     expect(botox?.faq.find((item) => item.question.includes("difference"))?.answer).toContain(
       "non-interchangeable units",
@@ -183,5 +183,35 @@ describe("public pricing and claims integrity", () => {
     expect(treatmentServiceSchema(peels!).areaServed.map((area) => area.name)).toEqual([
       "Vacaville",
     ]);
+  });
+
+  it("keeps shared service copy free of universal outcomes and fixed recovery promises", () => {
+    const publicCopy = JSON.stringify(servicePages);
+
+    for (const unsupported of [
+      "zero downtime",
+      "No downtime",
+      "suitable for all skin types",
+      "All skin types including",
+      "immediate results",
+      "instantly visible",
+      "walk out glowing",
+      "optimal results",
+      "Most fillers last 6–18 months",
+      "Some purging is normal",
+      "facials pair well",
+      "providing an added safety measure",
+      "Downtime: IPL 1–3 days",
+      "Laser hair removal needs 6–8 sessions",
+      "new collagen develops over 4–6 weeks",
+      "return to their daily routine immediately",
+      "No anesthesia is needed",
+    ]) {
+      expect(publicCopy, unsupported).not.toContain(unsupported);
+    }
+
+    expect(publicCopy).toContain("Recovery and visible response vary by person");
+    expect(publicCopy).toContain("not everyone is an appropriate candidate");
+    expect(publicCopy).toContain("risks, including burns, scarring, infection");
   });
 });
