@@ -196,3 +196,27 @@ export function medicalWeightLossServiceSchema() {
     },
   };
 }
+
+export function physicianOwnerSchema() {
+  return {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "@id": "https://experiencerella.com/about#dr-zachary-wagner",
+    name: "Zachary Wagner",
+    honorificPrefix: "Dr.",
+    honorificSuffix: "DO",
+    jobTitle: "Physician Owner",
+    url: "https://experiencerella.com/about",
+    image: "https://experiencerella.com/images/dr-zachary-wagner.jpg",
+    worksFor: {
+      "@type": "MedicalBusiness",
+      "@id": "https://experiencerella.com/#organization",
+      name: "Rella Aesthetics",
+    },
+    hasCredential: {
+      "@type": "EducationalOccupationalCredential",
+      credentialCategory: "Board certification",
+      name: "American Board of Obesity Medicine diplomate",
+    },
+  };
+}

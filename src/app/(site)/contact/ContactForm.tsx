@@ -20,9 +20,12 @@ export function ContactForm() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),
       });
+      const result: { accepted?: boolean } = await res.json().catch(() => ({}));
       if (!res.ok) throw new Error("Failed to send");
       setStatus("sent");
-      dispatchConversion("contact_form_success");
+      if (result.accepted === true) {
+        dispatchConversion("contact_form_success");
+      }
       form.reset();
     } catch {
       setStatus("error");
@@ -33,13 +36,23 @@ export function ContactForm() {
     return (
       <div className="bg-rose-blush border border-rose-light rounded-lg p-8 text-center">
         <p className="font-medium text-silver-dark text-lg mb-2">Thank you!</p>
-        <p className="text-silver">We&apos;ll be in touch within one business day.</p>
+        <p className="text-silver">Your message reached Rella. A member of our team will follow up.</p>
       </div>
     );
   }
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
+      <div className="absolute -left-[9999px]" aria-hidden="true">
+        <label htmlFor="website">Website</label>
+        <input
+          type="text"
+          id="website"
+          name="website"
+          tabIndex={-1}
+          autoComplete="off"
+        />
+      </div>
       <div>
         <label htmlFor="name" className="block text-sm font-medium text-silver-dark mb-1">
           Full Name
@@ -107,7 +120,20 @@ export function ContactForm() {
       </div>
 
       {status === "error" && (
-        <p className="text-sm text-rose-dark">Something went wrong. Please try again or call us directly.</p>
+        <div role="alert" className="rounded-lg border border-rose-light bg-rose-blush p-4 text-sm leading-relaxed text-silver-dark">
+          <p className="font-medium text-rose-dark">Your message was not sent.</p>
+          <p>
+            Please try again, call{" "}
+            <a className="font-medium underline underline-offset-2" href="tel:+17073582928">
+              707.358.2928
+            </a>
+            , or email{" "}
+            <a className="font-medium underline underline-offset-2" href="mailto:hello@experiencerella.com">
+              hello@experiencerella.com
+            </a>
+            .
+          </p>
+        </div>
       )}
 
       <Button type="submit" disabled={status === "sending"}>

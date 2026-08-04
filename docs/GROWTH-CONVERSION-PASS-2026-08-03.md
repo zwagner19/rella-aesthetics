@@ -27,7 +27,7 @@ This pass strengthens the path from a search result or ad click to a measurable 
   - phone and email intent;
   - contact-page intent;
   - successful contact-form leads.
-- A contact form is recorded as `generate_lead` only after the lead API returns success.
+- A contact form is recorded as `generate_lead` only after HighLevel confirms the contact and the lead API returns `accepted: true`.
 - Booking clicks remain intent events; they are not mislabeled as completed appointments.
 - Event payloads are deliberately generic. No form values, names, phone numbers, email addresses, provider names, location names, service selections, messages, or health information are sent by this layer.
 
@@ -79,7 +79,7 @@ The tracking components remain inert when their existing environment variables a
 
 1. `NEXT_PUBLIC_GA_MEASUREMENT_ID` is set to the correct GA4 property.
 2. `NEXT_PUBLIC_META_PIXEL_ID` is set only after the privacy/compliance decision for health-service pages.
-3. `GHL_API_KEY` and `GHL_LOCATION_ID` are set so contact submissions create real CRM contacts.
+3. `GHL_API_KEY`, `GHL_LOCATION_ID`, and `GHL_CUSTOM_FIELD_MESSAGE_ID` are set so contact submissions create real CRM contacts and preserve the full inquiry.
 4. The production domain is tested in GA4 DebugView and Meta Test Events.
 5. Only successful `generate_lead` events are marked as lead conversions initially.
 6. A later Boulevard completion or approved thank-you-page integration supplies the authoritative completed-appointment event. Booking-click intent must not be treated as a completed appointment.

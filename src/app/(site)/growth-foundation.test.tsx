@@ -8,6 +8,8 @@ import VacavillePage, {
 import { locations } from "@/lib/data";
 import { localBusinessSchema } from "@/lib/schemas";
 import GalleryPage, { metadata as galleryMetadata } from "./gallery/page";
+import AboutPage, { metadata as aboutMetadata } from "./about/page";
+import { physicianOwnerSchema } from "@/lib/schemas";
 
 describe("local-search location pages", () => {
   it("renders a complete Napa visit and booking journey", () => {
@@ -52,6 +54,9 @@ describe("sitewide conversion foundation", () => {
     const leadEvent = source.indexOf('dispatchConversion("contact_form_success")');
     expect(successCheck).toBeGreaterThan(-1);
     expect(leadEvent).toBeGreaterThan(successCheck);
+    expect(source).toContain("result.accepted === true");
+    expect(source).toContain('href="tel:+17073582928"');
+    expect(source).toContain('href="mailto:hello@experiencerella.com"');
   });
 });
 
@@ -74,6 +79,28 @@ describe("trust and indexation foundation", () => {
     );
     expect(source).toContain("/images/dr-zachary-wagner.jpg");
     expect(source).toContain("American Board of Obesity Medicine diplomate");
+  });
+
+  it("makes Dr. Wagner and his verified ABOM credential visible on About", () => {
+    const html = renderToStaticMarkup(<AboutPage />);
+    expect(html).toContain("Zachary Wagner, DO");
+    expect(html).toContain("American Board of Obesity Medicine diplomate");
+    expect(html).toContain("/images/dr-zachary-wagner.jpg");
+    expect(html).toContain("Physician Owner");
+    expect(html).not.toContain("she leads");
+    expect(html).not.toContain('class="aspect-[4/5] bg-silver-pale rounded-lg"');
+    expect(aboutMetadata.alternates).toEqual({ canonical: "/about" });
+  });
+
+  it("publishes Dr. Wagner as the physician owner with an ABOM credential", () => {
+    const schema = physicianOwnerSchema();
+    expect(schema.jobTitle).toBe("Physician Owner");
+    expect(schema.hasCredential.name).toBe(
+      "American Board of Obesity Medicine diplomate",
+    );
+    expect(schema.worksFor["@id"]).toBe(
+      "https://experiencerella.com/#organization",
+    );
   });
 
   it("declares canonical URLs on every ordinary index landing page", () => {
