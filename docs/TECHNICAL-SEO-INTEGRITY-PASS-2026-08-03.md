@@ -66,10 +66,10 @@ This is a technical integrity gate, not a guarantee of ranking position. Search 
 
 ## Verification
 
-- 289 automated tests passed across 23 files.
+- 294 automated tests passed across 25 files.
 - Full ESLint pass completed with no findings.
 - TypeScript completed with no errors.
-- Next.js 16.2.12 optimized build completed and generated 39 routes including the two metadata-image endpoints.
+- Next.js 16.2.12 optimized build completed and generated 41 routes including the two metadata-image endpoints, preserved giveaway record, and KML endpoint.
 - Sitemap regenerated with 30 indexable pages; the booking chooser and both media endpoints remain excluded.
 - Internal link crawl passed across 30 pages and 40 unique destinations.
 - Booking crawl passed across 11 unique external destinations.

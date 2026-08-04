@@ -97,8 +97,18 @@ export interface MobileBookingDestination {
   cta: string;
 }
 
+const MOBILE_BAR_EXCLUDED_PATHS = new Set([
+  BOOKING_LOCATION_CHOOSER,
+  "/booking",
+  "/cancellation-policy",
+  "/contact",
+  "/giveaway-terms-and-conditions",
+  "/privacy-policy",
+  "/terms",
+]);
+
 export function shouldShowMobileConversionBar(pathname: string | null): boolean {
-  return pathname !== BOOKING_LOCATION_CHOOSER;
+  return !pathname || !MOBILE_BAR_EXCLUDED_PATHS.has(pathname);
 }
 
 export function resolveMobileBookingDestination(

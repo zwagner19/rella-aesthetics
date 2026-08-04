@@ -42,9 +42,15 @@ describe("conversion intent classification", () => {
 });
 
 describe("mobile booking bar routing", () => {
-  it("stays out of the way while the visitor chooses a clinic", () => {
+  it("stays out of the way on clinic choice, contact, policy, and archive pages", () => {
     expect(shouldShowMobileConversionBar("/book")).toBe(false);
+    expect(shouldShowMobileConversionBar("/contact")).toBe(false);
+    expect(shouldShowMobileConversionBar("/cancellation-policy")).toBe(false);
+    expect(shouldShowMobileConversionBar("/privacy-policy")).toBe(false);
+    expect(shouldShowMobileConversionBar("/terms")).toBe(false);
+    expect(shouldShowMobileConversionBar("/giveaway-terms-and-conditions")).toBe(false);
     expect(shouldShowMobileConversionBar("/")).toBe(true);
+    expect(shouldShowMobileConversionBar("/services/botox")).toBe(true);
   });
 
   it("keeps weight-loss visitors inside the city-choice funnel", () => {

@@ -14,6 +14,7 @@ No paid campaign should point to the site until one real test inquiry is visible
 - [ ] `npm run lint` passes.
 - [ ] `npm run build` passes and regenerates the sitemap.
 - [ ] `npm run check:links` passes against the exact preview deployment.
+- [ ] `npm run check:legacy-redirects` passes against the exact preview deployment for every audited WordPress URL and preserved public record.
 - [ ] `npm run check:booking-links` passes against the exact preview deployment with outbound network access.
 - [ ] `npm run check:seo` passes against the exact preview deployment.
 - [ ] Every distinct external booking URL is opened in a real browser on the exact preview; HTTP 200 alone does not pass this gate.
@@ -85,9 +86,18 @@ Source verification note (2026-08-03): the approved July 15 Signature Menu and M
 - [ ] Napa and Vacaville addresses, phone, and published hours are confirmed current.
 - [ ] Weight-management claims, medication wording, pricing, labs, monitoring cadence, and virtual-care boundaries have final clinical approval.
 
+### 5A. Legacy URL migration
+
+- [ ] The live WordPress `page-sitemap.xml`, `post-sitemap.xml`, and `local-sitemap.xml` have been compared with `legacy-redirects.json` on the final cutover date.
+- [ ] Old About, Team, service, VIP, gallery, FAQ, location, payment, booking-received, and article URLs finish on their audited relevant destinations.
+- [ ] `/giveaway-terms-and-conditions` remains accessible as a `noindex, follow` preserved record unless owner/counsel approves a different retention decision.
+- [ ] `/locations.kml` returns KML containing both approved clinic addresses and current public hours.
+- [ ] Only the new sitemap is submitted after cutover; the old Rank Math sitemap index is not advertised by robots or Search Console.
+
 ### 6. Measurement and privacy
 
 - [ ] Counsel supplies Rella Aesthetics-specific Terms and a website/privacy policy covering the actual data stack; publish that text verbatim and record the approval date.
+- [ ] Owner/counsel confirms the retention status of the preserved October 2024 giveaway terms; do not silently rewrite the archived promotion language.
 - [ ] `/terms` contains no Rella Weight Loss language, unsupported 24-hour policy, or unapproved fee promise.
 - [ ] `/cancellation-policy` states the approved 48-hour policy and keeps the Napa $50 booking deposit separate from per-unit treatment pricing.
 - [ ] Footer, booking, and consent links resolve to the approved legal and cancellation pages on the exact production host.

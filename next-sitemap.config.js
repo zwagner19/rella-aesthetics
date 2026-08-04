@@ -8,6 +8,8 @@ module.exports = {
     "/studio/**",
     "/book",
     "/booking",
+    "/giveaway-terms-and-conditions",
+    "/locations.kml",
     "/opengraph-image",
     "/twitter-image",
   ],
