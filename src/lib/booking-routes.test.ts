@@ -5,6 +5,8 @@ import {
   BOULEVARD_WIDGET_GENERIC,
   BOULEVARD_WIDGET_NAPA,
   BOULEVARD_WIDGET_VACAVILLE,
+  WEIGHT_LOSS_BOOKING_ORIGIN,
+  resolveWeightLossConsultHref,
 } from "./booking-routes";
 
 /**
@@ -60,5 +62,30 @@ describe("resolveBookingHref — generic (no location) never silently Napa Tox",
   });
   it("no-location, no service → generic business widget", () => {
     expect(resolveBookingHref({})).toBe(BOULEVARD_WIDGET_GENERIC);
+  });
+});
+
+describe("resolveBookingHref — dedicated medical-weight-loss funnel", () => {
+  it("requires an explicit city before entering the dedicated booking app", () => {
+    expect(resolveBookingHref({ service: "weight-loss" })).toBe(BOULEVARD_WIDGET_GENERIC);
+  });
+
+  for (const location of ["napa", "vacaville"] as const) {
+    it(`${location} medical weight loss → verified location-first consultation route`, () => {
+      const expected = `${WEIGHT_LOSS_BOOKING_ORIGIN}/book/${location}/weight-loss-consult`;
+      expect(resolveBookingHref({ location, service: "weight-loss" })).toBe(expected);
+      expect(resolveWeightLossConsultHref(location)).toBe(expected);
+    });
+
+  }
+
+  it("never regenerates the stale service-first paths that return 404", () => {
+    const hrefs = [
+      resolveWeightLossConsultHref("napa"),
+      resolveWeightLossConsultHref("vacaville"),
+    ];
+    for (const href of hrefs) {
+      expect(href).not.toContain("/book/weight-loss-consult/");
+    }
   });
 });
