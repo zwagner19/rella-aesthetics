@@ -290,7 +290,7 @@ export default function VacavilleFillerPage() {
         </div>
       </section>
 
-      <section className="bg-rose py-20 text-center text-white" aria-labelledby="vacaville-filler-next-step">
+      <section className="bg-rose-cta py-20 text-center text-white" aria-labelledby="vacaville-filler-next-step">
         <div className="mx-auto max-w-[720px] px-6">
           <h2 id="vacaville-filler-next-step" className="mb-4 text-3xl font-medium tracking-[-0.035em] md:text-5xl">
             Start with the Vacaville plan.
@@ -299,7 +299,7 @@ export default function VacavilleFillerPage() {
             Open the live Dermal Fillers service, review the current treatment areas and booking terms, or call Rella with a question.
           </p>
           <div className="flex flex-col justify-center gap-3 sm:flex-row">
-            <Button href={BOOKING_HREF} data-cta="service-booking" className="rounded-full bg-white !text-rose hover:bg-white/90 hover:!text-rose-dark">
+            <Button href={BOOKING_HREF} data-cta="service-booking" className="rounded-full bg-white !text-rose-text hover:bg-white/90 hover:!text-rose-dark">
               Book Dermal Fillers
             </Button>
             <Button href="tel:+17073582928" data-cta="phone" variant="ghost" className="rounded-full border-white/70 !text-white hover:border-white hover:!text-white">

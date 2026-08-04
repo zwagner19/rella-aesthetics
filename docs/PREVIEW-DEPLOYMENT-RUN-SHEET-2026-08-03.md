@@ -87,7 +87,7 @@ npm run build
 
 Prepared checkpoint expectation:
 
-- 31 test files and 345 tests pass;
+- 32 test files and 349 tests pass;
 - Next.js 16.2.12 generates 47 routes;
 - sitemap generation completes.
 
@@ -160,6 +160,9 @@ Fail for the wrong clinic, wrong service, `#/not-found`, “things have moved,�
 - [ ] Desktop representative pages at 1440 × 1000.
 - [ ] Mobile representative and high-intent pages at 390 × 844.
 - [ ] One visible H1; no horizontal overflow; no clipped sticky action; no blocked form/policy controls.
+- [ ] Keyboard focus enters the mobile menu, remains inside it, and returns to the menu trigger after Escape or close.
+- [ ] Primary booking labels remain readable in default, hover, focus, and disabled states.
+- [ ] Contact accepts name plus either email or phone and announces validation, sending, failure, and success states without losing entered data.
 - [ ] Authentic Dr. Wagner portrait is clear.
 - [ ] Addresses, phones, hours, prices, service names, and clinic labels match the approved sources.
 

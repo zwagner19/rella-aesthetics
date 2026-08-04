@@ -161,7 +161,7 @@ export function TreatmentServicePage({ service }: TreatmentServicePageProps) {
           <ol className="grid gap-4 sm:grid-cols-2">
             {service.whatToExpect.steps.map((step, index) => (
               <li key={step} className="rounded-[1.25rem] border border-white/15 bg-white/[0.04] p-5">
-                <span className="mb-6 inline-flex h-8 w-8 items-center justify-center rounded-full bg-rose text-xs font-bold text-white">{index + 1}</span>
+                <span className="mb-6 inline-flex h-8 w-8 items-center justify-center rounded-full bg-rose-cta text-xs font-bold text-white">{index + 1}</span>
                 <p className="text-sm leading-relaxed text-white/75">{step}</p>
               </li>
             ))}
@@ -242,7 +242,7 @@ export function TreatmentServicePage({ service }: TreatmentServicePageProps) {
         </div>
       </section>
 
-      <section className="bg-rose py-20 text-center text-white">
+      <section className="bg-rose-cta py-20 text-center text-white">
         <div className="mx-auto max-w-[680px] px-6">
           <h2 className="mb-4 text-3xl font-medium tracking-[-0.035em] md:text-5xl">Ready for a clear next step?</h2>
           <p className="mb-8 text-lg font-light leading-relaxed text-white/85">Book a consultation to review your goals, the appropriate plan, and the current total before treatment.</p>
@@ -252,7 +252,7 @@ export function TreatmentServicePage({ service }: TreatmentServicePageProps) {
                 key={location.name}
                 href={location.bookingHref}
                 data-cta="service-booking"
-                className="rounded-full bg-white !text-rose hover:bg-white/90 hover:!text-rose-dark"
+                className="rounded-full bg-white !text-rose-text hover:bg-white/90 hover:!text-rose-dark"
               >
                 Book in {location.name}
               </Button>

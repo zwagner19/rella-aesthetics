@@ -287,7 +287,7 @@ export default function VacavilleBotoxPage() {
         </div>
       </section>
 
-      <section className="bg-rose py-20 text-center text-white" aria-labelledby="vacaville-botox-next-step">
+      <section className="bg-rose-cta py-20 text-center text-white" aria-labelledby="vacaville-botox-next-step">
         <div className="mx-auto max-w-[720px] px-6">
           <h2 id="vacaville-botox-next-step" className="mb-4 text-3xl font-medium tracking-[-0.035em] md:text-5xl">
             Ready for a clear Vacaville next step?
@@ -296,7 +296,7 @@ export default function VacavilleBotoxPage() {
             Open the live New Patient Tox service, review the current booking terms, or call Rella if you have a question before choosing a visit.
           </p>
           <div className="flex flex-col justify-center gap-3 sm:flex-row">
-            <Button href={BOOKING_HREF} data-cta="service-booking" className="rounded-full bg-white !text-rose hover:bg-white/90 hover:!text-rose-dark">
+            <Button href={BOOKING_HREF} data-cta="service-booking" className="rounded-full bg-white !text-rose-text hover:bg-white/90 hover:!text-rose-dark">
               Book New Patient Tox
             </Button>
             <Button href="tel:+17073582928" data-cta="phone" variant="ghost" className="rounded-full border-white/70 !text-white hover:border-white hover:!text-white">

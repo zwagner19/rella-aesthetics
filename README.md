@@ -20,8 +20,10 @@ npm run lint
 npm run build
 npm run start
 # In another terminal:
+npm run check:legacy-redirects
 npm run check:links
 npm run check:booking-links
+npm run check:seo
 ```
 
 The production build also regenerates `public/sitemap.xml` through `next-sitemap`.
@@ -72,6 +74,7 @@ Do not place names, emails, phone numbers, messages, provider selections, or hea
 `POST /api/leads` accepts a prospect only after HighLevel confirms an upserted contact. Repeat inquiries use HighLevel's upsert endpoint. Tags are added separately so existing tags are not overwritten.
 
 - Missing CRM configuration returns an error, never a fake success.
+- The public form accepts a name plus either email or phone, matching the server contract and supporting phone-first prospects.
 - A free-text message is stored only in the configured message custom field.
 - Clinic preference accepts only Napa, Vacaville, or no preference; it is stored in the configured field when available and preserved as a routing tag either way.
 - Form contents are never printed to application logs.

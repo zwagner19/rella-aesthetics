@@ -16,7 +16,7 @@ No deployment, push, merge, DNS change, CRM mutation, patient-data access, ad/ac
 | Runtime checkpoint | Record and deploy only the exact reviewed branch head from the preview run sheet |
 | Branch scope | Multi-commit release branch; deploy only an exact reviewed head |
 | Production build | Passed; 47 routes generated |
-| Automated suite | 345 checks across 31 files; all passed |
+| Automated suite | 349 checks across 32 files; all passed |
 | Lint and TypeScript | Passed with no findings |
 | Indexable crawl | 36 pages; all passed |
 | Internal destinations | 47; all passed; zero orphaned indexed pages; maximum homepage crawl depth 2 |
@@ -56,6 +56,7 @@ The optimized preview used for the final checks ran locally on port 3010 from th
 - Approved 2026 pricing canon applied across injectable memberships, Botox/Dysport, filler, HydraFacial, and named laser services.
 - Broader unsupported medical, recovery, candidacy, duration, and outcome claims removed or narrowed.
 - Mobile action bars and clinic-specific CTAs tested at 390 × 844 on representative and newly built pages.
+- Ordinary-site booking actions use WCAG AA text contrast; the lead form accepts email or phone and the mobile menu contains and restores keyboard focus.
 - Booking events remain intent signals; no click is reported as an appointment, arrival, or revenue event.
 
 ## Blocking owner decisions
@@ -81,6 +82,7 @@ Fast owner review packets:
 - `docs/REVENUE-OPERATING-SCORECARD-2026-08-03.md`
 - `docs/PREVIEW-DEPLOYMENT-RUN-SHEET-2026-08-03.md`
 - `docs/NAPA-ENTITY-CONSOLIDATION-PASS-2026-08-04.md`
+- `docs/CONVERSION-ACCESSIBILITY-PASS-2026-08-04.md`
 
 ## Recommended activation order
 

@@ -3,11 +3,11 @@
 @theme inline {
   /* Brand Colors */
   --color-rose: #F7A19A;
-  --color-rose-dark: #e8887f;
+  --color-rose-dark: #8f403b;
   --color-rose-light: #fbc8c4;
   --color-rose-blush: #FDF7F5;
-  --color-rose-text: #F7A19A;
-  --color-rose-cta: #e8887f;
+  --color-rose-text: #a34f49;
+  --color-rose-cta: #a34f49;
 
   --color-silver: #83888D;
   --color-silver-dark: #5a5e62;

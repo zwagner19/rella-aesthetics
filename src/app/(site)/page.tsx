@@ -202,7 +202,7 @@ export default function HomePage() {
       </section>
 
       {/* Final CTA */}
-      <section className="py-20 bg-rose text-white text-center">
+      <section className="bg-rose-cta py-20 text-center text-white">
         <div className="mx-auto max-w-[600px] px-6">
           <h2 className="font-bold text-3xl md:text-4xl tracking-[0.06em] uppercase mb-4">
             Ready to Begin?
@@ -212,7 +212,7 @@ export default function HomePage() {
           </p>
           <Button
             href={resolveBookingHref({})}
-            className="bg-white !text-rose hover:bg-white/90 hover:!text-rose-dark"
+            className="bg-white !text-rose-text hover:bg-white/90 hover:!text-rose-dark"
           >
             Book Consultation
           </Button>

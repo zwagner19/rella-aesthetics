@@ -98,7 +98,7 @@ export default function GalleryPage() {
         </div>
       </section>
 
-      <section className="bg-rose py-16 text-center text-white">
+      <section className="bg-rose-cta py-16 text-center text-white">
         <div className="mx-auto max-w-[640px] px-6">
           <h2 className="mb-4 text-3xl font-medium tracking-[-0.035em] md:text-4xl">Start with the right conversation.</h2>
           <p className="mb-7 text-lg font-light opacity-90">
@@ -107,7 +107,7 @@ export default function GalleryPage() {
           <Button
             href={resolveBookingHref({})}
             data-cta="gallery-booking"
-            className="rounded-full bg-white !text-rose hover:bg-white/90 hover:!text-rose-dark"
+            className="rounded-full bg-white !text-rose-text hover:bg-white/90 hover:!text-rose-dark"
           >
             Book Consultation
           </Button>

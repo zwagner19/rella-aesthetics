@@ -219,7 +219,7 @@ export default function VacavilleMicroneedlingPage() {
                 key={path.title}
                 className={`rounded-[1.6rem] border p-7 md:p-8 ${index === 0 ? "border-rose-light bg-rose-blush" : "border-silver-pale bg-white shadow-[0_14px_45px_rgba(90,94,98,0.07)]"}`}
               >
-                <span className="mb-8 inline-flex h-9 w-9 items-center justify-center rounded-full bg-rose text-xs font-bold text-white">{index + 1}</span>
+                <span className="mb-8 inline-flex h-9 w-9 items-center justify-center rounded-full bg-rose-cta text-xs font-bold text-white">{index + 1}</span>
                 <h3 className="mb-4 text-xl font-medium tracking-[-0.02em] text-ink">{path.title}</h3>
                 <p className="text-sm leading-7 text-silver">{path.body}</p>
               </article>
@@ -304,7 +304,7 @@ export default function VacavilleMicroneedlingPage() {
         </div>
       </section>
 
-      <section className="bg-rose py-20 text-center text-white" aria-labelledby="vacaville-microneedling-next-step">
+      <section className="bg-rose-cta py-20 text-center text-white" aria-labelledby="vacaville-microneedling-next-step">
         <div className="mx-auto max-w-[740px] px-6">
           <h2 id="vacaville-microneedling-next-step" className="mb-4 text-3xl font-medium tracking-[-0.035em] md:text-5xl">
             Choose the modality after the assessment.
@@ -313,7 +313,7 @@ export default function VacavilleMicroneedlingPage() {
             Open the exact Vacaville consult, review the professional and booking terms, or call the team before choosing a treatment.
           </p>
           <div className="flex flex-col justify-center gap-3 sm:flex-row">
-            <Button href={BOOKING_HREF} data-cta="service-booking" className="rounded-full bg-white !text-rose hover:bg-white/90 hover:!text-rose-dark">
+            <Button href={BOOKING_HREF} data-cta="service-booking" className="rounded-full bg-white !text-rose-text hover:bg-white/90 hover:!text-rose-dark">
               Book Initial Consult
             </Button>
             <Button href="tel:+17073582928" data-cta="phone" variant="ghost" className="rounded-full border-white/70 !text-white hover:border-white hover:!text-white">

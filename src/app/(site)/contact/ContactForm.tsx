@@ -7,12 +7,23 @@ import { dispatchConversion } from "@/lib/conversion-tracking";
 
 export function ContactForm() {
   const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">("idle");
+  const [contactMethodError, setContactMethodError] = useState("");
 
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    setStatus("sending");
     const form = e.currentTarget;
     const data = Object.fromEntries(new FormData(form));
+    const email = typeof data.email === "string" ? data.email.trim() : "";
+    const phone = typeof data.phone === "string" ? data.phone.trim() : "";
+
+    if (!email && !phone) {
+      setContactMethodError("Enter an email address or phone number so the Rella team can reach you.");
+      setStatus("idle");
+      return;
+    }
+
+    setContactMethodError("");
+    setStatus("sending");
 
     try {
       const res = await fetch("/api/leads", {
@@ -34,7 +45,7 @@ export function ContactForm() {
 
   if (status === "sent") {
     return (
-      <div className="bg-rose-blush border border-rose-light rounded-lg p-8 text-center">
+      <div className="rounded-lg border border-rose-light bg-rose-blush p-8 text-center" role="status" aria-live="polite">
         <p className="font-medium text-silver-dark text-lg mb-2">Thank you!</p>
         <p className="text-silver">Your message reached Rella. A member of our team will follow up.</p>
       </div>
@@ -62,34 +73,57 @@ export function ContactForm() {
           id="name"
           name="name"
           required
+          autoComplete="name"
           className="w-full border border-silver-light rounded px-4 py-3 text-silver-dark bg-white focus:border-rose focus:ring-2 focus:ring-rose/20 transition-colors"
         />
       </div>
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-        <div>
-          <label htmlFor="email" className="block text-sm font-medium text-silver-dark mb-1">
-            Email
-          </label>
-          <input
-            type="email"
-            id="email"
-            name="email"
-            required
-            className="w-full border border-silver-light rounded px-4 py-3 text-silver-dark bg-white focus:border-rose focus:ring-2 focus:ring-rose/20 transition-colors"
-          />
+      <fieldset>
+        <legend className="block text-sm font-medium text-silver-dark">
+          Best way to reach you
+        </legend>
+        <p id="contact-method-help" className="mb-3 mt-1 text-xs leading-relaxed text-silver">
+          Enter at least one: email or phone.
+        </p>
+        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+          <div>
+            <label htmlFor="email" className="mb-1 block text-sm font-medium text-silver-dark">
+              Email
+            </label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              autoComplete="email"
+              inputMode="email"
+              aria-invalid={contactMethodError ? true : undefined}
+              aria-describedby={contactMethodError ? "contact-method-help contact-method-error" : "contact-method-help"}
+              onInput={() => setContactMethodError("")}
+              className="w-full border border-silver-light rounded px-4 py-3 text-silver-dark bg-white focus:border-rose focus:ring-2 focus:ring-rose/20 transition-colors"
+            />
+          </div>
+          <div>
+            <label htmlFor="phone" className="mb-1 block text-sm font-medium text-silver-dark">
+              Phone
+            </label>
+            <input
+              type="tel"
+              id="phone"
+              name="phone"
+              autoComplete="tel"
+              inputMode="tel"
+              aria-invalid={contactMethodError ? true : undefined}
+              aria-describedby={contactMethodError ? "contact-method-help contact-method-error" : "contact-method-help"}
+              onInput={() => setContactMethodError("")}
+              className="w-full border border-silver-light rounded px-4 py-3 text-silver-dark bg-white focus:border-rose focus:ring-2 focus:ring-rose/20 transition-colors"
+            />
+          </div>
         </div>
-        <div>
-          <label htmlFor="phone" className="block text-sm font-medium text-silver-dark mb-1">
-            Phone
-          </label>
-          <input
-            type="tel"
-            id="phone"
-            name="phone"
-            className="w-full border border-silver-light rounded px-4 py-3 text-silver-dark bg-white focus:border-rose focus:ring-2 focus:ring-rose/20 transition-colors"
-          />
-        </div>
-      </div>
+        {contactMethodError && (
+          <p id="contact-method-error" role="alert" className="mt-3 text-sm font-medium text-rose-dark">
+            {contactMethodError}
+          </p>
+        )}
+      </fieldset>
       <div>
         <label htmlFor="service" className="block text-sm font-medium text-silver-dark mb-1">
           Service Interest
@@ -158,7 +192,7 @@ export function ContactForm() {
         </div>
       )}
 
-      <Button type="submit" disabled={status === "sending"}>
+      <Button type="submit" disabled={status === "sending"} className="w-full sm:w-auto">
         {status === "sending" ? "Sending..." : "Send Message"}
       </Button>
     </form>

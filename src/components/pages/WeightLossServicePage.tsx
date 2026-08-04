@@ -362,7 +362,7 @@ export function WeightLossServicePage() {
           </p>
           <Button
             href="#consultation-options"
-            className="rounded-full bg-rose text-white hover:bg-rose-dark"
+            className="rounded-full bg-rose-cta text-white hover:bg-rose-dark"
             data-cta="booking-flow-start"
           >
             Choose Napa or Vacaville

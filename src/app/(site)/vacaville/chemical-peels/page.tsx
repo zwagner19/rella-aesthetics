@@ -306,7 +306,7 @@ export default function VacavilleChemicalPeelsPage() {
         </div>
       </section>
 
-      <section className="bg-rose py-20 text-center text-white" aria-labelledby="vacaville-peel-next-step">
+      <section className="bg-rose-cta py-20 text-center text-white" aria-labelledby="vacaville-peel-next-step">
         <div className="mx-auto max-w-[740px] px-6">
           <h2 id="vacaville-peel-next-step" className="mb-4 text-3xl font-medium tracking-[-0.035em] md:text-5xl">
             Choose your Vacaville peel with context.
@@ -315,7 +315,7 @@ export default function VacavilleChemicalPeelsPage() {
             Open the current menu, call with a question, or review the general guide before you choose an option.
           </p>
           <div className="flex flex-col justify-center gap-3 sm:flex-row">
-            <Button href={BOOKING_HREF} data-cta="service-booking" className="rounded-full bg-white !text-rose hover:bg-white/90 hover:!text-rose-dark">
+            <Button href={BOOKING_HREF} data-cta="service-booking" className="rounded-full bg-white !text-rose-text hover:bg-white/90 hover:!text-rose-dark">
               Open Vacaville Menu
             </Button>
             <Button href="tel:+17073582928" data-cta="phone" variant="ghost" className="rounded-full border-white/70 !text-white hover:border-white hover:!text-white">

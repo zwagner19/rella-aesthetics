@@ -9,7 +9,7 @@ export function TestimonialCard({ quote, name, source, rating = 5 }: Testimonial
   return (
     <div className="bg-white border border-silver-pale rounded-lg p-8">
       <div
-        className="text-rose text-sm tracking-wider mb-3"
+        className="mb-3 text-sm tracking-wider text-rose-text"
         aria-label={`${rating} out of 5 stars`}
       >
         {Array.from({ length: rating }, (_, i) => (

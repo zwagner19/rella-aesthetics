@@ -187,7 +187,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
       </section>
 
       {/* Bottom CTA */}
-      <section className="py-16 bg-rose text-white text-center">
+      <section className="bg-rose-cta py-16 text-center text-white">
         <div className="mx-auto max-w-[600px] px-6">
           <h2 className="font-bold text-2xl md:text-3xl tracking-[0.06em] uppercase mb-4">
             Questions? We&apos;re Here to Help
@@ -197,7 +197,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
           </p>
           <Button
             href={resolveBookingHref({})}
-            className="bg-white !text-rose hover:bg-white/90 hover:!text-rose-dark"
+            className="bg-white !text-rose-text hover:bg-white/90 hover:!text-rose-dark"
           >
             Book Consultation
           </Button>

@@ -330,7 +330,7 @@ export default function VacavilleLaserPage() {
         </div>
       </section>
 
-      <section className="bg-rose py-20 text-center text-white" aria-labelledby="vacaville-laser-next-step">
+      <section className="bg-rose-cta py-20 text-center text-white" aria-labelledby="vacaville-laser-next-step">
         <div className="mx-auto max-w-[720px] px-6">
           <h2 id="vacaville-laser-next-step" className="mb-4 text-3xl font-medium tracking-[-0.035em] md:text-5xl">
             Choose the device after the assessment.
@@ -339,7 +339,7 @@ export default function VacavilleLaserPage() {
             Open the exact Vacaville consult, review the live booking terms, and give the team the context needed to recommend a responsible path.
           </p>
           <div className="flex flex-col justify-center gap-3 sm:flex-row">
-            <Button href={BOOKING_HREF} data-cta="service-booking" className="rounded-full bg-white !text-rose hover:bg-white/90 hover:!text-rose-dark">
+            <Button href={BOOKING_HREF} data-cta="service-booking" className="rounded-full bg-white !text-rose-text hover:bg-white/90 hover:!text-rose-dark">
               Book Initial Laser Consult
             </Button>
             <Button href="tel:+17073582928" data-cta="phone" variant="ghost" className="rounded-full border-white/70 !text-white hover:border-white hover:!text-white">

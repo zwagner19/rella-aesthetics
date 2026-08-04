@@ -304,7 +304,7 @@ export function LocalEditorialPost({
         </div>
       </article>
 
-      <section className="bg-rose py-16 text-white">
+      <section className="bg-rose-cta py-16 text-white">
         <div className="mx-auto grid max-w-[900px] gap-7 px-6 md:grid-cols-[1fr_auto] md:items-center md:px-8">
           <div>
             <p className="text-[0.6875rem] font-bold uppercase tracking-[0.18em] text-white/75">
@@ -321,7 +321,7 @@ export function LocalEditorialPost({
             <Button
               href={NAPA_BOOKING_HREF}
               data-cta="service-booking"
-              className="rounded-full bg-white !text-rose hover:bg-white/90"
+              className="rounded-full bg-white !text-rose-text hover:bg-white/90"
             >
               Book Napa Botox
             </Button>

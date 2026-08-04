@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { resolveBookingHref } from "@/lib/booking-routes";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { MobileNav } from "./MobileNav";
 
 const navLinks = [
@@ -16,6 +16,7 @@ const navLinks = [
 
 export function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const closeMobileNav = useCallback(() => setMobileOpen(false), []);
 
   return (
     <>
@@ -44,7 +45,7 @@ export function Header() {
 
           <Link
             href={resolveBookingHref({})}
-            className="hidden lg:inline-flex items-center justify-center font-bold text-[0.6875rem] tracking-[0.18em] uppercase bg-rose text-white px-7 py-3 hover:bg-rose-dark transition-colors duration-150"
+            className="hidden lg:inline-flex items-center justify-center bg-rose-cta px-7 py-3 text-[0.6875rem] font-bold uppercase tracking-[0.18em] text-white transition-colors duration-150 hover:bg-rose-dark"
           >
             Book Consultation
           </Link>
@@ -54,6 +55,7 @@ export function Header() {
             onClick={() => setMobileOpen(true)}
             aria-label="Open menu"
             aria-expanded={mobileOpen}
+            aria-controls="mobile-navigation"
           >
             <span className="block w-6 h-0.5 bg-silver-dark" />
             <span className="block w-6 h-0.5 bg-silver-dark" />
@@ -65,7 +67,7 @@ export function Header() {
       <MobileNav
         links={navLinks}
         isOpen={mobileOpen}
-        onClose={() => setMobileOpen(false)}
+        onClose={closeMobileNav}
       />
     </>
   );

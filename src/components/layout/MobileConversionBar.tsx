@@ -28,7 +28,7 @@ export function MobileConversionBar() {
       <Link
         href={booking.href}
         data-cta={booking.cta}
-        className="inline-flex min-h-12 items-center justify-center bg-rose px-3 text-center text-[0.6875rem] font-bold uppercase tracking-[0.14em] text-white transition-colors hover:bg-rose-dark"
+        className="inline-flex min-h-12 items-center justify-center bg-rose-cta px-3 text-center text-[0.6875rem] font-bold uppercase tracking-[0.14em] text-white transition-colors hover:bg-rose-dark"
       >
         {booking.label}
       </Link>

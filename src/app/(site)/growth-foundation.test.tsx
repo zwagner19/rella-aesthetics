@@ -70,6 +70,12 @@ describe("sitewide conversion foundation", () => {
     expect(source).toContain("No preference — help me choose");
     expect(source).toContain('value="Membership Questions"');
     expect(source).toContain("Please do not include sensitive medical information");
+    expect(source).toContain("if (!email && !phone)");
+    expect(source).toContain('autoComplete="name"');
+    expect(source).toContain('autoComplete="email"');
+    expect(source).toContain('autoComplete="tel"');
+    expect(source).toContain("Enter at least one: email or phone.");
+    expect(source).not.toMatch(/name="email"[\s\S]{0,120}\brequired\b/);
   });
 });
 
