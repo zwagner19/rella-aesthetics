@@ -18,9 +18,9 @@ const popularServices = [
     description: "Vacaville-specific pricing, visit details, and the location-pinned booking path.",
   },
   {
-    href: "/services/dermal-fillers",
+    href: "/vacaville/filler",
     title: "Dermal Fillers",
-    description: "Consultation-led treatment designed for balanced, natural-looking results.",
+    description: "Vacaville-specific pricing, treatment-plan factors, and the location-pinned booking path.",
   },
   {
     href: "/services/laser-treatments",

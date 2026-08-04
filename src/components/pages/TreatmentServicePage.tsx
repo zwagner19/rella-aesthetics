@@ -17,17 +17,31 @@ export function TreatmentServicePage({ service }: TreatmentServicePageProps) {
       location: "vacaville" as const,
       name: "Vacaville",
       address: "542 Main St",
-      detailsHref: service.slug === "botox" ? "/vacaville/botox" : "/locations/vacaville",
+      detailsHref:
+        service.slug === "botox"
+          ? "/vacaville/botox"
+          : service.slug === "dermal-fillers"
+            ? "/vacaville/filler"
+            : "/locations/vacaville",
       detailsLabel:
-        service.slug === "botox" ? "View Vacaville pricing & visit guide" : "View Vacaville clinic details",
+        service.slug === "botox" || service.slug === "dermal-fillers"
+          ? "View Vacaville pricing & visit guide"
+          : "View Vacaville clinic details",
     },
     {
       location: "napa" as const,
       name: "Napa",
       address: "1541 3rd St",
-      detailsHref: service.slug === "botox" ? "/napa/botox" : "/locations/napa",
+      detailsHref:
+        service.slug === "botox"
+          ? "/napa/botox"
+          : service.slug === "dermal-fillers"
+            ? "/napa/filler"
+            : "/locations/napa",
       detailsLabel:
-        service.slug === "botox" ? "View Napa pricing & visit guide" : "View Napa clinic details",
+        service.slug === "botox" || service.slug === "dermal-fillers"
+          ? "View Napa pricing & visit guide"
+          : "View Napa clinic details",
     },
   ]
     .filter((option) => availableLocations.includes(option.location))

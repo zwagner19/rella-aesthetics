@@ -32,7 +32,7 @@ The final-host rule matters because Boulevard currently redirects its dashboard 
 
 The August 3 production-mode preview passed with:
 
-- 29 sitemap pages inspected;
+- 30 sitemap pages inspected;
 - 11 unique external booking destinations;
 - 1 `book.experiencerella.com` destination returning 200 on the same host;
 - 4 `book.rellaweightloss.com` destinations returning 200 on the same host;
@@ -70,4 +70,4 @@ Resolve or deliberately replace the affected route in the typed booking resolver
 - 277 automated checks passed across 21 test files.
 - Full ESLint pass completed with no findings.
 - TypeScript completed with no errors.
-- The command passed against the optimized preview's 29 sitemap pages and all 11 currently rendered external destinations.
+- The command passed against the optimized preview's 30 sitemap pages and all 11 currently rendered external destinations.

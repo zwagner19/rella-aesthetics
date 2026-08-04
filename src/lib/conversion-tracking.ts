@@ -122,6 +122,17 @@ export function resolveMobileBookingDestination(
     };
   }
 
+  if (currentPath === "/vacaville/filler") {
+    return {
+      href: resolveBookingHref({
+        location: "vacaville",
+        service: "dermal-fillers",
+      }),
+      label: "Book Vacaville",
+      cta: "service-booking",
+    };
+  }
+
   if (currentPath === "/services/weight-loss") {
     return {
       href: "#consultation-options",

@@ -106,4 +106,12 @@ describe("mobile booking bar routing", () => {
       cta: "service-booking",
     });
   });
+
+  it("keeps the Vacaville filler local page on the Vacaville booking path", () => {
+    expect(resolveMobileBookingDestination("/vacaville/filler")).toEqual({
+      href: BOULEVARD_WIDGET_VACAVILLE,
+      label: "Book Vacaville",
+      cta: "service-booking",
+    });
+  });
 });
