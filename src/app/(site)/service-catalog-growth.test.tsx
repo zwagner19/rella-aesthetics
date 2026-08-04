@@ -77,9 +77,15 @@ describe("public pricing and claims integrity", () => {
     expect(botox?.pricing.body).toContain("$13/unit");
     expect(botox?.pricing.body).toContain("$4.40/unit");
 
-    expect(membershipTiers).toHaveLength(1);
+    expect(membershipTiers).toHaveLength(3);
     expect(membershipTiers[0].price).toBe("$30");
     expect(membershipTiers[0].benefits).toContain("One-year membership commitment");
+    expect(membershipTiers[1]).toEqual(
+      expect.objectContaining({ name: "Filler Membership", price: "$40" }),
+    );
+    expect(membershipTiers[2]).toEqual(
+      expect.objectContaining({ name: "Tox + Filler Membership", price: "$50" }),
+    );
   });
 
   it("removes superseded price and IV benefit claims from acquisition copy", () => {

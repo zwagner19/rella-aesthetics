@@ -20,9 +20,9 @@ describe("homepage and catalog claim integrity", () => {
   it("keeps the homepage membership banner on the approved 2026 plan", () => {
     const html = renderToStaticMarkup(<MembershipBanner />);
     expect(html).toContain("$30/month");
-    expect(html).toContain("$13/unit");
-    expect(html).toContain("$4.40/unit");
-    expect(html).toContain("one-year commitment");
+    expect(html).toContain("Tox, Filler, and Tox + Filler");
+    expect(html).toContain("one-year terms");
+    expect(html).toContain('href="/membership"');
     expect(html).not.toContain("complimentary treatments");
     expect(html).not.toContain("exclusive wellness benefits");
   });

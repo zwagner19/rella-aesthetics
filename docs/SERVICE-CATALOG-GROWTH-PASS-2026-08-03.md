@@ -38,6 +38,8 @@ Published exact prices now match that binding canon:
 | --- | --- |
 | Botox & Dysport | Botox $18/unit; Dysport $6/unit |
 | 2026 Tox Membership | $30/month; one-year commitment; Botox $13/unit; Dysport $4.40/unit |
+| 2026 Filler Membership | $40/month; one-year commitment; Restylane $600; Juvederm $600–$700 |
+| 2026 Tox + Filler Membership | $50/month; one-year commitment; combined Tox and filler rates |
 | Dermal Fillers | $840 base; active products $540–$960 |
 | HydraFacial | Signature $240; Deluxe $300; Platinum $390 |
 | Laser | IPL Full Face $420; CO2 CoolPeel Full Face $1,440 |
@@ -62,7 +64,7 @@ The prior membership page mixed prohibited legacy and unsupported acquisition te
 - filler plans and rates not established by the binding public canon;
 - three-month/cancel-anytime language that contradicted the approved one-year commitment.
 
-The public page now shows only the approved 2026 Tox Membership and clearly directs legacy members to contact Rella for their account-specific terms.
+The page initially narrowed itself to Tox while the full public-membership source was being reconciled. The completed follow-on now compares the approved Tox, Filler, and Tox + Filler plans, including the material HydraFacial redemption condition and one-year terms. Legacy members are still directed to contact Rella for their account-specific plan. See `docs/INJECTABLE-MEMBERSHIP-COMPARISON-PASS-2026-08-03.md`.
 
 ## Claims cleanup
 

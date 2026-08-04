@@ -14,11 +14,11 @@ No deployment, environment change, ad change, DNS change, push, merge, or public
 - Removed the unsupported blanket claim that every aesthetic treatment is physician-supervised.
 - Removed `artist's eye` and guaranteed/natural-lasting-results language from broad practice copy.
 - Reframed the location section around clinic details, directions, and booking paths.
-- Changed header and footer navigation from broad `VIP Membership` language to the accurate `Tox Membership` label.
+- Changed header and footer navigation from unsupported `VIP Membership` language to `Memberships`, which now leads to the source-backed injectable plan comparison.
 
 ## Membership accuracy
 
-The homepage banner no longer advertises complimentary treatments, wellness perks, or undefined benefits.
+The homepage banner no longer advertises undefined wellness perks or unsupported benefits.
 
 It now states only the approved 2026 public facts:
 
@@ -28,7 +28,7 @@ It now states only the approved 2026 public facts:
 - Dysport at $4.40/unit for members;
 - complete terms should be reviewed before enrollment.
 
-The membership page title and H1 now say `2026 Tox Membership`.
+The completed membership follow-on now compares the approved Tox, Filler, and Tox + Filler plans and publishes the exact included HydraFacials and redemption timing. See `docs/INJECTABLE-MEMBERSHIP-COMPARISON-PASS-2026-08-03.md`.
 
 ## Education dead end removed
 
@@ -46,7 +46,7 @@ No placeholder date, fake article, or broken blog slug remains.
 
 - Replaced unverified `hello@experiencerella.com` references with the current public inbox `info@experiencerella.com` across Contact, fallback messaging, Privacy, Terms, Sanity seed data, tests, and the launch gate.
 - Added a message-field warning not to include sensitive medical information and not to use the form for urgent or emergency care.
-- Confirmed the public phone, Vacaville address, Napa address, weekday hours, and Saturday hours against Rella's live contact page.
+- Confirmed the public phone, Vacaville address, and Napa address against Rella's live contact page. The hours were later reconciled to the approved July 15 public documents: Napa Tuesday–Saturday and Vacaville Wednesday–Saturday, both 9am–5pm.
 - Restored three homepage Google-review quotations to the exact archived public wording. The previous implementation had silently paraphrased quoted reviews and removed portions of them.
 - Removed remaining blanket `physician-led` aesthetic language from filler metadata, Botox acquisition copy, and the site footer; physician-led wording remains where it is specifically verified for medical weight management.
 

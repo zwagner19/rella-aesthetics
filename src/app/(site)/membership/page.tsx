@@ -1,21 +1,22 @@
 import type { Metadata } from "next";
-import { resolveBookingHref } from "@/lib/booking-routes";
 import { SectionHeader } from "@/components/ui/SectionHeader";
 import { TierCard } from "@/components/blocks/TierCard";
 import { FaqAccordion, FaqSchema } from "@/components/blocks/FaqAccordion";
 import { membershipTiers } from "@/lib/data";
 
 export const metadata: Metadata = {
-  title: "2026 Tox Membership",
+  title: "2026 Injectable Memberships",
   description:
-    "Join the 2026 Rella Tox Membership for $30/month with preferred Botox and Dysport pricing and a one-year commitment.",
+    "Compare Rella's 2026 Tox, Filler, and Tox + Filler memberships, including monthly dues, member rates, benefits, and one-year terms.",
   alternates: { canonical: "/membership" },
 };
 
 const faq = [
-  { question: "How does the 2026 Tox Membership work?", answer: "The membership is $30/month with a one-year commitment. It provides the approved member rates for Botox and Dysport." },
-  { question: "What are the member rates?", answer: "Members pay $13/unit for Botox and $4.40/unit for Dysport. Standard pricing is $18/unit for Botox and $6/unit for Dysport." },
-  { question: "Is there a commitment?", answer: "Yes. The 2026 aesthetic membership has a one-year commitment. Review the complete membership terms before enrolling." },
+  { question: "Which injectable memberships are available?", answer: "Rella's approved 2026 public injectable options are Tox at $30/month, Filler at $40/month, and Tox + Filler at $50/month. Each has a one-year commitment." },
+  { question: "What are the Tox member rates?", answer: "Tox and Tox + Filler members pay $13/unit for Botox and $4.40/unit for Dysport. Standard pricing is $18/unit for Botox and $6/unit for Dysport." },
+  { question: "What are the Filler member rates?", answer: "Filler and Tox + Filler members pay $600 per Restylane syringe. Juvederm member rates are $600 or $700 depending on the product; the team can review the exact product-specific rate before treatment." },
+  { question: "When can I use the complimentary HydraFacial?", answer: "The included HydraFacial can be redeemed after six months of on-time payments, or immediately when the full membership year is paid in advance. Tox and Filler include a Signature HydraFacial; Tox + Filler includes a Deluxe HydraFacial." },
+  { question: "Is there a commitment?", answer: "Yes. These 2026 aesthetic memberships have a one-year commitment. Review the complete membership agreement before enrolling." },
   { question: "Is a booking deposit part of the membership price?", answer: "No. A booking deposit and per-unit treatment prices are separate. Boulevard will show any booking requirement before you confirm an appointment." },
   { question: "What if I already have a different Rella membership?", answer: "Legacy memberships may have different terms. Contact Rella so the team can review the plan attached to your account rather than assuming the 2026 new-member terms apply." },
 ];
@@ -32,10 +33,10 @@ export default function MembershipPage() {
             Membership
           </p>
           <h1 className="font-bold text-4xl md:text-5xl tracking-[0.08em] uppercase text-rose-text mb-4 leading-[1.1]">
-            2026 Tox Membership
+            2026 Memberships
           </h1>
           <p className="text-lg font-light text-silver max-w-[560px] leading-relaxed">
-            Straightforward 2026 member pricing for patients who plan to maintain Botox or Dysport treatment over the year.
+            Compare current injectable membership dues, member rates, included benefits, and the terms that matter before you enroll.
           </p>
         </div>
       </section>
@@ -44,11 +45,11 @@ export default function MembershipPage() {
       <section className="py-20">
         <div className="mx-auto max-w-[1200px] px-6 md:px-8 lg:px-12">
           <SectionHeader
-            eyebrow="2026 Public Plan"
-            title="Tox Membership"
-            description="One current new-patient membership, published with the same pricing used across Rella's website and Napa Tox campaign."
+            eyebrow="2026 Public Plans"
+            title="Injectable Memberships"
+            description="Choose Tox, Filler, or the combined plan. Every option below is published with its monthly dues and one-year commitment."
           />
-          <div className="mx-auto grid max-w-[560px] grid-cols-1 gap-6">
+          <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
             {membershipTiers.map((tier) => (
               <TierCard
                 key={tier.name}
@@ -57,10 +58,18 @@ export default function MembershipPage() {
                 period={tier.period}
                 benefits={[...tier.benefits]}
                 featured={false}
-                ctaHref={resolveBookingHref({ service: "botox" })}
-                ctaText="Book a Tox Consultation"
+                ctaHref="/contact"
+                ctaText="Ask About Membership"
               />
             ))}
+          </div>
+          <div className="mx-auto mt-10 max-w-[900px] rounded-[1.25rem] border border-rose-light bg-rose-blush p-6 text-sm leading-7 text-silver-dark md:p-8">
+            <p>
+              <strong>*Included HydraFacial timing:</strong> redeem after six months of on-time payments, or immediately if the full membership year is paid in advance. Tox and Filler include one Signature HydraFacial; Tox + Filler includes one Deluxe HydraFacial.
+            </p>
+            <p className="mt-3">
+              Member rates apply under the complete membership agreement. Product choice and treatment plans are determined through an individual clinical assessment, and the proposed total is reviewed before treatment.
+            </p>
           </div>
         </div>
       </section>

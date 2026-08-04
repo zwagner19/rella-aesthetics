@@ -7,17 +7,17 @@ export function MembershipBanner() {
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
           <div>
             <p className="font-bold text-[0.6875rem] tracking-[0.2em] uppercase text-silver mb-2">
-              2026 Tox Membership
+              2026 Injectable Memberships
             </p>
             <h2 className="font-medium text-2xl md:text-3xl text-silver-dark mb-2">
-              $30/month. Clear member rates.
+              Tox plans from $30/month.
             </h2>
             <p className="text-silver max-w-lg">
-              With a one-year commitment, members pay $13/unit for Botox and $4.40/unit for Dysport. Review complete terms before enrolling.
+              Compare Tox, Filler, and Tox + Filler plans with current member rates, included benefits, and one-year terms.
             </p>
           </div>
           <Button href="/membership" className="shrink-0">
-            See Membership Details
+            Compare Memberships
           </Button>
         </div>
       </div>

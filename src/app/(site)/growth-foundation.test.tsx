@@ -60,6 +60,7 @@ describe("sitewide conversion foundation", () => {
     expect(source).toContain('name="location"');
     expect(source).toContain("Preferred Clinic");
     expect(source).toContain("No preference — help me choose");
+    expect(source).toContain('value="Membership Questions"');
     expect(source).toContain("Please do not include sensitive medical information");
   });
 });

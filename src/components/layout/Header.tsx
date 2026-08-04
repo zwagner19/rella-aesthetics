@@ -8,7 +8,7 @@ import { MobileNav } from "./MobileNav";
 const navLinks = [
   { href: "/about", label: "About" },
   { href: "/services", label: "Services" },
-  { href: "/membership", label: "Tox Membership" },
+  { href: "/membership", label: "Memberships" },
   { href: "/gallery", label: "Results" },
   { href: "/blog", label: "Education" },
   { href: "/contact", label: "Contact" },

@@ -121,14 +121,42 @@ export const locations = {
 
 export const membershipTiers = [
   {
-    name: "2026 Tox Membership",
+    name: "Tox Membership",
     price: "$30",
     period: "month",
     benefits: [
       "Botox at $13/unit",
       "Dysport at $4.40/unit",
+      "1 complimentary Signature HydraFacial*",
+      "10% off retail",
       "One-year membership commitment",
-      "Treatment plan and total reviewed before treatment",
+    ],
+  },
+  {
+    name: "Filler Membership",
+    price: "$40",
+    period: "month",
+    benefits: [
+      "Restylane at $600/syringe",
+      "Juvederm Ultra / Ultra Plus at $600",
+      "Voluma / Vollure / Vollux / Volbella at $700",
+      "1 complimentary Signature HydraFacial*",
+      "10% off retail",
+      "One-year membership commitment",
+    ],
+  },
+  {
+    name: "Tox + Filler Membership",
+    price: "$50",
+    period: "month",
+    benefits: [
+      "Botox at $13/unit",
+      "Dysport at $4.40/unit",
+      "Restylane at $600/syringe",
+      "Juvederm at $600–$700, depending on product",
+      "1 complimentary Deluxe HydraFacial*",
+      "10% off retail",
+      "One-year membership commitment",
     ],
   },
 ] as const;

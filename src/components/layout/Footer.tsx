@@ -44,7 +44,7 @@ export function Footer() {
               <li><Link href="/about" className="text-sm hover:text-rose-light transition-colors">About</Link></li>
               <li><Link href="/gallery" className="text-sm hover:text-rose-light transition-colors">Results</Link></li>
               <li><Link href="/blog" className="text-sm hover:text-rose-light transition-colors">Education</Link></li>
-              <li><Link href="/membership" className="text-sm hover:text-rose-light transition-colors">Tox Membership</Link></li>
+              <li><Link href="/membership" className="text-sm hover:text-rose-light transition-colors">Memberships</Link></li>
             </ul>
           </div>
 

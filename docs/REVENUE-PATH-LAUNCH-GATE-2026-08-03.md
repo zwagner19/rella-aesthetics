@@ -71,6 +71,8 @@ Source verification note (2026-08-03): the approved July 15 Signature Menu and M
 - [ ] The credential reads `American Board of Obesity Medicine diplomate`.
 - [ ] The authentic Dr. Wagner portrait renders clearly on desktop and mobile.
 - [ ] Public prices match the approved July 24, 2026 pricing canon or a newer explicitly approved source.
+- [ ] The Membership page matches the approved injectable dues, product-specific member rates, included HydraFacial tiers, redemption timing, 10% retail benefit, and one-year terms.
+- [ ] A synthetic `Membership Questions` inquiry reaches HighLevel with the expected service field and interest tag.
 - [ ] The Botox pricing article's membership commitment, deposit boundary, arithmetic disclaimer, visible FAQs, and structured data match the approved public facts.
 - [ ] Napa and Vacaville addresses, phone, and published hours are confirmed current.
 - [ ] Weight-management claims, medication wording, pricing, labs, monitoring cadence, and virtual-care boundaries have final clinical approval.
