@@ -43,7 +43,11 @@ export function FaqSchema({ items }: FaqAccordionProps) {
   return (
     <script
       type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+      dangerouslySetInnerHTML={{
+        // Next.js recommends escaping `<` in JSON-LD so CMS-provided strings
+        // cannot terminate the script element.
+        __html: JSON.stringify(schema).replace(/</g, "\\u003c"),
+      }}
     />
   );
 }

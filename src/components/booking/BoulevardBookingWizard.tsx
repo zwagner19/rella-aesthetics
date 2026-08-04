@@ -160,12 +160,6 @@ export function BoulevardBookingWizard() {
     return step;
   }, [step]);
 
-  useEffect(() => {
-    if (step === "intake" && unanswerQs.length === 0) {
-      setStep("confirm");
-    }
-  }, [step, unanswerQs.length]);
-
   const resetFlow = useCallback(() => {
     setStep("location");
     setCart(null);

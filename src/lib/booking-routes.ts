@@ -29,6 +29,24 @@ export const BOULEVARD_WIDGET_GENERIC = WIDGET_BASE;
 export const BOULEVARD_WIDGET_NAPA = `${WIDGET_BASE}?locationId=${NAPA_LOCATION_ID}`;
 export const BOULEVARD_WIDGET_VACAVILLE = `${WIDGET_BASE}?locationId=${VACAVILLE_LOCATION_ID}`;
 
+/**
+ * Dedicated medical-weight-loss funnel.
+ *
+ * These four public routes were checked directly on 2026-08-03 and returned
+ * HTTP 200. Keep the path order location-first: an older audit recorded the
+ * segments in the opposite order, and those stale URLs now return 404.
+ */
+export const WEIGHT_LOSS_BOOKING_ORIGIN = "https://book.rellaweightloss.com";
+export const WEIGHT_LOSS_CONSULT_SERVICE = "weight-loss-consult";
+
+export function resolveWeightLossAssessmentHref(location: BookingLocation): string {
+  return `${WEIGHT_LOSS_BOOKING_ORIGIN}/assessment/${location}`;
+}
+
+export function resolveWeightLossConsultHref(location: BookingLocation): string {
+  return `${WEIGHT_LOSS_BOOKING_ORIGIN}/book/${location}/${WEIGHT_LOSS_CONSULT_SERVICE}`;
+}
+
 const deepLink = (menuPath: string) =>
   `${WIDGET_BASE}?path=${encodeURIComponent(`/cart/menu/${menuPath}`)}&locationId=${NAPA_LOCATION_ID}&visitType=SELF_VISIT`;
 
@@ -53,6 +71,7 @@ export interface BookingIntent {
 }
 
 const TOX_SLUGS = new Set(["botox", "tox", "new-patient-tox", "new-patient-botox", "napa-botox"]);
+const WEIGHT_LOSS_SLUGS = new Set(["weight-loss", "medical-weight-loss", WEIGHT_LOSS_CONSULT_SERVICE]);
 
 function normalizeService(service?: string): string {
   return (service ?? "").toLowerCase().trim().replace(/\s+/g, "-").replace(/[^a-z0-9-]/g, "");
@@ -65,6 +84,13 @@ function normalizeService(service?: string): string {
  */
 export function resolveBookingHref(intent: BookingIntent = {}): string {
   const svc = normalizeService(intent.service);
+
+  // The weight-loss consultation is owned by the dedicated, verified booking
+  // app. An explicit city is required; a locationless CTA still falls back to
+  // the business widget rather than guessing a clinic.
+  if (intent.location && WEIGHT_LOSS_SLUGS.has(svc)) {
+    return resolveWeightLossConsultHref(intent.location);
+  }
 
   // Vacaville: always the Vacaville widget. No service ever escalates to Napa.
   if (intent.location === "vacaville") return BOULEVARD_WIDGET_VACAVILLE;

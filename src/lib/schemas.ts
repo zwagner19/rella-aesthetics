@@ -85,3 +85,56 @@ export function localBusinessSchema(location: {
     ],
   };
 }
+
+export function medicalWeightLossServiceSchema() {
+  return {
+    "@context": "https://schema.org",
+    "@type": "Service",
+    "@id": "https://experiencerella.com/services/weight-loss#service",
+    name: "Medical Weight-Loss Consultation",
+    serviceType: "Physician-led medical weight management",
+    description:
+      "A 30-minute phone consultation to discuss medical weight-loss goals, the Rella program, appropriate next steps, and cost questions before deciding.",
+    url: "https://experiencerella.com/services/weight-loss",
+    provider: {
+      "@type": "MedicalBusiness",
+      "@id": "https://experiencerella.com/#organization",
+      name: "Rella Aesthetics",
+      telephone: "+17073582928",
+    },
+    areaServed: [
+      { "@type": "City", name: "Vacaville", containedInPlace: { "@type": "State", name: "California" } },
+      { "@type": "City", name: "Napa", containedInPlace: { "@type": "State", name: "California" } },
+    ],
+    availableChannel: {
+      "@type": "ServiceChannel",
+      servicePhone: { "@type": "ContactPoint", telephone: "+17073582928" },
+      serviceLocation: [
+        {
+          "@type": "Place",
+          name: "Rella Aesthetics Vacaville",
+          address: {
+            "@type": "PostalAddress",
+            streetAddress: "542 Main St",
+            addressLocality: "Vacaville",
+            addressRegion: "CA",
+            postalCode: "95688",
+            addressCountry: "US",
+          },
+        },
+        {
+          "@type": "Place",
+          name: "Rella Aesthetics Napa",
+          address: {
+            "@type": "PostalAddress",
+            streetAddress: "1541 3rd St",
+            addressLocality: "Napa",
+            addressRegion: "CA",
+            postalCode: "94559",
+            addressCountry: "US",
+          },
+        },
+      ],
+    },
+  };
+}

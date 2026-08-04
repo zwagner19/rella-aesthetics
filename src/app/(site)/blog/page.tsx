@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { client, projectId } from "@/sanity/client";
+import { client } from "@/sanity/client";
 import { allBlogPostsQuery, allCategoriesQuery } from "@/sanity/queries";
 import { urlFor } from "@/sanity/image";
 import { SectionHeader } from "@/components/ui/SectionHeader";

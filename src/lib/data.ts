@@ -59,7 +59,7 @@ export const services = [
     slug: "weight-loss",
     title: "Medical Weight Loss",
     category: "Body & Wellness",
-    description: "Physician-supervised semaglutide program with weekly check-ins and personalized support.",
+    description: "Physician-led weight management with a clear, no-pressure starting-point consultation.",
     image: "/images/service-weightloss.jpg",
   },
 ] as const;
