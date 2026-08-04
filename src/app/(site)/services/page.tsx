@@ -21,6 +21,7 @@ export default function ServicesPage() {
             eyebrow="Treatments"
             title="Our Services"
             description="Explore consultation-led aesthetic, skin, wellness, and medical weight-management options available through Rella in Vacaville and Napa."
+            headingLevel={1}
           />
 
           {categories.map((category) => {

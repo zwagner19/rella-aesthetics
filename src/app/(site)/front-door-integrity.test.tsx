@@ -30,6 +30,9 @@ describe("homepage and catalog claim integrity", () => {
   it("does not promise lasting results across every service", () => {
     const html = renderToStaticMarkup(<ServicesPage />);
     expect(html).toContain("consultation-led aesthetic, skin, wellness");
+    expect(html.match(/<h1\b/g)).toHaveLength(1);
+    expect(html).toContain("<h1");
+    expect(html).toContain("Our Services</h1>");
     expect(html).not.toContain("natural, lasting results");
   });
 

@@ -13,7 +13,8 @@
     "lint": "eslint",
     "test": "vitest run",
     "check:links": "node scripts/check-internal-links.mjs",
-    "check:booking-links": "node scripts/check-booking-links.mjs"
+    "check:booking-links": "node scripts/check-booking-links.mjs",
+    "check:seo": "node scripts/check-seo.mjs"
   },
   "dependencies": {
     "@boulevard/blvd-book-sdk": "^2.0.10",

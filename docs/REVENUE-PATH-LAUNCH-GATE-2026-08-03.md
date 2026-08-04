@@ -15,6 +15,7 @@ No paid campaign should point to the site until one real test inquiry is visible
 - [ ] `npm run build` passes and regenerates the sitemap.
 - [ ] `npm run check:links` passes against the exact preview deployment.
 - [ ] `npm run check:booking-links` passes against the exact preview deployment with outbound network access.
+- [ ] `npm run check:seo` passes against the exact preview deployment.
 - [ ] Every distinct external booking URL is opened in a real browser on the exact preview; HTTP 200 alone does not pass this gate.
 - [ ] The preview commit matches the commit that was reviewed.
 

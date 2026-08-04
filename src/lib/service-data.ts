@@ -383,7 +383,7 @@ export const servicePages: ServicePageData[] = [
     slug: "weight-loss",
     title: "Medical Weight Loss",
     metaTitle: "Medical Weight Loss in Vacaville & Napa, CA",
-    metaDescription: "Start with a no-card, 30-minute phone consultation for physician-led medical weight management in Vacaville or Napa. Review your goals, options, next steps, and costs before deciding.",
+    metaDescription: "Start with a no-card, 30-minute phone consultation for physician-led medical weight management in Vacaville or Napa. Review goals, options, costs, and next steps.",
     heroEyebrow: "Body & Wellness",
     heroTitle: "Medical Weight Loss",
     heroDescription: "Start with Zachary Wagner, DO, an American Board of Obesity Medicine diplomate, for medical weight management built around your history, goals, monitoring needs, and the right next step.",

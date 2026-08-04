@@ -28,7 +28,7 @@ const routes = [
     slug: "filler",
     Page: NapaFillerPage,
     metadata: fillerMetadata,
-    canonical: "https://experiencerella.com/napa/filler/",
+    canonical: "https://experiencerella.com/napa/filler",
     bookingService: "dermal-fillers",
     bookingToken: "s_e3564b2f",
     prices: ["$840", "$540–$960"],
@@ -37,7 +37,7 @@ const routes = [
     slug: "laser",
     Page: NapaLaserPage,
     metadata: laserMetadata,
-    canonical: "https://experiencerella.com/napa/laser/",
+    canonical: "https://experiencerella.com/napa/laser",
     bookingService: "laser-treatments",
     bookingToken: "%2Fcart%2Fmenu%2FLaser",
     prices: ["$420", "$1,440"],
@@ -46,7 +46,7 @@ const routes = [
     slug: "hydrafacial",
     Page: NapaHydraFacialPage,
     metadata: hydrafacialMetadata,
-    canonical: "https://experiencerella.com/napa/hydrafacial/",
+    canonical: "https://experiencerella.com/napa/hydrafacial",
     bookingService: "hydrafacial",
     bookingToken: "s_68b27f62",
     prices: ["$240", "$300", "$390"],
@@ -55,7 +55,7 @@ const routes = [
     slug: "hyperhidrosis",
     Page: NapaHyperhidrosisPage,
     metadata: hyperhidrosisMetadata,
-    canonical: "https://experiencerella.com/napa/hyperhidrosis/",
+    canonical: "https://experiencerella.com/napa/hyperhidrosis",
     bookingService: "hyperhidrosis",
     bookingToken: "s_14029fc9",
     prices: ["$2,400", "60 min"],
@@ -135,7 +135,7 @@ describe("Napa campaign hub", () => {
 
   it("preserves the paid /napa/ destination with one local business entity", () => {
     expect(hubMetadata.alternates?.canonical).toBe(
-      "https://experiencerella.com/napa/",
+      "https://experiencerella.com/napa",
     );
     expect(text).toContain("Rella Aesthetics — Napa");
     expect(text).toContain("American Board of Obesity Medicine diplomate");

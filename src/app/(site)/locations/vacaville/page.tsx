@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { LocationServicePage } from "@/components/pages/LocationServicePage";
 import { locations } from "@/lib/data";
 import { localBusinessSchema } from "@/lib/schemas";
+import { DEFAULT_SOCIAL_IMAGE } from "@/lib/social-card";
 
 export const metadata: Metadata = {
   title: "Vacaville Med Spa",
@@ -12,6 +13,7 @@ export const metadata: Metadata = {
     title: "Vacaville Med Spa | Rella Aesthetics",
     description: "Physician-owned aesthetic and wellness care in downtown Vacaville, California.",
     url: "/locations/vacaville",
+    images: [DEFAULT_SOCIAL_IMAGE],
   },
 };
 

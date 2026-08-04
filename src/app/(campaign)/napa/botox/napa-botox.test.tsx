@@ -301,7 +301,7 @@ describe("SEO metadata", () => {
     expect(metadata.title).toBe("Botox in Napa — Physician-Owned Med Spa");
     expect(String(metadata.description)).toMatch(/Napa/);
     expect(String(metadata.description)).toMatch(/\$18\/unit/);
-    expect(metadata.alternates?.canonical).toBe("https://experiencerella.com/napa/botox/");
+    expect(metadata.alternates?.canonical).toBe("https://experiencerella.com/napa/botox");
   });
 
   it("the canonical is the MARKETING url, never the booking app", () => {

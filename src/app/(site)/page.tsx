@@ -11,6 +11,7 @@ import { SectionHeader } from "@/components/ui/SectionHeader";
 import { Button } from "@/components/ui/Button";
 import { services, testimonials, locations } from "@/lib/data";
 import { medicalBusinessSchema } from "@/lib/schemas";
+import { DEFAULT_SOCIAL_IMAGE } from "@/lib/social-card";
 
 export const metadata: Metadata = {
   title: { absolute: "Rella Aesthetics Med Spa | Vacaville & Napa CA" },
@@ -21,6 +22,7 @@ export const metadata: Metadata = {
     title: "Rella Aesthetics Med Spa | Vacaville & Napa CA",
     description: "Physician-owned aesthetic and wellness care in Vacaville and Napa, California.",
     url: "/",
+    images: [DEFAULT_SOCIAL_IMAGE],
   },
 };
 

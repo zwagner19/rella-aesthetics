@@ -15,7 +15,7 @@ const DIRECTIONS_HREF =
   "https://maps.google.com/?q=1541+3rd+St+Napa+CA+94559";
 
 const PUBLIC_LINKS = {
-  napa: "https://experiencerella.com/napa/",
+  napa: "https://experiencerella.com/napa",
   privacy: "https://experiencerella.com/privacy-policy/",
   terms: "https://experiencerella.com/terms-and-conditions/",
 } as const;
@@ -176,7 +176,7 @@ function CampaignFooter({ legal }: { legal: string }) {
 }
 
 function campaignSchema(service: NapaCampaignService) {
-  const canonical = `https://experiencerella.com/napa/${service.slug}/`;
+  const canonical = `https://experiencerella.com/napa/${service.slug}`;
 
   return {
     "@context": "https://schema.org",
@@ -190,7 +190,7 @@ function campaignSchema(service: NapaCampaignService) {
         url: canonical,
         provider: {
           "@type": "MedicalBusiness",
-          "@id": "https://experiencerella.com/napa/#location",
+          "@id": "https://experiencerella.com/napa#location",
           name: "Rella Aesthetics — Napa",
           telephone: "+17073582928",
           address: {
@@ -495,9 +495,9 @@ function hubSchema() {
   return {
     "@context": "https://schema.org",
     "@type": ["MedicalBusiness", "DaySpa"],
-    "@id": "https://experiencerella.com/napa/#location",
+    "@id": "https://experiencerella.com/napa#location",
     name: "Rella Aesthetics — Napa",
-    url: "https://experiencerella.com/napa/",
+    url: "https://experiencerella.com/napa",
     telephone: "+17073582928",
     address: {
       "@type": "PostalAddress",
