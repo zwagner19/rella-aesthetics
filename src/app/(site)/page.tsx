@@ -80,11 +80,11 @@ export default function HomePage() {
               Built around more than medication.
             </h2>
             <p className="mb-7 text-lg font-light leading-relaxed text-silver">
-              Start with a 30-minute phone consultation to discuss your goals, understand how Rella works, and review the appropriate next step and costs before deciding.
+              Start with a 30-minute phone consultation with Zachary Wagner, DO, an American Board of Obesity Medicine diplomate, to understand how Rella works and review the appropriate next step and costs before deciding.
             </p>
             <ul className="mb-8 space-y-3 text-sm text-silver-dark">
               {[
-                "Physician-led medical team",
+                "ABOM-certified physician",
                 "Napa and Vacaville clinic support",
                 "No card required for the starting-point consultation",
                 "Medication only when clinically appropriate",

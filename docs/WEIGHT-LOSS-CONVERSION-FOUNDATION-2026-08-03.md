@@ -18,7 +18,7 @@ The generic medical-weight-loss service page is now a focused conversion experie
 - Replaced the homepage's generic “Ageless Beauty” headline with local, physician-owned positioning.
 - Added a medical-weight-loss homepage feature linking to the rebuilt service page.
 - Rewrote the old unverified weight-loss copy so the page no longer publishes the unsupported `$350/month`, included-bloodwork, or `15–20%` outcome statements.
-- Kept provider language neutral because the consultation-provider operating decision remains unresolved.
+- Aligned the consultation provider to Zachary Wagner, DO, an American Board of Obesity Medicine diplomate, after owner confirmation.
 - Added canonical metadata, local keyword targeting, FAQ schema, service schema, and non-PII CTA attributes for future reporting.
 - Sanitized JSON-LD output according to the local Next.js 16 guidance.
 - Removed a redundant booking-wizard state effect and an unused blog import so the full lint check passes.
@@ -60,14 +60,11 @@ These destinations now live in the typed booking-route module with regression te
 
 ## Decisions still required before publication
 
-1. Confirm who conducts the initial consultation and then align public copy, Boulevard configuration, assessment results, and follow-up messages.
-2. Approve the actual program pricing/range and what is included before adding exact figures.
-3. Confirm current medication offerings, sourcing language, labs, monitoring cadence, and virtual-care boundaries with the clinical owner.
-4. Approve location-specific proof: real clinic photos, verified reviews, provider imagery, and any location-specific availability claims.
-5. Decide whether the ordinary site analytics, Meta pixel, and GHL chat should remain on the health-service landing page after privacy/compliance review.
+1. Approve the actual program pricing/range and what is included before adding exact figures.
+2. Confirm current medication offerings, sourcing language, labs, monitoring cadence, and virtual-care boundaries with the clinical owner.
+3. Approve location-specific proof: real clinic photos, verified reviews, provider imagery, and any location-specific availability claims.
+4. Decide whether the ordinary site analytics, Meta pixel, and GHL chat should remain on the health-service landing page after privacy/compliance review.
 
 ## Exact next action
 
-Zach should answer one operating question: **Who is the primary initial weight-loss consultation provider—Warda Harchaoui, PA-C, or Zachary Wagner, DO?**
-
-Once that is settled, update the provider module and booking catalog together, run the final content/claims review, and prepare a preview deployment for approval.
+Approve one clinical facts sheet covering the program price range, what is included, current medication offerings, lab requirements, monitoring cadence, and virtual-care boundaries. Then run the final claims review and prepare a preview deployment for approval.

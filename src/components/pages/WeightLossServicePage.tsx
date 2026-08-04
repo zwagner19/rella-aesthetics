@@ -13,7 +13,7 @@ const valueCards = [
   {
     number: "01",
     title: "A real clinical starting point",
-    body: "Begin with your goals, health history, prior attempts, and questions—not a promise of a prescription.",
+    body: "Review your goals, health history, prior attempts, and questions with Dr. Wagner—not a promise of a prescription.",
   },
   {
     number: "02",
@@ -59,7 +59,7 @@ const faq = [
   {
     question: "What happens during the first phone consultation?",
     answer:
-      "You will discuss your goals, relevant history, what you have already tried, how Rella's program works, likely next steps, and cost questions. It is a starting-point conversation, not a medical intake or a guarantee of treatment.",
+      "During your phone consultation with Zachary Wagner, DO, you will discuss your goals, relevant history, what you have already tried, how Rella's program works, likely next steps, and cost questions. It is a starting-point conversation, not a medical intake or a guarantee of treatment.",
   },
   {
     question: "Do I need a card to see consultation times?",
@@ -100,13 +100,13 @@ const locationOptions: LocationOption[] = [
     slug: "vacaville",
     name: "Vacaville",
     address: "542 Main St · Vacaville, CA",
-    detail: "Connect your phone consultation to Rella's Vacaville clinic.",
+    detail: "Connect your phone consultation with Dr. Wagner to Rella's Vacaville clinic.",
   },
   {
     slug: "napa",
     name: "Napa",
     address: "1541 3rd St · Downtown Napa",
-    detail: "Connect your phone consultation to Rella's Napa clinic.",
+    detail: "Connect your phone consultation with Dr. Wagner to Rella's Napa clinic.",
   },
 ];
 
@@ -179,7 +179,7 @@ export function WeightLossServicePage() {
               Medical weight loss built around more than medication.
             </h1>
             <p className="mb-8 max-w-[650px] text-lg font-light leading-relaxed text-silver-dark md:text-xl">
-              Start with a 30-minute phone consultation with Rella&apos;s physician-led medical team. Understand the program, the appropriate next step, and the costs before you decide.
+              Start with a 30-minute phone consultation with Zachary Wagner, DO, an American Board of Obesity Medicine diplomate. Understand the program, the appropriate next step, and the costs before you decide.
             </p>
             <div className="mb-6 flex flex-col gap-3 sm:flex-row">
               <Button href="#consultation-options" className="rounded-full">
@@ -220,7 +220,7 @@ export function WeightLossServicePage() {
 
       <TrustStrip
         ariaLabel="Rella weight-loss care principles"
-        items={["Physician-led medical team", "Two local clinics", "Medication only when appropriate", "Transparent next steps"]}
+        items={["ABOM-certified physician", "Two local clinics", "Medication only when appropriate", "Transparent next steps"]}
       />
 
       <section id="program" className="scroll-mt-24 py-20 md:py-28">
@@ -273,11 +273,11 @@ export function WeightLossServicePage() {
             <p className="mb-4 text-[0.6875rem] font-bold uppercase tracking-[0.2em] text-rose-dark">Your first conversation</p>
             <h2 className="mb-5 text-3xl font-medium tracking-[-0.035em] text-ink md:text-5xl">Know what happens before you book.</h2>
             <p className="text-lg font-light leading-relaxed text-silver">
-              The starting-point consultation is designed to give you useful clarity without forcing you through a long intake or asking for a card.
+              Dr. Wagner&apos;s starting-point consultation is designed to give you useful clarity without forcing you through a long intake or asking for a card.
             </p>
           </div>
           <div className="rounded-[1.75rem] bg-ink p-7 text-white md:p-10">
-            <h3 className="mb-7 text-xl font-medium md:text-2xl">In 30 minutes, discuss:</h3>
+            <h3 className="mb-7 text-xl font-medium md:text-2xl">In 30 minutes with Dr. Wagner, discuss:</h3>
             <ul className="grid gap-4 sm:grid-cols-2">
               {["Your goals and prior attempts", "What may be getting in the way", "How the Rella program works", "Likely evaluation and next steps", "Monitoring and ongoing support", "Applicable cost questions"].map((item) => (
                 <li key={item} className="flex gap-3 text-sm leading-relaxed text-white/80">

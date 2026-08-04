@@ -17,6 +17,8 @@ describe("medical-weight-loss conversion foundation", () => {
     expect(weightLossHtml).toContain("Napa");
     expect(weightLossHtml).toContain("30-minute phone consultation");
     expect(weightLossHtml).toContain("No card required");
+    expect(weightLossHtml).toContain("Zachary Wagner, DO");
+    expect(weightLossHtml).toContain("American Board of Obesity Medicine diplomate");
   });
 
   it("gives ready and uncertain visitors separate, city-correct paths", () => {
@@ -30,7 +32,7 @@ describe("medical-weight-loss conversion foundation", () => {
   });
 
   it("does not publish unapproved pricing, outcome promises, or disputed provider copy", () => {
-    for (const claim of ["$350", "15–20%", "15-20%", "Warda Harchaoui", "Zachary Wagner"] as const) {
+    for (const claim of ["$350", "15–20%", "15-20%", "Warda Harchaoui"] as const) {
       expect(weightLossHtml).not.toContain(claim);
     }
     expect(weightLossHtml).toContain("does not guarantee a prescription");

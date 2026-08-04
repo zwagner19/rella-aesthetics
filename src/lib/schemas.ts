@@ -101,6 +101,17 @@ export function medicalWeightLossServiceSchema() {
       "@id": "https://experiencerella.com/#organization",
       name: "Rella Aesthetics",
       telephone: "+17073582928",
+      employee: {
+        "@type": "Person",
+        name: "Zachary Wagner",
+        honorificSuffix: "DO",
+        jobTitle: "Physician",
+        hasCredential: {
+          "@type": "EducationalOccupationalCredential",
+          credentialCategory: "Certification",
+          name: "American Board of Obesity Medicine diplomate",
+        },
+      },
     },
     areaServed: [
       { "@type": "City", name: "Vacaville", containedInPlace: { "@type": "State", name: "California" } },

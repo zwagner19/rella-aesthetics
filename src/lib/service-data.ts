@@ -387,7 +387,7 @@ export const servicePages: ServicePageData[] = [
     metaDescription: "Start with a no-card, 30-minute phone consultation for physician-led medical weight management in Vacaville or Napa. Review your goals, options, next steps, and costs before deciding.",
     heroEyebrow: "Body & Wellness",
     heroTitle: "Medical Weight Loss",
-    heroDescription: "Physician-led medical weight management built around your history, goals, monitoring needs, and the right next step.",
+    heroDescription: "Start with Zachary Wagner, DO, an American Board of Obesity Medicine diplomate, for medical weight management built around your history, goals, monitoring needs, and the right next step.",
     whatItIs: {
       heading: "What Is Medical Weight Loss?",
       body: "Medical weight management begins with a clinical evaluation of your goals, history, prior attempts, and health needs. A personalized plan may include lifestyle support, monitoring, labs when appropriate, and medication only when clinically appropriate.",
@@ -405,7 +405,7 @@ export const servicePages: ServicePageData[] = [
     },
     whatToExpect: {
       heading: "What to Expect",
-      body: "The program begins with a comprehensive medical evaluation and continues with weekly support.",
+      body: "The program begins with a starting-point phone consultation with Zachary Wagner, DO, followed by the appropriate clinical evaluation and support.",
       steps: [
         "A 30-minute phone consultation to discuss goals and questions",
         "The appropriate clinical evaluation and labs when indicated",
@@ -420,7 +420,7 @@ export const servicePages: ServicePageData[] = [
       note: "The starting-point phone consultation requires no card and does not guarantee treatment or a prescription.",
     },
     faq: [
-      { question: "What happens during the first consultation?", answer: "You will discuss your goals, relevant history, what you have tried, how the program works, likely next steps, and cost questions. It is not a guarantee of treatment or a prescription." },
+      { question: "What happens during the first consultation?", answer: "During your phone consultation with Zachary Wagner, DO, you will discuss your goals, relevant history, what you have tried, how the program works, likely next steps, and cost questions. It is not a guarantee of treatment or a prescription." },
       { question: "Does Rella offer semaglutide or other GLP-1 options?", answer: "GLP-1 medications may be discussed when clinically appropriate. The appropriate medication, source, dosing, and availability depend on your history and current clinical circumstances." },
       { question: "Do I need a card to see consultation times?", answer: "No. The 30-minute weight-loss starting-point phone consultation does not require a card." },
       { question: "How much weight can I lose?", answer: "Results vary by person, treatment plan, health factors, and follow-through. Rella does not promise a specific result and will discuss realistic expectations for the plan being considered." },
