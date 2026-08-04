@@ -1,50 +1,27 @@
+import { locations } from "@/lib/data";
+
 export function medicalBusinessSchema() {
+  const locationNodes = [locations.vacaville, locations.napa].map((location) =>
+    localBusinessNode(location),
+  );
+
   return {
     "@context": "https://schema.org",
-    "@type": "MedicalBusiness",
-    "@id": "https://experiencerella.com/#organization",
-    name: "Rella Aesthetics",
-    description:
-      "Northern California's luxury med spa offering Botox, dermal fillers, medical weight loss, laser treatments, and advanced skin care.",
-    url: "https://experiencerella.com",
-    telephone: "+17073582928",
-    priceRange: "$$",
-    address: [
+    "@graph": [
       {
-        "@type": "PostalAddress",
-        streetAddress: "542 Main St",
-        addressLocality: "Vacaville",
-        addressRegion: "CA",
-        postalCode: "95688",
-        addressCountry: "US",
+        "@type": "Organization",
+        "@id": "https://experiencerella.com/#organization",
+        name: "Rella Aesthetics",
+        description:
+          "Physician-owned aesthetic, skin, wellness, and medical weight-management care in Vacaville and Napa, California.",
+        url: "https://experiencerella.com",
+        telephone: "+17073582928",
+        department: locationNodes.map((location) => ({
+          "@id": location["@id"],
+        })),
       },
-      {
-        "@type": "PostalAddress",
-        streetAddress: "1541 3rd St",
-        addressLocality: "Napa",
-        addressRegion: "CA",
-        postalCode: "94559",
-        addressCountry: "US",
-      },
+      ...locationNodes,
     ],
-    openingHoursSpecification: [
-      {
-        "@type": "OpeningHoursSpecification",
-        dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
-        opens: "09:00",
-        closes: "17:00",
-      },
-      {
-        "@type": "OpeningHoursSpecification",
-        dayOfWeek: "Saturday",
-        opens: "09:00",
-        closes: "13:00",
-      },
-    ],
-    // No aggregateRating. The 4.9 / 32-review figures previously emitted here
-    // were not traceable to a verifiable source, and star ratings in structured
-    // data are a representation to both search engines and patients. Rating
-    // markup may return only when the numbers come from an auditable feed.
   };
 }
 
@@ -64,7 +41,7 @@ export function treatmentServiceSchema(service: {
     url: `https://experiencerella.com/services/${service.slug}`,
     image: `https://experiencerella.com${service.image}`,
     provider: {
-      "@type": "MedicalBusiness",
+      "@type": "Organization",
       "@id": "https://experiencerella.com/#organization",
       name: "Rella Aesthetics",
       telephone: "+17073582928",
@@ -76,7 +53,7 @@ export function treatmentServiceSchema(service: {
   };
 }
 
-export function localBusinessSchema(location: {
+type LocalBusinessInput = {
   name: string;
   address: string;
   city: string;
@@ -84,11 +61,17 @@ export function localBusinessSchema(location: {
   zip: string;
   phone: string;
   mapUrl: string;
-}) {
+  openingHours: readonly {
+    readonly dayOfWeek: readonly string[];
+    readonly opens: string;
+    readonly closes: string;
+  }[];
+};
+
+function localBusinessNode(location: LocalBusinessInput) {
   const slug = location.name.toLowerCase();
 
   return {
-    "@context": "https://schema.org",
     "@type": ["MedicalBusiness", "DaySpa"],
     "@id": `https://experiencerella.com/locations/${slug}#location`,
     name: `Rella Aesthetics — ${location.name}`,
@@ -116,20 +99,20 @@ export function localBusinessSchema(location: {
       name: location.city,
       containedInPlace: { "@type": "State", name: "California" },
     },
-    openingHoursSpecification: [
-      {
-        "@type": "OpeningHoursSpecification",
-        dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
-        opens: "09:00",
-        closes: "17:00",
-      },
-      {
-        "@type": "OpeningHoursSpecification",
-        dayOfWeek: "Saturday",
-        opens: "09:00",
-        closes: "13:00",
-      },
-    ],
+    openingHoursSpecification: location.openingHours.map((hours) => ({
+      "@type": "OpeningHoursSpecification",
+      dayOfWeek: [...hours.dayOfWeek],
+      opens: hours.opens,
+      closes: hours.closes,
+    })),
+    // No aggregateRating. Ratings may return only from an auditable source.
+  };
+}
+
+export function localBusinessSchema(location: LocalBusinessInput) {
+  return {
+    "@context": "https://schema.org",
+    ...localBusinessNode(location),
   };
 }
 
@@ -144,7 +127,7 @@ export function medicalWeightLossServiceSchema() {
       "A 30-minute phone consultation to discuss medical weight-loss goals, the Rella program, appropriate next steps, and cost questions before deciding.",
     url: "https://experiencerella.com/services/weight-loss",
     provider: {
-      "@type": "MedicalBusiness",
+      "@type": "Organization",
       "@id": "https://experiencerella.com/#organization",
       name: "Rella Aesthetics",
       telephone: "+17073582928",
@@ -209,7 +192,7 @@ export function physicianOwnerSchema() {
     url: "https://experiencerella.com/about",
     image: "https://experiencerella.com/images/dr-zachary-wagner.jpg",
     worksFor: {
-      "@type": "MedicalBusiness",
+      "@type": "Organization",
       "@id": "https://experiencerella.com/#organization",
       name: "Rella Aesthetics",
     },

@@ -90,7 +90,14 @@ export const locations = {
     state: "CA",
     zip: "95688",
     phone: "707.358.2928",
-    hours: ["Monday–Friday: 9am–5pm", "Saturday: 9am–1pm"],
+    hours: ["Wednesday–Saturday: 9am–5pm", "Sunday–Tuesday: Closed"],
+    openingHours: [
+      {
+        dayOfWeek: ["Wednesday", "Thursday", "Friday", "Saturday"],
+        opens: "09:00",
+        closes: "17:00",
+      },
+    ],
     mapUrl: "https://maps.google.com/?q=542+Main+St+Vacaville+CA+95688",
   },
   napa: {
@@ -100,7 +107,14 @@ export const locations = {
     state: "CA",
     zip: "94559",
     phone: "707.358.2928",
-    hours: ["Monday–Friday: 9am–5pm", "Saturday: 9am–1pm"],
+    hours: ["Tuesday–Saturday: 9am–5pm", "Sunday–Monday: Closed"],
+    openingHours: [
+      {
+        dayOfWeek: ["Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
+        opens: "09:00",
+        closes: "17:00",
+      },
+    ],
     mapUrl: "https://maps.google.com/?q=1541+3rd+St+Napa+CA+94559",
   },
 } as const;

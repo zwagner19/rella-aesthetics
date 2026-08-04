@@ -71,7 +71,7 @@ export const MARKETING_PHONE = {
 export const NAPA = {
   street: "1541 3rd St",
   cityStateZip: "Napa, CA 94559",
-  hoursCopy: "Open Wednesday – Saturday",
+  hoursCopy: "Open Tuesday – Saturday · 9am – 5pm",
   parkingCopy: "Street & garage parking within one block",
 } as const;
 

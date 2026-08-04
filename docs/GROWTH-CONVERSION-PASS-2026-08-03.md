@@ -88,7 +88,7 @@ The tracking components remain inert when their existing environment variables a
 
 ## Remaining launch approvals
 
-1. Confirm that the published Napa and Vacaville hours are current.
+1. Reconfirm that the approved Napa Tuesday–Saturday and Vacaville Wednesday–Saturday schedules remain current and match Google Business Profile and phone staffing.
 2. Approve the medical-weight-loss facts sheet: pricing/range, inclusions, medications, labs, monitoring cadence, and virtual-care boundaries.
 3. Approve the privacy/compliance policy for GA4, Meta, and GHL chat on medical-weight-loss pages.
 4. Confirm the production analytics and GHL environment variables.

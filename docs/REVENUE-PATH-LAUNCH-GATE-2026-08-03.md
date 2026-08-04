@@ -65,7 +65,7 @@ Use a unique label such as `Rella Site Test 20260803-2215`; do not use a real pa
 
 ### 5. Trust, claims, and local accuracy
 
-Source verification note (2026-08-03): the live Rella Contact page matches `707.358.2928`, both published addresses, Monday–Friday 9am–5pm, Saturday 9am–1pm, and `info@experiencerella.com`. Reconfirm on the approved preview immediately before cutover.
+Source verification note (2026-08-03): the approved July 15 Signature Menu and Memberships documents specify Napa Tuesday–Saturday 9am–5pm and Vacaville Wednesday–Saturday 9am–5pm. They explicitly supersede the live site's shared Monday–Friday/Saturday hours and the Napa Wednesday–Saturday prototype. The live Contact page still supports the central phone, both addresses, and email, but it is not the controlling hours source. Reconfirm the approved schedules with the owner and Google Business Profile immediately before cutover.
 
 - [ ] About displays Zachary Wagner, DO as Physician Owner.
 - [ ] The credential reads `American Board of Obesity Medicine diplomate`.

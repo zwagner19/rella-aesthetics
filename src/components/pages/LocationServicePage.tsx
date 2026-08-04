@@ -109,7 +109,6 @@ export function LocationServicePage({ location, slug }: LocationServicePageProps
               {location.hours.map((line) => (
                 <p key={line} className="text-sm leading-7 text-white/70">{line}</p>
               ))}
-              <p className="text-sm leading-7 text-white/70">Sunday: Closed</p>
             </div>
           </div>
         </div>
