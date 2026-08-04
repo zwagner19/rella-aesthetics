@@ -86,16 +86,18 @@ export function localBusinessSchema(location: {
   };
 }
 
+export const MEDICAL_WEIGHT_LOSS_CANONICAL_URL = "https://weightloss.experiencerella.com/";
+
 export function medicalWeightLossServiceSchema() {
   return {
     "@context": "https://schema.org",
     "@type": "Service",
-    "@id": "https://experiencerella.com/services/weight-loss#service",
+    "@id": `${MEDICAL_WEIGHT_LOSS_CANONICAL_URL}#service`,
     name: "Medical Weight-Loss Qualification Consultation",
     serviceType: "Physician-led medical weight management",
     description:
       "A 30-minute phone consultation with an ABOM-certified physician to determine whether a patient medically qualifies to proceed with individualized weight-loss treatment, including GLP-1 options when appropriate.",
-    url: "https://experiencerella.com/services/weight-loss",
+    url: MEDICAL_WEIGHT_LOSS_CANONICAL_URL,
     provider: {
       "@type": "Organization",
       "@id": "https://experiencerella.com/#organization",

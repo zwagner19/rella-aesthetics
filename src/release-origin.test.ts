@@ -1,6 +1,11 @@
 import { describe, it, expect } from "vitest";
 import { NextRequest } from "next/server";
-import { proxy, isReleaseOriginHost, isAllowedOnReleaseOrigin } from "./proxy";
+import {
+  proxy,
+  isReleaseOriginHost,
+  isAllowedOnReleaseOrigin,
+  isWeightLossHost,
+} from "./proxy";
 
 /**
  * Release-origin surface guard.
@@ -13,8 +18,44 @@ import { proxy, isReleaseOriginHost, isAllowedOnReleaseOrigin } from "./proxy";
  */
 
 const RELEASE = "rella-napa-botox-release.vercel.app";
+const WEIGHT_LOSS = "weightloss.experiencerella.com";
 const req = (path: string, host: string) =>
   new NextRequest(`https://${host}${path}`, { headers: { host } });
+
+describe("medical weight-loss subdomain", () => {
+  it("matches only the exact branded hostname", () => {
+    expect(isWeightLossHost(WEIGHT_LOSS)).toBe(true);
+    expect(isWeightLossHost(WEIGHT_LOSS.toUpperCase())).toBe(true);
+    expect(isWeightLossHost(`${WEIGHT_LOSS}:443`)).toBe(true);
+
+    for (const host of [
+      "experiencerella.com",
+      "www.experiencerella.com",
+      "weightloss.experiencerella.com.evil.com",
+      "notweightloss.experiencerella.com",
+      "rella-aesthetics.vercel.app",
+    ]) {
+      expect(isWeightLossHost(host), `must not match: ${host}`).toBe(false);
+    }
+  });
+
+  it("rewrites only the subdomain root to the qualification funnel", () => {
+    const response = proxy(req("/?utm_source=google&gclid=test-click", WEIGHT_LOSS));
+    expect(response.headers.get("x-middleware-rewrite")).toBe(
+      `https://${WEIGHT_LOSS}/services/weight-loss?utm_source=google&gclid=test-click`,
+    );
+  });
+
+  it("does not rewrite paths or the main domains", () => {
+    for (const [path, host] of [
+      ["/services/weight-loss", WEIGHT_LOSS],
+      ["/", "experiencerella.com"],
+      ["/", "www.experiencerella.com"],
+    ] as const) {
+      expect(proxy(req(path, host)).headers.get("x-middleware-rewrite")).toBeNull();
+    }
+  });
+});
 
 describe("release-origin host matching", () => {
   it("matches the base release host and suffixed variants", () => {

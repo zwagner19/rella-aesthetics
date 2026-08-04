@@ -34,6 +34,7 @@ import type { NextRequest } from "next/server";
  * cannot match.
  */
 const RELEASE_ORIGIN_HOST = /^rella-napa-botox-release(?:-[a-z0-9]+)?\.vercel\.app$/;
+const WEIGHT_LOSS_HOST = "weightloss.experiencerella.com";
 
 /** The only paths the release origin may serve. */
 const ALLOWED_EXACT = new Set([
@@ -50,6 +51,11 @@ export function isReleaseOriginHost(host: string | null | undefined): boolean {
   return RELEASE_ORIGIN_HOST.test(host.split(":")[0].trim().toLowerCase());
 }
 
+export function isWeightLossHost(host: string | null | undefined): boolean {
+  if (!host) return false;
+  return host.split(":")[0].trim().toLowerCase() === WEIGHT_LOSS_HOST;
+}
+
 export function isAllowedOnReleaseOrigin(pathname: string): boolean {
   if (ALLOWED_EXACT.has(pathname)) return true;
   return ALLOWED_PREFIXES.some((p) => pathname.startsWith(p) && !pathname.includes(".."));
@@ -57,6 +63,16 @@ export function isAllowedOnReleaseOrigin(pathname: string): boolean {
 
 export function proxy(request: NextRequest) {
   const host = request.headers.get("host");
+
+  // Keep the branded paid-traffic URL short while serving the existing,
+  // tested qualification funnel. A rewrite preserves query parameters such as
+  // gclid and UTM tags and keeps the public address at the subdomain root.
+  if (isWeightLossHost(host) && request.nextUrl.pathname === "/") {
+    const destination = request.nextUrl.clone();
+    destination.pathname = "/services/weight-loss";
+    return NextResponse.rewrite(destination);
+  }
+
   if (!isReleaseOriginHost(host)) return NextResponse.next();
 
   const { pathname } = request.nextUrl;

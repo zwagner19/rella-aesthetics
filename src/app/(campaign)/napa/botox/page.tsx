@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { resolveBookingHref } from "@/lib/booking-routes";
 import {
   PRICING, VISIT, PAYMENT_DISCLOSURE, CANCELLATION_POLICY_URL,
-  TRUST, MARKETING_PHONE, NAPA, RESULTS, FAQS,
+  TRUST, MARKETING_PHONE, NAPA, RESULTS, FAQS, PUBLIC_LINKS,
 } from "@/lib/napa-botox-facts";
 import "./napa-botox.css";
 
@@ -44,12 +44,6 @@ const LOGO = "/brand/rella-logo-black.svg";
  * whether the document is served from a Vercel alias or proxied onto the public
  * WordPress host — a root-relative `/terms` would 404 in production.
  */
-export const PUBLIC_LINKS = {
-  treatments: "https://experiencerella.com/botox/",
-  privacy: "https://experiencerella.com/privacy-policy/",
-  terms: "https://experiencerella.com/terms-and-conditions/",
-} as const;
-
 export const metadata: Metadata = {
   title: "Botox in Napa — Physician-Owned Med Spa",
   description:

@@ -2,10 +2,10 @@ import { describe, it, expect, vi } from "vitest";
 import { renderToStaticMarkup } from "react-dom/server";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
-import NapaBotoxPage, { PUBLIC_LINKS } from "./(campaign)/napa/botox/page";
+import NapaBotoxPage from "./(campaign)/napa/botox/page";
 import { CAMPAIGN_GTM_ENV_VAR } from "@/components/integrations/CampaignGtm";
 import { CANONICAL_NAPA_TOX } from "@/lib/booking-routes";
-import { MARKETING_PHONE } from "@/lib/napa-botox-facts";
+import { MARKETING_PHONE, PUBLIC_LINKS } from "@/lib/napa-botox-facts";
 
 vi.mock("next/font/google", () => ({
   Poppins: () => ({ variable: "--font-poppins", className: "font-poppins" }),
