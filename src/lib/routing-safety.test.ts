@@ -32,6 +32,21 @@ describe("no public CTA points at /booking", () => {
   });
 });
 
+describe("employee-only Rella HQ is outside the public website", () => {
+  it("has no Rella HQ hostname or navigation target in production source", () => {
+    const offenders = FILES.filter((p) =>
+      /rella-hq(?:-[a-z0-9-]+)?\.vercel\.app|rella-hq/i.test(
+        readFileSync(p, "utf8"),
+      ),
+    ).map(rel);
+
+    expect(
+      offenders,
+      `public source must never send customers to Rella HQ: ${offenders.join(", ")}`,
+    ).toEqual([]);
+  });
+});
+
 describe("retired embedded wizard is quarantined (no public import)", () => {
   it("no page/route imports BoulevardCustomBooking / BoulevardBookingWizard", () => {
     const importers = FILES.filter((p) => {
