@@ -4,16 +4,16 @@
  * Single source of truth for where every booking CTA sends a visitor. Hard
  * safety rules encoded here + proven by booking-routes.test.ts:
  *  - Napa New Patient Tox / Botox → the canonical hardened booking app.
- *  - Other Napa services → their VERIFIED Boulevard deep link.
+ *  - Other verified city/service pairs → their rendered Boulevard deep link.
  *  - A Napa CTA with no specific service → the Napa-scoped Boulevard widget
  *    (NOT Tox — never silently assume the service).
- *  - Vacaville → the Vacaville-scoped Boulevard widget. NEVER Napa Tox.
- *  - A generic CTA with no location → the business-level Boulevard widget.
- *    NEVER silently Napa Tox.
+ *  - Unverified Vacaville service intent → the Vacaville-scoped menu. NEVER Napa Tox.
+ *  - A generic CTA with no location → Rella's first-party clinic chooser.
+ *    NEVER silently chooses a city or Napa Tox.
  *
- * Only the two service deep links below are verified (Admin-read + live); any
- * other service intentionally falls back to a location/business widget. Do not
- * invent Boulevard ids.
+ * The Napa campaign service routes below are verified from the Boulevard
+ * inventory and the live campaign handoff. Any other service intentionally
+ * falls back to a location/business widget. Do not invent Boulevard ids.
  */
 
 /** Canonical, hardened New Patient Tox booking (rella-booking). */
@@ -24,16 +24,27 @@ const WIDGET_BASE =
 const NAPA_LOCATION_ID = "91eba843-57fb-49e9-8505-431d501ffec7";
 const VACAVILLE_LOCATION_ID = "0f146f87-364e-4dfd-b938-61ba49528820";
 
-/** Business-level generic widget (safe fallback; visitor picks location/service). */
-export const BOULEVARD_WIDGET_GENERIC = WIDGET_BASE;
-export const BOULEVARD_WIDGET_NAPA = `${WIDGET_BASE}?locationId=${NAPA_LOCATION_ID}`;
-export const BOULEVARD_WIDGET_VACAVILLE = `${WIDGET_BASE}?locationId=${VACAVILLE_LOCATION_ID}`;
+/** First-party clinic chooser used whenever location intent is not explicit. */
+export const BOOKING_LOCATION_CHOOSER = "/book";
+
+/**
+ * Location-pinned Boulevard menus.
+ *
+ * Boulevard's old widget URL without `path` rendered its live `#/not-found`
+ * screen when checked in a real browser on 2026-08-03, even though the HTTP
+ * response was 200. Supplying the menu path is required for a usable handoff.
+ */
+const locationMenu = (locationId: string) =>
+  `${WIDGET_BASE}?path=${encodeURIComponent("/cart/menu")}&locationId=${locationId}&visitType=SELF_VISIT`;
+
+export const BOULEVARD_WIDGET_NAPA = locationMenu(NAPA_LOCATION_ID);
+export const BOULEVARD_WIDGET_VACAVILLE = locationMenu(VACAVILLE_LOCATION_ID);
 
 /**
  * Dedicated medical-weight-loss funnel.
  *
- * These public consultation routes were checked directly on 2026-08-03 and
- * returned HTTP 200. Keep the path order location-first: an older audit recorded the
+ * These four public routes were checked directly on 2026-08-03 and returned
+ * HTTP 200. Keep the path order location-first: an older audit recorded the
  * segments in the opposite order, and those stale URLs now return 404.
  */
 export const WEIGHT_LOSS_BOOKING_ORIGIN = "https://book.rellaweightloss.com";
@@ -46,6 +57,9 @@ export function resolveWeightLossConsultHref(location: BookingLocation): string 
 const deepLink = (menuPath: string) =>
   `${WIDGET_BASE}?path=${encodeURIComponent(`/cart/menu/${menuPath}`)}&locationId=${NAPA_LOCATION_ID}&visitType=SELF_VISIT`;
 
+const vacavilleDeepLink = (menuPath: string) =>
+  `${WIDGET_BASE}?path=${encodeURIComponent(`/cart/menu/${menuPath}`)}&locationId=${VACAVILLE_LOCATION_ID}&visitType=SELF_VISIT`;
+
 /**
  * VERIFIED Boulevard service deep links, by canonical service slug — Napa menu,
  * with the Napa locationId pinned (a service path alone is not sufficient). These
@@ -54,7 +68,61 @@ const deepLink = (menuPath: string) =>
  */
 const VERIFIED_NAPA_SERVICE_DEEPLINKS: Readonly<Record<string, string>> = {
   hydrafacial: deepLink("Facials/s_68b27f62-4a04-4f9f-953e-ec4b2918ad3d"),
+  facials: deepLink("Facials/s_3ae8bab0-f23c-45d2-b265-3836289df3a1"),
+  "iv-hydration": deepLink("IV Hydration"),
+  "dermal-fillers": deepLink("Injectables/s_e3564b2f-c00d-47c2-8ca0-665b6d6f25e4"),
+  filler: deepLink("Injectables/s_e3564b2f-c00d-47c2-8ca0-665b6d6f25e4"),
+  "laser-treatments": deepLink("Laser"),
+  laser: deepLink("Laser"),
+  // Consult-first: avoids hard-linking a rotating MiraDry special or silently
+  // routing a sweating concern into the standard cosmetic-tox cart.
+  hyperhidrosis: deepLink("Injectables/s_14029fc9-a8d2-441e-99de-52ca98cd3ae8"),
   // botox/tox intentionally NOT here — Napa Tox routes to the canonical app.
+};
+
+/**
+ * Rendered against the live Vacaville menu on 2026-08-03. The laser service
+ * explicitly requires the Initial Laser Consult before IPL. The microneedling
+ * and facial menus likewise provide modality-neutral initial consultations.
+ * New Patient Tox and Dermal Fillers also render with selectable professionals.
+ * The IV Hydration category renders the current formula list at both clinics;
+ * the visitor still chooses the formula after the clinic has been pinned.
+ * These city pages can therefore remove a menu-selection step without guessing
+ * a treatment.
+ */
+const VERIFIED_VACAVILLE_SERVICE_DEEPLINKS: Readonly<Record<string, string>> = {
+  botox: vacavilleDeepLink(
+    "Injectables/s_2fee10b1-1831-4c00-83e9-9c05a7071b15",
+  ),
+  tox: vacavilleDeepLink(
+    "Injectables/s_2fee10b1-1831-4c00-83e9-9c05a7071b15",
+  ),
+  "new-patient-tox": vacavilleDeepLink(
+    "Injectables/s_2fee10b1-1831-4c00-83e9-9c05a7071b15",
+  ),
+  "new-patient-botox": vacavilleDeepLink(
+    "Injectables/s_2fee10b1-1831-4c00-83e9-9c05a7071b15",
+  ),
+  "dermal-fillers": vacavilleDeepLink(
+    "Injectables/s_e3564b2f-c00d-47c2-8ca0-665b6d6f25e4",
+  ),
+  filler: vacavilleDeepLink(
+    "Injectables/s_e3564b2f-c00d-47c2-8ca0-665b6d6f25e4",
+  ),
+  hydrafacial: vacavilleDeepLink(
+    "Facials/s_68b27f62-4a04-4f9f-953e-ec4b2918ad3d",
+  ),
+  facials: vacavilleDeepLink(
+    "Facials/s_3ae8bab0-f23c-45d2-b265-3836289df3a1",
+  ),
+  "iv-hydration": vacavilleDeepLink("IV Hydration"),
+  "laser-treatments": vacavilleDeepLink(
+    "Laser/s_1328674e-c793-4b3c-833e-9a3827c5769b",
+  ),
+  laser: vacavilleDeepLink("Laser/s_1328674e-c793-4b3c-833e-9a3827c5769b"),
+  microneedling: vacavilleDeepLink(
+    "Microneedling/s_762959b6-0015-4904-be74-78d563b5651a",
+  ),
 };
 
 export type BookingLocation = "napa" | "vacaville";
@@ -88,8 +156,14 @@ export function resolveBookingHref(intent: BookingIntent = {}): string {
     return resolveWeightLossConsultHref(intent.location);
   }
 
-  // Vacaville: always the Vacaville widget. No service ever escalates to Napa.
-  if (intent.location === "vacaville") return BOULEVARD_WIDGET_VACAVILLE;
+  // Vacaville: use only rendered, location-pinned paths; otherwise keep the
+  // verified clinic menu fallback. No service ever escalates to Napa.
+  if (intent.location === "vacaville") {
+    if (svc && VERIFIED_VACAVILLE_SERVICE_DEEPLINKS[svc]) {
+      return VERIFIED_VACAVILLE_SERVICE_DEEPLINKS[svc];
+    }
+    return BOULEVARD_WIDGET_VACAVILLE;
+  }
 
   if (intent.location === "napa") {
     if (TOX_SLUGS.has(svc)) return CANONICAL_NAPA_TOX;
@@ -98,7 +172,7 @@ export function resolveBookingHref(intent: BookingIntent = {}): string {
   }
 
   // No explicit location: never assume Napa — not even for a known service slug
-  // like hydrafacial. Route to the generic widget so the visitor selects a
+  // like hydrafacial. Route to the clinic chooser so the visitor selects a
   // location before any location-specific menu/deep link is used.
-  return BOULEVARD_WIDGET_GENERIC;
+  return BOOKING_LOCATION_CHOOSER;
 }

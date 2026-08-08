@@ -1,14 +1,20 @@
 import type { Metadata } from "next";
-import { SectionHeader } from "@/components/ui/SectionHeader";
-import { Button } from "@/components/ui/Button";
-import { resolveBookingHref } from "@/lib/booking-routes";
+import { LocationServicePage } from "@/components/pages/LocationServicePage";
 import { locations } from "@/lib/data";
 import { localBusinessSchema } from "@/lib/schemas";
+import { DEFAULT_SOCIAL_IMAGE } from "@/lib/social-card";
 
 export const metadata: Metadata = {
-  title: "Napa Med Spa",
+  title: "Rella Aesthetics Napa | Hours, Address & Booking",
   description:
-    "Visit Rella Aesthetics in downtown Napa — 1541 3rd St. Botox, fillers, laser treatments, weight loss, and more. Book your appointment today.",
+    "Find Rella Aesthetics Napa at 1541 3rd St. View Tuesday–Saturday hours, directions, phone, service guides, and city-pinned booking.",
+  alternates: { canonical: "/locations/napa" },
+  openGraph: {
+    title: "Rella Aesthetics Napa | Hours, Address & Booking",
+    description: "Clinic details, directions, hours, and booking for Rella Aesthetics in downtown Napa.",
+    url: "/locations/napa",
+    images: [DEFAULT_SOCIAL_IMAGE],
+  },
 };
 
 const loc = locations.napa;
@@ -19,49 +25,10 @@ export default function NapaPage() {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
-          __html: JSON.stringify(localBusinessSchema(loc)),
+          __html: JSON.stringify(localBusinessSchema(loc)).replace(/</g, "\\u003c"),
         }}
       />
-
-      <section className="py-24 bg-rose-blush">
-        <div className="mx-auto max-w-[1200px] px-6 md:px-8 lg:px-12">
-          <p className="font-bold text-[0.6875rem] tracking-[0.2em] uppercase text-silver mb-4">
-            Location
-          </p>
-          <h1 className="font-bold text-4xl md:text-5xl tracking-[0.08em] uppercase text-rose-text mb-4 leading-[1.1]">
-            Rella Aesthetics — Napa
-          </h1>
-          <p className="text-lg font-light text-silver max-w-[560px] leading-relaxed">
-            Our wine country location in the heart of downtown Napa.
-          </p>
-        </div>
-      </section>
-
-      <section className="py-20">
-        <div className="mx-auto max-w-[1200px] px-6 md:px-8 lg:px-12">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 lg:gap-20">
-            <div>
-              <SectionHeader title="Visit Us" />
-              <address className="not-italic text-silver leading-relaxed mb-6">
-                {loc.address}<br />
-                {loc.city}, {loc.state} {loc.zip}<br /><br />
-                <strong className="text-silver-dark">Phone: </strong>
-                <a href={`tel:+1${loc.phone.replace(/\D/g, "")}`} className="hover:text-rose-text transition-colors">
-                  {loc.phone}
-                </a>
-              </address>
-              <h3 className="font-medium text-lg text-silver-dark mb-3">Hours</h3>
-              {loc.hours.map((line, i) => (
-                <p key={i} className="text-silver text-sm">{line}</p>
-              ))}
-              <div className="mt-8">
-                <Button href={resolveBookingHref({ location: "napa" })}>Book at Napa</Button>
-              </div>
-            </div>
-            <div className="aspect-[4/3] bg-silver-pale rounded-lg" />
-          </div>
-        </div>
-      </section>
+      <LocationServicePage location={loc} slug="napa" />
     </>
   );
 }

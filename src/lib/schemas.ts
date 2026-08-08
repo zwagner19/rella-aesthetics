@@ -1,66 +1,104 @@
+import { locations } from "@/lib/data";
+
+export const LOCATION_ENTITY_IDS = {
+  napa: "https://experiencerella.com/locations/napa#location",
+  vacaville: "https://experiencerella.com/locations/vacaville#location",
+} as const;
+
 export function medicalBusinessSchema() {
+  const locationNodes = [locations.vacaville, locations.napa].map((location) =>
+    localBusinessNode(location),
+  );
+
   return {
     "@context": "https://schema.org",
-    "@type": "MedicalBusiness",
-    name: "Rella Aesthetics",
-    description:
-      "Northern California's luxury med spa offering Botox, dermal fillers, medical weight loss, laser treatments, and advanced skin care.",
-    url: "https://experiencerella.com",
-    telephone: "+17073582928",
-    priceRange: "$$",
-    address: [
+    "@graph": [
       {
-        "@type": "PostalAddress",
-        streetAddress: "542 Main St",
-        addressLocality: "Vacaville",
-        addressRegion: "CA",
-        postalCode: "95688",
-        addressCountry: "US",
+        "@type": "Organization",
+        "@id": "https://experiencerella.com/#organization",
+        name: "Rella Aesthetics",
+        description:
+          "Physician-owned aesthetic, skin, wellness, and medical weight-management care in Vacaville and Napa, California.",
+        url: "https://experiencerella.com",
+        telephone: "+17073582928",
+        department: locationNodes.map((location) => ({
+          "@id": location["@id"],
+        })),
       },
-      {
-        "@type": "PostalAddress",
-        streetAddress: "1541 3rd St",
-        addressLocality: "Napa",
-        addressRegion: "CA",
-        postalCode: "94559",
-        addressCountry: "US",
-      },
+      ...locationNodes,
     ],
-    openingHoursSpecification: [
-      {
-        "@type": "OpeningHoursSpecification",
-        dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
-        opens: "09:00",
-        closes: "17:00",
-      },
-      {
-        "@type": "OpeningHoursSpecification",
-        dayOfWeek: "Saturday",
-        opens: "09:00",
-        closes: "13:00",
-      },
-    ],
-    // No aggregateRating. The 4.9 / 32-review figures previously emitted here
-    // were not traceable to a verifiable source, and star ratings in structured
-    // data are a representation to both search engines and patients. Rating
-    // markup may return only when the numbers come from an auditable feed.
   };
 }
 
-export function localBusinessSchema(location: {
+export function treatmentServiceSchema(service: {
+  slug: string;
+  title: string;
+  metaDescription: string;
+  image: string;
+  availableLocations?: readonly ("vacaville" | "napa")[];
+}) {
+  const availableLocations = service.availableLocations ?? ["vacaville", "napa"];
+
+  return {
+    "@context": "https://schema.org",
+    "@type": "Service",
+    "@id": `https://experiencerella.com/services/${service.slug}#service`,
+    name: service.title,
+    serviceType: service.title,
+    description: service.metaDescription,
+    url: `https://experiencerella.com/services/${service.slug}`,
+    image: `https://experiencerella.com${service.image}`,
+    provider: {
+      "@type": "Organization",
+      "@id": "https://experiencerella.com/#organization",
+      name: "Rella Aesthetics",
+      telephone: "+17073582928",
+    },
+    areaServed: availableLocations.map((location) => ({
+      "@type": "City",
+      name: location === "vacaville" ? "Vacaville" : "Napa",
+      containedInPlace: { "@type": "State", name: "California" },
+    })),
+  };
+}
+
+type LocalBusinessInput = {
   name: string;
   address: string;
   city: string;
   state: string;
   zip: string;
   phone: string;
-}) {
+  mapUrl: string;
+  openingHours: readonly {
+    readonly dayOfWeek: readonly string[];
+    readonly opens: string;
+    readonly closes: string;
+  }[];
+};
+
+function localBusinessNode(location: LocalBusinessInput) {
+  const slug = location.name.toLowerCase();
+  const entityId =
+    slug in LOCATION_ENTITY_IDS
+      ? LOCATION_ENTITY_IDS[slug as keyof typeof LOCATION_ENTITY_IDS]
+      : `https://experiencerella.com/locations/${slug}#location`;
+
   return {
-    "@context": "https://schema.org",
-    "@type": "LocalBusiness",
-    "@id": `https://experiencerella.com/locations/${location.name.toLowerCase()}`,
+    "@type": ["MedicalBusiness", "DaySpa"],
+    "@id": entityId,
     name: `Rella Aesthetics — ${location.name}`,
+    url: `https://experiencerella.com/locations/${slug}`,
+    image: "https://experiencerella.com/images/service-botox.jpg",
     telephone: `+1${location.phone.replace(/\D/g, "")}`,
+    priceRange: "$$",
+    hasMap: location.mapUrl,
+    parentOrganization: {
+      "@type": "Organization",
+      "@id": "https://experiencerella.com/#organization",
+      name: "Rella Aesthetics",
+      url: "https://experiencerella.com",
+    },
     address: {
       "@type": "PostalAddress",
       streetAddress: location.address,
@@ -69,20 +107,44 @@ export function localBusinessSchema(location: {
       postalCode: location.zip,
       addressCountry: "US",
     },
-    openingHoursSpecification: [
-      {
-        "@type": "OpeningHoursSpecification",
-        dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
-        opens: "09:00",
-        closes: "17:00",
-      },
-      {
-        "@type": "OpeningHoursSpecification",
-        dayOfWeek: "Saturday",
-        opens: "09:00",
-        closes: "13:00",
-      },
-    ],
+    areaServed: {
+      "@type": "City",
+      name: location.city,
+      containedInPlace: { "@type": "State", name: "California" },
+    },
+    openingHoursSpecification: location.openingHours.map((hours) => ({
+      "@type": "OpeningHoursSpecification",
+      dayOfWeek: [...hours.dayOfWeek],
+      opens: hours.opens,
+      closes: hours.closes,
+    })),
+    // No aggregateRating. Ratings may return only from an auditable source.
+  };
+}
+
+export function localBusinessSchema(location: LocalBusinessInput) {
+  return {
+    "@context": "https://schema.org",
+    ...localBusinessNode(location),
+  };
+}
+
+export function physicianOwnerSchema() {
+  return {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "@id": "https://experiencerella.com/about#dr-zachary-wagner",
+    name: "Zachary Wagner",
+    honorificPrefix: "Dr.",
+    honorificSuffix: "DO",
+    jobTitle: "Physician Owner",
+    url: "https://experiencerella.com/about",
+    image: "https://experiencerella.com/images/dr-zachary-wagner.jpg",
+    worksFor: {
+      "@type": "Organization",
+      "@id": "https://experiencerella.com/#organization",
+      name: "Rella Aesthetics",
+    },
   };
 }
 

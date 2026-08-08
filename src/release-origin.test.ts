@@ -6,6 +6,7 @@ import {
   proxy,
   isReleaseOriginHost,
   isAllowedOnReleaseOrigin,
+  isWeightLossAsset,
   isWeightLossHost,
 } from "./proxy";
 
@@ -15,7 +16,7 @@ import {
  * Without this, the release alias would expose the ENTIRE application to anyone
  * who guessed the hostname. That is not abstract: `sanity` is a PRODUCTION
  * dependency because Studio mounts at `/studio`, so the Studio toolchain — and
- * its current critical/high advisories — ships in the production tree. Blocking
+ * its current high-severity advisories — ships in the production tree. Blocking
  * `/studio` here is what keeps it unreachable from the public origin.
  */
 
@@ -52,13 +53,53 @@ describe("medical weight-loss subdomain", () => {
     expect(rootPage).toContain("<WeightLossServicePage />");
   });
 
-  it("does not rewrite paths or the main domains", () => {
-    for (const [path, host] of [
-      ["/services/weight-loss", WEIGHT_LOSS],
-      ["/", "experiencerella.com"],
-      ["/", "www.experiencerella.com"],
-    ] as const) {
-      expect(proxy(req(path, host)).headers.get("x-middleware-rewrite")).toBeNull();
+  it("keeps the root and required assets on the dedicated host", () => {
+    for (const path of ["/", "/images/service-weightloss.jpg", "/media/semaglutide-story.mp4"]) {
+      expect(isWeightLossAsset(path) || path === "/").toBe(true);
+      const response = proxy(req(path, WEIGHT_LOSS));
+      expect(response.headers.get("location")).toBeNull();
+      expect(response.status).not.toBe(404);
+    }
+  });
+
+  it("redirects the duplicate weight-loss path to its canonical root", () => {
+    const response = proxy(req("/services/weight-loss?utm_source=google", WEIGHT_LOSS));
+    expect(response.status).toBe(308);
+    expect(response.headers.get("location")).toBe(
+      "https://weightloss.experiencerella.com/?utm_source=google",
+    );
+  });
+
+  it("moves general-site pages to the main domain instead of duplicating them", () => {
+    const response = proxy(req("/about?utm_source=instagram", WEIGHT_LOSS));
+    expect(response.status).toBe(308);
+    expect(response.headers.get("location")).toBe(
+      "https://experiencerella.com/about?utm_source=instagram",
+    );
+  });
+
+  it("blocks APIs and the editor on the customer-facing weight-loss host", () => {
+    for (const path of ["/api/leads", "/api/revalidate", "/studio", "/studio/desk"]) {
+      const response = proxy(req(path, WEIGHT_LOSS));
+      expect(response.status, path).toBe(404);
+      expect(response.headers.get("x-robots-tag")).toBe("noindex, nofollow");
+    }
+  });
+
+  it("serves a one-page sitemap and host-correct robots policy", async () => {
+    const sitemap = proxy(req("/sitemap.xml", WEIGHT_LOSS));
+    expect(sitemap.headers.get("content-type")).toContain("application/xml");
+    expect(await sitemap.text()).toContain("https://weightloss.experiencerella.com/");
+    expect(await proxy(req("/robots.txt", WEIGHT_LOSS)).text()).toContain(
+      "Sitemap: https://weightloss.experiencerella.com/sitemap.xml",
+    );
+  });
+
+  it("does not change the main domains", () => {
+    for (const host of ["experiencerella.com", "www.experiencerella.com"]) {
+      const response = proxy(req("/", host));
+      expect(response.headers.get("x-middleware-rewrite")).toBeNull();
+      expect(response.headers.get("location")).toBeNull();
     }
   });
 });

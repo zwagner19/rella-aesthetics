@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { headers } from "next/headers";
+import Image from "next/image";
 import { Hero } from "@/components/blocks/Hero";
+import { TrustStrip } from "@/components/blocks/TrustStrip";
 import { resolveBookingHref } from "@/lib/booking-routes";
 import { ServiceCard } from "@/components/blocks/ServiceCard";
 import { TestimonialCard } from "@/components/blocks/TestimonialCard";
@@ -13,13 +15,27 @@ import { medicalBusinessSchema } from "@/lib/schemas";
 import { WeightLossServicePage } from "@/components/pages/WeightLossServicePage";
 import { getServiceMetadata } from "@/lib/service-metadata";
 import { isWeightLossHost } from "@/lib/site-hosts";
+import { DEFAULT_SOCIAL_IMAGE } from "@/lib/social-card";
+
+const mainSiteMetadata: Metadata = {
+  title: { absolute: "Rella Aesthetics Med Spa | Vacaville & Napa CA" },
+  description:
+    "Personalized aesthetic and wellness care in Vacaville and Napa, California. Explore Rella's services or book a consultation.",
+  alternates: { canonical: "/" },
+  openGraph: {
+    title: "Rella Aesthetics Med Spa | Vacaville & Napa CA",
+    description: "Personalized aesthetic and wellness care in Vacaville and Napa, California.",
+    url: "/",
+    images: [DEFAULT_SOCIAL_IMAGE],
+  },
+};
 
 export async function generateMetadata(): Promise<Metadata> {
   const host = (await headers()).get("host");
-  return isWeightLossHost(host) ? getServiceMetadata("weight-loss") : {};
+  return isWeightLossHost(host) ? getServiceMetadata("weight-loss") : mainSiteMetadata;
 }
 
-function HomePageContent({ isWeightLoss }: { isWeightLoss: boolean }) {
+export function HomePageContent({ isWeightLoss }: { isWeightLoss: boolean }) {
   if (isWeightLoss) return <WeightLossServicePage />;
 
   return (
@@ -27,7 +43,7 @@ function HomePageContent({ isWeightLoss }: { isWeightLoss: boolean }) {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
-          __html: JSON.stringify(medicalBusinessSchema()),
+          __html: JSON.stringify(medicalBusinessSchema()).replace(/</g, "\\u003c"),
         }}
       />
 
@@ -35,10 +51,16 @@ function HomePageContent({ isWeightLoss }: { isWeightLoss: boolean }) {
       <Hero
         eyebrow="Northern California's Luxury Med Spa"
         title="Ageless Beauty"
-        description="Physician-led aesthetic treatments designed around your goals. Natural results, elevated care — in Vacaville and Napa."
+        description="Personalized aesthetic and wellness treatments designed around your goals. Natural-looking results, elevated care — in Vacaville and Napa."
         ctaText="Book Consultation"
         ctaHref={resolveBookingHref({})}
         secondaryCta={{ text: "Explore Services", href: "/services" }}
+        backgroundImage="/images/service-botox.jpg"
+      />
+
+      <TrustStrip
+        ariaLabel="Why patients choose Rella Aesthetics"
+        items={["Natural-looking results", "Two local clinics", "Thoughtful guidance", "Personalized plans"]}
       />
 
       {/* Services Grid */}
@@ -47,7 +69,7 @@ function HomePageContent({ isWeightLoss }: { isWeightLoss: boolean }) {
           <SectionHeader
             eyebrow="Treatments"
             title="Our Services"
-            description="Expert aesthetic and wellness treatments tailored to your unique needs."
+            description="Explore aesthetic, skin, wellness, and medical weight-management options available through Rella."
           />
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {services.map((service) => (
@@ -64,17 +86,43 @@ function HomePageContent({ isWeightLoss }: { isWeightLoss: boolean }) {
         </div>
       </section>
 
-      {/* About teaser */}
+      {/* Medical weight-loss feature */}
       <section className="py-24">
-        <div className="mx-auto max-w-[1200px] px-6 md:px-8 lg:px-12">
-          <div className="max-w-[700px]">
-            <SectionHeader
-              eyebrow="Why Rella"
-              title="Physician-Led, Patient-Centered"
-              description="Rella Aesthetics combines medical expertise with an artist's eye. Every treatment is physician-supervised and designed for naturally beautiful outcomes."
+        <div className="mx-auto grid max-w-[1200px] items-center gap-10 px-6 md:px-8 lg:grid-cols-2 lg:px-12">
+          <div className="relative min-h-[380px] overflow-hidden rounded-[1.75rem] md:min-h-[520px]">
+            <Image
+              src="/images/service-weightloss.jpg"
+              alt="A patient discussing a personalized medical weight-loss plan"
+              fill
+              className="object-cover"
+              sizes="(min-width: 1024px) 50vw, 100vw"
             />
-            <Button href="/about" variant="ghost">
-              Meet Our Team
+          </div>
+          <div className="lg:pl-8">
+            <p className="mb-4 text-[0.6875rem] font-bold uppercase tracking-[0.2em] text-rose-dark">
+              Medical weight management
+            </p>
+            <h2 className="mb-5 text-3xl font-medium leading-tight tracking-[-0.035em] text-ink md:text-5xl">
+              Built around more than medication.
+            </h2>
+            <p className="mb-7 text-lg font-light leading-relaxed text-silver">
+              Start with a 30-minute phone consultation with Zachary Wagner, DO, an American Board of Obesity Medicine diplomate, to understand how Rella works and review the appropriate next step and costs before deciding.
+            </p>
+            <ul className="mb-8 space-y-3 text-sm text-silver-dark">
+              {[
+                "ABOM-certified physician",
+                "Napa and Vacaville clinic support",
+                "No card required for the starting-point consultation",
+                "Medication only when clinically appropriate",
+              ].map((item) => (
+                <li key={item} className="flex gap-3">
+                  <span aria-hidden="true" className="text-rose">✓</span>
+                  {item}
+                </li>
+              ))}
+            </ul>
+            <Button href="/services/weight-loss" className="rounded-full">
+              Explore Medical Weight Loss
             </Button>
           </div>
         </div>
@@ -109,7 +157,7 @@ function HomePageContent({ isWeightLoss }: { isWeightLoss: boolean }) {
           <SectionHeader
             eyebrow="Two Locations"
             title="Visit Us"
-            description="Serving Vacaville and Napa with the same level of luxury care."
+            description="Explore clinic details, directions, and booking paths for Vacaville and Napa."
           />
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <LocationCard
@@ -135,17 +183,17 @@ function HomePageContent({ isWeightLoss }: { isWeightLoss: boolean }) {
       </section>
 
       {/* Final CTA */}
-      <section className="py-20 bg-rose text-white text-center">
+      <section className="bg-rose-cta py-20 text-center text-white">
         <div className="mx-auto max-w-[600px] px-6">
           <h2 className="font-bold text-3xl md:text-4xl tracking-[0.06em] uppercase mb-4">
             Ready to Begin?
           </h2>
           <p className="font-light text-lg mb-8 opacity-90">
-            Schedule your complimentary consultation today and discover what&apos;s possible.
+            Schedule a consultation and discover the right next step for your goals.
           </p>
           <Button
             href={resolveBookingHref({})}
-            className="bg-white !text-rose hover:bg-white/90 hover:!text-rose-dark"
+            className="bg-white !text-rose-text hover:bg-white/90 hover:!text-rose-dark"
           >
             Book Consultation
           </Button>

@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
+import { isWeightLossHost } from "@/lib/site-hosts";
 export { isWeightLossHost } from "@/lib/site-hosts";
 
 /**
@@ -11,8 +12,8 @@ export { isWeightLossHost } from "@/lib/site-hosts";
  * the legacy `/booking` page, and every ordinary marketing route.
  *
  * That is not theoretical exposure. `sanity` is a PRODUCTION dependency because
- * Studio is mounted at `/studio`, so the Studio toolchain (and its current
- * critical/high advisories in tar, adm-zip, ws, js-yaml, undici, vite) ships in
+ * Studio is mounted at `/studio`, so the Studio toolchain (including current
+ * high-severity transitive advisories) ships in
  * the production tree. Blocking `/studio` on the release alias is what keeps
  * that toolchain unreachable from the public origin.
  *
@@ -45,6 +46,17 @@ const ALLOWED_EXACT = new Set([
 ]);
 const ALLOWED_PREFIXES = ["/_next/static/"];
 
+const WEIGHT_LOSS_ASSET_PREFIXES = ["/_next/", "/brand/", "/images/", "/media/"];
+const WEIGHT_LOSS_EXACT_ASSETS = new Set(["/favicon.ico", "/opengraph-image", "/twitter-image"]);
+const WEIGHT_LOSS_SITEMAP = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"><url><loc>https://weightloss.experiencerella.com/</loc><changefreq>weekly</changefreq><priority>1.0</priority></url></urlset>`;
+
+export function isWeightLossAsset(pathname: string): boolean {
+  return (
+    WEIGHT_LOSS_EXACT_ASSETS.has(pathname) ||
+    WEIGHT_LOSS_ASSET_PREFIXES.some((prefix) => pathname.startsWith(prefix) && !pathname.includes(".."))
+  );
+}
+
 export function isReleaseOriginHost(host: string | null | undefined): boolean {
   if (!host) return false;
   // Strip any port before matching; compare lowercase.
@@ -58,6 +70,47 @@ export function isAllowedOnReleaseOrigin(pathname: string): boolean {
 
 export function proxy(request: NextRequest) {
   const host = request.headers.get("host");
+
+  if (isWeightLossHost(host)) {
+    const { pathname } = request.nextUrl;
+
+    if (pathname === "/robots.txt") {
+      return new NextResponse(
+        "User-agent: *\nAllow: /\nDisallow: /api/\nDisallow: /studio/\nSitemap: https://weightloss.experiencerella.com/sitemap.xml\n",
+        { headers: { "content-type": "text/plain; charset=utf-8" } },
+      );
+    }
+
+    if (pathname === "/sitemap.xml" || pathname === "/sitemap-0.xml") {
+      return new NextResponse(WEIGHT_LOSS_SITEMAP, {
+        headers: { "content-type": "application/xml; charset=utf-8" },
+      });
+    }
+
+    if (pathname === "/" || isWeightLossAsset(pathname)) return NextResponse.next();
+
+    if (pathname.startsWith("/api/") || pathname.startsWith("/studio")) {
+      return new NextResponse("Not Found", {
+        status: 404,
+        headers: {
+          "content-type": "text/plain; charset=utf-8",
+          "x-robots-tag": "noindex, nofollow",
+        },
+      });
+    }
+
+    if (pathname === "/services/weight-loss" || pathname === "/services/weight-loss/") {
+      const canonicalWeightLossUrl = request.nextUrl.clone();
+      canonicalWeightLossUrl.pathname = "/";
+      return NextResponse.redirect(canonicalWeightLossUrl, 308);
+    }
+
+    const mainSiteUrl = request.nextUrl.clone();
+    mainSiteUrl.protocol = "https:";
+    mainSiteUrl.hostname = "experiencerella.com";
+    mainSiteUrl.port = "";
+    return NextResponse.redirect(mainSiteUrl, 308);
+  }
 
   if (!isReleaseOriginHost(host)) return NextResponse.next();
 

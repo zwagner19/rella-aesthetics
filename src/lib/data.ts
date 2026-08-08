@@ -3,7 +3,7 @@ export const services = [
     slug: "botox",
     title: "Botox & Dysport",
     category: "Injectables",
-    description: "Reduce fine lines and prevent wrinkles with expertly administered neuromodulators.",
+    description: "Temporarily soften the appearance of dynamic lines with consultation-led neuromodulator treatment.",
     image: "/images/service-botox.jpg",
   },
   {
@@ -17,7 +17,7 @@ export const services = [
     slug: "chemical-peels",
     title: "Chemical Peels",
     category: "Skin Care",
-    description: "Reveal smoother, brighter skin by removing damaged outer layers with medical-grade peels.",
+    description: "Consultation-led MicroPeel and TCA options currently available for Vacaville booking.",
     image: "/images/service-peels.jpg",
   },
   {
@@ -45,7 +45,7 @@ export const services = [
     slug: "iv-hydration",
     title: "IV Hydration",
     category: "Body & Wellness",
-    description: "Vitamin-infused IV therapy for energy, immunity, and recovery.",
+    description: "Clinician-guided IV hydration with screening, monitored administration, and an individualized formulation.",
     image: "/images/service-iv.jpg",
   },
   {
@@ -59,24 +59,24 @@ export const services = [
     slug: "weight-loss",
     title: "Medical Weight Loss",
     category: "Body & Wellness",
-    description: "Physician-supervised semaglutide program with weekly check-ins and personalized support.",
+    description: "Physician-led weight management with a clear, no-pressure starting-point consultation.",
     image: "/images/service-weightloss.jpg",
   },
 ] as const;
 
 export const testimonials = [
   {
-    quote: "The team here is wonderful at their craft. They take the time to listen and make sure you are comfortable. I always leave feeling refreshed and confident.",
-    name: "Emika Freeman",
+    quote: "I decided to get my mom a birthday present — a little pampering at Rella Aesthetics. She absolutely loved it! The staff was warm and professional, and the results were beautiful. We will definitely be back.",
+    name: "Mrs. Fout",
     source: "Google Review",
   },
   {
-    quote: "I have been getting Botox for the last 14 years. The team here is knowledgeable, skilled, and genuinely cares about their patients. Best results I have ever had.",
+    quote: "I have been getting Botox for the last 14 years. I am so happy I found Rella Aesthetics. The team here is knowledgeable, skilled, and genuinely cares about their patients. Best results I have ever had.",
     name: "Jenya Khranilov",
     source: "Google Review",
   },
   {
-    quote: "The entire experience at Rella Aesthetics was top-notch. From the moment I walked in, the staff was welcoming and attentive. I could not be happier with my results.",
+    quote: "The entire experience at Rella Aesthetics was top-notch. From the moment I walked in, the staff was welcoming and attentive. I could not be happier with my treatment results.",
     name: "Diamond Bolton",
     source: "Google Review",
   },
@@ -90,7 +90,14 @@ export const locations = {
     state: "CA",
     zip: "95688",
     phone: "707.358.2928",
-    hours: ["Monday–Friday: 9am–5pm", "Saturday: 9am–1pm"],
+    hours: ["Wednesday–Saturday: 9am–5pm", "Sunday–Tuesday: Closed"],
+    openingHours: [
+      {
+        dayOfWeek: ["Wednesday", "Thursday", "Friday", "Saturday"],
+        opens: "09:00",
+        closes: "17:00",
+      },
+    ],
     mapUrl: "https://maps.google.com/?q=542+Main+St+Vacaville+CA+95688",
   },
   napa: {
@@ -100,7 +107,14 @@ export const locations = {
     state: "CA",
     zip: "94559",
     phone: "707.358.2928",
-    hours: ["Monday–Friday: 9am–5pm", "Saturday: 9am–1pm"],
+    hours: ["Tuesday–Saturday: 9am–5pm", "Sunday–Monday: Closed"],
+    openingHours: [
+      {
+        dayOfWeek: ["Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
+        opens: "09:00",
+        closes: "17:00",
+      },
+    ],
     mapUrl: "https://maps.google.com/?q=1541+3rd+St+Napa+CA+94559",
   },
 } as const;
@@ -108,33 +122,41 @@ export const locations = {
 export const membershipTiers = [
   {
     name: "Tox Membership",
-    price: "$20",
+    price: "$30",
     period: "month",
     benefits: [
-      "Botox at $10/unit",
-      "Dysport at $3.33/unit",
-      "10% off all Rella Skincare Products",
+      "Botox at $13/unit",
+      "Dysport at $4.40/unit",
+      "1 complimentary Signature HydraFacial*",
+      "10% off retail",
+      "One-year membership commitment",
     ],
   },
   {
     name: "Filler Membership",
-    price: "$30",
+    price: "$40",
     period: "month",
     benefits: [
-      "Filler at $500/syringe",
-      "10% off all Rella Skincare Products",
+      "Restylane at $600/syringe",
+      "Juvederm Ultra / Ultra Plus at $600",
+      "Voluma / Vollure / Vollux / Volbella at $700",
+      "1 complimentary Signature HydraFacial*",
+      "10% off retail",
+      "One-year membership commitment",
     ],
   },
   {
-    name: "Filler & Tox Membership",
-    price: "$40",
+    name: "Tox + Filler Membership",
+    price: "$50",
     period: "month",
-    featured: true,
     benefits: [
-      "Botox at $10/unit",
-      "Dysport at $3.33/unit",
-      "Filler at $450/syringe",
-      "15% off Rella Skincare Products",
+      "Botox at $13/unit",
+      "Dysport at $4.40/unit",
+      "Restylane at $600/syringe",
+      "Juvederm at $600–$700, depending on product",
+      "1 complimentary Deluxe HydraFacial*",
+      "10% off retail",
+      "One-year membership commitment",
     ],
   },
 ] as const;

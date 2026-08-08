@@ -280,6 +280,51 @@
   margin: 0;
 }
 
+/* ── Shared Napa campaign service modules ───────────────────────────────── */
+.nb-step-list {
+  list-style: none;
+  padding: 0;
+}
+.nb-step-list > li {
+  margin: 0;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: start;
+  gap: 14px;
+}
+.nb-step-number {
+  color: var(--nb-clay);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  line-height: 1.7;
+}
+.nb a.nb-service-card {
+  display: flex;
+  min-height: 220px;
+  flex-direction: column;
+  align-items: flex-start;
+  color: var(--nb-ink);
+  transition: border-color 0.15s ease, transform 0.15s ease;
+}
+.nb a.nb-service-card:hover {
+  border-color: var(--nb-clay);
+  transform: translateY(-2px);
+}
+.nb-service-card strong {
+  margin-top: 18px;
+  font-size: clamp(20px, 4vw, 27px);
+  line-height: 1.2;
+}
+.nb-service-card .nb-body { margin: 14px 0 0; }
+.nb-service-arrow {
+  margin-top: auto;
+  padding-top: 24px;
+  color: var(--nb-clay);
+  font-size: 13px;
+  font-weight: 600;
+}
+
 /* ── FAQ ─────────────────────────────────────────────────────────────────── */
 .nb-faq { border-top: 1px solid var(--nb-hairline); }
 .nb-faq:last-of-type { border-bottom: 1px solid var(--nb-hairline); }

@@ -2,35 +2,73 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { resolveBookingHref } from "@/lib/booking-routes";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
+import { resolveGlobalBookingAction } from "@/lib/site-experience";
 
 interface MobileNavProps {
   links: { href: string; label: string }[];
   isOpen: boolean;
   onClose: () => void;
+  weightLossExperience?: boolean;
 }
 
-export function MobileNav({ links, isOpen, onClose }: MobileNavProps) {
+export function MobileNav({
+  links,
+  isOpen,
+  onClose,
+  weightLossExperience = false,
+}: MobileNavProps) {
   const pathname = usePathname();
-  const isWeightLossPage = pathname === "/services/weight-loss";
-  const bookingHref = isWeightLossPage ? "#consultation-options" : resolveBookingHref({});
-  const bookingLabel = isWeightLossPage ? "See Call Times" : "Book Consultation";
+  const booking = resolveGlobalBookingAction(pathname, weightLossExperience, "Book Consultation");
+  const dialogRef = useRef<HTMLDivElement>(null);
+  const closeButtonRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
-    if (isOpen) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "";
-    }
+    if (!isOpen) return;
+
+    const previousOverflow = document.body.style.overflow;
+    const previousActiveElement = document.activeElement;
+    document.body.style.overflow = "hidden";
+    closeButtonRef.current?.focus();
+
     return () => {
-      document.body.style.overflow = "";
+      document.body.style.overflow = previousOverflow;
+      if (previousActiveElement instanceof HTMLElement) {
+        previousActiveElement.focus();
+      }
     };
   }, [isOpen]);
 
   useEffect(() => {
     function handleKey(e: KeyboardEvent) {
-      if (e.key === "Escape" && isOpen) onClose();
+      if (!isOpen) return;
+
+      if (e.key === "Escape") {
+        onClose();
+        return;
+      }
+
+      if (e.key !== "Tab") return;
+
+      const focusable = dialogRef.current?.querySelectorAll<HTMLElement>(
+        'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])',
+      );
+      if (!focusable?.length) return;
+
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      const active = document.activeElement;
+
+      if (!dialogRef.current?.contains(active)) {
+        e.preventDefault();
+        (e.shiftKey ? last : first).focus();
+      } else if (e.shiftKey && active === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && active === last) {
+        e.preventDefault();
+        first.focus();
+      }
     }
     document.addEventListener("keydown", handleKey);
     return () => document.removeEventListener("keydown", handleKey);
@@ -40,11 +78,15 @@ export function MobileNav({ links, isOpen, onClose }: MobileNavProps) {
 
   return (
     <div
+      id="mobile-navigation"
+      ref={dialogRef}
       className="fixed inset-0 z-[200] bg-white flex flex-col px-6 pt-24 pb-6 gap-6"
       role="dialog"
+      aria-modal="true"
       aria-label="Mobile navigation"
     >
       <button
+        ref={closeButtonRef}
         className="absolute top-4 right-6 text-2xl text-silver-dark p-2"
         onClick={onClose}
         aria-label="Close menu"
@@ -64,12 +106,12 @@ export function MobileNav({ links, isOpen, onClose }: MobileNavProps) {
       ))}
 
       <Link
-        href={bookingHref}
-        data-cta={isWeightLossPage ? "booking-flow-start" : undefined}
+        href={booking.href}
+        data-cta={booking.cta}
         onClick={onClose}
-        className="mt-4 inline-flex items-center justify-center font-bold text-[0.6875rem] tracking-[0.18em] uppercase bg-rose text-white px-10 py-4 hover:bg-rose-dark transition-colors"
+        className="mt-4 inline-flex items-center justify-center bg-rose-cta px-10 py-4 text-[0.6875rem] font-bold uppercase tracking-[0.18em] text-white transition-colors hover:bg-rose-dark"
       >
-        {bookingLabel}
+        {booking.label}
       </Link>
     </div>
   );

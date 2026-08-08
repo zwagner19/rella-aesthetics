@@ -2,25 +2,35 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { resolveBookingHref } from "@/lib/booking-routes";
-import { useState } from "react";
+import { useCallback, useState } from "react";
+import { resolveGlobalBookingAction } from "@/lib/site-experience";
 import { MobileNav } from "./MobileNav";
 
-const navLinks = [
+const mainNavLinks = [
   { href: "/about", label: "About" },
   { href: "/services", label: "Services" },
-  { href: "/membership", label: "VIP Membership" },
-  { href: "/gallery", label: "Gallery" },
+  { href: "/membership", label: "Memberships" },
+  { href: "/gallery", label: "Results" },
   { href: "/blog", label: "Education" },
   { href: "/contact", label: "Contact" },
 ];
 
-export function Header() {
+function weightLossNavLinks(pathname: string | null) {
+  const root = pathname === "/" ? "" : "/";
+  return [
+    { href: `${root}#weight-loss-reviews-heading`, label: "Reviews" },
+    { href: `${root}#how-it-works`, label: "How It Works" },
+    { href: `${root}#weight-loss-faq`, label: "FAQ" },
+    { href: `${root}#consultation-options`, label: "Clinics" },
+  ];
+}
+
+export function Header({ weightLossExperience = false }: { weightLossExperience?: boolean }) {
   const [mobileOpen, setMobileOpen] = useState(false);
   const pathname = usePathname();
-  const isWeightLossPage = pathname === "/services/weight-loss";
-  const bookingHref = isWeightLossPage ? "#consultation-options" : resolveBookingHref({});
-  const bookingLabel = isWeightLossPage ? "See Call Times" : "Book Consultation";
+  const booking = resolveGlobalBookingAction(pathname, weightLossExperience, "Book Consultation");
+  const navLinks = weightLossExperience ? weightLossNavLinks(pathname) : mainNavLinks;
+  const closeMobileNav = useCallback(() => setMobileOpen(false), []);
 
   return (
     <>
@@ -48,11 +58,11 @@ export function Header() {
           </nav>
 
           <Link
-            href={bookingHref}
-            data-cta={isWeightLossPage ? "booking-flow-start" : undefined}
-            className="hidden lg:inline-flex items-center justify-center font-bold text-[0.6875rem] tracking-[0.18em] uppercase bg-rose text-white px-7 py-3 hover:bg-rose-dark transition-colors duration-150"
+            href={booking.href}
+            data-cta={booking.cta}
+            className="hidden lg:inline-flex items-center justify-center bg-rose-cta px-7 py-3 text-[0.6875rem] font-bold uppercase tracking-[0.18em] text-white transition-colors duration-150 hover:bg-rose-dark"
           >
-            {bookingLabel}
+            {booking.label}
           </Link>
 
           <button
@@ -60,6 +70,7 @@ export function Header() {
             onClick={() => setMobileOpen(true)}
             aria-label="Open menu"
             aria-expanded={mobileOpen}
+            aria-controls="mobile-navigation"
           >
             <span className="block w-6 h-0.5 bg-silver-dark" />
             <span className="block w-6 h-0.5 bg-silver-dark" />
@@ -71,7 +82,8 @@ export function Header() {
       <MobileNav
         links={navLinks}
         isOpen={mobileOpen}
-        onClose={() => setMobileOpen(false)}
+        onClose={closeMobileNav}
+        weightLossExperience={weightLossExperience}
       />
     </>
   );

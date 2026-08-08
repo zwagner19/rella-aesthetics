@@ -12,10 +12,10 @@ export interface GhlContactInput {
   email?: string;
   phone?: string;
   locationId: string;
-  tags: string[];
+  tags?: string[];
   source: string;
   /** Optional: map GHL custom field UUID → value (create fields in GHL → Settings → Custom Fields) */
-  customFields?: { id: string; value: string }[];
+  customFields?: { id: string; fieldValue: string }[];
 }
 
 export function buildGhlContactBody(input: GhlContactInput): Record<string, unknown> {
@@ -24,14 +24,14 @@ export function buildGhlContactBody(input: GhlContactInput): Record<string, unkn
     firstName: input.firstName || "Website",
     lastName: input.lastName || "Lead",
     source: input.source,
-    tags: input.tags,
   };
+  if (input.tags?.length) body.tags = input.tags;
   if (input.email) body.email = input.email;
   if (input.phone) body.phone = normalizePhone(input.phone);
   if (input.customFields?.length) {
     body.customFields = input.customFields.map((f) => ({
       id: f.id,
-      value: f.value,
+      fieldValue: f.fieldValue,
     }));
   }
   return body;

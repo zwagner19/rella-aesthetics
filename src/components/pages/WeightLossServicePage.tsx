@@ -1,8 +1,11 @@
 import Image from "next/image";
 import { Button } from "@/components/ui/Button";
 import { FaqAccordion, FaqSchema } from "@/components/blocks/FaqAccordion";
+import { BeforeAfterGallery } from "@/components/blocks/BeforeAfterGallery";
 import { TrustStrip } from "@/components/blocks/TrustStrip";
 import { WeightLossConversionTracker } from "@/components/integrations/WeightLossConversionTracker";
+import { approvedResultsFor } from "@/content/results";
+import { weightLossGoogleProof, weightLossPatientStory } from "@/content/social-proof";
 import { resolveBookingHref, type BookingLocation } from "@/lib/booking-routes";
 import { medicalWeightLossServiceSchema } from "@/lib/schemas";
 
@@ -29,25 +32,7 @@ const steps = [
   },
 ] as const;
 
-const googleReviewUrl = "https://www.google.com/maps?cid=10820799198475906076";
-
-const weightLossReviews = [
-  {
-    quote: "They genuinely care about how your treatments are going.",
-    name: "Georgia Javaras",
-    context: "Google review · Weight-loss patient",
-  },
-  {
-    quote: "My concerns are always heard and addressed.",
-    name: "Paige Kiehn",
-    context: "Google review · Weight-loss medication care",
-  },
-  {
-    quote: "Very easy to reach Dr. Wagner with a question.",
-    name: "J N",
-    context: "Google review · Weight-loss patient",
-  },
-] as const;
+const weightLossResults = approvedResultsFor("weight-loss");
 
 const faq = [
   {
@@ -294,18 +279,18 @@ export function WeightLossServicePage() {
               </p>
             </div>
             <a
-              href={googleReviewUrl}
+              href={weightLossGoogleProof.profileUrl}
               target="_blank"
               rel="noreferrer"
               className="inline-flex w-fit items-center gap-3 rounded-full border border-rose-light bg-rose-blush px-5 py-3 text-sm font-semibold text-ink transition-colors hover:bg-rose-light/60"
             >
               <span aria-hidden="true" className="text-rose-dark">★★★★★</span>
-              <span>4.9 on Google · 219 reviews</span>
+              <span>{weightLossGoogleProof.ratingLabel}</span>
             </a>
           </div>
 
           <div className="grid gap-5 md:grid-cols-3">
-            {weightLossReviews.map((review) => (
+            {weightLossGoogleProof.reviews.map((review) => (
               <figure key={review.name} className="flex min-h-[230px] flex-col justify-between rounded-[1.5rem] border border-silver-pale bg-[linear-gradient(145deg,#fff_0%,#FDF7F5_100%)] p-6 shadow-[0_14px_45px_rgba(90,94,98,0.06)] md:p-7">
                 <blockquote className="text-xl font-medium leading-relaxed tracking-[-0.02em] text-ink">
                   &ldquo;{review.quote}&rdquo;
@@ -319,7 +304,7 @@ export function WeightLossServicePage() {
           </div>
 
           <div className="mt-7 flex flex-col gap-3 text-sm text-silver md:flex-row md:items-center md:justify-between">
-            <p>23 Google reviews mention weight loss. Profile checked August 4, 2026.</p>
+            <p>{weightLossGoogleProof.coverageNote}</p>
             <p>Reviews reflect individual experiences. Results vary.</p>
           </div>
         </div>
@@ -329,31 +314,39 @@ export function WeightLossServicePage() {
         <div className="mx-auto grid max-w-[1050px] gap-10 px-6 md:px-8 lg:grid-cols-[0.75fr_1.25fr] lg:items-center lg:px-12">
           <div className="mx-auto w-full max-w-[420px] overflow-hidden rounded-[1.75rem] border border-rose-light/80 bg-ink shadow-[0_20px_60px_rgba(40,42,44,0.14)]">
             <video
-              aria-label="Rella semaglutide patient story"
+              aria-label={weightLossPatientStory.ariaLabel}
               className="aspect-[9/16] w-full bg-ink object-cover"
               controls
               playsInline
               preload="metadata"
             >
-              <source src="/media/semaglutide-story.mp4" type="video/mp4" />
+              <source src={weightLossPatientStory.videoSrc} type="video/mp4" />
               Your browser does not support embedded video.
             </video>
           </div>
 
           <div className="max-w-[520px]">
-            <p className="mb-4 text-[0.6875rem] font-bold uppercase tracking-[0.2em] text-rose-dark">A real Rella patient story</p>
+            <p className="mb-4 text-[0.6875rem] font-bold uppercase tracking-[0.2em] text-rose-dark">{weightLossPatientStory.eyebrow}</p>
             <h2 id="weight-loss-story-heading" className="mb-5 text-3xl font-medium leading-tight tracking-[-0.035em] text-ink md:text-5xl">
-              Hear the experience in a patient&apos;s own words.
+              {weightLossPatientStory.heading}
             </h2>
             <p className="text-base font-light leading-relaxed text-silver md:text-lg">
-              This short video shares one patient&apos;s personal experience with Rella&apos;s semaglutide program. Your care plan and results will be individual to you.
+              {weightLossPatientStory.description}
             </p>
             <p className="mt-5 text-sm leading-relaxed text-silver">
-              Individual results vary. Prescription treatment is offered only when clinically appropriate after evaluation.
+              {weightLossPatientStory.disclaimer}
             </p>
           </div>
         </div>
       </section>
+
+      <BeforeAfterGallery
+        eyebrow="Medical weight-management results"
+        title="Progress from real Rella patients."
+        introduction="Published only with patient permission and clear treatment context. Every plan and outcome is individual."
+        results={weightLossResults}
+        tone="light"
+      />
 
       <section id="how-it-works" className="scroll-mt-24 bg-silver-pale/60 py-20 md:py-28">
         <div className="mx-auto max-w-[1200px] px-6 md:px-8 lg:px-12">
@@ -393,7 +386,7 @@ export function WeightLossServicePage() {
         </div>
       </section>
 
-      <section className="bg-silver-pale/60 py-20 md:py-28">
+      <section id="weight-loss-faq" className="scroll-mt-24 bg-silver-pale/60 py-20 md:py-28">
         <div className="mx-auto max-w-[1000px] px-6 md:px-8 lg:px-12">
           <div className="mb-10">
             <p className="mb-4 text-[0.6875rem] font-bold uppercase tracking-[0.2em] text-rose-dark">Questions, answered</p>
@@ -437,14 +430,6 @@ export function WeightLossServicePage() {
           </Button>
         </div>
       </section>
-
-      <a
-        href="#consultation-options"
-        data-cta="booking-flow-start"
-        className="fixed inset-x-4 bottom-4 z-40 flex min-h-12 items-center justify-center rounded-full bg-[#A34F49] px-6 text-center text-xs font-bold uppercase tracking-[0.16em] text-white shadow-[0_12px_35px_rgba(40,42,44,0.28)] hover:bg-[#8F403B] lg:hidden"
-      >
-        See Call Times
-      </a>
 
     </>
   );

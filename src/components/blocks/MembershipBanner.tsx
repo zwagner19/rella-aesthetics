@@ -7,18 +7,17 @@ export function MembershipBanner() {
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
           <div>
             <p className="font-bold text-[0.6875rem] tracking-[0.2em] uppercase text-silver mb-2">
-              VIP Membership
+              2026 Injectable Memberships
             </p>
             <h2 className="font-medium text-2xl md:text-3xl text-silver-dark mb-2">
-              Elevated Care, Every Month
+              Tox plans from $30/month.
             </h2>
             <p className="text-silver max-w-lg">
-              Become a Rella VIP member and access preferred pricing, complimentary treatments, and
-              exclusive wellness benefits tailored to your aesthetic goals.
+              Compare Tox, Filler, and Tox + Filler plans with current member rates, included benefits, and one-year terms.
             </p>
           </div>
           <Button href="/membership" className="shrink-0">
-            Explore Membership
+            Compare Memberships
           </Button>
         </div>
       </div>

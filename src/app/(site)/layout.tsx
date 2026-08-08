@@ -1,9 +1,13 @@
+import { headers } from "next/headers";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { SkipNav } from "@/components/layout/SkipNav";
 import { GhlChatWidget } from "@/components/integrations/GhlChatWidget";
 import { GoogleAnalytics } from "@/components/integrations/GoogleAnalytics";
 import { MetaPixel } from "@/components/integrations/MetaPixel";
+import { ConversionTracker } from "@/components/integrations/ConversionTracker";
+import { MobileConversionBar } from "@/components/layout/MobileConversionBar";
+import { isWeightLossHost } from "@/lib/site-hosts";
 
 /**
  * Global site chrome for every ordinary marketing route.
@@ -14,20 +18,24 @@ import { MetaPixel } from "@/components/integrations/MetaPixel";
  * after the fact. Every route in this group keeps its existing URL, chrome, and
  * behaviour; route groups do not appear in the path.
  */
-export default function SiteLayout({ children }: Readonly<{ children: React.ReactNode }>) {
+export default async function SiteLayout({ children }: Readonly<{ children: React.ReactNode }>) {
+  const weightLossExperience = isWeightLossHost((await headers()).get("host"));
+
   return (
     <>
       {/* Direct GA + Meta belong to ordinary marketing routes ONLY. Moved here
           from the root layout so the campaign group cannot inherit them. */}
       <GoogleAnalytics />
       <MetaPixel />
+      <ConversionTracker />
       <SkipNav />
-      <Header />
-      <main id="main" className="flex-1">
+      <Header weightLossExperience={weightLossExperience} />
+      <main id="main" className="flex-1 pb-20 lg:pb-0">
         {children}
       </main>
-      <Footer />
+      <Footer weightLossExperience={weightLossExperience} />
       <GhlChatWidget />
+      <MobileConversionBar weightLossExperience={weightLossExperience} />
     </>
   );
 }

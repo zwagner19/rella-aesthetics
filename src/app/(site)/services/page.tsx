@@ -7,6 +7,7 @@ export const metadata: Metadata = {
   title: "Our Services",
   description:
     "Explore Rella Aesthetics' full range of treatments — injectables, skin care, laser, IV hydration, and medical weight loss in Vacaville and Napa.",
+  alternates: { canonical: "/services" },
 };
 
 const categories = ["Injectables", "Skin Care", "Body & Wellness"] as const;
@@ -19,7 +20,8 @@ export default function ServicesPage() {
           <SectionHeader
             eyebrow="Treatments"
             title="Our Services"
-            description="Physician-led aesthetic and wellness treatments designed around your goals. Every service follows a personalized treatment plan for natural, lasting results."
+            description="Explore consultation-led aesthetic, skin, wellness, and medical weight-management options available through Rella in Vacaville and Napa."
+            headingLevel={1}
           />
 
           {categories.map((category) => {

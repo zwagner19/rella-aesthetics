@@ -2,9 +2,17 @@ interface SectionHeaderProps {
   eyebrow?: string;
   title: string;
   description?: string;
+  headingLevel?: 1 | 2;
 }
 
-export function SectionHeader({ eyebrow, title, description }: SectionHeaderProps) {
+export function SectionHeader({
+  eyebrow,
+  title,
+  description,
+  headingLevel = 2,
+}: SectionHeaderProps) {
+  const Heading = headingLevel === 1 ? "h1" : "h2";
+
   return (
     <div className="mb-12 max-w-[600px]">
       {eyebrow && (
@@ -12,7 +20,7 @@ export function SectionHeader({ eyebrow, title, description }: SectionHeaderProp
           {eyebrow}
         </p>
       )}
-      <h2 className="font-medium text-2xl md:text-3xl text-silver-dark mb-4">{title}</h2>
+      <Heading className="font-medium text-2xl md:text-3xl text-silver-dark mb-4">{title}</Heading>
       {description && <p className="text-silver leading-relaxed">{description}</p>}
     </div>
   );

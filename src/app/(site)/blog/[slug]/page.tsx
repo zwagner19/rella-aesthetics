@@ -6,28 +6,69 @@ import { client } from "@/sanity/client";
 import { urlFor } from "@/sanity/image";
 import { blogPostBySlugQuery, blogPostSlugsQuery } from "@/sanity/queries";
 import { BlogContent } from "@/components/blog/BlogContent";
+import { LocalEditorialPost } from "@/components/blog/LocalEditorialPost";
 import { Button } from "@/components/ui/Button";
+import {
+  getLocalEditorialPost,
+  LOCAL_EDITORIAL_POSTS,
+} from "@/lib/local-editorial-posts";
 
 interface BlogPostPageProps {
   params: Promise<{ slug: string }>;
 }
 
 export async function generateStaticParams() {
-  if (!client) return [];
+  const localParams = LOCAL_EDITORIAL_POSTS.map((post) => ({ slug: post.slug }));
+  if (!client) return localParams;
   try {
     const posts = await client.fetch<{ slug: string }[]>(blogPostSlugsQuery);
-    return posts.map((p) => ({ slug: p.slug }));
+    const localSlugs = new Set(localParams.map((post) => post.slug));
+    return [
+      ...localParams,
+      ...posts
+        .filter((post) => !localSlugs.has(post.slug))
+        .map((post) => ({ slug: post.slug })),
+    ];
   } catch {
     // Don’t fail the whole Vercel build if Sanity is unreachable at build time;
     // `[slug]` can still render on-demand when the CMS is available.
-    return [];
+    return localParams;
   }
 }
 
 export async function generateMetadata({ params }: BlogPostPageProps): Promise<Metadata> {
-  if (!client) return {};
   const { slug } = await params;
-  const post = await client.fetch(blogPostBySlugQuery, { slug });
+  const localPost = getLocalEditorialPost(slug);
+  if (localPost) {
+    return {
+      title: localPost.seoTitle,
+      description: localPost.seoDescription,
+      alternates: { canonical: `/blog/${slug}` },
+      openGraph: {
+        title: localPost.title,
+        description: localPost.seoDescription,
+        url: `/blog/${slug}`,
+        type: "article",
+        publishedTime: localPost.publishedAt,
+        modifiedTime: localPost.modifiedAt,
+        images: [{ url: localPost.ogImage, alt: localPost.seoTitle }],
+      },
+      twitter: {
+        card: "summary_large_image",
+        title: localPost.seoTitle,
+        description: localPost.seoDescription,
+        images: [localPost.ogImage],
+      },
+    };
+  }
+
+  if (!client) return {};
+  let post;
+  try {
+    post = await client.fetch(blogPostBySlugQuery, { slug });
+  } catch {
+    return {};
+  }
   if (!post) return {};
 
   const title = post.seoTitle || post.title;
@@ -36,9 +77,11 @@ export async function generateMetadata({ params }: BlogPostPageProps): Promise<M
   return {
     title,
     description,
+    alternates: { canonical: `/blog/${slug}` },
     openGraph: {
       title,
       description,
+      url: `/blog/${slug}`,
       type: "article",
       publishedTime: post.publishedAt,
       ...(post.coverImage && {
@@ -49,9 +92,17 @@ export async function generateMetadata({ params }: BlogPostPageProps): Promise<M
 }
 
 export default async function BlogPostPage({ params }: BlogPostPageProps) {
-  if (!client) notFound();
   const { slug } = await params;
-  const post = await client.fetch(blogPostBySlugQuery, { slug });
+  const localPost = getLocalEditorialPost(slug);
+  if (localPost) return <LocalEditorialPost post={localPost} />;
+
+  if (!client) notFound();
+  let post;
+  try {
+    post = await client.fetch(blogPostBySlugQuery, { slug });
+  } catch {
+    notFound();
+  }
   if (!post) notFound();
 
   const articleSchema = {
@@ -81,7 +132,9 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }}
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(articleSchema).replace(/</g, "\\u003c"),
+        }}
       />
 
       {/* Hero */}
@@ -134,7 +187,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
       </section>
 
       {/* Bottom CTA */}
-      <section className="py-16 bg-rose text-white text-center">
+      <section className="bg-rose-cta py-16 text-center text-white">
         <div className="mx-auto max-w-[600px] px-6">
           <h2 className="font-bold text-2xl md:text-3xl tracking-[0.06em] uppercase mb-4">
             Questions? We&apos;re Here to Help
@@ -144,7 +197,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
           </p>
           <Button
             href={resolveBookingHref({})}
-            className="bg-white !text-rose hover:bg-white/90 hover:!text-rose-dark"
+            className="bg-white !text-rose-text hover:bg-white/90 hover:!text-rose-dark"
           >
             Book Consultation
           </Button>

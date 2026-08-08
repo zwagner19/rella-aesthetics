@@ -4,6 +4,7 @@ import {
   PRICING, VISIT, PAYMENT_DISCLOSURE, CANCELLATION_POLICY_URL,
   TRUST, MARKETING_PHONE, NAPA, RESULTS, FAQS, PUBLIC_LINKS,
 } from "@/lib/napa-botox-facts";
+import { DEFAULT_SOCIAL_IMAGE } from "@/lib/social-card";
 import "./napa-botox.css";
 
 /**
@@ -27,7 +28,7 @@ import "./napa-botox.css";
  */
 
 const BOOKING_HREF = resolveBookingHref({ location: "napa", service: "botox" });
-const CANONICAL = "https://experiencerella.com/napa/botox/";
+const CANONICAL = "https://experiencerella.com/napa/botox";
 const LOGO = "/brand/rella-logo-black.svg";
 
 /**
@@ -47,7 +48,7 @@ const LOGO = "/brand/rella-logo-black.svg";
 export const metadata: Metadata = {
   title: "Botox in Napa — Physician-Owned Med Spa",
   description:
-    "Botox® and Dysport in downtown Napa from a physician-owned med spa. Botox® $18/unit, Dysport $6/unit. 30-minute new-patient visit with a free consultation. Book online or call.",
+    "Botox® and Dysport in downtown Napa at a physician-owned med spa. See Botox® at $18/unit, Dysport at $6/unit, and book a 30-minute new-patient visit.",
   alternates: { canonical: CANONICAL },
   openGraph: {
     title: "Botox in Napa — Rella Aesthetics · Physician-Owned Med Spa",
@@ -55,6 +56,7 @@ export const metadata: Metadata = {
       "Natural-looking Botox® and Dysport from a physician-owned med spa on 3rd Street in downtown Napa.",
     url: CANONICAL,
     type: "website",
+    images: [DEFAULT_SOCIAL_IMAGE],
   },
   robots: { index: true, follow: true },
 };
@@ -75,7 +77,7 @@ const faqSchema = {
 };
 
 function BookCta({ children = "Book an appointment", className = "nb-btn nb-btn--primary" }: { children?: string; className?: string }) {
-  return <a className={className} href={BOOKING_HREF} data-cta="book">{children}</a>;
+  return <a className={className} href={BOOKING_HREF} data-cta="book" data-gtm="booking_start" data-service="botox">{children}</a>;
 }
 function CallCta({ children = `Call ${MARKETING_PHONE.display}`, className = "nb-btn nb-btn--secondary" }: { children?: string; className?: string }) {
   return <a className={className} href={MARKETING_PHONE.href} data-cta="call">{children}</a>;
@@ -314,7 +316,7 @@ export default function NapaBotoxLandingPage() {
 
       {/* ── Mobile sticky actions — hidden at >=1024px per the B01 spec ────── */}
       <div className="nb-sticky" role="group" aria-label="Book or call Rella Napa">
-        <a className="nb-sticky-book" href={BOOKING_HREF} data-cta="book">Book an appointment</a>
+        <a className="nb-sticky-book" href={BOOKING_HREF} data-cta="book" data-gtm="booking_start" data-service="botox">Book an appointment</a>
         <a className="nb-sticky-call" href={MARKETING_PHONE.href} data-cta="call">Call Rella</a>
       </div>
     </div>

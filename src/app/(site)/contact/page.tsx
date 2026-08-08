@@ -8,6 +8,7 @@ export const metadata: Metadata = {
   title: "Contact Us",
   description:
     "Get in touch with Rella Aesthetics in Vacaville or Napa. Call, email, or submit a contact form. We're here to help you begin your aesthetic journey.",
+  alternates: { canonical: "/contact" },
 };
 
 export default function ContactPage() {
@@ -47,15 +48,21 @@ export default function ContactPage() {
                 </p>
                 <p className="text-silver">
                   <strong className="text-silver-dark">Email: </strong>
-                  <a href="mailto:hello@experiencerella.com" className="hover:text-rose-text transition-colors">
-                    hello@experiencerella.com
+                  <a href="mailto:info@experiencerella.com" className="hover:text-rose-text transition-colors">
+                    info@experiencerella.com
                   </a>
                 </p>
               </div>
-              <h3 className="font-medium text-lg text-silver-dark mb-4">Hours</h3>
-              <p className="text-silver text-sm">Monday – Friday: 9am – 5pm</p>
-              <p className="text-silver text-sm">Saturday: 9am – 1pm</p>
-              <p className="text-silver text-sm">Sunday: Closed</p>
+              <h3 className="font-medium text-lg text-silver-dark mb-4">Clinic Hours</h3>
+              <div className="space-y-2 text-sm text-silver">
+                {[locations.vacaville, locations.napa].map((location) => (
+                  <p key={location.name}>
+                    <strong className="text-silver-dark">{location.name}: </strong>
+                    {location.hours[0]}
+                  </p>
+                ))}
+                <p className="pt-1">Online booking is available at any time.</p>
+              </div>
             </div>
           </div>
         </div>

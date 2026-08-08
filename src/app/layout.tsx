@@ -22,6 +22,9 @@ export const metadata: Metadata = {
     locale: "en_US",
     siteName: "Rella Aesthetics",
   },
+  twitter: {
+    card: "summary_large_image",
+  },
   robots: {
     index: true,
     follow: true,
