@@ -23,7 +23,7 @@ describe("Vacaville laser local-acquisition page", () => {
     expect(String(metadata.description).length).toBeLessThanOrEqual(180);
   });
 
-  it("keeps every booking action on the rendered Vacaville consult", () => {
+  it("keeps every booking action on the custom Vacaville laser entry", () => {
     const expected = resolveBookingHref({
       location: "vacaville",
       service: "laser-treatments",
@@ -39,9 +39,11 @@ describe("Vacaville laser local-acquisition page", () => {
 
     expect(bookingHrefs).toHaveLength(3);
     expect(new Set(bookingHrefs)).toEqual(new Set([expected]));
-    expect(expected).toContain("s_1328674e-c793-4b3c-833e-9a3827c5769b");
-    expect(expected).toContain("locationId=0f146f87-364e-4dfd-b938-61ba49528820");
-    expect(expected).not.toContain("91eba843-57fb-49e9-8505-431d501ffec7");
+    const destination = new URL(expected);
+    expect(destination.hostname).toBe("book.experiencerella.com");
+    expect(destination.searchParams.get("location")).toBe("vacaville");
+    expect(destination.searchParams.get("service")).toBe("laser-treatments");
+    expect(expected).not.toContain("dashboard.boulevard.io");
   });
 
   it("shows approved pricing, live menu scope, location, and consult requirement", () => {

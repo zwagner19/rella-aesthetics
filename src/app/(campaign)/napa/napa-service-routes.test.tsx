@@ -31,7 +31,6 @@ const routes = [
     metadata: fillerMetadata,
     canonical: "https://experiencerella.com/napa/filler",
     bookingService: "dermal-fillers",
-    bookingToken: "s_e3564b2f",
     prices: ["$840", "$540–$960"],
   },
   {
@@ -40,7 +39,6 @@ const routes = [
     metadata: laserMetadata,
     canonical: "https://experiencerella.com/napa/laser",
     bookingService: "laser-treatments",
-    bookingToken: "%2Fcart%2Fmenu%2FLaser",
     prices: ["$420", "$1,440"],
   },
   {
@@ -49,7 +47,6 @@ const routes = [
     metadata: hydrafacialMetadata,
     canonical: "https://experiencerella.com/napa/hydrafacial",
     bookingService: "hydrafacial",
-    bookingToken: "s_68b27f62",
     prices: ["$240", "$300", "$390"],
   },
   {
@@ -58,7 +55,6 @@ const routes = [
     metadata: hyperhidrosisMetadata,
     canonical: "https://experiencerella.com/napa/hyperhidrosis",
     bookingService: "hyperhidrosis",
-    bookingToken: "s_14029fc9",
     prices: ["$2,400", "60 min"],
   },
 ] as const;
@@ -79,7 +75,7 @@ describe("Napa paid + local-search route preservation", () => {
     );
   });
 
-  it.each(routes)("/$slug keeps every Book CTA on one verified Napa path", (route) => {
+  it.each(routes)("/$slug keeps every Book CTA on one custom Napa path", (route) => {
     const html = renderToStaticMarkup(<route.Page />);
     const expected = resolveBookingHref({
       location: "napa",
@@ -100,8 +96,11 @@ describe("Napa paid + local-search route preservation", () => {
       expect(anchor.attrs).toContain('data-gtm="booking_start"');
       expect(anchor.attrs).toContain(`data-service="${route.slug}"`);
     }
-    expect(expected).toContain(route.bookingToken);
-    expect(expected).toContain("locationId=91eba843-57fb-49e9-8505-431d501ffec7");
+    const destination = new URL(expected);
+    expect(destination.hostname).toBe("book.experiencerella.com");
+    expect(destination.searchParams.get("location")).toBe("napa");
+    expect(destination.searchParams.get("service")).toBe(route.bookingService);
+    expect(expected).not.toContain("dashboard.boulevard.io");
   });
 
   it.each(routes)("/$slug renders local facts, current prices, and no patient form", (route) => {
@@ -179,14 +178,14 @@ describe("Napa campaign hub", () => {
     }
   });
 
-  it("uses only the Napa-scoped generic booking menu", () => {
+  it("uses only the Napa-scoped custom booking entry", () => {
     const expected = resolveBookingHref({ location: "napa" }).replace(/&/g, "&amp;");
     const bookHrefs = [...html.matchAll(/<a\b[^>]*href="([^"]+)"[^>]*data-cta="book"/g)].map(
       (match) => match[1],
     );
     expect(bookHrefs.length).toBeGreaterThanOrEqual(3);
     expect(new Set(bookHrefs)).toEqual(new Set([expected]));
-    expect(html).not.toContain("book.experiencerella.com");
+    expect(html).not.toContain("dashboard.boulevard.io");
   });
 });
 

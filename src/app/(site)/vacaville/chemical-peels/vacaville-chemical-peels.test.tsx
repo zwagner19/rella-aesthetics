@@ -1,6 +1,6 @@
 import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it } from "vitest";
-import { BOULEVARD_WIDGET_VACAVILLE, resolveBookingHref } from "@/lib/booking-routes";
+import { resolveBookingHref } from "@/lib/booking-routes";
 import VacavilleChemicalPeelsPage, { metadata } from "./page";
 
 const html = renderToStaticMarkup(<VacavilleChemicalPeelsPage />);
@@ -23,7 +23,7 @@ describe("Vacaville chemical-peels local-acquisition page", () => {
     expect(String(metadata.description).length).toBeLessThanOrEqual(180);
   });
 
-  it("keeps every booking action on the working Vacaville menu fallback", () => {
+  it("keeps every booking action on the custom Vacaville peels entry", () => {
     const expected = resolveBookingHref({
       location: "vacaville",
       service: "chemical-peels",
@@ -39,11 +39,11 @@ describe("Vacaville chemical-peels local-acquisition page", () => {
 
     expect(bookingHrefs).toHaveLength(3);
     expect(new Set(bookingHrefs)).toEqual(new Set([expected]));
-    expect(expected).toBe(BOULEVARD_WIDGET_VACAVILLE);
-    expect(expected).toContain("path=%2Fcart%2Fmenu");
-    expect(expected).toContain("locationId=0f146f87-364e-4dfd-b938-61ba49528820");
-    expect(expected).not.toContain("%2Fcart%2Fmenu%2FPeels");
-    expect(expected).not.toContain("91eba843-57fb-49e9-8505-431d501ffec7");
+    const destination = new URL(expected);
+    expect(destination.hostname).toBe("book.experiencerella.com");
+    expect(destination.searchParams.get("location")).toBe("vacaville");
+    expect(destination.searchParams.get("service")).toBe("chemical-peels");
+    expect(expected).not.toContain("dashboard.boulevard.io");
   });
 
   it("shows the verified menu, location, hours, and consultation-led pricing boundary", () => {

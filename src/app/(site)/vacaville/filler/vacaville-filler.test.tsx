@@ -25,7 +25,7 @@ describe("Vacaville filler local-acquisition page", () => {
     expect(String(metadata.description).length).toBeLessThanOrEqual(180);
   });
 
-  it("keeps every booking action on the rendered Vacaville Dermal Fillers service", () => {
+  it("keeps every booking action on the custom Vacaville filler entry", () => {
     const expected = resolveBookingHref({
       location: "vacaville",
       service: "dermal-fillers",
@@ -41,10 +41,11 @@ describe("Vacaville filler local-acquisition page", () => {
 
     expect(bookingHrefs).toHaveLength(3);
     expect(new Set(bookingHrefs)).toEqual(new Set([expected]));
-    expect(expected).toContain("s_e3564b2f-c00d-47c2-8ca0-665b6d6f25e4");
-    expect(expected).toContain("locationId=0f146f87-364e-4dfd-b938-61ba49528820");
-    expect(expected).not.toContain("91eba843-57fb-49e9-8505-431d501ffec7");
-    expect(expected).not.toContain("book.experiencerella.com");
+    const destination = new URL(expected);
+    expect(destination.hostname).toBe("book.experiencerella.com");
+    expect(destination.searchParams.get("location")).toBe("vacaville");
+    expect(destination.searchParams.get("service")).toBe("dermal-fillers");
+    expect(expected).not.toContain("dashboard.boulevard.io");
   });
 
   it("shows approved pricing, location, hours, and conservative boundaries", () => {

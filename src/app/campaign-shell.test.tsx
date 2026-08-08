@@ -258,10 +258,13 @@ describe("FULL-DOCUMENT booking and call destination matrix", () => {
     expect(campaignDoc).toContain("(707) 358-2928");
   });
 
-  it("generic and Vacaville routing behaviour is unchanged", () => {
+  it("generic and Vacaville routing stay city-safe and widget-free", () => {
     expect(resolveBookingHref({})).toBe("/book");
-    expect(resolveBookingHref({ location: "vacaville" })).toMatch(/locationId=0f146f87/);
+    expect(resolveBookingHref({ location: "vacaville" })).toBe(
+      "https://book.experiencerella.com/book?location=vacaville",
+    );
     expect(resolveBookingHref({ location: "vacaville", service: "botox" })).not.toBe(CANONICAL_NAPA_TOX);
+    expect(resolveBookingHref({ location: "vacaville", service: "botox" })).not.toContain("dashboard.boulevard.io");
   });
 });
 

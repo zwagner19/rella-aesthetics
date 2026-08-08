@@ -23,7 +23,7 @@ describe("Napa facials local-acquisition page", () => {
     expect(String(metadata.description).length).toBeLessThanOrEqual(180);
   });
 
-  it("keeps every booking action on the rendered Napa skin consult", () => {
+  it("keeps every booking action on the custom Napa facials entry", () => {
     const expected = resolveBookingHref({
       location: "napa",
       service: "facials",
@@ -39,9 +39,11 @@ describe("Napa facials local-acquisition page", () => {
 
     expect(bookingHrefs).toHaveLength(3);
     expect(new Set(bookingHrefs)).toEqual(new Set([expected]));
-    expect(expected).toContain("Facials%2Fs_3ae8bab0-f23c-45d2-b265-3836289df3a1");
-    expect(expected).toContain("locationId=91eba843-57fb-49e9-8505-431d501ffec7");
-    expect(expected).not.toContain("0f146f87-364e-4dfd-b938-61ba49528820");
+    const destination = new URL(expected);
+    expect(destination.hostname).toBe("book.experiencerella.com");
+    expect(destination.searchParams.get("location")).toBe("napa");
+    expect(destination.searchParams.get("service")).toBe("facials");
+    expect(expected).not.toContain("dashboard.boulevard.io");
   });
 
   it("shows the verified menu, consult next step, location, and pricing boundary", () => {

@@ -5,7 +5,7 @@ import { locations } from "@/lib/data";
 
 export const metadata: Metadata = {
   title: "Book an Appointment",
-  description: "Choose Rella Aesthetics in Vacaville or Napa to view the correct live booking menu.",
+  description: "Choose Rella Aesthetics in Vacaville or Napa to continue in Rella's custom booking experience.",
   robots: { index: false, follow: true },
 };
 
@@ -24,7 +24,7 @@ export default function BookPage() {
             Choose your Rella clinic.
           </h1>
           <p className="mx-auto max-w-[680px] text-base font-light leading-relaxed text-silver-dark md:text-lg">
-            Select Napa or Vacaville to open the correct live appointment menu for that clinic.
+            Select Napa or Vacaville to continue in Rella&rsquo;s custom booking experience for that clinic.
           </p>
         </div>
       </section>

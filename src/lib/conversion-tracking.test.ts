@@ -7,10 +7,21 @@ import {
 } from "./conversion-tracking";
 import {
   BOOKING_LOCATION_CHOOSER,
-  BOULEVARD_WIDGET_NAPA,
-  BOULEVARD_WIDGET_VACAVILLE,
   CANONICAL_NAPA_TOX,
+  resolveBookingHref,
 } from "./booking-routes";
+
+function expectCustomIntent(
+  href: string,
+  location: "napa" | "vacaville",
+  service?: string,
+) {
+  const destination = new URL(href);
+  expect(destination.hostname).toBe("book.experiencerella.com");
+  expect(destination.searchParams.get("location")).toBe(location);
+  expect(destination.searchParams.get("service")).toBe(service ?? null);
+  expect(href).not.toContain("dashboard.boulevard.io");
+}
 
 describe("conversion intent classification", () => {
   it("separates booking, assessment, and funnel-start intent", () => {
@@ -62,11 +73,13 @@ describe("mobile booking bar routing", () => {
   });
 
   it("keeps location-page booking city-correct", () => {
-    expect(resolveMobileBookingDestination("/locations/napa").href).toBe(
-      BOULEVARD_WIDGET_NAPA,
+    expectCustomIntent(
+      resolveMobileBookingDestination("/locations/napa").href,
+      "napa",
     );
-    expect(resolveMobileBookingDestination("/locations/vacaville").href).toBe(
-      BOULEVARD_WIDGET_VACAVILLE,
+    expectCustomIntent(
+      resolveMobileBookingDestination("/locations/vacaville").href,
+      "vacaville",
     );
   });
 
@@ -113,74 +126,70 @@ describe("mobile booking bar routing", () => {
     });
   });
 
-  it("keeps the Vacaville Botox page on the rendered New Patient Tox service", () => {
+  it("keeps the Vacaville Botox page on the custom service intent", () => {
     const booking = resolveMobileBookingDestination("/vacaville/botox");
 
     expect(booking.label).toBe("Book New Patient Tox");
     expect(booking.cta).toBe("service-booking");
-    expect(booking.href).toContain("s_2fee10b1-1831-4c00-83e9-9c05a7071b15");
-    expect(booking.href).toContain("locationId=0f146f87-364e-4dfd-b938-61ba49528820");
+    expectCustomIntent(booking.href, "vacaville", "botox");
   });
 
-  it("keeps the Vacaville filler page on the rendered Dermal Fillers service", () => {
+  it("keeps the Vacaville filler page on the custom service intent", () => {
     const booking = resolveMobileBookingDestination("/vacaville/filler");
 
     expect(booking.label).toBe("Book Dermal Fillers");
     expect(booking.cta).toBe("service-booking");
-    expect(booking.href).toContain("s_e3564b2f-c00d-47c2-8ca0-665b6d6f25e4");
-    expect(booking.href).toContain("locationId=0f146f87-364e-4dfd-b938-61ba49528820");
+    expectCustomIntent(booking.href, "vacaville", "dermal-fillers");
   });
 
-  it("keeps the Vacaville laser page on the rendered consult path", () => {
+  it("keeps the Vacaville laser page on the custom service intent", () => {
     const booking = resolveMobileBookingDestination("/vacaville/laser");
 
     expect(booking.label).toBe("Book Laser Consult");
     expect(booking.cta).toBe("service-booking");
-    expect(booking.href).toContain("s_1328674e-c793-4b3c-833e-9a3827c5769b");
-    expect(booking.href).toContain("locationId=0f146f87-364e-4dfd-b938-61ba49528820");
+    expectCustomIntent(booking.href, "vacaville", "laser-treatments");
   });
 
-  it("keeps the Vacaville HydraFacial page on the rendered Signature service", () => {
+  it("keeps the Vacaville HydraFacial page on the custom service intent", () => {
     const booking = resolveMobileBookingDestination("/vacaville/hydrafacial");
 
     expect(booking.label).toBe("Book Signature");
     expect(booking.cta).toBe("service-booking");
-    expect(booking.href).toContain("s_68b27f62-4a04-4f9f-953e-ec4b2918ad3d");
-    expect(booking.href).toContain("locationId=0f146f87-364e-4dfd-b938-61ba49528820");
+    expectCustomIntent(booking.href, "vacaville", "hydrafacial");
   });
 
-  it("keeps the Vacaville facials page on the rendered skin consult", () => {
+  it("keeps the Vacaville facials page on the custom service intent", () => {
     const booking = resolveMobileBookingDestination("/vacaville/facials");
 
     expect(booking.label).toBe("Book Skin Consult");
     expect(booking.cta).toBe("service-booking");
-    expect(booking.href).toContain("s_3ae8bab0-f23c-45d2-b265-3836289df3a1");
-    expect(booking.href).toContain("locationId=0f146f87-364e-4dfd-b938-61ba49528820");
+    expectCustomIntent(booking.href, "vacaville", "facials");
   });
 
-  it("keeps the Vacaville chemical-peel page on the working clinic menu", () => {
+  it("keeps the Vacaville chemical-peel page on the custom service intent", () => {
     expect(resolveMobileBookingDestination("/vacaville/chemical-peels")).toEqual({
-      href: BOULEVARD_WIDGET_VACAVILLE,
+      href: resolveBookingHref({
+        location: "vacaville",
+        service: "chemical-peels",
+      }),
       label: "Open Peel Menu",
       cta: "service-booking",
     });
   });
 
-  it("keeps the Vacaville microneedling page on the rendered initial consult", () => {
+  it("keeps the Vacaville microneedling page on the custom service intent", () => {
     const booking = resolveMobileBookingDestination("/vacaville/microneedling");
 
     expect(booking.label).toBe("Book Initial Consult");
     expect(booking.cta).toBe("service-booking");
-    expect(booking.href).toContain("s_762959b6-0015-4904-be74-78d563b5651a");
-    expect(booking.href).toContain("locationId=0f146f87-364e-4dfd-b938-61ba49528820");
+    expectCustomIntent(booking.href, "vacaville", "microneedling");
   });
 
-  it("keeps the Napa facials page on the rendered skin consult", () => {
+  it("keeps the Napa facials page on the custom service intent", () => {
     const booking = resolveMobileBookingDestination("/napa/facials");
 
     expect(booking.label).toBe("Book Skin Consult");
     expect(booking.cta).toBe("service-booking");
-    expect(booking.href).toContain("s_3ae8bab0-f23c-45d2-b265-3836289df3a1");
-    expect(booking.href).toContain("locationId=91eba843-57fb-49e9-8505-431d501ffec7");
+    expectCustomIntent(booking.href, "napa", "facials");
   });
 });

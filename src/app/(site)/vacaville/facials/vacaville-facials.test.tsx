@@ -23,7 +23,7 @@ describe("Vacaville facials local-acquisition page", () => {
     expect(String(metadata.description).length).toBeLessThanOrEqual(180);
   });
 
-  it("keeps every booking action on the rendered Vacaville skin consult", () => {
+  it("keeps every booking action on the custom Vacaville facials entry", () => {
     const expected = resolveBookingHref({
       location: "vacaville",
       service: "facials",
@@ -39,9 +39,11 @@ describe("Vacaville facials local-acquisition page", () => {
 
     expect(bookingHrefs).toHaveLength(3);
     expect(new Set(bookingHrefs)).toEqual(new Set([expected]));
-    expect(expected).toContain("Facials%2Fs_3ae8bab0-f23c-45d2-b265-3836289df3a1");
-    expect(expected).toContain("locationId=0f146f87-364e-4dfd-b938-61ba49528820");
-    expect(expected).not.toContain("91eba843-57fb-49e9-8505-431d501ffec7");
+    const destination = new URL(expected);
+    expect(destination.hostname).toBe("book.experiencerella.com");
+    expect(destination.searchParams.get("location")).toBe("vacaville");
+    expect(destination.searchParams.get("service")).toBe("facials");
+    expect(expected).not.toContain("dashboard.boulevard.io");
   });
 
   it("shows the verified menu, consult next step, location, and pricing boundary", () => {

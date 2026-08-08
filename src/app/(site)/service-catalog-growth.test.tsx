@@ -111,7 +111,7 @@ describe("public pricing and claims integrity", () => {
     }
   });
 
-  it("hands IV visitors to the rendered city-pinned category without adopting vendor claims", () => {
+  it("hands IV visitors to the city-pinned custom chooser without adopting vendor claims", () => {
     const ivHydration = servicePages.find(
       (service) => service.slug === "iv-hydration",
     );
@@ -119,9 +119,9 @@ describe("public pricing and claims integrity", () => {
       <TreatmentServicePage service={ivHydration!} />,
     );
 
-    expect(html).toContain("%2Fcart%2Fmenu%2FIV%20Hydration");
-    expect(html).toContain("locationId=91eba843-57fb-49e9-8505-431d501ffec7");
-    expect(html).toContain("locationId=0f146f87-364e-4dfd-b938-61ba49528820");
+    expect(html).toContain("location=vacaville&amp;service=iv-hydration");
+    expect(html).toContain("location=napa&amp;service=iv-hydration");
+    expect(html).not.toContain("dashboard.boulevard.io");
 
     for (const unsafeVendorLabel of [
       "Hangover Cure",
