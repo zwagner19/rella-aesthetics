@@ -43,6 +43,10 @@ describe("conversion intent classification", () => {
     expect(classifyConversionHref("mailto:info@experiencerella.com")).toBe("email_intent");
     expect(classifyConversionHref("/contact")).toBe("contact_intent");
     expect(classifyConversionHref("/services/botox")).toBeNull();
+    expect(
+      classifyConversionHref("https://dashboard.boulevard.io/booking/businesses/example/widget"),
+    ).toBeNull();
+    expect(classifyConversionHref("https://www.joinblvd.com/b/example/widget")).toBeNull();
   });
 
   it("reserves generate_lead for a lead that was actually submitted", () => {

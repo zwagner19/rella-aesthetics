@@ -1,4 +1,9 @@
-import { BOOKING_LOCATION_CHOOSER, resolveBookingHref } from "@/lib/booking-routes";
+import {
+  BOOKING_LOCATION_CHOOSER,
+  CUSTOM_BOOKING_ORIGIN,
+  WEIGHT_LOSS_BOOKING_ORIGIN,
+  resolveBookingHref,
+} from "@/lib/booking-routes";
 
 export const CONVERSION_EVENT_NAME = "rella:conversion";
 
@@ -18,10 +23,8 @@ export interface ConversionMeasurement {
 }
 
 const BOOKING_HOSTS = new Set([
-  "book.experiencerella.com",
-  "book.rellaweightloss.com",
-  "dashboard.boulevard.io",
-  "rella-booking.vercel.app",
+  new URL(CUSTOM_BOOKING_ORIGIN).hostname,
+  new URL(WEIGHT_LOSS_BOOKING_ORIGIN).hostname,
 ]);
 
 /**

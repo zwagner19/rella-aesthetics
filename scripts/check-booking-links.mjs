@@ -1,15 +1,19 @@
 const baseUrl = new URL(process.env.SITE_URL ?? "http://localhost:3000");
 
-const bookingSourceHosts = new Set([
-  "book.experiencerella.com",
-  "book.rellaweightloss.com",
-  "dashboard.boulevard.io",
-]);
+const configuredAestheticsOrigin = new URL(
+  process.env.BOOKING_CHECK_AESTHETICS_ORIGIN ??
+    process.env.NEXT_PUBLIC_RELLA_BOOKING_ORIGIN ??
+    "https://book.experiencerella.com",
+);
+if (configuredAestheticsOrigin.protocol !== "https:") {
+  throw new Error("The aesthetics booking check origin must use HTTPS.");
+}
 
-const allowedFinalHosts = new Set([
-  ...bookingSourceHosts,
-  "www.joinblvd.com",
+const bookingSourceHosts = new Set([
+  configuredAestheticsOrigin.hostname,
+  "book.rellaweightloss.com",
 ]);
+const allowedFinalHosts = new Set(bookingSourceHosts);
 
 function localize(url) {
   const parsed = new URL(url, baseUrl);
@@ -80,13 +84,6 @@ for (const pageUrl of sitemapUrls) {
       failures.push(`Non-HTTPS booking link on ${pageUrl}: ${target}`);
       continue;
     }
-    if (target.hostname === "dashboard.boulevard.io" && !target.searchParams.has("path")) {
-      failures.push(
-        `Boulevard link is missing a rendered route path and may land on #/not-found: ${target} (referenced by ${new URL(pageUrl).pathname})`,
-      );
-      continue;
-    }
-
     target.hash = "";
     const normalized = target.toString();
     bookingLinks.add(normalized);
@@ -161,6 +158,6 @@ if (failures.length > 0) {
     console.log(`- ${count} ${route}`);
   }
   console.log(
-    "- HTTP reachability and Boulevard route shape passed; rendered booking-screen verification remains a separate launch gate.",
+    "- HTTP reachability and Rella-owned booking-host containment passed; rendered booking-screen verification remains a separate launch gate.",
   );
 }

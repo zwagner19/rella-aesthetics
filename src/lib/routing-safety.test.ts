@@ -1,15 +1,16 @@
 import { describe, it, expect } from "vitest";
-import { readFileSync, readdirSync, statSync } from "node:fs";
+import { existsSync, readFileSync, readdirSync, statSync } from "node:fs";
 import { join } from "node:path";
 
 /**
  * Sprint 07 lead-review routing closure — full-repo static proof that:
- *  - no public component points a CTA at the retired `/booking` embedded wizard, and
- *  - the retired embedded wizard has no public import path (only `/booking`, now a
- *    server redirect, ever referenced it — and it no longer does).
+ *  - no public component points a CTA at the retired `/booking` route,
+ *  - the employee-only HQ stays outside the customer app, and
+ *  - the retired browser-side Boulevard widget and SDK remain physically absent.
  */
 
-const SRC = join(__dirname, "..");
+const ROOT = join(__dirname, "..", "..");
+const SRC = join(ROOT, "src");
 
 function walk(dir: string, acc: string[] = []): string[] {
   for (const f of readdirSync(dir)) {
@@ -47,14 +48,21 @@ describe("employee-only Rella HQ is outside the public website", () => {
   });
 });
 
-describe("retired embedded wizard is quarantined (no public import)", () => {
-  it("no page/route imports BoulevardCustomBooking / BoulevardBookingWizard", () => {
-    const importers = FILES.filter((p) => {
-      const t = readFileSync(p, "utf8");
-      // The wizard component files themselves may reference their own name.
-      if (/components\/(integrations\/BoulevardCustomBooking|booking\/BoulevardBookingWizard)\.tsx$/.test(p)) return false;
-      return /import[^;]*Boulevard(CustomBooking|BookingWizard)/.test(t);
-    }).map(rel);
-    expect(importers, `retired wizard must have no public importers: ${importers.join(", ")}`).toEqual([]);
+describe("retired embedded Boulevard widget is deleted", () => {
+  it("contains neither the old widget implementation nor its browser SDK", () => {
+    for (const path of [
+      "src/components/integrations/BoulevardCustomBooking.tsx",
+      "src/components/booking/BoulevardBookingWizard.tsx",
+      "src/components/booking/BookingQuestionsForm.tsx",
+      "src/components/booking/BookingAppointmentSummary.tsx",
+      "src/components/booking/booking-styles.ts",
+      "src/lib/boulevard-config.ts",
+      "src/types/boulevard-book-sdk.d.ts",
+    ]) {
+      expect(existsSync(join(ROOT, path)), path).toBe(false);
+    }
+    expect(readFileSync(join(ROOT, "package.json"), "utf8")).not.toContain(
+      "@boulevard/blvd-book-sdk",
+    );
   });
 });

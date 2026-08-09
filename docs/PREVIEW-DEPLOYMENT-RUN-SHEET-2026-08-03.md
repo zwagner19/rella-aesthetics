@@ -51,9 +51,7 @@ Never paste credential values into this document, Git, terminal output, screensh
 
 ### Required revenue path
 
-- [ ] `NEXT_PUBLIC_BOULEVARD_API_KEY`
-- [ ] `NEXT_PUBLIC_BOULEVARD_BUSINESS_ID`
-- [ ] `NEXT_PUBLIC_BOULEVARD_USE_SANDBOX=false` only when the approved preview should exercise the production booking handoff
+- [ ] `NEXT_PUBLIC_RELLA_BOOKING_ORIGIN` points to the approved protected Rella booking preview for cross-preview QA; omit it for the production default
 - [ ] `GHL_API_KEY` as a server-only secret
 - [ ] `GHL_LOCATION_ID`
 - [ ] `GHL_CUSTOM_FIELD_MESSAGE_ID`

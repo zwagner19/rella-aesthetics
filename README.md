@@ -30,7 +30,7 @@ npm run check:seo
 The production build also regenerates `public/sitemap.xml` through `next-sitemap`.
 `check:links` reads the generated sitemap from `http://localhost:3000` by default and fails if a public page or internal destination returns an error, an indexed page has no internal inlink, an indexed page is unreachable from the homepage, or homepage crawl depth exceeds three. Set `SITE_URL` to run the same read-only check against another local port or an approved preview.
 
-`check:booking-links` discovers the external booking URLs actually rendered by the sitemap pages, requires the three approved booking hosts, follows each destination without submitting a form, and fails on unreachable responses, non-HTTPS links, or redirects outside the approved Rella/JoinBLVD host set. It requires outbound network access. Set `SITE_URL` the same way when the preview uses another port.
+`check:booking-links` discovers the external booking URLs actually rendered by the sitemap pages, requires the two Rella-owned booking surfaces, follows each destination without submitting a form, and fails on unreachable responses, non-HTTPS links, or redirects outside those approved hosts. It requires outbound network access. Set `SITE_URL` the same way when the preview uses another port. For a protected booking preview, also set `BOOKING_CHECK_AESTHETICS_ORIGIN` to that exact preview origin.
 
 ## Environment configuration
 
@@ -40,8 +40,7 @@ Never commit real credentials. `.env.local` and hosted environment values stay o
 
 | Variable | Purpose | Failure behavior |
 | --- | --- | --- |
-| `NEXT_PUBLIC_BOULEVARD_API_KEY` | Loads the Boulevard booking experience | Booking widget cannot initialize |
-| `NEXT_PUBLIC_BOULEVARD_BUSINESS_ID` | Selects the Rella business in Boulevard | Booking widget cannot initialize |
+| `NEXT_PUBLIC_RELLA_BOOKING_ORIGIN` | Optional preview-only origin for the protected Rella-owned booking app | Production safely defaults to `https://book.experiencerella.com` |
 | `GHL_API_KEY` | Sends contact inquiries to HighLevel | Contact form fails closed and displays phone/email fallback |
 | `GHL_LOCATION_ID` | Places the contact in the correct HighLevel sub-account | Contact form fails closed |
 | `GHL_CUSTOM_FIELD_MESSAGE_ID` | Stores the prospect's message in a dedicated HighLevel field | Contact form fails closed; messages are never hidden in logs or `source` |

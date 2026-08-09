@@ -9,6 +9,14 @@ One codebase now contains both customer-facing experiences:
 
 The employee-only Rella HQ app is a different repository and is not part of this workspace.
 
+Customer booking also lives in its own Rella-owned application. This website
+passes only clinic/service intent to that application; Boulevard remains
+server-side behind the booking app. The old embedded Boulevard widget, browser
+SDK, public widget environment variables, and widget UI components have been
+deleted from this workspace. Do not add them back. IV hydration intentionally
+uses the Rella call path until a clinically appropriate selection flow is
+verified.
+
 ## Owner-approved positioning boundary
 
 - Keep the main homepage recognizably Rella. Its dominant promise is broad aesthetic and wellness care, not Dr. Wagner or obesity medicine.
