@@ -65,4 +65,15 @@ describe("retired embedded Boulevard widget is deleted", () => {
       "@boulevard/blvd-book-sdk",
     );
   });
+
+  it("the release validator never requires Boulevard or JoinBLVD customer hosts", () => {
+    const validator = readFileSync(
+      join(ROOT, "scripts/check-booking-links.mjs"),
+      "utf8",
+    );
+    expect(validator).not.toContain("dashboard.boulevard.io");
+    expect(validator).not.toContain("joinblvd.com");
+    expect(validator).toContain("book.rellaweightloss.com");
+    expect(validator).toContain("book.experiencerella.com");
+  });
 });
