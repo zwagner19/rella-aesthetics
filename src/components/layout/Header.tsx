@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useCallback, useState } from "react";
@@ -34,23 +35,25 @@ export function Header({ weightLossExperience = false }: { weightLossExperience?
 
   return (
     <>
-      <header className="sticky top-0 z-50 bg-white border-b border-silver-pale">
-        <div className="mx-auto max-w-[1200px] px-6 md:px-8 lg:px-12 flex items-center justify-between h-16 lg:h-[72px]">
-          <Link href="/" className="flex items-center gap-3" aria-label="Rella Aesthetics — Home">
-            <span className="flex flex-col leading-none">
-              <span className="font-light text-xl tracking-[0.12em] text-ink">rella</span>
-              <span className="font-bold text-[0.5rem] tracking-[0.25em] uppercase text-silver">
-                Aesthetics
-              </span>
-            </span>
+      <header className="sticky top-0 z-50 border-b border-silver/25 bg-paper">
+        <div className="mx-auto flex h-[76px] max-w-[1280px] items-center justify-between px-5 md:px-8 lg:h-[88px] lg:px-10 xl:px-12">
+          <Link href="/" className="flex shrink-0 items-center" aria-label="Rella Aesthetics — Home">
+            <Image
+              src="/brand/rella-logo-black.svg"
+              alt=""
+              width={360}
+              height={176}
+              priority
+              className="h-[54px] w-auto lg:h-[64px]"
+            />
           </Link>
 
-          <nav className="hidden lg:flex items-center gap-8" aria-label="Main navigation">
+          <nav className="hidden items-center gap-5 lg:flex xl:gap-7" aria-label="Main navigation">
             {navLinks.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
-                className="font-medium text-xs tracking-[0.1em] uppercase text-silver-dark hover:text-rose-text border-b-2 border-transparent hover:border-rose transition-all duration-150 py-1"
+                className="border-b border-transparent py-2 text-[0.6875rem] font-bold uppercase tracking-[0.15em] text-ink transition-colors hover:border-rose"
               >
                 {link.label}
               </Link>
@@ -60,21 +63,21 @@ export function Header({ weightLossExperience = false }: { weightLossExperience?
           <Link
             href={booking.href}
             data-cta={booking.cta}
-            className="hidden lg:inline-flex items-center justify-center bg-rose-cta px-7 py-3 text-[0.6875rem] font-bold uppercase tracking-[0.18em] text-white transition-colors duration-150 hover:bg-rose-dark"
+            className="hidden items-center justify-center rounded-full border-[1.5px] border-rose bg-rose px-6 py-3 text-[0.6875rem] font-bold uppercase tracking-[0.18em] text-ink transition-colors hover:bg-rose/70 lg:inline-flex xl:px-7"
           >
             {booking.label}
           </Link>
 
           <button
-            className="lg:hidden flex flex-col gap-[5px] p-2"
+            className="flex min-h-11 min-w-11 flex-col items-center justify-center gap-[5px] rounded-full border border-silver/35 p-2 lg:hidden"
             onClick={() => setMobileOpen(true)}
             aria-label="Open menu"
             aria-expanded={mobileOpen}
             aria-controls="mobile-navigation"
           >
-            <span className="block w-6 h-0.5 bg-silver-dark" />
-            <span className="block w-6 h-0.5 bg-silver-dark" />
-            <span className="block w-6 h-0.5 bg-silver-dark" />
+            <span className="block h-px w-5 bg-ink" />
+            <span className="block h-px w-5 bg-ink" />
+            <span className="block h-px w-5 bg-ink" />
           </button>
         </div>
       </header>

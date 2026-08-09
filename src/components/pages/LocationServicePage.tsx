@@ -99,37 +99,37 @@ export function LocationServicePage({ location, slug }: LocationServicePageProps
 
   return (
     <>
-      <section className="relative overflow-hidden bg-[linear-gradient(135deg,#fff_0%,#FDF7F5_55%,#FBE7E3_100%)] py-16 md:py-24">
-        <div className="mx-auto grid max-w-[1200px] items-center gap-10 px-6 md:px-8 lg:grid-cols-[1.05fr_0.95fr] lg:px-12">
-          <div>
-            <p className="mb-5 text-[0.6875rem] font-bold uppercase tracking-[0.22em] text-rose-dark">
-              Physician-owned · Downtown {location.name}
+      <section className="bg-paper py-[clamp(4rem,8vw,7rem)]">
+        <div className="mx-auto grid max-w-[1160px] items-stretch gap-12 px-5 md:px-8 lg:grid-cols-[1.05fr_0.95fr] lg:gap-20">
+          <div className="flex flex-col justify-center">
+            <p className="mb-5 text-sm font-normal italic text-rose-text">
+              Consultation-led care · Downtown {location.name}
             </p>
-            <h1 className="mb-6 text-[clamp(2.75rem,6vw,4.75rem)] font-medium leading-[0.98] tracking-[-0.055em] text-ink">
+            <h1 className="mb-6 text-[clamp(2.5rem,6vw,4.5rem)] font-bold uppercase leading-[1.08] tracking-[0.08em] text-ink">
               Med spa care in {location.name}, California.
             </h1>
-            <p className="mb-8 max-w-[650px] text-lg font-light leading-relaxed text-silver-dark md:text-xl">
+            <p className="mb-8 max-w-[650px] text-base font-light leading-[1.75] text-ink/70 md:text-lg">
               Consultation-led aesthetic and wellness care, honest guidance, and a plan built around your goals—right in downtown {location.name}.
             </p>
             <div className="flex flex-col gap-3 sm:flex-row">
-              <Button href={bookingHref} data-cta="location-booking" className="rounded-full">
+              <Button href={bookingHref} data-cta="location-booking">
                 Book at {location.name}
               </Button>
-              <Button href={location.mapUrl} variant="ghost" className="rounded-full bg-white/70">
+              <Button href={location.mapUrl} variant="ghost">
                 Get Directions
               </Button>
             </div>
           </div>
 
-          <div className="relative overflow-hidden rounded-[2rem] bg-ink px-7 py-10 text-white shadow-[0_24px_80px_rgba(90,94,98,0.18)] md:px-10 md:py-12">
-            <p className="mb-10 text-[0.625rem] font-bold uppercase tracking-[0.24em] text-rose">
+          <div className="relative overflow-hidden bg-ink px-7 py-12 text-white md:px-10 md:py-16">
+            <p className="mb-10 text-sm font-normal italic text-rose">
               Rella Aesthetics
             </p>
-            <p aria-hidden="true" className="absolute -right-3 top-8 text-[6.5rem] font-medium leading-none tracking-[-0.08em] text-white/[0.035] md:text-[8rem]">
+            <p aria-hidden="true" className="absolute -right-3 top-8 text-[6.5rem] font-bold uppercase leading-none tracking-[0.04em] text-white/[0.035] md:text-[8rem]">
               {location.name.toUpperCase()}
             </p>
             <address className="relative not-italic">
-              <p className="mb-3 text-2xl font-medium tracking-[-0.025em]">{location.address}</p>
+              <p className="mb-3 text-2xl font-semibold tracking-[0.02em]">{location.address}</p>
               <p className="mb-8 text-white/65">{location.city}, {location.state} {location.zip}</p>
               <a href={`tel:+1${location.phone.replace(/\D/g, "")}`} className="text-lg text-white underline decoration-rose underline-offset-4">
                 {location.phone}
@@ -146,17 +146,17 @@ export function LocationServicePage({ location, slug }: LocationServicePageProps
 
       <TrustStrip
         ariaLabel={`Why patients choose Rella Aesthetics ${location.name}`}
-        items={["Physician-owned", "Clear guidance", "Personalized plans", "Downtown location"]}
+        items={["Clear guidance", "Personalized plans", "Downtown location", "Two local clinics"]}
       />
 
-      <section className="py-20 md:py-28">
-        <div className="mx-auto max-w-[1200px] px-6 md:px-8 lg:px-12">
+      <section className="py-[clamp(4rem,8vw,7rem)]">
+        <div className="mx-auto max-w-[1160px] px-5 md:px-8">
           <div className="mb-12 max-w-[760px]">
-            <p className="mb-4 text-[0.6875rem] font-bold uppercase tracking-[0.2em] text-rose-dark">Explore care</p>
-            <h2 className="mb-5 text-3xl font-medium tracking-[-0.035em] text-ink md:text-5xl">
+            <p className="mb-4 text-sm font-normal italic text-rose-text">Explore care</p>
+            <h2 className="mb-5 text-[clamp(2rem,4vw,3rem)] font-bold uppercase leading-[1.15] tracking-[0.06em] text-ink">
               Start with the service that matches your goal.
             </h2>
-            <p className="text-lg font-light leading-relaxed text-silver">
+            <p className="text-lg font-light leading-[1.75] text-ink/70">
               Not sure what to choose? Book a consultation and the Rella team can help you identify the appropriate next step.
             </p>
           </div>
@@ -165,38 +165,44 @@ export function LocationServicePage({ location, slug }: LocationServicePageProps
               <Link
                 key={service.href}
                 href={service.href}
-                className="group rounded-[1.5rem] border border-silver-pale bg-white p-6 transition-all hover:-translate-y-0.5 hover:border-rose-light hover:shadow-[0_14px_45px_rgba(90,94,98,0.09)] md:p-8"
+                className="group border-t border-ink/15 bg-white p-6 transition-colors hover:bg-rose-blush md:p-8"
               >
                 <div className="mb-8 flex items-start justify-between gap-4">
-                  <span className="text-xs font-bold tracking-[0.18em] text-rose-dark">0{index + 1}</span>
-                  <span aria-hidden="true" className="text-2xl font-light text-rose transition-transform group-hover:translate-x-1">→</span>
+                  <span className="text-xs font-bold tracking-[0.18em] text-ink/55">0{index + 1}</span>
+                  <span aria-hidden="true" className="text-2xl font-light text-ink">→</span>
                 </div>
-                <h3 className="mb-3 text-xl font-medium tracking-[-0.02em] text-ink md:text-2xl">{service.title}</h3>
-                <p className="text-sm leading-relaxed text-silver">{service.description}</p>
+                <h3 className="mb-3 text-xl font-bold uppercase leading-tight tracking-[0.06em] text-ink md:text-2xl">{service.title}</h3>
+                <p className="text-sm leading-[1.75] text-ink/65">{service.description}</p>
               </Link>
             ))}
           </div>
           <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
             {slug === "napa" && (
-              <Button href="/napa" className="rounded-full">
+              <Button href="/napa">
                 Explore the Napa Service Hub
               </Button>
             )}
-            <Button href="/services" variant="ghost" className="rounded-full">View All Services</Button>
+            <Button href="/services" variant="ghost">View All Services</Button>
           </div>
         </div>
       </section>
 
-      <section className="bg-rose-blush py-20 md:py-24">
-        <div className="mx-auto grid max-w-[1000px] gap-8 px-6 md:grid-cols-[1fr_auto] md:items-center md:px-8">
+      <section className="bg-rose py-[clamp(4rem,8vw,6rem)]">
+        <div className="mx-auto grid max-w-[1000px] gap-8 px-5 md:grid-cols-[1fr_auto] md:items-center md:px-8">
           <div>
-            <p className="mb-3 text-[0.6875rem] font-bold uppercase tracking-[0.2em] text-rose-dark">Plan your visit</p>
-            <h2 className="mb-3 text-3xl font-medium tracking-[-0.035em] text-ink">{fullAddress}</h2>
-            <p className="text-silver">Choose a time online, call the team, or open directions before you leave.</p>
+            <p className="mb-3 text-sm font-normal italic text-ink/70">Plan your visit</p>
+            <h2 className="mb-3 text-3xl font-bold uppercase leading-tight tracking-[0.06em] text-ink">{fullAddress}</h2>
+            <p className="text-ink/70">Choose a time online, call the team, or open directions before you leave.</p>
           </div>
           <div className="flex flex-col gap-3 sm:flex-row md:flex-col">
-            <Button href={bookingHref} data-cta="location-booking" className="rounded-full">See Available Times</Button>
-            <Button href={location.mapUrl} variant="ghost" className="rounded-full bg-white">Get Directions</Button>
+            <Button
+              href={bookingHref}
+              data-cta="location-booking"
+              className="!border-ink !bg-ink !text-white hover:!bg-ink/80"
+            >
+              See Available Times
+            </Button>
+            <Button href={location.mapUrl} variant="ghost">Get Directions</Button>
           </div>
         </div>
       </section>

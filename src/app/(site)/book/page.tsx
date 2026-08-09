@@ -14,13 +14,12 @@ const clinicOrder = ["vacaville", "napa"] as const satisfies readonly BookingLoc
 export default function BookPage() {
   return (
     <>
-      <section className="relative overflow-hidden bg-[linear-gradient(145deg,#fff_0%,#FDF7F5_52%,#FBE7E3_100%)] py-12 md:py-10">
-        <div aria-hidden="true" className="absolute -right-28 -top-36 h-96 w-96 rounded-full border border-white/70 bg-white/25" />
+      <section className="relative overflow-hidden bg-rose-blush py-16 md:py-20">
         <div className="relative mx-auto max-w-[960px] px-6 text-center md:px-8">
-          <p className="mb-3 text-[0.6875rem] font-bold uppercase tracking-[0.22em] text-rose-dark">
+          <p className="mb-4 text-[0.75rem] font-medium capitalize italic tracking-[0.08em] text-rose-dark">
             Start your visit
           </p>
-          <h1 className="mx-auto mb-4 max-w-[760px] text-[clamp(2.7rem,6.5vw,4.8rem)] font-medium leading-[0.96] tracking-[-0.06em] text-ink">
+          <h1 className="mx-auto mb-5 max-w-[760px] text-[clamp(2.7rem,6.5vw,4.8rem)] font-bold uppercase leading-[0.98] tracking-[0.06em] text-ink">
             Choose your Rella clinic.
           </h1>
           <p className="mx-auto max-w-[680px] text-base font-light leading-relaxed text-silver-dark md:text-lg">
@@ -29,10 +28,10 @@ export default function BookPage() {
         </div>
       </section>
 
-      <section className="py-8" aria-labelledby="clinic-choice-heading">
+      <section className="py-12 md:py-16" aria-labelledby="clinic-choice-heading">
         <div className="mx-auto max-w-[1040px] px-6 md:px-8">
           <h2 id="clinic-choice-heading" className="sr-only">Select a clinic</h2>
-          <div className="grid gap-6 md:grid-cols-2">
+          <div className="grid gap-px bg-silver-pale md:grid-cols-2">
             {clinicOrder.map((slug, index) => {
               const clinic = locations[slug];
               const bookingHref = resolveBookingHref({ location: slug });
@@ -41,16 +40,16 @@ export default function BookPage() {
                 <article
                   key={slug}
                   data-booking-location={slug}
-                  className="group relative overflow-hidden rounded-[2rem] border border-silver-pale bg-white p-7 shadow-[0_18px_60px_rgba(90,94,98,0.08)] transition-transform hover:-translate-y-1 md:p-8"
+                  className="group relative overflow-hidden border-t-2 border-t-rose bg-white p-7 md:p-9"
                 >
                   <span aria-hidden="true" className="absolute right-5 top-2 text-[6rem] font-medium leading-none tracking-[-0.08em] text-rose/[0.06]">
                     0{index + 1}
                   </span>
                   <div className="relative">
-                    <p className="mb-8 text-[0.625rem] font-bold uppercase tracking-[0.22em] text-rose-dark">
+                    <p className="mb-8 text-[0.75rem] font-medium capitalize italic tracking-[0.08em] text-rose-dark">
                       Rella Aesthetics
                     </p>
-                    <h3 className="mb-3 text-4xl font-medium tracking-[-0.045em] text-ink md:text-5xl">
+                    <h3 className="mb-3 text-4xl font-bold uppercase tracking-[0.06em] text-ink md:text-5xl">
                       {clinic.name}
                     </h3>
                     <address className="mb-6 not-italic text-base leading-7 text-silver-dark">
@@ -83,7 +82,7 @@ export default function BookPage() {
             })}
           </div>
 
-          <div className="mt-10 rounded-[1.5rem] bg-rose-blush px-6 py-7 text-center md:px-10">
+          <div className="mt-10 border-y border-rose bg-rose-blush px-6 py-7 text-center md:px-10">
             <p className="text-sm leading-7 text-silver-dark md:text-base">
               Not sure which clinic to choose? Call Rella at{" "}
               <a

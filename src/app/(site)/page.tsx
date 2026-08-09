@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { headers } from "next/headers";
 import Image from "next/image";
-import { Hero } from "@/components/blocks/Hero";
 import { TrustStrip } from "@/components/blocks/TrustStrip";
 import { resolveBookingHref } from "@/lib/booking-routes";
 import { ServiceCard } from "@/components/blocks/ServiceCard";
@@ -35,7 +34,7 @@ export async function generateMetadata(): Promise<Metadata> {
   return isWeightLossHost(host) ? getServiceMetadata("weight-loss") : mainSiteMetadata;
 }
 
-export function HomePageContent({ isWeightLoss }: { isWeightLoss: boolean }) {
+function HomePageContent({ isWeightLoss }: { isWeightLoss: boolean }) {
   if (isWeightLoss) return <WeightLossServicePage />;
 
   return (
@@ -48,15 +47,35 @@ export function HomePageContent({ isWeightLoss }: { isWeightLoss: boolean }) {
       />
 
       {/* Hero */}
-      <Hero
-        eyebrow="Northern California's Luxury Med Spa"
-        title="Ageless Beauty"
-        description="Personalized aesthetic and wellness treatments designed around your goals. Natural-looking results, elevated care — in Vacaville and Napa."
-        ctaText="Book Consultation"
-        ctaHref={resolveBookingHref({})}
-        secondaryCta={{ text: "Explore Services", href: "/services" }}
-        backgroundImage="/images/service-botox.jpg"
-      />
+      <section className="grid min-h-[70vh] bg-white md:min-h-[80vh] md:grid-cols-2">
+        <div className="flex items-center px-6 py-20 md:px-8 md:py-24 lg:pl-[max(3rem,calc((100vw-1200px)/2))] lg:pr-16">
+          <div className="max-w-[620px]">
+            <p className="mb-6 text-sm font-medium italic tracking-[0.04em] text-silver">
+              Northern California&apos;s Luxury Med Spa
+            </p>
+            <h1 className="mb-5 text-4xl font-bold uppercase leading-[1.04] tracking-[0.08em] text-ink md:text-5xl lg:text-6xl">
+              Ageless Beauty
+            </h1>
+            <p className="mb-9 max-w-[520px] text-lg font-light leading-relaxed text-ink/70">
+              Personalized aesthetic and wellness treatments designed around your goals. Natural-looking results, elevated care — in Vacaville and Napa.
+            </p>
+            <div className="flex flex-wrap gap-4">
+              <Button href={resolveBookingHref({})}>Book Consultation</Button>
+              <Button href="/services" variant="ghost">Explore Services</Button>
+            </div>
+          </div>
+        </div>
+        <div className="relative min-h-[420px] md:min-h-full">
+          <Image
+            src="/images/service-botox.jpg"
+            alt="Rella Aesthetics med spa"
+            fill
+            priority
+            className="object-cover"
+            sizes="(min-width: 768px) 50vw, 100vw"
+          />
+        </div>
+      </section>
 
       <TrustStrip
         ariaLabel="Why patients choose Rella Aesthetics"
@@ -64,14 +83,14 @@ export function HomePageContent({ isWeightLoss }: { isWeightLoss: boolean }) {
       />
 
       {/* Services Grid */}
-      <section className="py-24 bg-rose-blush">
+      <section className="border-y border-rose-light/60 bg-white py-24 md:py-32">
         <div className="mx-auto max-w-[1200px] px-6 md:px-8 lg:px-12">
           <SectionHeader
             eyebrow="Treatments"
             title="Our Services"
             description="Explore aesthetic, skin, wellness, and medical weight-management options available through Rella."
           />
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {services.map((service) => (
               <ServiceCard
                 key={service.slug}
@@ -87,9 +106,9 @@ export function HomePageContent({ isWeightLoss }: { isWeightLoss: boolean }) {
       </section>
 
       {/* Medical weight-loss feature */}
-      <section className="py-24">
-        <div className="mx-auto grid max-w-[1200px] items-center gap-10 px-6 md:px-8 lg:grid-cols-2 lg:px-12">
-          <div className="relative min-h-[380px] overflow-hidden rounded-[1.75rem] md:min-h-[520px]">
+      <section className="bg-rose-blush py-24 md:py-32">
+        <div className="mx-auto grid max-w-[1200px] items-center gap-12 px-6 md:px-8 lg:grid-cols-2 lg:gap-20 lg:px-12">
+          <div className="relative min-h-[380px] overflow-hidden md:min-h-[560px]">
             <Image
               src="/images/service-weightloss.jpg"
               alt="A patient discussing a personalized medical weight-loss plan"
@@ -99,10 +118,10 @@ export function HomePageContent({ isWeightLoss }: { isWeightLoss: boolean }) {
             />
           </div>
           <div className="lg:pl-8">
-            <p className="mb-4 text-[0.6875rem] font-bold uppercase tracking-[0.2em] text-rose-dark">
+            <p className="mb-5 text-[0.75rem] font-medium capitalize italic tracking-[0.08em] text-rose-dark">
               Medical weight management
             </p>
-            <h2 className="mb-5 text-3xl font-medium leading-tight tracking-[-0.035em] text-ink md:text-5xl">
+            <h2 className="mb-6 text-3xl font-bold uppercase leading-[1.08] tracking-[0.06em] text-ink md:text-5xl">
               Built around more than medication.
             </h2>
             <p className="mb-7 text-lg font-light leading-relaxed text-silver">
@@ -129,13 +148,13 @@ export function HomePageContent({ isWeightLoss }: { isWeightLoss: boolean }) {
       </section>
 
       {/* Testimonials */}
-      <section className="py-24 bg-rose-blush">
+      <section className="bg-white py-24 md:py-32">
         <div className="mx-auto max-w-[1200px] px-6 md:px-8 lg:px-12">
           <SectionHeader
             eyebrow="Results"
             title="What Our Patients Say"
           />
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 gap-10 md:grid-cols-3">
             {testimonials.map((item, i) => (
               <TestimonialCard
                 key={i}
@@ -149,17 +168,19 @@ export function HomePageContent({ isWeightLoss }: { isWeightLoss: boolean }) {
       </section>
 
       {/* Membership Banner */}
-      <MembershipBanner />
+      <div className="border-y border-rose-light/60">
+        <MembershipBanner />
+      </div>
 
       {/* Locations */}
-      <section className="py-24">
+      <section className="py-24 md:py-32">
         <div className="mx-auto max-w-[1200px] px-6 md:px-8 lg:px-12">
           <SectionHeader
             eyebrow="Two Locations"
             title="Visit Us"
             description="Explore clinic details, directions, and booking paths for Vacaville and Napa."
           />
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
             <LocationCard
               name={locations.vacaville.name}
               address={locations.vacaville.address}
@@ -183,17 +204,17 @@ export function HomePageContent({ isWeightLoss }: { isWeightLoss: boolean }) {
       </section>
 
       {/* Final CTA */}
-      <section className="bg-rose-cta py-20 text-center text-white">
+      <section className="bg-rose py-20 text-center text-ink md:py-24">
         <div className="mx-auto max-w-[600px] px-6">
-          <h2 className="font-bold text-3xl md:text-4xl tracking-[0.06em] uppercase mb-4">
+          <h2 className="mb-4 text-3xl font-bold uppercase tracking-[0.08em] md:text-4xl">
             Ready to Begin?
           </h2>
-          <p className="font-light text-lg mb-8 opacity-90">
+          <p className="mb-8 text-lg font-light">
             Schedule a consultation and discover the right next step for your goals.
           </p>
           <Button
             href={resolveBookingHref({})}
-            className="bg-white !text-rose-text hover:bg-white/90 hover:!text-rose-dark"
+            variant="ghost"
           >
             Book Consultation
           </Button>

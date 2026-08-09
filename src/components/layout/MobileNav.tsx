@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef } from "react";
@@ -80,36 +81,50 @@ export function MobileNav({
     <div
       id="mobile-navigation"
       ref={dialogRef}
-      className="fixed inset-0 z-[200] bg-white flex flex-col px-6 pt-24 pb-6 gap-6"
+      className="fixed inset-0 z-[200] flex flex-col bg-paper px-6 pb-8 pt-6"
       role="dialog"
       aria-modal="true"
       aria-label="Mobile navigation"
     >
-      <button
-        ref={closeButtonRef}
-        className="absolute top-4 right-6 text-2xl text-silver-dark p-2"
-        onClick={onClose}
-        aria-label="Close menu"
-      >
-        &times;
-      </button>
-
-      {links.map((link) => (
-        <Link
-          key={link.href}
-          href={link.href}
-          onClick={onClose}
-          className="font-medium text-lg tracking-[0.06em] uppercase text-silver-dark py-3 border-b border-silver-pale hover:text-rose-text transition-colors"
-        >
-          {link.label}
+      <div className="flex items-start justify-between border-b border-silver/25 pb-5">
+        <Link href="/" onClick={onClose} aria-label="Rella Aesthetics — Home">
+          <Image
+            src="/brand/rella-logo-black.svg"
+            alt=""
+            width={360}
+            height={176}
+            priority
+            className="h-[58px] w-auto"
+          />
         </Link>
-      ))}
+        <button
+          ref={closeButtonRef}
+          className="flex min-h-11 min-w-11 items-center justify-center rounded-full border border-silver/35 p-2 text-2xl font-light leading-none text-ink"
+          onClick={onClose}
+          aria-label="Close menu"
+        >
+          &times;
+        </button>
+      </div>
+
+      <nav className="mt-7 flex flex-1 flex-col" aria-label="Mobile menu links">
+        {links.map((link) => (
+          <Link
+            key={link.href}
+            href={link.href}
+            onClick={onClose}
+            className="border-b border-silver/25 py-4 text-lg font-medium uppercase tracking-[0.1em] text-ink transition-colors hover:bg-rose/15"
+          >
+            {link.label}
+          </Link>
+        ))}
+      </nav>
 
       <Link
         href={booking.href}
         data-cta={booking.cta}
         onClick={onClose}
-        className="mt-4 inline-flex items-center justify-center bg-rose-cta px-10 py-4 text-[0.6875rem] font-bold uppercase tracking-[0.18em] text-white transition-colors hover:bg-rose-dark"
+        className="mt-7 inline-flex min-h-14 items-center justify-center rounded-full border-[1.5px] border-rose bg-rose px-10 py-4 text-[0.6875rem] font-bold uppercase tracking-[0.2em] text-ink transition-colors hover:bg-rose/70"
       >
         {booking.label}
       </Link>

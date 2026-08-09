@@ -69,12 +69,12 @@ export default function AboutPage() {
       />
 
       <section className="overflow-hidden bg-rose-blush">
-        <div className="mx-auto grid max-w-[1200px] gap-12 px-6 py-16 md:px-8 md:py-24 lg:grid-cols-[1.05fr_0.95fr] lg:items-center lg:gap-20 lg:px-12">
+        <div className="mx-auto grid max-w-[1200px] gap-14 px-6 py-20 md:px-8 md:py-28 lg:grid-cols-[1.05fr_0.95fr] lg:items-center lg:gap-24 lg:px-12">
           <div>
-            <p className="mb-5 text-[0.6875rem] font-bold uppercase tracking-[0.2em] text-rose-dark">
+            <p className="mb-5 text-[0.75rem] font-medium capitalize italic tracking-[0.08em] text-rose-dark">
               Physician-owned · Vacaville + Napa
             </p>
-            <h1 className="mb-6 max-w-[720px] text-4xl font-medium leading-[1.04] tracking-[-0.045em] text-ink md:text-6xl">
+            <h1 className="mb-7 max-w-[720px] text-4xl font-bold uppercase leading-[1.04] tracking-[0.06em] text-ink md:text-6xl">
               Care built on judgment, honesty, and the right next step.
             </h1>
             <p className="mb-7 max-w-[650px] text-lg font-light leading-relaxed text-silver md:text-xl">
@@ -95,8 +95,8 @@ export default function AboutPage() {
           </div>
 
           <div className="relative mx-auto w-full max-w-[500px] lg:mx-0">
-            <div className="absolute -inset-5 translate-x-5 translate-y-5 rounded-[2rem] border border-rose-light/80" aria-hidden="true" />
-            <div className="relative aspect-[4/5] overflow-hidden rounded-[2rem] bg-white shadow-[0_24px_70px_rgba(90,94,98,0.14)]">
+            <div className="absolute -inset-5 border border-rose/70" aria-hidden="true" />
+            <div className="relative aspect-[4/5] overflow-hidden bg-white">
               <Image
                 src="/images/dr-zachary-wagner.jpg"
                 alt="Zachary Wagner, DO, physician owner of Rella Aesthetics"
@@ -105,7 +105,7 @@ export default function AboutPage() {
                 className="object-cover object-top"
                 sizes="(min-width: 1024px) 500px, 90vw"
               />
-              <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-ink/80 via-ink/35 to-transparent px-6 pb-6 pt-20 text-white md:px-8 md:pb-8">
+              <div className="absolute inset-x-0 bottom-0 bg-ink/90 px-6 py-5 text-white md:px-8 md:py-6">
                 <p className="text-lg font-medium">Dr. Zachary Wagner</p>
                 <p className="mt-1 text-xs uppercase tracking-[0.16em] text-white/75">Physician Owner</p>
               </div>
@@ -117,8 +117,8 @@ export default function AboutPage() {
       <section className="py-20 md:py-28">
         <div className="mx-auto grid max-w-[1200px] gap-10 px-6 md:px-8 lg:grid-cols-[0.8fr_1.2fr] lg:gap-20 lg:px-12">
           <div>
-            <p className="mb-4 text-[0.6875rem] font-bold uppercase tracking-[0.2em] text-rose-dark">The Rella standard</p>
-            <h2 className="text-3xl font-medium leading-tight tracking-[-0.035em] text-ink md:text-5xl">
+            <p className="mb-4 text-[0.75rem] font-medium capitalize italic tracking-[0.08em] text-rose-dark">The Rella standard</p>
+            <h2 className="text-3xl font-bold uppercase leading-tight tracking-[0.06em] text-ink md:text-5xl">
               The best plan starts with a real conversation.
             </h2>
           </div>
@@ -131,7 +131,7 @@ export default function AboutPage() {
             </p>
             <div className="mt-8 flex flex-wrap gap-2">
               {careAreas.map((area) => (
-                <span key={area} className="rounded-full border border-silver-pale bg-silver-pale/60 px-4 py-2 text-xs font-medium text-silver-dark">
+                <span key={area} className="border border-silver-pale bg-white px-4 py-2 text-xs font-medium uppercase tracking-[0.08em] text-silver-dark">
                   {area}
                 </span>
               ))}
@@ -140,17 +140,17 @@ export default function AboutPage() {
         </div>
       </section>
 
-      <section className="bg-silver-pale/60 py-20 md:py-28">
+      <section className="bg-rose-blush py-20 md:py-28">
         <div className="mx-auto max-w-[1200px] px-6 md:px-8 lg:px-12">
           <div className="mb-12 max-w-[720px]">
-            <p className="mb-4 text-[0.6875rem] font-bold uppercase tracking-[0.2em] text-rose-dark">How Rella approaches care</p>
-            <h2 className="text-3xl font-medium tracking-[-0.035em] text-ink md:text-5xl">Four principles behind every patient experience.</h2>
+            <p className="mb-4 text-[0.75rem] font-medium capitalize italic tracking-[0.08em] text-rose-dark">How Rella approaches care</p>
+            <h2 className="text-3xl font-bold uppercase tracking-[0.06em] text-ink md:text-5xl">Four principles behind every patient experience.</h2>
           </div>
-          <div className="grid gap-5 md:grid-cols-2">
+          <div className="grid gap-px bg-rose-light/70 md:grid-cols-2">
             {values.map((value) => (
-              <article key={value.number} className="rounded-[1.5rem] border border-white bg-white p-7 shadow-[0_12px_40px_rgba(90,94,98,0.05)] md:p-8">
+              <article key={value.number} className="border-l-2 border-l-rose bg-white p-7 md:p-9">
                 <p className="mb-8 text-xs font-bold tracking-[0.18em] text-rose-dark">{value.number}</p>
-                <h3 className="mb-3 text-xl font-medium tracking-[-0.02em] text-ink">{value.title}</h3>
+                <h3 className="mb-3 text-xl font-bold uppercase tracking-[0.06em] text-ink">{value.title}</h3>
                 <p className="leading-relaxed text-silver">{value.description}</p>
               </article>
             ))}
@@ -160,23 +160,23 @@ export default function AboutPage() {
 
       <section className="py-20 md:py-28">
         <div className="mx-auto grid max-w-[1200px] gap-6 px-6 md:grid-cols-2 md:px-8 lg:px-12">
-          <Link href="/locations/vacaville" className="group rounded-[1.5rem] border border-silver-pale p-7 transition-colors hover:border-rose-light hover:bg-rose-blush/40 md:p-9">
-            <p className="mb-3 text-[0.6875rem] font-bold uppercase tracking-[0.2em] text-rose-dark">Vacaville</p>
-            <h2 className="mb-3 text-2xl font-medium text-ink">542 Main Street</h2>
-            <p className="text-sm text-silver">Explore the clinic, hours, services, and directions <span aria-hidden="true" className="transition-transform group-hover:translate-x-1">→</span></p>
+          <Link href="/locations/vacaville" className="group border-y border-silver-pale p-7 transition-colors hover:border-rose md:p-9">
+            <p className="mb-3 text-[0.75rem] font-medium capitalize italic tracking-[0.08em] text-rose-dark">Vacaville</p>
+            <h2 className="mb-3 text-2xl font-bold uppercase tracking-[0.06em] text-ink">542 Main Street</h2>
+            <p className="text-sm text-silver">Explore the clinic, hours, services, and directions <span aria-hidden="true">→</span></p>
           </Link>
-          <Link href="/locations/napa" className="group rounded-[1.5rem] border border-silver-pale p-7 transition-colors hover:border-rose-light hover:bg-rose-blush/40 md:p-9">
-            <p className="mb-3 text-[0.6875rem] font-bold uppercase tracking-[0.2em] text-rose-dark">Napa</p>
-            <h2 className="mb-3 text-2xl font-medium text-ink">1541 3rd Street</h2>
-            <p className="text-sm text-silver">Explore the clinic, hours, services, and directions <span aria-hidden="true" className="transition-transform group-hover:translate-x-1">→</span></p>
+          <Link href="/locations/napa" className="group border-y border-silver-pale p-7 transition-colors hover:border-rose md:p-9">
+            <p className="mb-3 text-[0.75rem] font-medium capitalize italic tracking-[0.08em] text-rose-dark">Napa</p>
+            <h2 className="mb-3 text-2xl font-bold uppercase tracking-[0.06em] text-ink">1541 3rd Street</h2>
+            <p className="text-sm text-silver">Explore the clinic, hours, services, and directions <span aria-hidden="true">→</span></p>
           </Link>
         </div>
       </section>
 
       <section className="bg-ink py-16 text-white md:py-20">
         <div className="mx-auto flex max-w-[900px] flex-col items-center px-6 text-center">
-          <p className="mb-4 text-[0.6875rem] font-bold uppercase tracking-[0.2em] text-rose-light">Start with clarity</p>
-          <h2 className="mb-5 text-3xl font-medium tracking-[-0.035em] md:text-5xl">Tell us what you want to work on.</h2>
+          <p className="mb-4 text-[0.75rem] font-medium capitalize italic tracking-[0.08em] text-rose-light">Start with clarity</p>
+          <h2 className="mb-5 text-3xl font-bold uppercase tracking-[0.06em] md:text-5xl">Tell us what you want to work on.</h2>
           <p className="mb-8 max-w-[650px] font-light leading-relaxed text-white/70 md:text-lg">
             Choose a live booking time or contact the team with a question. We&apos;ll help you find the most appropriate next step.
           </p>

@@ -37,10 +37,10 @@ const mainGalleryResults = approvedResultsFor("main-gallery");
 export default function GalleryPage() {
   return (
     <>
-      <section className="bg-[linear-gradient(135deg,#fff_0%,#FDF7F5_58%,#FBE7E3_100%)] py-20 md:py-28">
+      <section className="bg-rose-blush py-20 md:py-28">
         <div className="mx-auto max-w-[1000px] px-6 text-center md:px-8">
-          <p className="mb-5 text-[0.6875rem] font-bold uppercase tracking-[0.22em] text-rose-dark">Our approach to results</p>
-          <h1 className="mb-6 text-[clamp(2.75rem,7vw,5rem)] font-medium leading-[0.98] tracking-[-0.055em] text-ink">
+          <p className="mb-5 text-[0.75rem] font-medium capitalize italic tracking-[0.08em] text-rose-dark">Our approach to results</p>
+          <h1 className="mb-6 text-[clamp(2.75rem,7vw,5rem)] font-bold uppercase leading-[0.98] tracking-[0.06em] text-ink">
             Results that still look like you.
           </h1>
           <p className="mx-auto mb-8 max-w-[700px] text-lg font-light leading-relaxed text-silver-dark md:text-xl">
@@ -58,14 +58,14 @@ export default function GalleryPage() {
       <section className="py-20 md:py-28">
         <div className="mx-auto max-w-[1200px] px-6 md:px-8 lg:px-12">
           <div className="mb-12 max-w-[760px]">
-            <p className="mb-4 text-[0.6875rem] font-bold uppercase tracking-[0.2em] text-rose-dark">What guides the work</p>
-            <h2 className="text-3xl font-medium tracking-[-0.035em] text-ink md:text-5xl">Natural does not mean one-size-fits-all.</h2>
+            <p className="mb-4 text-[0.75rem] font-medium capitalize italic tracking-[0.08em] text-rose-dark">What guides the work</p>
+            <h2 className="text-3xl font-bold uppercase tracking-[0.06em] text-ink md:text-5xl">Natural does not mean one-size-fits-all.</h2>
           </div>
-          <div className="grid gap-5 md:grid-cols-3">
+          <div className="grid gap-px bg-silver-pale md:grid-cols-3">
             {resultPrinciples.map((item) => (
-              <article key={item.number} className="rounded-[1.5rem] border border-silver-pale bg-white p-7 shadow-[0_12px_40px_rgba(90,94,98,0.06)]">
+              <article key={item.number} className="border-t-2 border-t-rose bg-white p-7 md:p-8">
                 <p className="mb-10 text-xs font-bold tracking-[0.18em] text-rose-dark">{item.number}</p>
-                <h3 className="mb-3 text-xl font-medium tracking-[-0.02em] text-ink">{item.title}</h3>
+                <h3 className="mb-3 text-xl font-bold uppercase tracking-[0.06em] text-ink">{item.title}</h3>
                 <p className="text-sm leading-relaxed text-silver">{item.body}</p>
               </article>
             ))}
@@ -79,8 +79,8 @@ export default function GalleryPage() {
         <section className="bg-ink py-20 text-white md:py-24">
           <div className="mx-auto grid max-w-[1000px] gap-8 px-6 md:grid-cols-[0.9fr_1.1fr] md:items-center md:px-8">
             <div>
-              <p className="mb-4 text-[0.6875rem] font-bold uppercase tracking-[0.2em] text-rose">Before-and-after photography</p>
-              <h2 className="text-3xl font-medium tracking-[-0.035em] md:text-5xl">Real examples. Proper permission.</h2>
+              <p className="mb-4 text-[0.75rem] font-medium capitalize italic tracking-[0.08em] text-rose">Before-and-after photography</p>
+              <h2 className="text-3xl font-bold uppercase tracking-[0.06em] md:text-5xl">Real examples. Proper permission.</h2>
             </div>
             <div>
               <p className="mb-7 text-lg font-light leading-relaxed text-white/70">
@@ -95,10 +95,10 @@ export default function GalleryPage() {
       <section className="bg-rose-blush py-20 md:py-24">
         <div className="mx-auto max-w-[1200px] px-6 md:px-8 lg:px-12">
           <div className="mb-10 max-w-[720px]">
-            <p className="mb-4 text-[0.6875rem] font-bold uppercase tracking-[0.2em] text-rose-dark">Patient perspective</p>
-            <h2 className="text-3xl font-medium tracking-[-0.035em] text-ink md:text-5xl">What patients say about the experience.</h2>
+            <p className="mb-4 text-[0.75rem] font-medium capitalize italic tracking-[0.08em] text-rose-dark">Patient perspective</p>
+            <h2 className="text-3xl font-bold uppercase tracking-[0.06em] text-ink md:text-5xl">What patients say about the experience.</h2>
           </div>
-          <div className="grid gap-6 md:grid-cols-3">
+          <div className="grid gap-10 md:grid-cols-3">
             {testimonials.map((item) => (
               <TestimonialCard key={item.name} quote={item.quote} name={item.name} source={item.source} />
             ))}
@@ -106,16 +106,16 @@ export default function GalleryPage() {
         </div>
       </section>
 
-      <section className="bg-rose-cta py-16 text-center text-white">
+      <section className="bg-rose py-16 text-center text-ink md:py-20">
         <div className="mx-auto max-w-[640px] px-6">
-          <h2 className="mb-4 text-3xl font-medium tracking-[-0.035em] md:text-4xl">Start with the right conversation.</h2>
+          <h2 className="mb-4 text-3xl font-bold uppercase tracking-[0.06em] md:text-4xl">Start with the right conversation.</h2>
           <p className="mb-7 text-lg font-light opacity-90">
             Share your goal, ask questions, and understand the appropriate next step before you decide.
           </p>
           <Button
             href={resolveBookingHref({})}
             data-cta="gallery-booking"
-            className="rounded-full bg-white !text-rose-text hover:bg-white/90 hover:!text-rose-dark"
+            variant="ghost"
           >
             Book Consultation
           </Button>

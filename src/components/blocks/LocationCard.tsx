@@ -12,15 +12,17 @@ interface LocationCardProps {
 
 export function LocationCard({ name, address, city, state, zip, hours, href }: LocationCardProps) {
   return (
-    <div className="p-8 bg-white border border-silver-pale rounded-lg">
-      <h3 className="font-medium text-xl text-silver-dark mb-4">{name}</h3>
-      <address className="not-italic text-[0.9375rem] text-silver leading-relaxed mb-4">
+    <div className="border border-ink/10 border-t-2 border-t-rose bg-white p-8">
+      <h3 className="mb-5 text-xl font-bold uppercase tracking-[0.08em] text-ink md:text-2xl">
+        {name}
+      </h3>
+      <address className="mb-6 text-[0.9375rem] font-light not-italic leading-relaxed text-ink/70">
         {address}
         <br />
         {city}, {state} {zip}
         <br />
         <br />
-        <strong className="text-silver-dark">Hours</strong>
+        <strong className="text-xs font-bold uppercase tracking-[0.14em] text-silver">Hours</strong>
         <br />
         {hours.map((line, i) => (
           <span key={i}>

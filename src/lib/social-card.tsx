@@ -4,7 +4,7 @@ export const SOCIAL_CARD_SIZE = {
 } as const;
 
 export const SOCIAL_CARD_ALT =
-  "Rella Aesthetics — physician-owned aesthetic and wellness care in Vacaville and Napa";
+  "Rella Aesthetics — personalized aesthetic and wellness care in Vacaville and Napa";
 
 export const DEFAULT_SOCIAL_IMAGE = {
   url: "/opengraph-image",
@@ -21,33 +21,17 @@ export function RellaSocialCard() {
         width: "100%",
         height: "100%",
         display: "flex",
-        position: "relative",
-        overflow: "hidden",
-        background: "linear-gradient(135deg, #ffffff 0%, #fdf7f5 52%, #f6d8d3 100%)",
-        color: "#2b2b2b",
+        background: "#ffffff",
+        color: "#1a1a1a",
         fontFamily: "Arial, Helvetica, sans-serif",
       }}
     >
       <div
         style={{
-          position: "absolute",
-          right: -110,
-          top: -150,
-          width: 500,
-          height: 500,
-          borderRadius: 999,
-          border: "2px solid rgba(255,255,255,0.8)",
-          background: "rgba(255,255,255,0.22)",
-        }}
-      />
-      <div
-        style={{
-          position: "absolute",
-          left: 0,
-          bottom: 0,
-          width: 22,
+          display: "flex",
+          width: 28,
           height: "100%",
-          background: "#ef9288",
+          background: "#f7a19a",
         }}
       />
       <div
@@ -56,48 +40,75 @@ export function RellaSocialCard() {
           flexDirection: "column",
           justifyContent: "space-between",
           width: "100%",
-          padding: "72px 86px 64px 94px",
+          padding: "68px 82px 60px 76px",
         }}
       >
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
           <div style={{ display: "flex", flexDirection: "column" }}>
-            <div style={{ fontSize: 42, fontWeight: 300, letterSpacing: 7 }}>rella</div>
-            <div style={{ fontSize: 13, fontWeight: 700, letterSpacing: 6, color: "#70757a" }}>
+            <div style={{ display: "flex", fontSize: 44, fontWeight: 400, letterSpacing: 6 }}>
+              rella
+            </div>
+            <div
+              style={{
+                display: "flex",
+                fontSize: 13,
+                fontWeight: 700,
+                letterSpacing: 6,
+                color: "#83888d",
+              }}
+            >
               AESTHETICS
             </div>
           </div>
           <div
             style={{
               display: "flex",
-              border: "1px solid rgba(43,43,43,0.18)",
-              borderRadius: 999,
-              padding: "14px 22px",
+              borderBottom: "3px solid #f7a19a",
+              padding: "10px 0",
               fontSize: 14,
               fontWeight: 700,
-              letterSpacing: 2.5,
-              color: "#5a5e62",
+              letterSpacing: 3,
             }}
           >
-            PHYSICIAN-OWNED
+            VACAVILLE + NAPA
           </div>
         </div>
 
         <div style={{ display: "flex", flexDirection: "column", maxWidth: 930 }}>
-          <div style={{ fontSize: 70, fontWeight: 500, lineHeight: 1.03, letterSpacing: -3.4 }}>
-            Aesthetic care with a clear plan.
+          <div
+            style={{
+              display: "flex",
+              fontSize: 67,
+              fontWeight: 700,
+              lineHeight: 1.08,
+              letterSpacing: 5,
+            }}
+          >
+            AGELESS BEAUTY
           </div>
-          <div style={{ marginTop: 26, fontSize: 25, fontWeight: 300, lineHeight: 1.45, color: "#5a5e62" }}>
-            Aesthetics · skin health · wellness · medical weight management
+          <div
+            style={{
+              display: "flex",
+              marginTop: 28,
+              fontSize: 25,
+              fontWeight: 400,
+              lineHeight: 1.45,
+              color: "#5d6165",
+            }}
+          >
+            Personalized aesthetic and wellness care, designed around your goals.
           </div>
         </div>
 
-        <div style={{ display: "flex", alignItems: "center", gap: 22, fontSize: 19, color: "#5a5e62" }}>
-          <span>Vacaville</span>
-          <span style={{ color: "#ef9288" }}>●</span>
-          <span>Napa</span>
-          <span style={{ marginLeft: "auto", fontWeight: 700, color: "#2b2b2b" }}>
+        <div style={{ display: "flex", alignItems: "center", fontSize: 19, color: "#5d6165" }}>
+          <div style={{ display: "flex" }}>
+            AESTHETICS · SKIN · WELLNESS · WEIGHT MANAGEMENT
+          </div>
+          <div
+            style={{ display: "flex", marginLeft: "auto", fontWeight: 700, color: "#1a1a1a" }}
+          >
             experiencerella.com
-          </span>
+          </div>
         </div>
       </div>
     </div>

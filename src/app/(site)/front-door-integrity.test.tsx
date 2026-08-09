@@ -1,14 +1,18 @@
 import { renderToStaticMarkup } from "react-dom/server";
-import { describe, expect, it } from "vitest";
-import { HomePageContent } from "./page";
+import { describe, expect, it, vi } from "vitest";
+import HomePage from "./page";
 import BlogPage from "./blog/page";
 import ServicesPage from "./services/page";
 import { MembershipBanner } from "@/components/blocks/MembershipBanner";
 import { testimonials } from "@/lib/data";
 
+vi.mock("next/headers", () => ({
+  headers: async () => new Headers([["host", "experiencerella.com"]]),
+}));
+
 describe("homepage and catalog claim integrity", () => {
-  it("keeps the general homepage broad while containing medical authority inside weight loss", () => {
-    const html = renderToStaticMarkup(<HomePageContent isWeightLoss={false} />);
+  it("keeps the general homepage broad while containing medical authority inside weight loss", async () => {
+    const html = renderToStaticMarkup(await HomePage());
     expect(html).toContain("Ageless Beauty");
     expect(html).toContain("American Board of Obesity Medicine diplomate");
     expect(html).toContain('href="/services/weight-loss"');

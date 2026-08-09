@@ -27,12 +27,12 @@ export default function MembershipPage() {
       <FaqSchema items={faq} />
 
       {/* Hero */}
-      <section className="py-24 bg-rose-blush">
+      <section className="bg-rose-blush py-24 md:py-28">
         <div className="mx-auto max-w-[1200px] px-6 md:px-8 lg:px-12">
-          <p className="font-bold text-[0.6875rem] tracking-[0.2em] uppercase text-silver mb-4">
+          <p className="mb-4 text-[0.75rem] font-medium capitalize italic tracking-[0.08em] text-silver-dark">
             Membership
           </p>
-          <h1 className="font-bold text-4xl md:text-5xl tracking-[0.08em] uppercase text-rose-text mb-4 leading-[1.1]">
+          <h1 className="mb-5 text-4xl font-bold uppercase leading-[1.08] tracking-[0.08em] text-ink md:text-6xl">
             2026 Memberships
           </h1>
           <p className="text-lg font-light text-silver max-w-[560px] leading-relaxed">
@@ -42,7 +42,7 @@ export default function MembershipPage() {
       </section>
 
       {/* Tiers */}
-      <section className="py-20">
+      <section className="py-20 md:py-28">
         <div className="mx-auto max-w-[1200px] px-6 md:px-8 lg:px-12">
           <SectionHeader
             eyebrow="2026 Public Plans"
@@ -63,7 +63,7 @@ export default function MembershipPage() {
               />
             ))}
           </div>
-          <div className="mx-auto mt-10 max-w-[900px] rounded-[1.25rem] border border-rose-light bg-rose-blush p-6 text-sm leading-7 text-silver-dark md:p-8">
+          <div className="mx-auto mt-12 max-w-[900px] border-y border-rose bg-rose-blush p-6 text-sm leading-7 text-silver-dark md:p-8">
             <p>
               <strong>*Included HydraFacial timing:</strong> redeem after six months of on-time payments, or immediately if the full membership year is paid in advance. Tox and Filler include one Signature HydraFacial; Tox + Filler includes one Deluxe HydraFacial.
             </p>
@@ -75,7 +75,7 @@ export default function MembershipPage() {
       </section>
 
       {/* FAQ */}
-      <section className="py-20 bg-rose-blush">
+      <section className="bg-rose-blush py-20 md:py-28">
         <div className="mx-auto max-w-[1200px] px-6 md:px-8 lg:px-12">
           <SectionHeader title="Membership FAQ" />
           <FaqAccordion items={faq} />

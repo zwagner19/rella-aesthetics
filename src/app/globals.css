@@ -1,20 +1,28 @@
 @import "tailwindcss";
 
 @theme inline {
-  /* Brand Colors */
+  /*
+   * Rella's owner-approved four-color system.
+   *
+   * Compatibility names remain because the existing page catalog already uses
+   * them, but every value below is one of the four colors or an alpha tint of
+   * one of them. New conversion actions use Rose with Ink text.
+   */
   --color-rose: #F7A19A;
-  --color-rose-dark: #8f403b;
-  --color-rose-light: #fbc8c4;
-  --color-rose-blush: #FDF7F5;
-  --color-rose-text: #a34f49;
-  --color-rose-cta: #a34f49;
+  --color-rose-dark: #1A1A1A;
+  --color-rose-light: #F7A19A70;
+  --color-rose-blush: #F7A19A24;
+  --color-rose-text: #1A1A1A;
+  /* Legacy white-label actions remain AA-safe until each page is reskinned. */
+  --color-rose-cta: #1A1A1A;
 
   --color-silver: #83888D;
-  --color-silver-dark: #5a5e62;
-  --color-silver-light: #b0b4b8;
-  --color-silver-pale: #f4f4f5;
+  --color-silver-dark: #1A1A1A;
+  --color-silver-light: #83888D66;
+  --color-silver-pale: #83888D14;
 
   --color-ink: #1a1a1a;
+  --color-paper: #ffffff;
   --color-white: #ffffff;
 
   /* Typography */
@@ -29,8 +37,8 @@
 
 /* Base styles */
 body {
-  color: var(--color-silver-dark);
-  background: var(--color-white);
+  color: var(--color-ink);
+  background: var(--color-paper);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -43,9 +51,8 @@ body {
 
 /* Focus visible for accessibility */
 :focus-visible {
-  outline: 2px solid var(--color-rose);
-  outline-offset: 2px;
-  border-radius: 4px;
+  outline: 2px solid var(--color-ink);
+  outline-offset: 3px;
 }
 
 /* Smooth scrolling */
@@ -56,4 +63,20 @@ html {
 /* List markers */
 li::marker {
   color: var(--color-rose);
+}
+
+/* Respect motion preferences across both Tailwind utilities and native UI. */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }
