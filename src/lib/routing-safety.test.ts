@@ -24,6 +24,36 @@ function walk(dir: string, acc: string[] = []): string[] {
 const FILES = walk(SRC).filter((p) => !/\.test\.(ts|tsx)$/.test(p));
 const rel = (p: string) => p.slice(SRC.length + 1);
 
+describe("customer-facing booking host ownership", () => {
+  it("has no direct Boulevard or JoinBLVD destination in production source", () => {
+    const offenders = FILES.filter((p) =>
+      /dashboard\.boulevard\.io|joinblvd\.com/i.test(
+        readFileSync(p, "utf8"),
+      ),
+    ).map(rel);
+
+    expect(
+      offenders,
+      `direct vendor booking destinations must be routed through the custom Rella app: ${offenders.join(", ")}`,
+    ).toEqual([]);
+  });
+
+  it("defines each customer booking origin only in the central resolver", () => {
+    for (const host of [
+      "book.experiencerella.com",
+      "book.rellaweightloss.com",
+    ]) {
+      const owners = FILES.filter((p) =>
+        readFileSync(p, "utf8").includes(host),
+      ).map(rel);
+
+      expect(owners, `${host} must not be hard-coded in a component`).toEqual([
+        "lib/booking-routes.ts",
+      ]);
+    }
+  });
+});
+
 describe("no public CTA points at /booking", () => {
   it("has zero href=/booking or ctaHref=/booking (plain or curly) in any source file", () => {
     // Matches href="/booking", ctaHref='/booking', href={"/booking"}, etc.

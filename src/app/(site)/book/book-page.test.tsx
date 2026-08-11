@@ -3,6 +3,7 @@ import { describe, expect, it } from "vitest";
 import BookPage, { metadata } from "./page";
 import {
   BOOKING_LOCATION_CHOOSER,
+  CUSTOM_BOOKING_ORIGIN,
   resolveBookingHref,
 } from "@/lib/booking-routes";
 
@@ -21,6 +22,35 @@ describe("first-party clinic booking chooser", () => {
     expect(html).not.toContain("%2Fcart%2Fmenu%2FPeels");
     expect(html).not.toContain("dashboard.boulevard.io");
     expect(html).not.toContain(`href="${BOOKING_LOCATION_CHOOSER}"`);
+  });
+
+  it("sends both clinic choices to the configured aesthetics custom app", () => {
+    const bookingHrefs = [
+      ...html.matchAll(/<a\b([^>]*)data-cta="location-booking"([^>]*)>/g),
+    ].map((match) => {
+      const attributes = `${match[1]} ${match[2]}`;
+      return /href="([^"]+)"/.exec(attributes)?.[1]?.replaceAll("&amp;", "&");
+    });
+
+    expect(bookingHrefs).toHaveLength(2);
+    const destinations = bookingHrefs.map((href) => new URL(href ?? ""));
+    expect(
+      destinations.every(
+        (destination) => destination.origin === CUSTOM_BOOKING_ORIGIN,
+      ),
+    ).toBe(true);
+    expect(
+      destinations.every((destination) => destination.pathname === "/book"),
+    ).toBe(true);
+    expect(
+      new Set(
+        destinations.map((destination) =>
+          destination.searchParams.get("location"),
+        ),
+      ),
+    ).toEqual(
+      new Set(["napa", "vacaville"]),
+    );
   });
 
   it("is a focused, noindex handoff with no form or health-data collection", () => {
