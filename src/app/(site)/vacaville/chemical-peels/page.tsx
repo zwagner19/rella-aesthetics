@@ -153,7 +153,7 @@ export default function VacavilleChemicalPeelsPage() {
         }}
       />
 
-      <section className="overflow-hidden bg-[linear-gradient(135deg,#fff_0%,#FDF7F5_56%,#FBE7E3_100%)] py-16 md:py-24">
+      <section className="overflow-hidden bg-paper py-16 md:py-24">
         <div className="mx-auto grid max-w-[1200px] items-center gap-12 px-6 md:px-8 lg:grid-cols-[1.04fr_0.96fr] lg:px-12">
           <div>
             <p className="mb-5 text-[0.6875rem] font-bold uppercase tracking-[0.22em] text-rose-dark">
@@ -178,7 +178,7 @@ export default function VacavilleChemicalPeelsPage() {
             </p>
           </div>
 
-          <div className="relative min-h-[390px] overflow-hidden rounded-[2rem] shadow-[0_24px_80px_rgba(90,94,98,0.18)] md:min-h-[520px]">
+          <div className="relative min-h-[390px] overflow-hidden md:min-h-[520px]">
             <Image
               src="/images/service-peels.jpg"
               alt="Chemical peel consultation at Rella Aesthetics in Vacaville"
@@ -187,7 +187,7 @@ export default function VacavilleChemicalPeelsPage() {
               className="object-cover"
               sizes="(min-width: 1024px) 46vw, 92vw"
             />
-            <div className="absolute inset-x-4 bottom-4 rounded-[1.35rem] bg-white/94 p-5 shadow-lg backdrop-blur md:inset-x-6 md:bottom-6 md:p-6">
+            <div className="absolute inset-x-0 bottom-0 border-t border-white/30 bg-white/94 p-5 md:p-6">
               <p className="mb-2 text-[0.625rem] font-bold uppercase tracking-[0.2em] text-rose-dark">
                 Rella Aesthetics — Vacaville
               </p>
@@ -219,7 +219,7 @@ export default function VacavilleChemicalPeelsPage() {
           </div>
           <div className="grid gap-5 md:grid-cols-2">
             {peelOptions.map((option, index) => (
-              <article key={option.name} className="rounded-[1.6rem] border border-silver-pale bg-white p-7 shadow-[0_14px_45px_rgba(90,94,98,0.07)] md:p-8">
+              <article key={option.name} className="border border-ink/12 bg-white p-7 md:p-8">
                 <div className="mb-7 flex items-center justify-between gap-4">
                   <span className="text-xs font-bold tracking-[0.18em] text-rose-dark">0{index + 1}</span>
                   <span className="h-px flex-1 bg-rose-light/70" aria-hidden="true" />
@@ -245,7 +245,7 @@ export default function VacavilleChemicalPeelsPage() {
           </div>
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {visitSteps.map((step, index) => (
-              <article key={step.title} className="rounded-[1.3rem] border border-white/15 bg-white/[0.04] p-6">
+              <article key={step.title} className="border border-white/15 bg-white/[0.04] p-6">
                 <span className="mb-8 inline-flex h-9 w-9 items-center justify-center rounded-full bg-rose text-xs font-bold">{index + 1}</span>
                 <h3 className="mb-3 text-xl font-medium">{step.title}</h3>
                 <p className="text-sm leading-7 text-white/70">{step.body}</p>
@@ -266,7 +266,7 @@ export default function VacavilleChemicalPeelsPage() {
               Rella&apos;s menu currently lists the four options above. The booking button keeps the correct clinic selected without forcing a broken category shortcut.
             </p>
           </div>
-          <div className="rounded-[1.75rem] bg-rose-blush p-7 md:p-10">
+          <div className="border-l-4 border-rose bg-rose-blush p-7 md:p-10">
             <p className="mb-3 text-[0.6875rem] font-bold uppercase tracking-[0.18em] text-rose-dark">Pricing before treatment</p>
             <p className="mb-6 text-lg leading-8 text-silver-dark">
               The selected peel and current menu determine the total. Review the exact service, preparation, expected recovery, and price before you confirm.

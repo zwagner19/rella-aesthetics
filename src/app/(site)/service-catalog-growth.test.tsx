@@ -84,6 +84,8 @@ describe("public pricing and claims integrity", () => {
     expect(botox?.pricing.body).toContain("$30/month");
     expect(botox?.pricing.body).toContain("$13/unit");
     expect(botox?.pricing.body).toContain("$4.40/unit");
+    expect(botox?.pricing.note).toContain("Allē rewards for Botox");
+    expect(botox?.pricing.note).toContain("Aspire rewards for Dysport");
 
     expect(membershipTiers).toHaveLength(3);
     expect(membershipTiers[0].price).toBe("$30");

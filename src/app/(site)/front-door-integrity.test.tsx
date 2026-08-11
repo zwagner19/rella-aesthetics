@@ -14,10 +14,30 @@ describe("homepage and catalog claim integrity", () => {
   it("keeps the general homepage broad while containing medical authority inside weight loss", async () => {
     const html = renderToStaticMarkup(await HomePage());
     expect(html).toContain("Ageless Beauty");
+    expect(html).toContain("Feel Comfortable");
+    expect(html).toContain("We Get It");
     expect(html).toContain("American Board of Obesity Medicine diplomate");
     expect(html).toContain('href="/services/weight-loss"');
     expect(html).not.toContain("Every treatment is physician-supervised");
     expect(html).not.toContain("artist&#x27;s eye");
+  });
+
+  it("follows the approved homepage narrative without changing the generic booking path", async () => {
+    const html = renderToStaticMarkup(await HomePage());
+    const landmarks = [
+      "Our Services",
+      "Feel Comfortable",
+      "We Get It",
+      "2026 Injectable Memberships",
+      "Visit Us",
+      "Ready to Begin?",
+    ].map((label) => html.indexOf(label));
+
+    expect(landmarks.every((position) => position >= 0)).toBe(true);
+    expect(landmarks).toEqual([...landmarks].sort((a, b) => a - b));
+    expect(html.match(/href="\/book"/g)?.length ?? 0).toBeGreaterThanOrEqual(2);
+    expect(html).toContain('href="/about"');
+    expect(html).not.toMatch(/dashboard\.boulevard\.io|joinblvd\.com|rella-hq/i);
   });
 
   it("keeps the homepage membership banner on the approved 2026 plan", () => {

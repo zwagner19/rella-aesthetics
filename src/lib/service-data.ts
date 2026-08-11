@@ -53,7 +53,7 @@ export const servicePages: ServicePageData[] = [
     pricing: {
       heading: "Pricing",
       body: "Botox is $18/unit and Dysport is $6/unit. The 2026 Tox Membership is $30/month with a one-year commitment; members pay $13/unit for Botox and $4.40/unit for Dysport.",
-      note: "Your provider will map the recommended units and total before treatment. Any booking deposit is separate from per-unit treatment pricing.",
+      note: "Your provider will map the recommended units and total before treatment. Rella accepts Allē rewards for Botox and Aspire rewards for Dysport; bring your account information to the visit. Any booking deposit is separate from per-unit treatment pricing.",
     },
     faq: [
       { question: "Does Botox hurt?", answer: "Sensation varies by person and treatment area. The injections use fine needles, and your provider can discuss comfort needs and the expected visit length before treatment." },

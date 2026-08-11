@@ -157,14 +157,14 @@ export function WeightLossServicePage() {
       <section className="bg-ink text-white">
         <div className="mx-auto grid max-w-[1160px] items-stretch xl:grid-cols-[1.15fr_0.85fr]">
           <div className="relative z-10 flex flex-col justify-center px-5 py-16 md:px-8 md:py-24 xl:px-14 xl:py-28">
-            <p className="mb-5 text-sm font-normal italic text-rose">
-              Vacaville · Napa · Physician-led care in California
+            <p className="mb-4 text-sm font-normal italic text-rose">
+              30-minute phone consultation · Napa + Vacaville
             </p>
-            <h1 className="mb-6 max-w-[800px] text-[clamp(2.35rem,4.4vw,3.65rem)] font-bold uppercase leading-[1.08] tracking-[0.07em] text-white">
-              Talk with an obesity-medicine physician about GLP-1 options in Vacaville &amp; Napa.
+            <h1 className="mb-5 max-w-[720px] text-[clamp(2.2rem,4vw,3.4rem)] font-bold uppercase leading-[1.06] tracking-[0.055em] text-white">
+              Find out if you medically qualify for GLP-1 care.
             </h1>
-            <p className="mb-8 max-w-[650px] text-base font-light leading-[1.75] text-white/75 md:text-lg">
-              In one 30-minute phone call, Zachary Wagner, DO, an ABOM-certified physician, will review your health history, goals, and treatment considerations; determine whether you medically qualify for options such as semaglutide or tirzepatide; and explain costs and next steps before you commit.
+            <p className="mb-7 max-w-[650px] text-base font-light leading-[1.7] text-white/80 md:text-lg">
+              Speak directly with Zachary Wagner, DO, an ABOM-certified physician. He will review your health history, goals, and safety considerations, then explain whether options such as semaglutide or tirzepatide—and what next steps—may be medically appropriate for you.
             </p>
             <div className="mb-6">
               <Button

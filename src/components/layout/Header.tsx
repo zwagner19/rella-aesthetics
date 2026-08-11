@@ -9,6 +9,7 @@ import { MobileNav } from "./MobileNav";
 
 const mainNavLinks = [
   { href: "/about", label: "About" },
+  { href: "/team", label: "Team" },
   { href: "/services", label: "Services" },
   { href: "/membership", label: "Memberships" },
   { href: "/gallery", label: "Results" },

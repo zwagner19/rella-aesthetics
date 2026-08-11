@@ -187,7 +187,7 @@ export default async function BlogPage() {
                 <Link
                   key={path.href}
                   href={path.href}
-                  className="group flex min-h-[260px] flex-col rounded-[1.25rem] border border-silver-pale bg-white p-7 transition-all hover:-translate-y-1 hover:border-rose-light hover:shadow-md"
+                  className="group flex min-h-[260px] flex-col border border-ink/12 bg-white p-7 transition-colors hover:border-rose"
                 >
                   <p className="mb-8 text-[0.625rem] font-bold uppercase tracking-[0.2em] text-rose-dark">
                     {path.category}

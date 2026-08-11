@@ -105,15 +105,18 @@ describe("trust and indexation foundation", () => {
     expect(html).toContain("Zachary Wagner, DO");
     expect(html).not.toContain("American Board of Obesity Medicine diplomate");
     expect(html).toContain("/images/dr-zachary-wagner.jpg");
-    expect(html).toContain("Physician Owner");
+    expect(html).toContain("Founder &amp; Owner");
+    expect(html).toContain("Medical Weight-Loss Physician");
+    expect(html).toContain("does not perform aesthetic treatments or injections");
+    expect(html).toContain('href="/team"');
     expect(html).not.toContain("she leads");
     expect(html).not.toContain('class="aspect-[4/5] bg-silver-pale rounded-lg"');
     expect(aboutMetadata.alternates).toEqual({ canonical: "/about" });
   });
 
-  it("publishes Dr. Wagner as the physician owner without weight-loss credentials", () => {
+  it("publishes Dr. Wagner's bounded owner role without weight-loss credentials", () => {
     const schema = physicianOwnerSchema();
-    expect(schema.jobTitle).toBe("Physician Owner");
+    expect(schema.jobTitle).toBe("Founder & Owner, Medical Weight-Loss Physician");
     expect(schema).not.toHaveProperty("hasCredential");
     expect(schema.worksFor["@id"]).toBe(
       "https://experiencerella.com/#organization",
@@ -124,6 +127,7 @@ describe("trust and indexation foundation", () => {
     const indexPages = [
       "src/app/(site)/page.tsx",
       "src/app/(site)/about/page.tsx",
+      "src/app/(site)/team/page.tsx",
       "src/app/(site)/blog/page.tsx",
       "src/app/(site)/contact/page.tsx",
       "src/app/(site)/gallery/page.tsx",

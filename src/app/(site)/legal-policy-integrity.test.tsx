@@ -59,6 +59,9 @@ describe("public cancellation-policy integrity", () => {
     expect(footerHtml).toContain('href="/cancellation-policy"');
     expect(footerHtml).toContain('href="https://www.instagram.com/experiencerella/"');
     expect(footerHtml).toContain('href="https://www.facebook.com/rellaaesthetics/"');
+    expect(footerHtml).toContain('href="/team"');
+    expect(footerHtml).toContain("Reviews shared on this site span both Rella locations");
+    expect(footerHtml).toContain("Individual results vary");
     expect(footerHtml).toContain("pb-28 lg:pb-8");
   });
 });

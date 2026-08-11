@@ -137,7 +137,7 @@ export function physicianOwnerSchema() {
     name: "Zachary Wagner",
     honorificPrefix: "Dr.",
     honorificSuffix: "DO",
-    jobTitle: "Physician Owner",
+    jobTitle: "Founder & Owner, Medical Weight-Loss Physician",
     url: "https://experiencerella.com/about",
     image: "https://experiencerella.com/images/dr-zachary-wagner.jpg",
     worksFor: {

@@ -11,7 +11,7 @@ const NAPA_BOOKING_HREF = resolveBookingHref({
 
 function PricingTable({ post }: { post: LocalEditorialPostData }) {
   return (
-    <div className="my-8 overflow-x-auto rounded-[1.25rem] border border-silver-pale">
+    <div className="my-8 overflow-x-auto border border-ink/12">
       <table className="w-full min-w-[640px] border-collapse text-left">
         <caption className="sr-only">
           Current Rella Napa Botox, Dysport, membership, and deposit pricing
@@ -166,7 +166,7 @@ export function LocalEditorialPost({
         </header>
 
         <div className="mx-auto max-w-[1100px] px-6 md:px-8 lg:px-12">
-          <div className="relative -mt-7 overflow-hidden rounded-[1.5rem] border border-white/80 bg-white shadow-[0_24px_70px_rgba(90,94,98,0.12)]">
+          <div className="relative -mt-7 overflow-hidden border border-ink/12 bg-white">
             <div className="relative aspect-[2/1] max-h-[470px] min-h-[240px]">
               <Image
                 src={post.coverImage}
@@ -182,7 +182,7 @@ export function LocalEditorialPost({
 
         <div className="mx-auto grid max-w-[1100px] gap-12 px-6 py-16 md:px-8 lg:grid-cols-[minmax(0,1fr)_300px] lg:px-12 lg:py-24">
           <div className="min-w-0">
-            <section aria-labelledby="answer-first" className="rounded-[1.5rem] border border-rose-light bg-rose-blush p-6 md:p-8">
+            <section aria-labelledby="answer-first" className="border-l-4 border-rose bg-rose-blush p-6 md:p-8">
               <p className="mb-3 text-[0.6875rem] font-bold uppercase tracking-[0.18em] text-rose-dark">
                 The short answer
               </p>
@@ -226,7 +226,7 @@ export function LocalEditorialPost({
                   </ul>
                 )}
                 {index === 1 && (
-                  <div className="mt-8 rounded-[1.25rem] bg-ink p-6 text-white md:p-8">
+                  <div className="mt-8 bg-ink p-6 text-white md:p-8">
                     <p className="text-[0.6875rem] font-bold uppercase tracking-[0.18em] text-rose-light">
                       Want the exact plan, not a guess?
                     </p>
@@ -281,7 +281,7 @@ export function LocalEditorialPost({
           </div>
 
           <aside className="space-y-6 lg:sticky lg:top-28 lg:self-start" aria-label="Article actions and key facts">
-            <div className="rounded-[1.25rem] bg-rose-blush p-6">
+            <div className="border-l-4 border-rose bg-rose-blush p-6">
               <h2 className="text-lg font-medium text-ink">Key Napa facts</h2>
               <ul className="mt-5 space-y-4">
                 {post.keyFacts.map((fact) => (
@@ -291,7 +291,7 @@ export function LocalEditorialPost({
                 ))}
               </ul>
             </div>
-            <div className="rounded-[1.25rem] border border-silver-pale p-6">
+            <div className="border border-ink/12 p-6">
               <h2 className="text-lg font-medium text-ink">Continue exploring</h2>
               <nav aria-label="Related Napa Botox pages" className="mt-4 flex flex-col gap-3 text-sm">
                 <Link href="/napa/botox" className="text-rose-text hover:text-rose-dark">Napa Botox treatment page →</Link>

@@ -6,9 +6,9 @@ import { resolveBookingHref } from "@/lib/booking-routes";
 import { physicianOwnerSchema } from "@/lib/schemas";
 
 export const metadata: Metadata = {
-  title: "About Dr. Zachary Wagner & Rella Aesthetics",
+  title: "About Rella Aesthetics & Dr. Zachary Wagner",
   description:
-    "Meet Zachary Wagner, DO, physician owner of Rella Aesthetics, serving Vacaville and Napa.",
+    "Meet Dr. Zachary Wagner, founder and owner of Rella Aesthetics and Rella's medical weight-loss physician, serving Vacaville and Napa.",
   alternates: { canonical: "/about" },
   openGraph: {
     title: "About Dr. Zachary Wagner | Rella Aesthetics",
@@ -18,7 +18,7 @@ export const metadata: Metadata = {
     images: [
       {
         url: "/images/dr-zachary-wagner.jpg",
-        alt: "Zachary Wagner, DO, physician owner of Rella Aesthetics",
+        alt: "Zachary Wagner, DO, founder and owner of Rella Aesthetics",
       },
     ],
   },
@@ -78,12 +78,17 @@ export default function AboutPage() {
               Care built on judgment, honesty, and the right next step.
             </h1>
             <p className="mb-7 max-w-[650px] text-lg font-light leading-relaxed text-silver md:text-xl">
-              Rella Aesthetics brings aesthetic care and medical weight management together in a warm, local practice led by physician owner Dr. Zachary Wagner.
+              Rella Aesthetics brings aesthetic care and medical weight management together under
+              founder and owner Dr. Zachary Wagner. Dr. Wagner is Rella&apos;s medical weight-loss
+              physician; Rella&apos;s aesthetics services are delivered by the aesthetics team.
             </p>
             <div className="mb-8 border-l-2 border-rose pl-5">
-              <p className="font-medium text-silver-dark">Zachary Wagner, DO</p>
+              <p className="font-medium text-silver-dark">Dr. Zachary Wagner, DO</p>
               <p className="mt-1 text-sm leading-relaxed text-silver">
-                Physician Owner · Rella Aesthetics
+                Founder &amp; Owner · Medical Weight-Loss Physician
+              </p>
+              <p className="mt-3 text-sm leading-relaxed text-silver">
+                Dr. Wagner does not perform aesthetic treatments or injections.
               </p>
             </div>
             <div className="flex flex-col gap-3 sm:flex-row">
@@ -99,7 +104,7 @@ export default function AboutPage() {
             <div className="relative aspect-[4/5] overflow-hidden bg-white">
               <Image
                 src="/images/dr-zachary-wagner.jpg"
-                alt="Zachary Wagner, DO, physician owner of Rella Aesthetics"
+                alt="Zachary Wagner, DO, founder and owner of Rella Aesthetics"
                 fill
                 priority
                 className="object-cover object-top"
@@ -107,7 +112,9 @@ export default function AboutPage() {
               />
               <div className="absolute inset-x-0 bottom-0 bg-ink/90 px-6 py-5 text-white md:px-8 md:py-6">
                 <p className="text-lg font-medium">Dr. Zachary Wagner</p>
-                <p className="mt-1 text-xs uppercase tracking-[0.16em] text-white/75">Physician Owner</p>
+                <p className="mt-1 text-xs uppercase tracking-[0.16em] text-white/75">
+                  Founder &amp; Owner · Medical Weight-Loss Physician
+                </p>
               </div>
             </div>
           </div>
@@ -127,7 +134,9 @@ export default function AboutPage() {
               Rella is built around a simple idea: people should feel heard before they are asked to make a decision. That means beginning with the goal, explaining the options plainly, and recommending only the next step that makes sense for the individual.
             </p>
             <p className="leading-relaxed text-silver">
-              From aesthetic treatments to physician-led weight management, the practice combines medical judgment with an experience designed to feel clear, respectful, and personal.
+              Rella&apos;s aesthetics team provides aesthetic treatments, while Dr. Wagner leads
+              medical weight-loss care. Across both areas, the practice is designed to feel clear,
+              respectful, and personal.
             </p>
             <div className="mt-8 flex flex-wrap gap-2">
               {careAreas.map((area) => (
@@ -137,6 +146,26 @@ export default function AboutPage() {
               ))}
             </div>
           </div>
+        </div>
+      </section>
+
+      <section className="border-y border-silver/20 py-16 md:py-20">
+        <div className="mx-auto flex max-w-[1120px] flex-col gap-8 px-6 md:px-8 lg:flex-row lg:items-center lg:justify-between lg:px-12">
+          <div className="max-w-[700px]">
+            <p className="mb-3 text-[0.75rem] font-medium capitalize italic tracking-[0.08em] text-rose-dark">
+              The people behind Rella
+            </p>
+            <h2 className="text-3xl font-bold uppercase tracking-[0.06em] text-ink md:text-4xl">
+              Meet the team by verified role.
+            </h2>
+            <p className="mt-4 leading-relaxed text-silver">
+              See Rella&apos;s leadership and care team without invented titles, biographies, or
+              treatment claims.
+            </p>
+          </div>
+          <Button href="/team" variant="ghost" className="shrink-0">
+            Meet the Team
+          </Button>
         </div>
       </section>
 

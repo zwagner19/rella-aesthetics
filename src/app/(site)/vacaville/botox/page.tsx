@@ -130,7 +130,7 @@ export default function VacavilleBotoxPage() {
         }}
       />
 
-      <section className="overflow-hidden bg-[linear-gradient(135deg,#fff_0%,#FDF7F5_56%,#FBE7E3_100%)] py-16 md:py-24">
+      <section className="overflow-hidden bg-paper py-16 md:py-24">
         <div className="mx-auto grid max-w-[1200px] items-center gap-12 px-6 md:px-8 lg:grid-cols-[1.04fr_0.96fr] lg:px-12">
           <div>
             <p className="mb-5 text-[0.6875rem] font-bold uppercase tracking-[0.22em] text-rose-dark">
@@ -155,7 +155,7 @@ export default function VacavilleBotoxPage() {
             </p>
           </div>
 
-          <div className="relative min-h-[390px] overflow-hidden rounded-[2rem] shadow-[0_24px_80px_rgba(90,94,98,0.18)] md:min-h-[520px]">
+          <div className="relative min-h-[390px] overflow-hidden md:min-h-[520px]">
             <Image
               src="/images/service-botox.jpg"
               alt="Botox and Dysport consultation at Rella Aesthetics in Vacaville"
@@ -164,7 +164,7 @@ export default function VacavilleBotoxPage() {
               className="object-cover"
               sizes="(min-width: 1024px) 46vw, 92vw"
             />
-            <div className="absolute inset-x-4 bottom-4 rounded-[1.35rem] bg-white/94 p-5 shadow-lg backdrop-blur md:inset-x-6 md:bottom-6 md:p-6">
+            <div className="absolute inset-x-0 bottom-0 border-t border-white/30 bg-white/94 p-5 md:p-6">
               <p className="mb-2 text-[0.625rem] font-bold uppercase tracking-[0.2em] text-rose-dark">Rella Aesthetics — Vacaville</p>
               <p className="text-lg font-medium leading-snug text-ink">542 Main St · Wednesday–Saturday, 9am–5pm</p>
             </div>
@@ -191,7 +191,7 @@ export default function VacavilleBotoxPage() {
 
           <div className="grid gap-5 md:grid-cols-3">
             {pricingCards.map((card, index) => (
-              <article key={card.label} className="rounded-[1.6rem] border border-silver-pale bg-white p-7 shadow-[0_14px_45px_rgba(90,94,98,0.07)]">
+              <article key={card.label} className="border border-ink/12 bg-white p-7">
                 <span className="mb-8 block text-xs font-bold tracking-[0.18em] text-rose-dark">0{index + 1}</span>
                 <p className="mb-2 text-3xl font-medium tracking-[-0.035em] text-ink">{card.value}</p>
                 <h3 className="mb-4 text-xs font-bold uppercase tracking-[0.16em] text-silver-dark">{card.label}</h3>
@@ -200,7 +200,7 @@ export default function VacavilleBotoxPage() {
             ))}
           </div>
 
-          <div className="mt-8 flex flex-col items-start justify-between gap-5 rounded-[1.5rem] bg-rose-blush p-7 md:flex-row md:items-center md:p-9">
+          <div className="mt-8 flex flex-col items-start justify-between gap-5 border-l-4 border-rose bg-rose-blush p-7 md:flex-row md:items-center md:p-9">
             <p className="max-w-[700px] text-sm leading-7 text-silver-dark">
               Membership pricing has a one-year commitment. Compare every injectable plan, included benefit, and current member rate before enrolling.
             </p>
@@ -229,7 +229,7 @@ export default function VacavilleBotoxPage() {
               "Map the proposed areas, units, per-unit rate, and expected total before treatment.",
               "Review product-specific onset, the two-week assessment point, aftercare, and an appropriate follow-up plan.",
             ].map((step, index) => (
-              <li key={step} className="rounded-[1.3rem] border border-white/15 bg-white/[0.04] p-6">
+              <li key={step} className="border border-white/15 bg-white/[0.04] p-6">
                 <span className="mb-7 inline-flex h-9 w-9 items-center justify-center rounded-full bg-rose text-xs font-bold">{index + 1}</span>
                 <p className="text-sm leading-7 text-white/75">{step}</p>
               </li>
@@ -249,7 +249,7 @@ export default function VacavilleBotoxPage() {
               Botox softening may begin in 4–7 days, while Dysport can show results in 2–5 days. Full effect is assessed around two weeks. Results commonly last around 3–4 months, and individual response varies.
             </p>
           </div>
-          <div className="rounded-[1.75rem] bg-rose-blush p-7 md:p-10">
+          <div className="border-l-4 border-rose bg-rose-blush p-7 md:p-10">
             <p className="mb-3 text-[0.6875rem] font-bold uppercase tracking-[0.18em] text-rose-dark">Important distinction</p>
             <p className="mb-6 text-lg leading-8 text-silver-dark">
               A lower per-unit number does not make Dysport directly cheaper than Botox because the products use different dosing units.

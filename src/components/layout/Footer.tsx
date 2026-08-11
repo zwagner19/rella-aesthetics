@@ -74,6 +74,7 @@ export function Footer({ weightLossExperience = false }: { weightLossExperience?
             </p>
             <ul className="space-y-3 text-ink/70">
               <li><Link href={mainSiteHref("/about")} className="text-sm transition-colors hover:text-ink">About</Link></li>
+              <li><Link href={mainSiteHref("/team")} className="text-sm transition-colors hover:text-ink">Team</Link></li>
               <li><Link href={mainSiteHref("/gallery")} className="text-sm transition-colors hover:text-ink">Results</Link></li>
               <li><Link href={mainSiteHref("/blog")} className="text-sm transition-colors hover:text-ink">Education</Link></li>
               <li><Link href={mainSiteHref("/membership")} className="text-sm transition-colors hover:text-ink">Memberships</Link></li>
@@ -100,6 +101,10 @@ export function Footer({ weightLossExperience = false }: { weightLossExperience?
             </ul>
           </div>
         </div>
+
+        <p className="border-t border-silver/30 py-6 text-sm leading-relaxed text-ink/70">
+          Reviews shared on this site span both Rella locations. Individual results vary.
+        </p>
 
         <div className="flex flex-col gap-4 border-t border-silver/30 pt-6 text-[0.75rem] uppercase tracking-[0.08em] text-ink/60 md:flex-row md:items-center md:justify-between">
           <p>&copy; {new Date().getFullYear()} Rella Aesthetics. All rights reserved.</p>

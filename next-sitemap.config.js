@@ -1,6 +1,7 @@
 const publicRoutes = [
   "/",
   "/about",
+  "/team",
   "/blog",
   "/blog/botox-cost-napa",
   "/cancellation-policy",
@@ -87,6 +88,7 @@ module.exports = {
       "/vacaville/microneedling": 0.9,
       "/contact": 0.8,
       "/about": 0.8,
+      "/team": 0.8,
       "/membership": 0.8,
       "/cancellation-policy": 0.7,
     };

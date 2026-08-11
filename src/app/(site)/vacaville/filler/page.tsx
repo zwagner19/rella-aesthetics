@@ -134,7 +134,7 @@ export default function VacavilleFillerPage() {
         }}
       />
 
-      <section className="overflow-hidden bg-[linear-gradient(135deg,#fff_0%,#FDF7F5_56%,#FBE7E3_100%)] py-16 md:py-24">
+      <section className="overflow-hidden bg-paper py-16 md:py-24">
         <div className="mx-auto grid max-w-[1200px] items-center gap-12 px-6 md:px-8 lg:grid-cols-[1.04fr_0.96fr] lg:px-12">
           <div>
             <p className="mb-5 text-[0.6875rem] font-bold uppercase tracking-[0.22em] text-rose-dark">
@@ -159,7 +159,7 @@ export default function VacavilleFillerPage() {
             </p>
           </div>
 
-          <div className="relative min-h-[390px] overflow-hidden rounded-[2rem] shadow-[0_24px_80px_rgba(90,94,98,0.18)] md:min-h-[520px]">
+          <div className="relative min-h-[390px] overflow-hidden md:min-h-[520px]">
             <Image
               src="/images/service-fillers.jpg"
               alt="Dermal filler consultation at Rella Aesthetics in Vacaville"
@@ -168,7 +168,7 @@ export default function VacavilleFillerPage() {
               className="object-cover"
               sizes="(min-width: 1024px) 46vw, 92vw"
             />
-            <div className="absolute inset-x-4 bottom-4 rounded-[1.35rem] bg-white/94 p-5 shadow-lg backdrop-blur md:inset-x-6 md:bottom-6 md:p-6">
+            <div className="absolute inset-x-0 bottom-0 border-t border-white/30 bg-white/94 p-5 md:p-6">
               <p className="mb-2 text-[0.625rem] font-bold uppercase tracking-[0.2em] text-rose-dark">Rella Aesthetics — Vacaville</p>
               <p className="text-lg font-medium leading-snug text-ink">542 Main St · Wednesday–Saturday, 9am–5pm</p>
             </div>
@@ -194,12 +194,12 @@ export default function VacavilleFillerPage() {
               </p>
             </div>
             <div className="grid gap-5 sm:grid-cols-2">
-              <article className="rounded-[1.6rem] border border-silver-pale bg-white p-7 shadow-[0_14px_45px_rgba(90,94,98,0.07)]">
+              <article className="border border-ink/12 bg-white p-7">
                 <p className="mb-3 text-4xl font-medium tracking-[-0.045em] text-ink">$840</p>
                 <h3 className="mb-4 text-xs font-bold uppercase tracking-[0.16em] text-rose-dark">Base service amount</h3>
                 <p className="text-sm leading-7 text-silver">The current dermal-filler base amount in Rella&apos;s approved public pricing canon.</p>
               </article>
-              <article className="rounded-[1.6rem] border border-rose-light bg-rose-blush p-7">
+              <article className="border border-rose bg-rose-blush p-7">
                 <p className="mb-3 text-4xl font-medium tracking-[-0.045em] text-ink">$540–$960</p>
                 <h3 className="mb-4 text-xs font-bold uppercase tracking-[0.16em] text-rose-dark">Active product range</h3>
                 <p className="text-sm leading-7 text-silver">The selected active product and plan determine the expected treatment total.</p>
@@ -207,7 +207,7 @@ export default function VacavilleFillerPage() {
             </div>
           </div>
 
-          <div className="mt-8 flex flex-col items-start justify-between gap-5 rounded-[1.5rem] border border-silver-pale bg-white p-7 md:flex-row md:items-center md:p-9">
+          <div className="mt-8 flex flex-col items-start justify-between gap-5 border border-ink/12 bg-white p-7 md:flex-row md:items-center md:p-9">
             <p className="max-w-[700px] text-sm leading-7 text-silver-dark">
               The 2026 Filler Membership is $40/month with a one-year commitment and product-specific member rates. Compare the full plan before enrolling.
             </p>
@@ -231,7 +231,7 @@ export default function VacavilleFillerPage() {
           </div>
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {planFactors.map((factor, index) => (
-              <article key={factor.title} className="rounded-[1.3rem] border border-white/15 bg-white/[0.04] p-6">
+              <article key={factor.title} className="border border-white/15 bg-white/[0.04] p-6">
                 <span className="mb-8 inline-flex h-9 w-9 items-center justify-center rounded-full bg-rose text-xs font-bold">{index + 1}</span>
                 <h3 className="mb-3 text-xl font-medium">{factor.title}</h3>
                 <p className="text-sm leading-7 text-white/70">{factor.body}</p>
@@ -252,7 +252,7 @@ export default function VacavilleFillerPage() {
               Review your goals, relevant history, prior filler, and the areas being considered. Your provider assesses facial anatomy, explains appropriate product options, and confirms the proposed amount and expected total before treatment.
             </p>
           </div>
-          <div className="rounded-[1.75rem] bg-rose-blush p-7 md:p-10">
+          <div className="border-l-4 border-rose bg-rose-blush p-7 md:p-10">
             <p className="mb-3 text-[0.6875rem] font-bold uppercase tracking-[0.18em] text-rose-dark">Plan around recovery</p>
             <p className="mb-6 text-lg leading-8 text-silver-dark">
               Temporary swelling, tenderness, or bruising can occur. Share upcoming work, travel, dental care, and important events before choosing a date.

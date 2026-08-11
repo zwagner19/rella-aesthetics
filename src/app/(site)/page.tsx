@@ -9,6 +9,7 @@ import { MembershipBanner } from "@/components/blocks/MembershipBanner";
 import { LocationCard } from "@/components/blocks/LocationCard";
 import { SectionHeader } from "@/components/ui/SectionHeader";
 import { Button } from "@/components/ui/Button";
+import { HomeLocationVisual } from "@/components/home/HomeLocationVisual";
 import { services, testimonials, locations } from "@/lib/data";
 import { medicalBusinessSchema } from "@/lib/schemas";
 import { WeightLossServicePage } from "@/components/pages/WeightLossServicePage";
@@ -65,15 +66,8 @@ function HomePageContent({ isWeightLoss }: { isWeightLoss: boolean }) {
             </div>
           </div>
         </div>
-        <div className="relative min-h-[420px] md:min-h-full">
-          <Image
-            src="/images/service-botox.jpg"
-            alt="Rella Aesthetics med spa"
-            fill
-            priority
-            className="object-cover"
-            sizes="(min-width: 768px) 50vw, 100vw"
-          />
+        <div className="min-h-[420px] md:min-h-full">
+          <HomeLocationVisual />
         </div>
       </section>
 
@@ -101,6 +95,52 @@ function HomePageContent({ isWeightLoss }: { isWeightLoss: boolean }) {
                 imageAlt={service.title}
               />
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Feel Comfortable */}
+      <section className="bg-white py-24 md:py-32">
+        <div className="mx-auto grid max-w-[1200px] items-center gap-12 px-6 md:px-8 lg:grid-cols-[0.95fr_1.05fr] lg:gap-20 lg:px-12">
+          <div className="relative min-h-[420px] overflow-hidden md:min-h-[580px]">
+            <Image
+              src="/images/service-hydrafacial.jpg"
+              alt="A Rella facial treatment in progress"
+              fill
+              className="object-cover"
+              sizes="(min-width: 1024px) 46vw, 100vw"
+            />
+          </div>
+          <div className="lg:pl-6">
+            <p className="mb-5 text-[0.75rem] font-medium capitalize italic tracking-[0.08em] text-rose-dark">
+              Feel Comfortable
+            </p>
+            <h2 className="mb-6 text-3xl font-bold uppercase leading-[1.08] tracking-[0.06em] text-ink md:text-5xl">
+              Your questions belong in the room.
+            </h2>
+            <p className="mb-5 text-lg font-light leading-relaxed text-ink/70">
+              Aesthetic care can come with a lot of choices. Rella starts with what you want to work on, what you want explained, and how you want the experience to feel.
+            </p>
+            <p className="mb-8 leading-relaxed text-ink/65">
+              From skin care and injectables to wellness services, the goal is a clear conversation and a next step shaped around you—not a one-size-fits-all plan.
+            </p>
+            <div className="mb-9 grid gap-px bg-ink/10 sm:grid-cols-3">
+              {[
+                "Two local clinics",
+                "Consultation first",
+                "Clear next steps",
+              ].map((item) => (
+                <p
+                  key={item}
+                  className="bg-white px-4 py-5 text-xs font-bold uppercase tracking-[0.12em] text-ink"
+                >
+                  {item}
+                </p>
+              ))}
+            </div>
+            <Button href="/about" variant="ghost">
+              How Rella Cares
+            </Button>
           </div>
         </div>
       </section>
@@ -147,21 +187,31 @@ function HomePageContent({ isWeightLoss }: { isWeightLoss: boolean }) {
         </div>
       </section>
 
-      {/* Testimonials */}
-      <section className="bg-white py-24 md:py-32">
+      {/* We Get It */}
+      <section className="bg-rose py-24 md:py-32">
         <div className="mx-auto max-w-[1200px] px-6 md:px-8 lg:px-12">
-          <SectionHeader
-            eyebrow="Results"
-            title="What Our Patients Say"
-          />
-          <div className="grid grid-cols-1 gap-10 md:grid-cols-3">
+          <div className="mb-12 grid gap-8 lg:grid-cols-[0.75fr_1.25fr] lg:items-end lg:gap-20">
+            <div>
+              <p className="mb-4 text-[0.75rem] font-medium capitalize italic tracking-[0.08em] text-ink/70">
+                Care should feel clear
+              </p>
+              <h2 className="text-4xl font-bold uppercase leading-[1.02] tracking-[0.08em] text-ink md:text-6xl">
+                We Get It
+              </h2>
+            </div>
+            <p className="max-w-[700px] text-lg font-light leading-relaxed text-ink/75 md:text-xl">
+              It can be hard to sort through treatment options, timing, and expectations. Rella makes room for the questions, explains the choices plainly, and helps you decide what feels right for you.
+            </p>
+          </div>
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
             {testimonials.map((item, i) => (
-              <TestimonialCard
-                key={i}
-                quote={item.quote}
-                name={item.name}
-                source={item.source}
-              />
+              <article key={i} className="border border-ink/10 bg-white p-7">
+                <TestimonialCard
+                  quote={item.quote}
+                  name={item.name}
+                  source={item.source}
+                />
+              </article>
             ))}
           </div>
         </div>
