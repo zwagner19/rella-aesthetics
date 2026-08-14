@@ -138,7 +138,7 @@ export default function TeamPage() {
           <h1 className="max-w-[850px] text-4xl font-bold uppercase leading-[1.04] tracking-[0.06em] text-ink md:text-6xl">
             Meet the people behind Rella.
           </h1>
-          <p className="mt-7 max-w-[720px] text-lg font-light leading-relaxed text-silver md:text-xl">
+          <p className="mt-7 max-w-[720px] text-lg font-light leading-relaxed text-ink/70 md:text-xl">
             Rella brings together medical weight-loss care, nursing, advanced practice, esthetics,
             medical assisting, and body-contouring support for our two local communities.
           </p>
@@ -174,7 +174,7 @@ export default function TeamPage() {
             <p className="mt-7 border-l-2 border-rose pl-5 text-lg font-medium text-ink">
               {leadershipMember.focus}
             </p>
-            <p className="mt-6 max-w-[620px] leading-relaxed text-silver">
+            <p className="mt-6 max-w-[620px] leading-relaxed text-ink/70">
               Dr. Wagner founded and owns Rella Aesthetics. His clinical role at Rella is medical
               weight-loss care. He does not perform aesthetic treatments or injections; those
               services are provided by Rella&apos;s aesthetics team.

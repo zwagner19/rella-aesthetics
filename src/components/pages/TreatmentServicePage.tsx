@@ -223,7 +223,7 @@ export function TreatmentServicePage({ service }: TreatmentServicePageProps) {
                   <span aria-hidden="true" className="text-2xl font-light text-ink/45">0{index + 1}</span>
                 </div>
                 <h3 className="mb-2 text-2xl font-medium tracking-[-0.025em] text-ink">{location.name}</h3>
-                <p className="mb-6 text-sm text-silver">{location.address}</p>
+                <p className="mb-6 text-sm text-ink/70">{location.address}</p>
                 <div className="flex flex-col items-start gap-4">
                   <Button
                     href={location.bookingHref}

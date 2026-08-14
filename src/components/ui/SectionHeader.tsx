@@ -16,7 +16,7 @@ export function SectionHeader({
   return (
     <div className="mb-12 max-w-[680px]">
       {eyebrow && (
-        <p className="mb-4 text-sm font-medium italic tracking-[0.04em] text-silver">
+        <p className="mb-4 text-sm font-medium italic tracking-[0.04em] text-ink/70">
           {eyebrow}
         </p>
       )}

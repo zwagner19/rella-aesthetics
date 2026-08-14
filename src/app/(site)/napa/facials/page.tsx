@@ -177,7 +177,7 @@ export default function NapaFacialsPage() {
                 Call 707.358.2928
               </Button>
             </div>
-            <p className="mt-5 text-xs leading-6 text-silver">
+            <p className="mt-5 text-xs leading-6 text-ink/70">
               Opens Rella Napa&apos;s live Initial Skin Health Consult. A professional and appointment time are selected in the secure booking flow.
             </p>
           </div>
@@ -217,7 +217,7 @@ export default function NapaFacialsPage() {
             <h2 id="napa-facial-options" className="mb-5 text-3xl font-medium tracking-[-0.04em] text-ink md:text-5xl">
               Start with your skin. Then choose the service.
             </h2>
-            <p className="text-lg font-light leading-relaxed text-silver">
+            <p className="text-lg font-light leading-relaxed text-ink/70">
               These paths are currently visible in Rella&apos;s Napa facial menu. The consult helps connect a service name to the products, steps, and aftercare that make sense for you.
             </p>
           </div>
@@ -238,7 +238,7 @@ export default function NapaFacialsPage() {
                   <span className={`h-px flex-1 ${index === 0 ? "bg-white/20" : "bg-rose-light/70"}`} aria-hidden="true" />
                 </div>
                 <h3 className="mb-3 text-2xl font-medium tracking-[-0.025em]">{option.name}</h3>
-                <p className={`text-sm leading-7 ${index === 0 ? "text-white/70" : "text-silver"}`}>{option.body}</p>
+                <p className={`text-sm leading-7 ${index === 0 ? "text-white/70" : "text-ink/70"}`}>{option.body}</p>
               </article>
             ))}
           </div>
@@ -259,7 +259,7 @@ export default function NapaFacialsPage() {
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {visitSteps.map((step, index) => (
               <article key={step.title} className="border border-white/15 bg-white/[0.04] p-6">
-                <span className="mb-8 inline-flex h-9 w-9 items-center justify-center rounded-full bg-rose text-xs font-bold">{index + 1}</span>
+                <span className="mb-8 inline-flex h-9 w-9 items-center justify-center rounded-full bg-rose text-xs font-bold text-ink">{index + 1}</span>
                 <h3 className="mb-3 text-xl font-medium">{step.title}</h3>
                 <p className="text-sm leading-7 text-white/70">{step.body}</p>
               </article>
@@ -275,7 +275,7 @@ export default function NapaFacialsPage() {
             <h2 id="napa-facial-booking" className="mb-5 text-3xl font-medium tracking-[-0.04em] text-ink md:text-5xl">
               Begin at the Initial Skin Health Consult.
             </h2>
-            <p className="text-lg font-light leading-relaxed text-silver">
+            <p className="text-lg font-light leading-relaxed text-ink/70">
               The verified booking path opens that exact Napa service and displays <strong className="font-medium text-ink">Select a professional</strong>. It does not choose a treatment or appointment for you.
             </p>
           </div>
@@ -301,7 +301,7 @@ export default function NapaFacialsPage() {
             <h2 id="napa-facial-compare" className="mb-3 text-3xl font-medium tracking-[-0.035em] text-ink">
               A facial, HydraFacial, and laser procedure are not interchangeable.
             </h2>
-            <p className="max-w-[760px] text-silver">
+            <p className="max-w-[760px] text-ink/70">
               Products, devices, intensity, candidacy, and recovery differ. Use the focused guides below, then ask the team to compare timing before combining or sequencing services.
             </p>
           </div>
@@ -322,28 +322,28 @@ export default function NapaFacialsPage() {
         </div>
       </section>
 
-      <section className="bg-rose-cta py-20 text-center text-white" aria-labelledby="napa-facial-next-step">
+      <section className="bg-rose-cta py-20 text-center text-ink" aria-labelledby="napa-facial-next-step">
         <div className="mx-auto max-w-[740px] px-6">
           <h2 id="napa-facial-next-step" className="mb-4 text-3xl font-medium tracking-[-0.035em] md:text-5xl">
             Put your skin—not a trend—at the center.
           </h2>
-          <p className="mb-8 text-lg font-light leading-relaxed text-white/85">
+          <p className="mb-8 text-lg font-light leading-relaxed text-ink/75">
             Start with the verified Napa consult or call Rella with a question before choosing a service.
           </p>
           <div className="flex flex-col justify-center gap-3 sm:flex-row">
-            <Button href={BOOKING_HREF} data-cta="service-booking" className="rounded-full bg-white !text-rose-text hover:bg-white/90 hover:!text-rose-dark">
+            <Button href={BOOKING_HREF} data-cta="service-booking" className="rounded-full bg-white !text-ink hover:bg-white/90 hover:!text-ink">
               Book Skin Health Consult
             </Button>
-            <Button href="tel:+17073582928" data-cta="phone" variant="ghost" className="rounded-full border-white/70 !text-white hover:border-white hover:!text-white">
+            <Button href="tel:+17073582928" data-cta="phone" variant="ghost">
               Call Rella
             </Button>
           </div>
-          <p className="mt-6 text-xs leading-6 text-white/70">
+          <p className="mt-6 text-xs leading-6 text-ink/75">
             Individual response varies. Suitability, products, treatment steps, possible temporary effects, preparation, and aftercare depend on the exact service and your skin.
           </p>
-          <div className="mt-5 flex flex-wrap justify-center gap-x-5 gap-y-2 text-xs text-white/75">
-            <Link href="/cancellation-policy" className="underline underline-offset-4 hover:text-white">Cancellation policy</Link>
-            <Link href="/locations/napa" className="underline underline-offset-4 hover:text-white">Napa clinic details</Link>
+          <div className="mt-5 flex flex-wrap justify-center gap-x-5 gap-y-2 text-xs text-ink/75">
+            <Link href="/cancellation-policy" className="underline underline-offset-4 hover:text-ink">Cancellation policy</Link>
+            <Link href="/locations/napa" className="underline underline-offset-4 hover:text-ink">Napa clinic details</Link>
           </div>
         </div>
       </section>

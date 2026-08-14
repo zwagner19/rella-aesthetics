@@ -227,10 +227,19 @@ describe("accepted light design, no photography", () => {
     }
   });
 
-  it("defines the Revision 06 light tokens and 44px targets", () => {
+  it("uses the binding Aug. 9 palette and 44px targets", () => {
     const css = readFileSync(join(__dirname, "napa-botox.css"), "utf8");
-    for (const t of ["--nb-paper: #ffffff", "--nb-porcelain: #fafaf9", "--nb-rose50: #fdf2f0", "--nb-clay: #b04a40"]) {
+    for (const t of [
+      "--nb-paper: #ffffff",
+      "--nb-porcelain: rgba(131, 136, 141, 0.08)",
+      "--nb-rose50: rgba(247, 161, 154, 0.28)",
+      "--nb-clay: #f7a19a",
+      "--nb-ink: #1a1a1a",
+    ]) {
       expect(css).toContain(t);
+    }
+    for (const retired of ["#fafaf9", "#fdf2f0", "#4a4a4a", "#70757a", "#e8e6e3", "#b04a40", "#963e36"]) {
+      expect(css).not.toContain(retired);
     }
     expect(css).toContain("--nb-target: 44px");
     expect(css).toMatch(/prefers-reduced-motion/);
@@ -269,10 +278,13 @@ describe("accepted light design, no photography", () => {
     expect(h1).toMatch(/line-height:\s*1\.1/);
   });
 
-  it("small text never uses the decorative-only silver token", () => {
+  it("keeps small text on an accessible Ink alpha and labels Rose actions with Ink", () => {
     const css = readFileSync(join(__dirname, "napa-botox.css"), "utf8");
-    expect(css).not.toMatch(/#83888D/i);           // 3.58:1, large/decorative only
-    expect(css).toContain("--nb-muted: #70757a");  // 4.65:1 for small text
+    expect(css).not.toMatch(/#83888D/i);
+    expect(css).toContain("--nb-muted: rgba(26, 26, 26, 0.72)");
+    expect(css).toMatch(/\.nb-btn--primary\s*\{[\s\S]*?background:\s*var\(--nb-clay\);[\s\S]*?color:\s*var\(--nb-ink\);/);
+    expect(css).toMatch(/\.nb-sticky \.nb-sticky-book\s*\{[^}]*color:\s*var\(--nb-ink\);/);
+    expect(css).not.toMatch(/box-shadow|translateY\(/);
   });
 });
 

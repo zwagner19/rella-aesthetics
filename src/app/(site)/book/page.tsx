@@ -65,13 +65,13 @@ export default function BookPage() {
                     </Button>
                     <div className="mt-7 border-t border-silver-pale pt-5">
                       {clinic.hours.map((line) => (
-                        <p key={line} className="text-sm leading-7 text-silver">{line}</p>
+                        <p key={line} className="text-sm leading-7 text-ink/70">{line}</p>
                       ))}
                     </div>
                     <div className="mt-4 text-center">
                       <a
                         href={clinic.mapUrl}
-                        className="text-xs font-bold uppercase tracking-[0.15em] text-silver underline decoration-silver-light underline-offset-4 transition-colors hover:text-rose-dark"
+                        className="text-xs font-bold uppercase tracking-[0.15em] text-ink/70 underline decoration-ink/30 underline-offset-4 transition-colors hover:text-ink"
                       >
                         View location
                       </a>

@@ -7,7 +7,7 @@ export const metadata: Metadata = {
   robots: { index: false, follow: true },
 };
 
-const headingClass = "font-medium text-xl text-silver-dark mt-8";
+const headingClass = "font-medium text-xl text-ink mt-8";
 
 export default function GiveawayTermsPage() {
   return (
@@ -20,7 +20,7 @@ export default function GiveawayTermsPage() {
           <h1 className="font-bold text-3xl md:text-4xl tracking-[0.06em] uppercase text-rose-text mb-5">
             Grand Opening Giveaway
           </h1>
-          <p className="text-lg font-light text-silver max-w-[680px] leading-relaxed">
+          <p className="text-lg font-light text-ink/70 max-w-[680px] leading-relaxed">
             Terms and conditions published for Rella Aesthetics&apos; October 2024 promotion.
           </p>
         </div>
@@ -28,8 +28,8 @@ export default function GiveawayTermsPage() {
 
       <section className="py-20">
         <div className="mx-auto max-w-[800px] px-6 md:px-8 lg:px-12">
-          <div className="prose prose-lg text-silver max-w-none space-y-6">
-            <h2 className="font-medium text-2xl text-silver-dark">Terms and Conditions</h2>
+          <div className="prose prose-lg text-ink/70 max-w-none space-y-6">
+            <h2 className="font-medium text-2xl text-ink">Terms and Conditions</h2>
 
             <h3 className={headingClass}>1. Eligibility</h3>
             <p>
@@ -121,19 +121,19 @@ export default function GiveawayTermsPage() {
               The promotion is void where prohibited by law.
             </p>
 
-            <h2 className="font-medium text-2xl text-silver-dark mt-12">
+            <h2 className="font-medium text-2xl text-ink mt-12">
               Prize Terms and Conditions
             </h2>
 
             <h3 className={headingClass}>1. HydraFacials for a Year</h3>
-            <p><strong className="text-silver-dark">Prize:</strong></p>
+            <p><strong className="text-ink">Prize:</strong></p>
             <ul>
               <li>The winner will receive 12 HydraFacials (one per month for a year) at Rella Aesthetics, valued at $3,000.</li>
               <li>The prize is non-transferable and can only be used by the winner.</li>
               <li>Missed treatments cannot be rolled over or accumulated for future months.</li>
               <li>The prize has no cash value and cannot be exchanged for other services or products.</li>
             </ul>
-            <p><strong className="text-silver-dark">Redemption:</strong></p>
+            <p><strong className="text-ink">Redemption:</strong></p>
             <ul>
               <li>The winner must book and receive one HydraFacial per month. Appointments are subject to availability.</li>
               <li>If an appointment is missed without proper notice, the monthly treatment will be forfeited.</li>
@@ -141,13 +141,13 @@ export default function GiveawayTermsPage() {
             </ul>
 
             <h3 className={headingClass}>2. B12 Shots for Life (2 Winners)</h3>
-            <p><strong className="text-silver-dark">Prize:</strong></p>
+            <p><strong className="text-ink">Prize:</strong></p>
             <ul>
               <li>Each winner will receive one B12 shot per month for as long as Rella Aesthetics offers the service.</li>
               <li>The prize is non-transferable and can only be used by the winner.</li>
               <li>The prize has no cash value and cannot be exchanged for any other product or service.</li>
             </ul>
-            <p><strong className="text-silver-dark">Redemption:</strong></p>
+            <p><strong className="text-ink">Redemption:</strong></p>
             <ul>
               <li>The winner is entitled to one B12 shot per calendar month.</li>
               <li>If a shot is missed in a given month, it cannot be rolled over to future months.</li>
@@ -155,26 +155,26 @@ export default function GiveawayTermsPage() {
             </ul>
 
             <h3 className={headingClass}>3. At-Home IV Party for 8 People</h3>
-            <p><strong className="text-silver-dark">Prize:</strong></p>
+            <p><strong className="text-ink">Prize:</strong></p>
             <ul>
               <li>The winner will receive an At-Home IV Therapy Party for up to 8 people, including the winner, valued at $[2400].</li>
               <li>The prize is non-transferable and can only be used for one event.</li>
               <li>If fewer than 8 people receive IV therapy, the remaining treatments cannot be carried over or reused.</li>
             </ul>
-            <p><strong className="text-silver-dark">Redemption:</strong></p>
+            <p><strong className="text-ink">Redemption:</strong></p>
             <ul>
               <li>The event must be scheduled in advance, and availability is subject to the location and travel range of Rella Aesthetics.</li>
               <li>Missed appointments or changes to the guest list must be communicated in advance, but the total number of treatments will not exceed 8.</li>
             </ul>
 
             <h3 className={headingClass}>4. Full Body Transformation ft. Rella Weight Loss + Body Sculpt</h3>
-            <p><strong className="text-silver-dark">Prize:</strong></p>
+            <p><strong className="text-ink">Prize:</strong></p>
             <ul>
               <li>The winner will receive a six-month weight loss program featuring an injectable and a Body Sculpt or Body Tone Package of 10 treatments, valued at $8000.</li>
               <li>The prize is non-transferable and can only be used by the winner.</li>
               <li>The Rella Weight Loss program includes the medication but does not cover the cost of blood work or other qualifying medical tests.</li>
             </ul>
-            <p><strong className="text-silver-dark">Redemption:</strong></p>
+            <p><strong className="text-ink">Redemption:</strong></p>
             <ul>
               <li>The winner must medically qualify for the Semaglutide program.</li>
               <li>The Body Sculpt or Body Tone treatments must be scheduled and completed within the six-month period.</li>
@@ -182,14 +182,14 @@ export default function GiveawayTermsPage() {
             </ul>
 
             <h3 className={headingClass}>5. Tox for a Year (Grand Prize)</h3>
-            <p><strong className="text-silver-dark">Prize:</strong></p>
+            <p><strong className="text-ink">Prize:</strong></p>
             <ul>
               <li>The winner will receive Botox treatments for a year (up to 50 units every 3 months), valued at $2800.</li>
               <li>The prize is non-transferable and can only be used by the winner.</li>
               <li>Treatments are limited to the forehead, 11&apos;s, and crow&apos;s feet areas using Dysport only.</li>
               <li>Treatments are subject to the discretion of Rella Aesthetics&apos; injectors, based on medical considerations.</li>
             </ul>
-            <p><strong className="text-silver-dark">Redemption:</strong></p>
+            <p><strong className="text-ink">Redemption:</strong></p>
             <ul>
               <li>The prize entitles the winner to a maximum of 50 units every three months.</li>
               <li>The treatments must be spaced out evenly (every three months) and cannot be rolled over or combined for larger treatments.</li>

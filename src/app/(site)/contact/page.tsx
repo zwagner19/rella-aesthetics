@@ -52,23 +52,23 @@ export default async function ContactPage({
               <SectionHeader title="Other Ways to Reach Us" />
               <div className="space-y-4 mb-8">
                 <p className="text-ink/70">
-                  <strong className="text-silver-dark">Phone: </strong>
+                  <strong className="text-ink">Phone: </strong>
                   <a href="tel:+17073582928" className="hover:text-rose-text transition-colors">
                     707.358.2928
                   </a>
                 </p>
                 <p className="text-ink/70">
-                  <strong className="text-silver-dark">Email: </strong>
+                  <strong className="text-ink">Email: </strong>
                   <a href="mailto:info@experiencerella.com" className="hover:text-rose-text transition-colors">
                     info@experiencerella.com
                   </a>
                 </p>
               </div>
-              <h3 className="font-medium text-lg text-silver-dark mb-4">Clinic Hours</h3>
+              <h3 className="font-medium text-lg text-ink mb-4">Clinic Hours</h3>
               <div className="space-y-2 text-sm text-ink/70">
                 {[locations.vacaville, locations.napa].map((location) => (
                   <p key={location.name}>
-                    <strong className="text-silver-dark">{location.name}: </strong>
+                    <strong className="text-ink">{location.name}: </strong>
                     {location.hours[0]}
                   </p>
                 ))}

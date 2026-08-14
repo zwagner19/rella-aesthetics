@@ -150,7 +150,7 @@ export default function VacavilleBotoxPage() {
                 Call 707.358.2928
               </Button>
             </div>
-            <p className="mt-5 text-xs leading-6 text-silver">
+            <p className="mt-5 text-xs leading-6 text-ink/70">
               Opens Rella Vacaville&apos;s live New Patient Tox service with Select a professional as the next step.
             </p>
           </div>
@@ -184,7 +184,7 @@ export default function VacavilleBotoxPage() {
             <h2 id="vacaville-botox-pricing" className="mb-5 text-3xl font-medium tracking-[-0.04em] text-ink md:text-5xl">
               Know the rate before you choose the plan.
             </h2>
-            <p className="text-lg font-light leading-relaxed text-silver">
+            <p className="text-lg font-light leading-relaxed text-ink/70">
               Botox and Dysport use different, non-interchangeable units. Your provider reviews the proposed product, units, and expected total before treatment.
             </p>
           </div>
@@ -195,7 +195,7 @@ export default function VacavilleBotoxPage() {
                 <span className="mb-8 block text-xs font-bold tracking-[0.18em] text-rose-dark">0{index + 1}</span>
                 <p className="mb-2 text-3xl font-medium tracking-[-0.035em] text-ink">{card.value}</p>
                 <h3 className="mb-4 text-xs font-bold uppercase tracking-[0.16em] text-silver-dark">{card.label}</h3>
-                <p className="text-sm leading-7 text-silver">{card.detail}</p>
+                <p className="text-sm leading-7 text-ink/70">{card.detail}</p>
               </article>
             ))}
           </div>
@@ -230,7 +230,7 @@ export default function VacavilleBotoxPage() {
               "Review product-specific onset, the two-week assessment point, aftercare, and an appropriate follow-up plan.",
             ].map((step, index) => (
               <li key={step} className="border border-white/15 bg-white/[0.04] p-6">
-                <span className="mb-7 inline-flex h-9 w-9 items-center justify-center rounded-full bg-rose text-xs font-bold">{index + 1}</span>
+                <span className="mb-7 inline-flex h-9 w-9 items-center justify-center rounded-full bg-rose text-xs font-bold text-ink">{index + 1}</span>
                 <p className="text-sm leading-7 text-white/75">{step}</p>
               </li>
             ))}
@@ -245,7 +245,7 @@ export default function VacavilleBotoxPage() {
             <h2 id="vacaville-botox-timing" className="mb-5 text-3xl font-medium tracking-[-0.04em] text-ink md:text-5xl">
               Temporary improvement, assessed over time.
             </h2>
-            <p className="text-lg font-light leading-relaxed text-silver">
+            <p className="text-lg font-light leading-relaxed text-ink/70">
               Botox softening may begin in 4–7 days, while Dysport can show results in 2–5 days. Full effect is assessed around two weeks. Results commonly last around 3–4 months, and individual response varies.
             </p>
           </div>
@@ -268,7 +268,7 @@ export default function VacavilleBotoxPage() {
             <h2 id="visit-rella-vacaville" className="mb-3 text-3xl font-medium tracking-[-0.035em] text-ink">
               542 Main St · Vacaville, CA 95688
             </h2>
-            <p className="text-silver">Wednesday–Saturday: 9am–5pm · Sunday–Tuesday: Closed</p>
+            <p className="text-ink/70">Wednesday–Saturday: 9am–5pm · Sunday–Tuesday: Closed</p>
           </div>
           <div className="flex flex-col gap-3">
             <Button href={BOOKING_HREF} data-cta="service-booking" className="rounded-full">Book New Patient Tox</Button>
@@ -287,28 +287,28 @@ export default function VacavilleBotoxPage() {
         </div>
       </section>
 
-      <section className="bg-rose-cta py-20 text-center text-white" aria-labelledby="vacaville-botox-next-step">
+      <section className="bg-rose-cta py-20 text-center text-ink" aria-labelledby="vacaville-botox-next-step">
         <div className="mx-auto max-w-[720px] px-6">
           <h2 id="vacaville-botox-next-step" className="mb-4 text-3xl font-medium tracking-[-0.035em] md:text-5xl">
             Ready for a clear Vacaville next step?
           </h2>
-          <p className="mb-8 text-lg font-light leading-relaxed text-white/85">
+          <p className="mb-8 text-lg font-light leading-relaxed text-ink/75">
             Open the live New Patient Tox service, review the current booking terms, or call Rella if you have a question before choosing a visit.
           </p>
           <div className="flex flex-col justify-center gap-3 sm:flex-row">
-            <Button href={BOOKING_HREF} data-cta="service-booking" className="rounded-full bg-white !text-rose-text hover:bg-white/90 hover:!text-rose-dark">
+            <Button href={BOOKING_HREF} data-cta="service-booking" className="rounded-full bg-white !text-ink hover:bg-white/90 hover:!text-ink">
               Book New Patient Tox
             </Button>
-            <Button href="tel:+17073582928" data-cta="phone" variant="ghost" className="rounded-full border-white/70 !text-white hover:border-white hover:!text-white">
+            <Button href="tel:+17073582928" data-cta="phone" variant="ghost">
               Call Rella
             </Button>
           </div>
-          <p className="mt-6 text-xs leading-6 text-white/70">
+          <p className="mt-6 text-xs leading-6 text-ink/75">
             Individual results vary. Treatment eligibility, product, dose, placement, and timing require an individualized assessment.
           </p>
-          <div className="mt-5 flex flex-wrap justify-center gap-x-5 gap-y-2 text-xs text-white/75">
-            <Link href="/cancellation-policy" className="underline underline-offset-4 hover:text-white">Cancellation policy</Link>
-            <Link href="/locations/vacaville" className="underline underline-offset-4 hover:text-white">Vacaville clinic details</Link>
+          <div className="mt-5 flex flex-wrap justify-center gap-x-5 gap-y-2 text-xs text-ink/75">
+            <Link href="/cancellation-policy" className="underline underline-offset-4 hover:text-ink">Cancellation policy</Link>
+            <Link href="/locations/vacaville" className="underline underline-offset-4 hover:text-ink">Vacaville clinic details</Link>
           </div>
         </div>
       </section>

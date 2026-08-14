@@ -24,14 +24,14 @@ export function Hero({
       <div className="mx-auto max-w-[1200px] px-6 md:px-8 lg:px-12 w-full">
         <div className="relative z-10 max-w-[640px]">
           {eyebrow && (
-            <p className="font-bold text-[0.6875rem] tracking-[0.2em] uppercase text-silver mb-6">
+            <p className="font-bold text-[0.6875rem] tracking-[0.2em] uppercase text-ink/70 mb-6">
               {eyebrow}
             </p>
           )}
           <h1 className="font-bold text-4xl md:text-5xl lg:text-6xl tracking-[0.08em] uppercase text-rose-text mb-4 leading-[1.1]">
             {title}
           </h1>
-          <p className="text-lg font-light text-silver mb-8 leading-relaxed max-w-[500px]">
+          <p className="text-lg font-light text-ink/70 mb-8 leading-relaxed max-w-[500px]">
             {description}
           </p>
           <div className="flex flex-wrap gap-4">

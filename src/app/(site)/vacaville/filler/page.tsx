@@ -154,7 +154,7 @@ export default function VacavilleFillerPage() {
                 Call 707.358.2928
               </Button>
             </div>
-            <p className="mt-5 text-xs leading-6 text-silver">
+            <p className="mt-5 text-xs leading-6 text-ink/70">
               Opens Rella Vacaville&apos;s live Dermal Fillers service with Select a professional as the next step.
             </p>
           </div>
@@ -189,7 +189,7 @@ export default function VacavilleFillerPage() {
               <h2 id="vacaville-filler-pricing" className="mb-5 text-3xl font-medium tracking-[-0.04em] text-ink md:text-5xl">
                 A range, then a specific plan.
               </h2>
-              <p className="text-lg font-light leading-relaxed text-silver">
+              <p className="text-lg font-light leading-relaxed text-ink/70">
                 The price follows the product and amount selected for your anatomy and goals—not a one-size-fits-all syringe promise.
               </p>
             </div>
@@ -197,12 +197,12 @@ export default function VacavilleFillerPage() {
               <article className="border border-ink/12 bg-white p-7">
                 <p className="mb-3 text-4xl font-medium tracking-[-0.045em] text-ink">$840</p>
                 <h3 className="mb-4 text-xs font-bold uppercase tracking-[0.16em] text-rose-dark">Base service amount</h3>
-                <p className="text-sm leading-7 text-silver">The current dermal-filler base amount in Rella&apos;s approved public pricing canon.</p>
+                <p className="text-sm leading-7 text-ink/70">The current dermal-filler base amount in Rella&apos;s approved public pricing canon.</p>
               </article>
               <article className="border border-rose bg-rose-blush p-7">
                 <p className="mb-3 text-4xl font-medium tracking-[-0.045em] text-ink">$540–$960</p>
                 <h3 className="mb-4 text-xs font-bold uppercase tracking-[0.16em] text-rose-dark">Active product range</h3>
-                <p className="text-sm leading-7 text-silver">The selected active product and plan determine the expected treatment total.</p>
+                <p className="text-sm leading-7 text-ink/70">The selected active product and plan determine the expected treatment total.</p>
               </article>
             </div>
           </div>
@@ -232,7 +232,7 @@ export default function VacavilleFillerPage() {
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {planFactors.map((factor, index) => (
               <article key={factor.title} className="border border-white/15 bg-white/[0.04] p-6">
-                <span className="mb-8 inline-flex h-9 w-9 items-center justify-center rounded-full bg-rose text-xs font-bold">{index + 1}</span>
+                <span className="mb-8 inline-flex h-9 w-9 items-center justify-center rounded-full bg-rose text-xs font-bold text-ink">{index + 1}</span>
                 <h3 className="mb-3 text-xl font-medium">{factor.title}</h3>
                 <p className="text-sm leading-7 text-white/70">{factor.body}</p>
               </article>
@@ -248,7 +248,7 @@ export default function VacavilleFillerPage() {
             <h2 id="vacaville-filler-visit" className="mb-5 text-3xl font-medium tracking-[-0.04em] text-ink md:text-5xl">
               Assessment, options, total, then choice.
             </h2>
-            <p className="text-lg font-light leading-relaxed text-silver">
+            <p className="text-lg font-light leading-relaxed text-ink/70">
               Review your goals, relevant history, prior filler, and the areas being considered. Your provider assesses facial anatomy, explains appropriate product options, and confirms the proposed amount and expected total before treatment.
             </p>
           </div>
@@ -271,7 +271,7 @@ export default function VacavilleFillerPage() {
             <h2 id="visit-rella-vacaville-filler" className="mb-3 text-3xl font-medium tracking-[-0.035em] text-ink">
               542 Main St · Vacaville, CA 95688
             </h2>
-            <p className="text-silver">Wednesday–Saturday: 9am–5pm · Sunday–Tuesday: Closed</p>
+            <p className="text-ink/70">Wednesday–Saturday: 9am–5pm · Sunday–Tuesday: Closed</p>
           </div>
           <div className="flex flex-col gap-3">
             <Button href={BOOKING_HREF} data-cta="service-booking" className="rounded-full">Book Dermal Fillers</Button>
@@ -290,28 +290,28 @@ export default function VacavilleFillerPage() {
         </div>
       </section>
 
-      <section className="bg-rose-cta py-20 text-center text-white" aria-labelledby="vacaville-filler-next-step">
+      <section className="bg-rose-cta py-20 text-center text-ink" aria-labelledby="vacaville-filler-next-step">
         <div className="mx-auto max-w-[720px] px-6">
           <h2 id="vacaville-filler-next-step" className="mb-4 text-3xl font-medium tracking-[-0.035em] md:text-5xl">
             Start with the Vacaville plan.
           </h2>
-          <p className="mb-8 text-lg font-light leading-relaxed text-white/85">
+          <p className="mb-8 text-lg font-light leading-relaxed text-ink/75">
             Open the live Dermal Fillers service, review the current treatment areas and booking terms, or call Rella with a question.
           </p>
           <div className="flex flex-col justify-center gap-3 sm:flex-row">
-            <Button href={BOOKING_HREF} data-cta="service-booking" className="rounded-full bg-white !text-rose-text hover:bg-white/90 hover:!text-rose-dark">
+            <Button href={BOOKING_HREF} data-cta="service-booking" className="rounded-full bg-white !text-ink hover:bg-white/90 hover:!text-ink">
               Book Dermal Fillers
             </Button>
-            <Button href="tel:+17073582928" data-cta="phone" variant="ghost" className="rounded-full border-white/70 !text-white hover:border-white hover:!text-white">
+            <Button href="tel:+17073582928" data-cta="phone" variant="ghost">
               Call Rella
             </Button>
           </div>
-          <p className="mt-6 text-xs leading-6 text-white/70">
+          <p className="mt-6 text-xs leading-6 text-ink/75">
             Individual results vary. Treatment eligibility, area, product, amount, and timing require an individualized assessment.
           </p>
-          <div className="mt-5 flex flex-wrap justify-center gap-x-5 gap-y-2 text-xs text-white/75">
-            <Link href="/cancellation-policy" className="underline underline-offset-4 hover:text-white">Cancellation policy</Link>
-            <Link href="/locations/vacaville" className="underline underline-offset-4 hover:text-white">Vacaville clinic details</Link>
+          <div className="mt-5 flex flex-wrap justify-center gap-x-5 gap-y-2 text-xs text-ink/75">
+            <Link href="/cancellation-policy" className="underline underline-offset-4 hover:text-ink">Cancellation policy</Link>
+            <Link href="/locations/vacaville" className="underline underline-offset-4 hover:text-ink">Vacaville clinic details</Link>
           </div>
         </div>
       </section>

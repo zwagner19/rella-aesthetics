@@ -47,8 +47,8 @@ export function ContactForm({ initialServiceInterest = "" }: { initialServiceInt
 
   if (status === "sent") {
     return (
-      <div className="rounded-lg border border-rose-light bg-rose-blush p-8 text-center" role="status" aria-live="polite">
-        <p className="font-medium text-silver-dark text-lg mb-2">Thank you!</p>
+      <div className="border border-rose-light bg-rose-blush p-8 text-center" role="status" aria-live="polite">
+        <p className="font-medium text-ink text-lg mb-2">Thank you!</p>
         <p className="text-ink/70">Your message reached Rella. A member of our team will follow up.</p>
       </div>
     );
@@ -67,7 +67,7 @@ export function ContactForm({ initialServiceInterest = "" }: { initialServiceInt
         />
       </div>
       <div>
-        <label htmlFor="name" className="block text-sm font-medium text-silver-dark mb-1">
+        <label htmlFor="name" className="block text-sm font-medium text-ink mb-1">
           Full Name
         </label>
         <input
@@ -76,11 +76,11 @@ export function ContactForm({ initialServiceInterest = "" }: { initialServiceInt
           name="name"
           required
           autoComplete="name"
-          className="w-full border border-silver-light rounded px-4 py-3 text-silver-dark bg-white focus:border-rose focus:ring-2 focus:ring-rose/20 transition-colors"
+          className="w-full border border-silver-light rounded px-4 py-3 text-ink bg-white focus:border-rose focus:ring-2 focus:ring-rose/20 transition-colors"
         />
       </div>
       <fieldset>
-        <legend className="block text-sm font-medium text-silver-dark">
+        <legend className="block text-sm font-medium text-ink">
           Best way to reach you
         </legend>
         <p id="contact-method-help" className="mb-3 mt-1 text-xs leading-relaxed text-ink/70">
@@ -88,7 +88,7 @@ export function ContactForm({ initialServiceInterest = "" }: { initialServiceInt
         </p>
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
           <div>
-            <label htmlFor="email" className="mb-1 block text-sm font-medium text-silver-dark">
+            <label htmlFor="email" className="mb-1 block text-sm font-medium text-ink">
               Email
             </label>
             <input
@@ -100,11 +100,11 @@ export function ContactForm({ initialServiceInterest = "" }: { initialServiceInt
               aria-invalid={contactMethodError ? true : undefined}
               aria-describedby={contactMethodError ? "contact-method-help contact-method-error" : "contact-method-help"}
               onInput={() => setContactMethodError("")}
-              className="w-full border border-silver-light rounded px-4 py-3 text-silver-dark bg-white focus:border-rose focus:ring-2 focus:ring-rose/20 transition-colors"
+              className="w-full border border-silver-light rounded px-4 py-3 text-ink bg-white focus:border-rose focus:ring-2 focus:ring-rose/20 transition-colors"
             />
           </div>
           <div>
-            <label htmlFor="phone" className="mb-1 block text-sm font-medium text-silver-dark">
+            <label htmlFor="phone" className="mb-1 block text-sm font-medium text-ink">
               Phone
             </label>
             <input
@@ -116,7 +116,7 @@ export function ContactForm({ initialServiceInterest = "" }: { initialServiceInt
               aria-invalid={contactMethodError ? true : undefined}
               aria-describedby={contactMethodError ? "contact-method-help contact-method-error" : "contact-method-help"}
               onInput={() => setContactMethodError("")}
-              className="w-full border border-silver-light rounded px-4 py-3 text-silver-dark bg-white focus:border-rose focus:ring-2 focus:ring-rose/20 transition-colors"
+              className="w-full border border-silver-light rounded px-4 py-3 text-ink bg-white focus:border-rose focus:ring-2 focus:ring-rose/20 transition-colors"
             />
           </div>
         </div>
@@ -127,7 +127,7 @@ export function ContactForm({ initialServiceInterest = "" }: { initialServiceInt
         )}
       </fieldset>
       <div>
-        <label htmlFor="service" className="block text-sm font-medium text-silver-dark mb-1">
+        <label htmlFor="service" className="block text-sm font-medium text-ink mb-1">
           Service Interest
         </label>
         <select
@@ -135,7 +135,7 @@ export function ContactForm({ initialServiceInterest = "" }: { initialServiceInt
           name="service"
           value={serviceInterest}
           onChange={(event) => setServiceInterest(event.currentTarget.value)}
-          className="w-full border border-silver-light rounded px-4 py-3 text-silver-dark bg-white focus:border-rose focus:ring-2 focus:ring-rose/20 transition-colors"
+          className="w-full border border-silver-light rounded px-4 py-3 text-ink bg-white focus:border-rose focus:ring-2 focus:ring-rose/20 transition-colors"
         >
           <option value="">Select a service</option>
           {services.map((s) => (
@@ -151,13 +151,13 @@ export function ContactForm({ initialServiceInterest = "" }: { initialServiceInt
         </select>
       </div>
       <div>
-        <label htmlFor="location" className="block text-sm font-medium text-silver-dark mb-1">
+        <label htmlFor="location" className="block text-sm font-medium text-ink mb-1">
           Preferred Clinic <span className="font-normal text-ink/70">(optional)</span>
         </label>
         <select
           id="location"
           name="location"
-          className="w-full border border-silver-light rounded px-4 py-3 text-silver-dark bg-white focus:border-rose focus:ring-2 focus:ring-rose/20 transition-colors"
+          className="w-full border border-silver-light rounded px-4 py-3 text-ink bg-white focus:border-rose focus:ring-2 focus:ring-rose/20 transition-colors"
         >
           <option value="">Select a clinic</option>
           <option value="Vacaville">Vacaville — 542 Main St</option>
@@ -169,14 +169,14 @@ export function ContactForm({ initialServiceInterest = "" }: { initialServiceInt
         </p>
       </div>
       <div>
-        <label htmlFor="message" className="block text-sm font-medium text-silver-dark mb-1">
+        <label htmlFor="message" className="block text-sm font-medium text-ink mb-1">
           Message
         </label>
         <textarea
           id="message"
           name="message"
           rows={4}
-          className="w-full border border-silver-light rounded px-4 py-3 text-silver-dark bg-white focus:border-rose focus:ring-2 focus:ring-rose/20 transition-colors resize-y"
+          className="w-full border border-silver-light rounded px-4 py-3 text-ink bg-white focus:border-rose focus:ring-2 focus:ring-rose/20 transition-colors resize-y"
         />
         <p className="mt-2 text-xs leading-relaxed text-ink/70">
           Please do not include sensitive medical information. This form is for general questions and is not monitored for urgent or emergency care.
@@ -184,8 +184,8 @@ export function ContactForm({ initialServiceInterest = "" }: { initialServiceInt
       </div>
 
       {status === "error" && (
-        <div role="alert" className="rounded-lg border border-rose-light bg-rose-blush p-4 text-sm leading-relaxed text-silver-dark">
-          <p className="font-medium text-rose-dark">Your message was not sent.</p>
+        <div role="alert" className="border border-rose-light bg-rose-blush p-4 text-sm leading-relaxed text-ink">
+          <p className="font-medium text-ink">Your message was not sent.</p>
           <p>
             Please try again, call{" "}
             <a className="font-medium underline underline-offset-2" href="tel:+17073582928">

@@ -249,7 +249,7 @@ export default function VacavilleHydraFacialPage() {
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {visitSteps.map((step, index) => (
               <article key={step.title} className="border border-white/15 bg-white/[0.04] p-6">
-                <span className="mb-8 inline-flex h-9 w-9 items-center justify-center rounded-full bg-rose text-xs font-bold">{index + 1}</span>
+                <span className="mb-8 inline-flex h-9 w-9 items-center justify-center rounded-full bg-rose text-xs font-bold text-ink">{index + 1}</span>
                 <h3 className="mb-3 text-xl font-medium">{step.title}</h3>
                 <p className="text-sm leading-7 text-white/70">{step.body}</p>
               </article>
@@ -309,28 +309,28 @@ export default function VacavilleHydraFacialPage() {
         </div>
       </section>
 
-      <section className="bg-rose-cta py-20 text-center text-white" aria-labelledby="vacaville-hydrafacial-next-step">
+      <section className="bg-rose-cta py-20 text-center text-ink" aria-labelledby="vacaville-hydrafacial-next-step">
         <div className="mx-auto max-w-[720px] px-6">
           <h2 id="vacaville-hydrafacial-next-step" className="mb-4 text-3xl font-medium tracking-[-0.035em] md:text-5xl">
             Start with Signature in Vacaville.
           </h2>
-          <p className="mb-8 text-lg font-light leading-relaxed text-white/85">
+          <p className="mb-8 text-lg font-light leading-relaxed text-ink/75">
             Open the live Signature service, review the professional and booking terms, or call Rella if you want help comparing tiers.
           </p>
           <div className="flex flex-col justify-center gap-3 sm:flex-row">
-            <Button href={BOOKING_HREF} data-cta="service-booking" className="rounded-full bg-white !text-rose-text hover:bg-white/90 hover:!text-rose-dark">
+            <Button href={BOOKING_HREF} data-cta="service-booking" className="rounded-full bg-white !text-ink hover:bg-white/90 hover:!text-ink">
               Book Signature HydraFacial
             </Button>
-            <Button href="tel:+17073582928" data-cta="phone" variant="ghost" className="rounded-full border-white/70 !text-white hover:border-white hover:!text-white">
+            <Button href="tel:+17073582928" data-cta="phone" variant="ghost">
               Call Rella
             </Button>
           </div>
-          <p className="mt-6 text-xs leading-6 text-white/70">
+          <p className="mt-6 text-xs leading-6 text-ink/75">
             Individual results and skin response vary. Service tier, customization, and suitability should be reviewed with the treating provider, particularly after recent procedures or with active skin concerns.
           </p>
-          <div className="mt-5 flex flex-wrap justify-center gap-x-5 gap-y-2 text-xs text-white/75">
-            <Link href="/cancellation-policy" className="underline underline-offset-4 hover:text-white">Cancellation policy</Link>
-            <Link href="/locations/vacaville" className="underline underline-offset-4 hover:text-white">Vacaville clinic details</Link>
+          <div className="mt-5 flex flex-wrap justify-center gap-x-5 gap-y-2 text-xs text-ink/75">
+            <Link href="/cancellation-policy" className="underline underline-offset-4 hover:text-ink">Cancellation policy</Link>
+            <Link href="/locations/vacaville" className="underline underline-offset-4 hover:text-ink">Vacaville clinic details</Link>
           </div>
         </div>
       </section>

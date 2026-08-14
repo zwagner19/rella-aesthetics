@@ -51,7 +51,7 @@ function HomePageContent({ isWeightLoss }: { isWeightLoss: boolean }) {
       <section className="grid min-h-[70vh] bg-white md:min-h-[80vh] md:grid-cols-2">
         <div className="flex items-center px-6 py-20 md:px-8 md:py-24 lg:pl-[max(3rem,calc((100vw-1200px)/2))] lg:pr-16">
           <div className="max-w-[620px]">
-            <p className="mb-6 text-sm font-medium italic tracking-[0.04em] text-silver">
+            <p className="mb-6 text-sm font-medium italic tracking-[0.04em] text-ink/70">
               Northern California&apos;s Luxury Med Spa
             </p>
             <h1 className="mb-5 text-4xl font-bold uppercase leading-[1.04] tracking-[0.08em] text-ink md:text-5xl lg:text-6xl">
@@ -164,7 +164,7 @@ function HomePageContent({ isWeightLoss }: { isWeightLoss: boolean }) {
             <h2 className="mb-6 text-3xl font-bold uppercase leading-[1.08] tracking-[0.06em] text-ink md:text-5xl">
               Built around more than medication.
             </h2>
-            <p className="mb-7 text-lg font-light leading-relaxed text-silver">
+            <p className="mb-7 text-lg font-light leading-relaxed text-ink/70">
               Start with a 30-minute phone consultation with Zachary Wagner, DO, an American Board of Obesity Medicine diplomate, to understand how Rella works and review the appropriate next step and costs before deciding.
             </p>
             <ul className="mb-8 space-y-3 text-sm text-silver-dark">

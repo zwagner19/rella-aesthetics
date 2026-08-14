@@ -145,7 +145,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
               {post.categoryName}
             </p>
           )}
-          <h1 className="font-bold text-3xl md:text-4xl lg:text-5xl tracking-[0.04em] text-silver-dark mb-4 max-w-[800px] leading-[1.2]">
+          <h1 className="font-bold text-3xl md:text-4xl lg:text-5xl tracking-[0.04em] text-ink mb-4 max-w-[800px] leading-[1.2]">
             {post.title}
           </h1>
           <div className="flex items-center gap-4 text-sm text-silver">
@@ -166,7 +166,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
       {/* Cover Image */}
       {post.coverImage && (
         <div className="mx-auto max-w-[1200px] px-6 md:px-8 lg:px-12 -mt-2 mb-12">
-          <div className="relative aspect-[2/1] rounded-lg overflow-hidden">
+          <div className="relative aspect-[2/1] overflow-hidden">
             <Image
               src={urlFor(post.coverImage).width(1200).height(600).url()}
               alt={post.title}
@@ -187,7 +187,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
       </section>
 
       {/* Bottom CTA */}
-      <section className="bg-rose-cta py-16 text-center text-white">
+      <section className="bg-rose-cta py-16 text-center text-ink">
         <div className="mx-auto max-w-[600px] px-6">
           <h2 className="font-bold text-2xl md:text-3xl tracking-[0.06em] uppercase mb-4">
             Questions? We&apos;re Here to Help
@@ -197,7 +197,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
           </p>
           <Button
             href={resolveBookingHref({})}
-            className="bg-white !text-rose-text hover:bg-white/90 hover:!text-rose-dark"
+            className="bg-white !text-ink hover:bg-white/90 hover:!text-ink"
           >
             Book Consultation
           </Button>

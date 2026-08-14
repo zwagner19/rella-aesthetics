@@ -24,7 +24,7 @@ export function BeforeAfterGallery({
     >
       <div className="mx-auto max-w-[1200px] px-6 md:px-8 lg:px-12">
         <div className="mb-10 max-w-[760px]">
-          <p className="mb-4 text-sm font-normal italic text-silver">
+          <p className="mb-4 text-sm font-normal italic text-ink/70">
             {eyebrow}
           </p>
           <h2 id="before-after-heading" className="mb-4 text-3xl font-bold uppercase leading-tight tracking-[0.08em] text-ink md:text-5xl">
@@ -58,7 +58,7 @@ export function BeforeAfterGallery({
               <figcaption className="p-5 md:p-6">
                 <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
                   <p className="font-bold uppercase tracking-[0.08em] text-ink">{result.treatment}</p>
-                  <p className="text-xs font-semibold uppercase tracking-[0.12em] text-silver">{result.timeframe}</p>
+                  <p className="text-xs font-semibold uppercase tracking-[0.12em] text-ink/70">{result.timeframe}</p>
                 </div>
                 <p className="text-sm font-light leading-relaxed text-ink/70">{result.caption}</p>
               </figcaption>

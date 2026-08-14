@@ -173,7 +173,7 @@ export default function VacavilleChemicalPeelsPage() {
                 Call 707.358.2928
               </Button>
             </div>
-            <p className="mt-5 text-xs leading-6 text-silver">
+            <p className="mt-5 text-xs leading-6 text-ink/70">
               The live Vacaville menu opens first. Choose Peels, then review the current service details before confirming.
             </p>
           </div>
@@ -213,7 +213,7 @@ export default function VacavilleChemicalPeelsPage() {
             <h2 id="vacaville-peel-options" className="mb-5 text-3xl font-medium tracking-[-0.04em] text-ink md:text-5xl">
               Four names are listed. Selection still needs context.
             </h2>
-            <p className="text-lg font-light leading-relaxed text-silver">
+            <p className="text-lg font-light leading-relaxed text-ink/70">
               These are the four peel options currently visible in Rella&apos;s Vacaville menu. A menu name is not a substitute for reviewing formulation, candidacy, preparation, and recovery.
             </p>
           </div>
@@ -225,7 +225,7 @@ export default function VacavilleChemicalPeelsPage() {
                   <span className="h-px flex-1 bg-rose-light/70" aria-hidden="true" />
                 </div>
                 <h3 className="mb-3 text-2xl font-medium tracking-[-0.025em] text-ink">{option.name}</h3>
-                <p className="text-sm leading-7 text-silver">{option.body}</p>
+                <p className="text-sm leading-7 text-ink/70">{option.body}</p>
               </article>
             ))}
           </div>
@@ -246,7 +246,7 @@ export default function VacavilleChemicalPeelsPage() {
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {visitSteps.map((step, index) => (
               <article key={step.title} className="border border-white/15 bg-white/[0.04] p-6">
-                <span className="mb-8 inline-flex h-9 w-9 items-center justify-center rounded-full bg-rose text-xs font-bold">{index + 1}</span>
+                <span className="mb-8 inline-flex h-9 w-9 items-center justify-center rounded-full bg-rose text-xs font-bold text-ink">{index + 1}</span>
                 <h3 className="mb-3 text-xl font-medium">{step.title}</h3>
                 <p className="text-sm leading-7 text-white/70">{step.body}</p>
               </article>
@@ -262,7 +262,7 @@ export default function VacavilleChemicalPeelsPage() {
             <h2 id="vacaville-peel-booking" className="mb-5 text-3xl font-medium tracking-[-0.04em] text-ink md:text-5xl">
               Open Vacaville, then choose Peels.
             </h2>
-            <p className="text-lg font-light leading-relaxed text-silver">
+            <p className="text-lg font-light leading-relaxed text-ink/70">
               Rella&apos;s menu currently lists the four options above. The booking button keeps the correct clinic selected without forcing a broken category shortcut.
             </p>
           </div>
@@ -288,7 +288,7 @@ export default function VacavilleChemicalPeelsPage() {
             <h2 id="vacaville-peel-alternatives" className="mb-3 text-3xl font-medium tracking-[-0.035em] text-ink">
               Start with the treatment plan, not the trend.
             </h2>
-            <p className="max-w-[700px] text-silver">
+            <p className="max-w-[700px] text-ink/70">
               If you are also considering a facial, HydraFacial, microneedling, or laser treatment, ask the team to compare timing and recovery before combining or sequencing services.
             </p>
           </div>
@@ -306,28 +306,28 @@ export default function VacavilleChemicalPeelsPage() {
         </div>
       </section>
 
-      <section className="bg-rose-cta py-20 text-center text-white" aria-labelledby="vacaville-peel-next-step">
+      <section className="bg-rose-cta py-20 text-center text-ink" aria-labelledby="vacaville-peel-next-step">
         <div className="mx-auto max-w-[740px] px-6">
           <h2 id="vacaville-peel-next-step" className="mb-4 text-3xl font-medium tracking-[-0.035em] md:text-5xl">
             Choose your Vacaville peel with context.
           </h2>
-          <p className="mb-8 text-lg font-light leading-relaxed text-white/85">
+          <p className="mb-8 text-lg font-light leading-relaxed text-ink/75">
             Open the current menu, call with a question, or review the general guide before you choose an option.
           </p>
           <div className="flex flex-col justify-center gap-3 sm:flex-row">
-            <Button href={BOOKING_HREF} data-cta="service-booking" className="rounded-full bg-white !text-rose-text hover:bg-white/90 hover:!text-rose-dark">
+            <Button href={BOOKING_HREF} data-cta="service-booking" className="rounded-full bg-white !text-ink hover:bg-white/90 hover:!text-ink">
               Open Vacaville Menu
             </Button>
-            <Button href="tel:+17073582928" data-cta="phone" variant="ghost" className="rounded-full border-white/70 !text-white hover:border-white hover:!text-white">
+            <Button href="tel:+17073582928" data-cta="phone" variant="ghost">
               Call Rella
             </Button>
           </div>
-          <p className="mt-6 text-xs leading-6 text-white/70">
+          <p className="mt-6 text-xs leading-6 text-ink/75">
             Individual response and recovery vary. Suitability, formulation, preparation, and aftercare should be reviewed for the exact peel being considered.
           </p>
-          <div className="mt-5 flex flex-wrap justify-center gap-x-5 gap-y-2 text-xs text-white/75">
-            <Link href="/cancellation-policy" className="underline underline-offset-4 hover:text-white">Cancellation policy</Link>
-            <Link href="/locations/vacaville" className="underline underline-offset-4 hover:text-white">Vacaville clinic details</Link>
+          <div className="mt-5 flex flex-wrap justify-center gap-x-5 gap-y-2 text-xs text-ink/75">
+            <Link href="/cancellation-policy" className="underline underline-offset-4 hover:text-ink">Cancellation policy</Link>
+            <Link href="/locations/vacaville" className="underline underline-offset-4 hover:text-ink">Vacaville clinic details</Link>
           </div>
         </div>
       </section>

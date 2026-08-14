@@ -32,13 +32,13 @@ export function BlogCard({ slug, title, excerpt, date, category, image }: BlogCa
         <p className="font-bold text-[0.625rem] tracking-[0.2em] uppercase text-silver mb-2">
           {category}
         </p>
-        <h3 className="font-medium text-lg text-silver-dark mb-2">
+        <h3 className="font-medium text-lg text-ink mb-2">
           <Link href={`/blog/${slug}`} className="hover:text-rose-text transition-colors">
             {title}
           </Link>
         </h3>
-        <p className="text-silver text-sm mb-3">{excerpt}</p>
-        <time className="text-xs text-silver-light" dateTime={date}>
+        <p className="text-sm text-ink/70 mb-3">{excerpt}</p>
+        <time className="text-xs text-ink/70" dateTime={date}>
           {new Date(date).toLocaleDateString("en-US", {
             month: "long",
             day: "numeric",

@@ -77,17 +77,17 @@ export default function AboutPage() {
             <h1 className="mb-7 max-w-[720px] text-4xl font-bold uppercase leading-[1.04] tracking-[0.06em] text-ink md:text-6xl">
               Care built on judgment, honesty, and the right next step.
             </h1>
-            <p className="mb-7 max-w-[650px] text-lg font-light leading-relaxed text-silver md:text-xl">
+            <p className="mb-7 max-w-[650px] text-lg font-light leading-relaxed text-ink/70 md:text-xl">
               Rella Aesthetics brings aesthetic care and medical weight management together under
               founder and owner Dr. Zachary Wagner. Dr. Wagner is Rella&apos;s medical weight-loss
               physician; Rella&apos;s aesthetics services are delivered by the aesthetics team.
             </p>
             <div className="mb-8 border-l-2 border-rose pl-5">
               <p className="font-medium text-silver-dark">Dr. Zachary Wagner, DO</p>
-              <p className="mt-1 text-sm leading-relaxed text-silver">
+              <p className="mt-1 text-sm leading-relaxed text-ink/70">
                 Founder &amp; Owner · Medical Weight-Loss Physician
               </p>
-              <p className="mt-3 text-sm leading-relaxed text-silver">
+              <p className="mt-3 text-sm leading-relaxed text-ink/70">
                 Dr. Wagner does not perform aesthetic treatments or injections.
               </p>
             </div>
@@ -130,10 +130,10 @@ export default function AboutPage() {
             </h2>
           </div>
           <div>
-            <p className="mb-5 text-lg font-light leading-relaxed text-silver">
+            <p className="mb-5 text-lg font-light leading-relaxed text-ink/70">
               Rella is built around a simple idea: people should feel heard before they are asked to make a decision. That means beginning with the goal, explaining the options plainly, and recommending only the next step that makes sense for the individual.
             </p>
-            <p className="leading-relaxed text-silver">
+            <p className="leading-relaxed text-ink/70">
               Rella&apos;s aesthetics team provides aesthetic treatments, while Dr. Wagner leads
               medical weight-loss care. Across both areas, the practice is designed to feel clear,
               respectful, and personal.
@@ -158,7 +158,7 @@ export default function AboutPage() {
             <h2 className="text-3xl font-bold uppercase tracking-[0.06em] text-ink md:text-4xl">
               Meet the people behind Rella.
             </h2>
-            <p className="mt-4 leading-relaxed text-silver">
+            <p className="mt-4 leading-relaxed text-ink/70">
               Get to know Rella&apos;s leadership and care team serving Vacaville and Napa.
             </p>
           </div>
@@ -179,7 +179,7 @@ export default function AboutPage() {
               <article key={value.number} className="border-l-2 border-l-rose bg-white p-7 md:p-9">
                 <p className="mb-8 text-xs font-bold tracking-[0.18em] text-rose-dark">{value.number}</p>
                 <h3 className="mb-3 text-xl font-bold uppercase tracking-[0.06em] text-ink">{value.title}</h3>
-                <p className="leading-relaxed text-silver">{value.description}</p>
+                <p className="leading-relaxed text-ink/70">{value.description}</p>
               </article>
             ))}
           </div>
@@ -191,12 +191,12 @@ export default function AboutPage() {
           <Link href="/locations/vacaville" className="group border-y border-silver-pale p-7 transition-colors hover:border-rose md:p-9">
             <p className="mb-3 text-[0.75rem] font-medium capitalize italic tracking-[0.08em] text-rose-dark">Vacaville</p>
             <h2 className="mb-3 text-2xl font-bold uppercase tracking-[0.06em] text-ink">542 Main Street</h2>
-            <p className="text-sm text-silver">Explore the clinic, hours, services, and directions <span aria-hidden="true">→</span></p>
+            <p className="text-sm text-ink/70">Explore the clinic, hours, services, and directions <span aria-hidden="true">→</span></p>
           </Link>
           <Link href="/locations/napa" className="group border-y border-silver-pale p-7 transition-colors hover:border-rose md:p-9">
             <p className="mb-3 text-[0.75rem] font-medium capitalize italic tracking-[0.08em] text-rose-dark">Napa</p>
             <h2 className="mb-3 text-2xl font-bold uppercase tracking-[0.06em] text-ink">1541 3rd Street</h2>
-            <p className="text-sm text-silver">Explore the clinic, hours, services, and directions <span aria-hidden="true">→</span></p>
+            <p className="text-sm text-ink/70">Explore the clinic, hours, services, and directions <span aria-hidden="true">→</span></p>
           </Link>
         </div>
       </section>

@@ -356,7 +356,7 @@ export function WeightLossServicePage() {
                 <span className="mb-8 inline-flex h-10 w-10 items-center justify-center rounded-full bg-rose-blush text-sm font-bold text-rose-dark">
                   {index + 1}
                 </span>
-                <p className="mb-2 text-xs font-bold uppercase tracking-[0.18em] text-ink/55">{step.label}</p>
+                <p className="mb-2 text-xs font-bold uppercase tracking-[0.18em] text-ink/70">{step.label}</p>
                 <h3 className="mb-3 text-lg font-semibold leading-snug text-ink">{step.title}</h3>
                 <p className="text-sm leading-[1.75] text-ink/65">{step.body}</p>
               </li>

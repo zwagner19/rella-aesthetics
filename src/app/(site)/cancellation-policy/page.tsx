@@ -30,14 +30,14 @@ export default function CancellationPolicyPage() {
       <section className="py-20">
         <div className="mx-auto max-w-[800px] px-6 md:px-8 lg:px-12">
           <div className="prose prose-lg max-w-none space-y-6 text-ink/70">
-            <h2 className="font-medium text-xl text-silver-dark">Current Policy</h2>
+            <h2 className="font-medium text-xl text-ink">Current Policy</h2>
             <p>
               Please give at least 48 hours&apos; notice if you need to cancel. Rella may retain the
               applicable booking deposit for cancellations within 48 hours. Emergencies are
               reviewed individually.
             </p>
 
-            <h2 className="font-medium text-xl text-silver-dark mt-8">
+            <h2 className="font-medium text-xl text-ink mt-8">
               Napa New-Patient Tox Appointments
             </h2>
             <p>{CANCELLATION_POLICY}</p>
@@ -46,7 +46,7 @@ export default function CancellationPolicyPage() {
               deposit is separate from per-unit treatment pricing.
             </p>
 
-            <h2 className="font-medium text-xl text-silver-dark mt-8">Need to Make a Change?</h2>
+            <h2 className="font-medium text-xl text-ink mt-8">Need to Make a Change?</h2>
             <p>
               Call Rella at{" "}
               <a href="tel:+17073582928" className="text-rose-text hover:underline">

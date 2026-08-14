@@ -93,14 +93,21 @@ export function RellaSocialCard() {
               fontSize: 25,
               fontWeight: 400,
               lineHeight: 1.45,
-              color: "#5d6165",
+              color: "rgba(26, 26, 26, 0.72)",
             }}
           >
             Personalized aesthetic and wellness care, designed around your goals.
           </div>
         </div>
 
-        <div style={{ display: "flex", alignItems: "center", fontSize: 19, color: "#5d6165" }}>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            fontSize: 19,
+            color: "rgba(26, 26, 26, 0.72)",
+          }}
+        >
           <div style={{ display: "flex" }}>
             AESTHETICS · SKIN · WELLNESS · WEIGHT MANAGEMENT
           </div>

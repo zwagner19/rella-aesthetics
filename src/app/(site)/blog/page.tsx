@@ -136,7 +136,7 @@ export default async function BlogPage() {
           <h1 className="font-bold text-4xl md:text-5xl tracking-[0.08em] uppercase text-rose-text mb-4 leading-[1.1]">
             Insights &amp; Guides
           </h1>
-          <p className="text-lg font-light text-silver max-w-[560px] leading-relaxed">
+          <p className="text-lg font-light text-ink/70 max-w-[560px] leading-relaxed">
             Local facts, transparent pricing, and practical questions to help you make a more informed treatment decision.
           </p>
         </div>
@@ -195,7 +195,7 @@ export default async function BlogPage() {
                   <h2 className="mb-3 text-xl font-medium leading-snug text-ink">
                     {path.title}
                   </h2>
-                  <p className="mb-6 flex-1 text-sm leading-relaxed text-silver">
+                  <p className="mb-6 flex-1 text-sm leading-relaxed text-ink/70">
                     {path.description}
                   </p>
                   <span className="text-sm font-medium text-rose-text transition-colors group-hover:text-rose-dark">

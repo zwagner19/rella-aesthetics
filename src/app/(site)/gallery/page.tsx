@@ -66,7 +66,7 @@ export default function GalleryPage() {
               <article key={item.number} className="border-t-2 border-t-rose bg-white p-7 md:p-8">
                 <p className="mb-10 text-xs font-bold tracking-[0.18em] text-rose-dark">{item.number}</p>
                 <h3 className="mb-3 text-xl font-bold uppercase tracking-[0.06em] text-ink">{item.title}</h3>
-                <p className="text-sm leading-relaxed text-silver">{item.body}</p>
+                <p className="text-sm leading-relaxed text-ink/70">{item.body}</p>
               </article>
             ))}
           </div>

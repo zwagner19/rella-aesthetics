@@ -11,10 +11,9 @@
   --color-rose: #F7A19A;
   --color-rose-dark: #1A1A1A;
   --color-rose-light: #F7A19A70;
-  --color-rose-blush: #F7A19A24;
+  --color-rose-blush: rgba(247, 161, 154, 0.28);
   --color-rose-text: #1A1A1A;
-  /* Legacy white-label actions remain AA-safe until each page is reskinned. */
-  --color-rose-cta: #1A1A1A;
+  --color-rose-cta: #F7A19A;
 
   --color-silver: #83888D;
   --color-silver-dark: #1A1A1A;
@@ -51,8 +50,8 @@ body {
 
 /* Focus visible for accessibility */
 :focus-visible {
-  outline: 2px solid var(--color-ink);
-  outline-offset: 3px;
+  outline: 3px solid var(--color-rose);
+  outline-offset: 2px;
 }
 
 /* Smooth scrolling */

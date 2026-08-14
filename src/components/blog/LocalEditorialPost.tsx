@@ -304,16 +304,16 @@ export function LocalEditorialPost({
         </div>
       </article>
 
-      <section className="bg-rose-cta py-16 text-white">
+      <section className="bg-rose-cta py-16 text-ink">
         <div className="mx-auto grid max-w-[900px] gap-7 px-6 md:grid-cols-[1fr_auto] md:items-center md:px-8">
           <div>
-            <p className="text-[0.6875rem] font-bold uppercase tracking-[0.18em] text-white/75">
+            <p className="text-[0.6875rem] font-bold uppercase tracking-[0.18em] text-ink/75">
               Rella Aesthetics · Downtown Napa
             </p>
             <h2 className="mt-3 text-3xl font-medium tracking-[-0.035em]">
               Ready for your exact price and plan?
             </h2>
-            <p className="mt-3 max-w-[580px] font-light leading-relaxed text-white/85">
+            <p className="mt-3 max-w-[580px] font-light leading-relaxed text-ink/75">
               Book the verified Napa new-patient tox path or call the team with a pricing question.
             </p>
           </div>
@@ -321,11 +321,11 @@ export function LocalEditorialPost({
             <Button
               href={NAPA_BOOKING_HREF}
               data-cta="service-booking"
-              className="rounded-full bg-white !text-rose-text hover:bg-white/90"
+              className="rounded-full bg-white !text-ink hover:bg-white/90"
             >
               Book Napa Botox
             </Button>
-            <a href="tel:+17073582928" className="text-center text-sm font-medium text-white underline decoration-white/50 underline-offset-4">
+            <a href="tel:+17073582928" className="text-center text-sm font-medium text-ink underline decoration-ink/50 underline-offset-4">
               (707) 358-2928
             </a>
           </div>

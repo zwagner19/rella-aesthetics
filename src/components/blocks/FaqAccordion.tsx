@@ -12,7 +12,7 @@ export function FaqAccordion({ items }: FaqAccordionProps) {
     <div className="max-w-[860px] border-t border-ink/10">
       {items.map((item, i) => (
         <details key={i} className="group border-b border-ink/10">
-          <summary className="flex cursor-pointer list-none items-center justify-between py-5 font-medium text-ink transition-colors hover:text-silver [&::-webkit-details-marker]:hidden">
+          <summary className="flex cursor-pointer list-none items-center justify-between py-5 font-medium text-ink transition-colors hover:text-ink/70 [&::-webkit-details-marker]:hidden">
             <span>{item.question}</span>
             <span className="ml-4 shrink-0 text-xl font-light text-rose-text group-open:hidden">+</span>
             <span className="ml-4 hidden shrink-0 text-xl font-light text-rose-text group-open:inline">&minus;</span>

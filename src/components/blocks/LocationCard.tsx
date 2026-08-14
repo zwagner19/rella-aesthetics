@@ -22,7 +22,7 @@ export function LocationCard({ name, address, city, state, zip, hours, href }: L
         {city}, {state} {zip}
         <br />
         <br />
-        <strong className="text-xs font-bold uppercase tracking-[0.14em] text-silver">Hours</strong>
+        <strong className="text-xs font-bold uppercase tracking-[0.14em] text-ink/70">Hours</strong>
         <br />
         {hours.map((line, i) => (
           <span key={i}>

@@ -9,10 +9,28 @@ function channel(value: number) {
     : ((normalized + 0.055) / 1.055) ** 2.4;
 }
 
-function luminance(hex: string) {
-  const channels = hex.match(/[0-9a-f]{2}/gi);
-  if (!channels || channels.length !== 3) throw new Error(`Invalid color: ${hex}`);
-  const [red, green, blue] = channels.map((value) => channel(Number.parseInt(value, 16)));
+function colorChannels(value: string): [number, number, number] {
+  const hexChannels = value.match(/^#([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})$/i);
+  if (hexChannels) {
+    return hexChannels.slice(1).map((hex) => Number.parseInt(hex, 16)) as [number, number, number];
+  }
+
+  const rgbaChannels = value.match(
+    /^rgba\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*,\s*(0(?:\.\d+)?|1(?:\.0+)?)\s*\)$/i,
+  );
+  if (rgbaChannels) {
+    const [, red, green, blue, alphaValue] = rgbaChannels;
+    const alpha = Number.parseFloat(alphaValue);
+    return [red, green, blue].map((component) =>
+      Math.round(Number.parseInt(component, 10) * alpha + 255 * (1 - alpha)),
+    ) as [number, number, number];
+  }
+
+  throw new Error(`Invalid color: ${value}`);
+}
+
+function luminance(value: string) {
+  const [red, green, blue] = colorChannels(value).map(channel);
   return 0.2126 * red + 0.7152 * green + 0.0722 * blue;
 }
 
@@ -25,7 +43,10 @@ function contrastRatio(foreground: string, background: string) {
 }
 
 function cssToken(source: string, token: string) {
-  const value = new RegExp(`--color-${token}:\\s*(#[0-9a-f]{6})`, "i").exec(source)?.[1];
+  const value = new RegExp(
+    `--color-${token}:\\s*(#[0-9a-f]{6}|rgba\\([^;]+\\))`,
+    "i",
+  ).exec(source)?.[1];
   if (!value) throw new Error(`Missing --color-${token}`);
   return value;
 }
@@ -42,14 +63,22 @@ describe("conversion color contrast", () => {
   const css = readFileSync("src/app/globals.css", "utf8");
   const white = cssToken(css, "white");
   const ink = cssToken(css, "ink");
+  const rose = cssToken(css, "rose");
   const blush = cssToken(css, "rose-blush");
 
-  it("keeps primary actions and readable rose text at WCAG AA contrast", () => {
-    expect(contrastRatio(cssToken(css, "rose-cta"), white)).toBeGreaterThanOrEqual(4.5);
+  it("keeps Rose actions paired with readable Ink labels", () => {
+    expect(cssToken(css, "rose-cta").toLowerCase()).toBe(rose.toLowerCase());
+    expect(contrastRatio(cssToken(css, "rose-cta"), ink)).toBeGreaterThanOrEqual(4.5);
     expect(contrastRatio(cssToken(css, "rose-dark"), white)).toBeGreaterThanOrEqual(4.5);
     expect(contrastRatio(cssToken(css, "rose-text"), white)).toBeGreaterThanOrEqual(4.5);
     expect(contrastRatio(cssToken(css, "rose-text"), blush)).toBeGreaterThanOrEqual(4.5);
-    expect(contrastRatio(cssToken(css, "rose"), ink)).toBeGreaterThanOrEqual(4.5);
+    expect(contrastRatio(rose, ink)).toBeGreaterThanOrEqual(4.5);
+    expect(blush).toBe("rgba(247, 161, 154, 0.28)");
+  });
+
+  it("uses the owner-approved Rose focus treatment", () => {
+    expect(css).toContain("outline: 3px solid var(--color-rose)");
+    expect(css).toContain("outline-offset: 2px");
   });
 
   it("never pairs the decorative rose fill with white CTA text", () => {
@@ -58,11 +87,17 @@ describe("conversion color contrast", () => {
     for (const file of componentFiles("src")) {
       const lines = readFileSync(file, "utf8").split("\n");
       lines.forEach((line, index) => {
-        const hasDecorativeRoseFill = /\\bbg-rose(?=\\s|[\"'`/])/.test(line);
-        const hasWhiteText = /\\btext-white(?=\\s|[\"'`/])/.test(line);
-        const hasDecorativeRoseTextOverride = /!text-rose(?=\\s|[\"'`/])/.test(line);
+        const hasDecorativeRoseFill = /\bbg-rose(?=\s|["'`/])/.test(line);
+        const hasRoseCtaFill = /\bbg-rose-cta(?=\s|["'`/])/.test(line);
+        const hasInkText = /\btext-ink(?=\s|["'`/])/.test(line);
+        const hasWhiteText = /\btext-white(?=\s|["'`/])/.test(line);
+        const hasDecorativeRoseTextOverride = /!text-rose(?=\s|["'`/])/.test(line);
 
-        if ((hasDecorativeRoseFill && hasWhiteText) || hasDecorativeRoseTextOverride) {
+        if (
+          ((hasDecorativeRoseFill || hasRoseCtaFill) && hasWhiteText) ||
+          (hasRoseCtaFill && !hasInkText) ||
+          hasDecorativeRoseTextOverride
+        ) {
           failures.push(`${file}:${index + 1}`);
         }
       });

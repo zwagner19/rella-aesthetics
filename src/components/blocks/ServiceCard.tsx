@@ -29,7 +29,7 @@ export function ServiceCard({ href, title, description, image, imageAlt }: Servi
           {title}
         </h3>
         <p className="mb-5 flex-1 text-sm font-light leading-relaxed text-ink/70">{description}</p>
-        <span className="inline-flex items-center gap-2 border-t border-ink/10 pt-4 text-[0.75rem] font-bold uppercase tracking-[0.14em] text-silver transition-colors duration-150 group-hover:text-ink">
+        <span className="inline-flex items-center gap-2 border-t border-ink/10 pt-4 text-[0.75rem] font-bold uppercase tracking-[0.14em] text-ink/70 transition-colors duration-150 group-hover:text-ink">
           Learn more <span>&rarr;</span>
         </span>
       </div>
