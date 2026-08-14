@@ -6,6 +6,7 @@ import TeamPage, { metadata } from "./page";
 import {
   additionalTeamMembers,
   leadershipMember,
+  teamLocations,
   teamRoleGroups,
 } from "@/content/team";
 
@@ -35,16 +36,16 @@ describe("team roster integrity", () => {
   it("uses only the exact confirmed public role labels", () => {
     expect(
       teamRoleGroups.flatMap((group) =>
-        group.members.map((member) => [member.name, member.role]),
+        group.members.map((member) => [member.name, member.role, member.primaryLocation]),
       ),
     ).toEqual([
-      ["Anna Johnson", "Lead Nurse, RN"],
-      ["Marisa Avalos", "Aesthetic RN"],
-      ["Warda Harchaoui", "PA-C"],
-      ["Michaela", "Esthetician & MA"],
-      ["Sandra Maldonado", "MA"],
-      ["Pia Tiaoqui", "MA"],
-      ["Hailey Butler", "Weight Loss & Body Contouring"],
+      ["Anna Johnson", "Lead Nurse, RN", "vacaville"],
+      ["Marisa Avalos", "Aesthetic RN", "napa"],
+      ["Warda Harchaoui", "PA-C", "vacaville"],
+      ["Michaela", "Esthetician & MA", "vacaville"],
+      ["Sandra Maldonado", "MA", "vacaville"],
+      ["Pia Tiaoqui", "MA", "vacaville"],
+      ["Hailey Butler", "Weight Loss & Body Contouring", "napa"],
     ]);
 
     for (const group of teamRoleGroups) {
@@ -61,8 +62,12 @@ describe("team roster integrity", () => {
   });
 
   it("presents the photo-only team members without inventing public roles or bios", () => {
-    expect(additionalTeamMembers.map((member) => member.name)).toEqual([
-      "Devyn Pickett", "Paula", "Ayano", "Natalie", "Ryan",
+    expect(additionalTeamMembers.map((member) => [member.name, member.primaryLocation])).toEqual([
+      ["Devyn Pickett", "napa"],
+      ["Paula", "vacaville"],
+      ["Ayano", "napa"],
+      ["Natalie", "napa"],
+      ["Ryan", "both"],
     ]);
     for (const member of additionalTeamMembers) {
       expect(teamHtml).toContain(member.name);
@@ -71,6 +76,80 @@ describe("team roster integrity", () => {
     expect(teamHtml).not.toMatch(
       /Director of Ops|Front Desk|Nurse Injector|verified roles|confirmed team members|approved for publication|listed without titles or biographies/i,
     );
+  });
+
+  it("breaks the roster down by Napa, Vacaville, and Rella-wide support", () => {
+    expect(leadershipMember.locations).toEqual(["napa", "vacaville"]);
+    expect(teamLocations.map((location) => [location.id, location.name])).toEqual([
+      ["napa", "Napa"],
+      ["vacaville", "Vacaville"],
+    ]);
+
+    const detailedByLocation = Object.fromEntries(
+      teamLocations.map((location) => [
+        location.id,
+        teamRoleGroups.flatMap((group) =>
+          group.members
+            .filter((member) => member.primaryLocation === location.id)
+            .map((member) => member.name),
+        ),
+      ]),
+    );
+    const additionalByLocation = Object.fromEntries(
+      [...teamLocations, { id: "both", name: "Both" }].map((location) => [
+        location.id,
+        additionalTeamMembers
+          .filter((member) => member.primaryLocation === location.id)
+          .map((member) => member.name),
+      ]),
+    );
+
+    expect(detailedByLocation).toEqual({
+      napa: ["Marisa Avalos", "Hailey Butler"],
+      vacaville: ["Anna Johnson", "Warda Harchaoui", "Michaela", "Sandra Maldonado", "Pia Tiaoqui"],
+    });
+    expect(additionalByLocation).toEqual({
+      napa: ["Devyn Pickett", "Ayano", "Natalie"],
+      vacaville: ["Paula"],
+      both: ["Ryan"],
+    });
+    expect(teamHtml).toContain('id="team-location-napa"');
+    expect(teamHtml).toContain('id="team-location-vacaville"');
+    expect(teamHtml).toContain("Meet the Napa team.");
+    expect(teamHtml).toContain("Meet the Vacaville team.");
+    expect(teamHtml).toContain("Across both locations.");
+    expect(
+      teamRoleGroups.flatMap((group) =>
+        group.members.flatMap((member) =>
+          member.alsoServes ? [[member.name, member.alsoServes]] : [],
+        ),
+      ),
+    ).toEqual([["Warda Harchaoui", "napa"]]);
+    expect(
+      additionalTeamMembers.flatMap((member) =>
+        member.alsoServes ? [[member.name, member.alsoServes]] : [],
+      ),
+    ).toEqual([["Devyn Pickett", "vacaville"]]);
+    expect(teamHtml).toContain("Also serves Napa");
+    expect(teamHtml).toContain("Also serves Vacaville");
+    expect(teamHtml.indexOf('id="team-location-napa"')).toBeLessThan(
+      teamHtml.indexOf('id="team-location-vacaville"'),
+    );
+
+    const napaStart = teamHtml.indexOf('id="team-location-napa"');
+    const vacavilleStart = teamHtml.indexOf('id="team-location-vacaville"');
+    const allLocationsStart = teamHtml.indexOf('id="additional-team-heading"');
+    const napaHtml = teamHtml.slice(napaStart, vacavilleStart);
+    const vacavilleHtml = teamHtml.slice(vacavilleStart, allLocationsStart);
+    const allLocationsHtml = teamHtml.slice(allLocationsStart);
+
+    for (const name of ["Marisa Avalos", "Hailey Butler", "Devyn Pickett", "Ayano", "Natalie"]) {
+      expect(napaHtml).toContain(name);
+    }
+    for (const name of ["Anna Johnson", "Warda Harchaoui", "Michaela", "Sandra Maldonado", "Pia Tiaoqui", "Paula"]) {
+      expect(vacavilleHtml).toContain(name);
+    }
+    expect(allLocationsHtml).toContain("Ryan");
   });
 
   it("uses every supplied portrait once and keeps the portraitless profile honest", () => {

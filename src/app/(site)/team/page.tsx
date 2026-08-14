@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/Button";
 import {
   additionalTeamMembers,
   leadershipMember,
+  teamLocations,
   teamRoleGroups,
 } from "@/content/team";
 import { resolveBookingHref } from "@/lib/booking-routes";
@@ -29,13 +30,18 @@ export const metadata: Metadata = {
 };
 
 type TeamProfileMember = (typeof teamRoleGroups)[number]["members"][number];
+type AdditionalTeamMember = (typeof additionalTeamMembers)[number];
+
+function locationName(locationId: "napa" | "vacaville") {
+  return teamLocations.find((location) => location.id === locationId)?.name ?? locationId;
+}
 
 function TeamProfile({ member }: { member: TeamProfileMember }) {
   if (!member.image) {
     return (
       <article className="border-t border-silver/30 py-8 md:col-span-2 md:grid md:grid-cols-[0.65fr_1.35fr] md:gap-12">
         <div>
-          <h4 className="text-2xl font-medium text-ink">{member.name}</h4>
+          <h5 className="text-2xl font-medium text-ink">{member.name}</h5>
           <p className="mt-2 text-xs font-bold uppercase tracking-[0.12em] text-silver-dark">
             {member.role}
           </p>
@@ -61,10 +67,15 @@ function TeamProfile({ member }: { member: TeamProfileMember }) {
         />
       </div>
       <div className="pt-6">
-        <h4 className="text-2xl font-medium text-ink">{member.name}</h4>
+        <h5 className="text-2xl font-medium text-ink">{member.name}</h5>
         <p className="mt-2 text-xs font-bold uppercase tracking-[0.12em] text-silver-dark">
           {member.role}
         </p>
+        {member.alsoServes ? (
+          <p className="mt-3 text-xs font-bold uppercase tracking-[0.12em] text-rose-dark">
+            Also serves {locationName(member.alsoServes)}
+          </p>
+        ) : null}
         <div className="mt-5 space-y-4 text-[0.9375rem] leading-relaxed text-ink/75">
           {member.bio.map((paragraph) => (
             <p key={paragraph}>{paragraph}</p>
@@ -72,6 +83,47 @@ function TeamProfile({ member }: { member: TeamProfileMember }) {
         </div>
       </div>
     </article>
+  );
+}
+
+function AdditionalTeamGrid({
+  members,
+  label,
+}: {
+  members: readonly AdditionalTeamMember[];
+  label: string;
+}) {
+  if (members.length === 0) return null;
+
+  return (
+    <section className="mt-16 border-t border-silver/25 pt-10" aria-label={label}>
+      <h4 className="mb-7 text-sm font-bold uppercase tracking-[0.16em] text-silver-dark">
+        {label}
+      </h4>
+      <ul className="grid gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3">
+        {members.map((member) => (
+          <li key={member.name}>
+            <div className="relative aspect-[4/5] overflow-hidden bg-rose-blush">
+              <Image
+                src={member.image}
+                alt=""
+                fill
+                className="object-cover object-top"
+                sizes="(min-width: 1024px) 320px, (min-width: 640px) 45vw, calc(100vw - 3rem)"
+              />
+            </div>
+            <p className="border-t border-silver/35 py-5 text-lg font-medium text-ink">
+              {member.name}
+            </p>
+            {member.alsoServes ? (
+              <p className="-mt-3 pb-5 text-xs font-bold uppercase tracking-[0.12em] text-rose-dark">
+                Also serves {locationName(member.alsoServes)}
+              </p>
+            ) : null}
+          </li>
+        ))}
+      </ul>
+    </section>
   );
 }
 
@@ -108,7 +160,7 @@ export default function TeamPage() {
 
           <div>
             <p className="mb-4 text-[0.75rem] font-medium capitalize italic tracking-[0.08em] text-rose-dark">
-              Leadership
+              Leadership · Across both locations
             </p>
             <h2
               id="leadership-heading"
@@ -141,29 +193,91 @@ export default function TeamPage() {
         <div className="mx-auto max-w-[1120px] px-6 md:px-8 lg:px-12">
           <div className="mb-14 max-w-[720px]">
             <p className="mb-4 text-[0.75rem] font-medium capitalize italic tracking-[0.08em] text-rose-dark">
-              Care team
+              Team by location
             </p>
             <h2 className="text-3xl font-bold uppercase tracking-[0.06em] text-ink md:text-5xl">
-              The Rella care team.
+              Napa and Vacaville.
             </h2>
+            <p className="mt-5 max-w-[650px] leading-relaxed text-ink/75">
+              Find the people based at each Rella location. Rella-wide leadership and support are
+              shown separately.
+            </p>
           </div>
 
-          <div className="space-y-20">
-            {teamRoleGroups.map((group) => (
-              <section key={group.title} aria-labelledby={`team-${group.title.toLowerCase().replaceAll(" ", "-").replaceAll("&", "and")}`}>
-                <h3
-                  id={`team-${group.title.toLowerCase().replaceAll(" ", "-").replaceAll("&", "and")}`}
-                  className="mb-7 text-sm font-bold uppercase tracking-[0.16em] text-silver-dark"
+          <div className="space-y-28">
+            {teamLocations.map((location) => {
+              const roleGroups = teamRoleGroups
+                .map((group) => ({
+                  ...group,
+                  members: group.members.filter(
+                    (member) => member.primaryLocation === location.id,
+                  ),
+                }))
+                .filter((group) => group.members.length > 0);
+              const additionalMembers = additionalTeamMembers.filter(
+                (member) => member.primaryLocation === location.id,
+              );
+
+              return (
+                <section
+                  key={location.id}
+                  id={`team-location-${location.id}`}
+                  aria-labelledby={`team-location-${location.id}-heading`}
+                  className="scroll-mt-28 border-t border-silver/30 pt-12 first:border-t-0 first:pt-0"
                 >
-                  {group.title}
-                </h3>
-                <div className="grid gap-x-8 gap-y-14 md:grid-cols-2">
-                  {group.members.map((member) => (
-                    <TeamProfile key={member.name} member={member} />
-                  ))}
-                </div>
-              </section>
-            ))}
+                  <div className="mb-14 grid gap-6 md:grid-cols-[1fr_auto] md:items-end">
+                    <div>
+                      <p className="mb-4 text-[0.75rem] font-medium capitalize italic tracking-[0.08em] text-rose-dark">
+                        Rella {location.name}
+                      </p>
+                      <h3
+                        id={`team-location-${location.id}-heading`}
+                        className="text-3xl font-bold uppercase tracking-[0.06em] text-ink md:text-5xl"
+                      >
+                        Meet the {location.name} team.
+                      </h3>
+                      <p className="mt-4 leading-relaxed text-ink/75">{location.description}</p>
+                    </div>
+                    <Link
+                      href={location.href}
+                      className="w-fit border-b border-ink pb-1 text-xs font-bold uppercase tracking-[0.14em] text-ink transition-colors hover:border-rose"
+                    >
+                      Explore {location.name} <span aria-hidden="true">→</span>
+                    </Link>
+                  </div>
+
+                  <div className="space-y-16">
+                    {roleGroups.map((group) => {
+                      const groupId = `team-${location.id}-${group.title
+                        .toLowerCase()
+                        .replaceAll(" ", "-")
+                        .replaceAll("&", "and")}`;
+
+                      return (
+                        <section key={group.title} aria-labelledby={groupId}>
+                          <h4
+                            id={groupId}
+                            className="mb-7 text-sm font-bold uppercase tracking-[0.16em] text-silver-dark"
+                          >
+                            {group.title}
+                          </h4>
+                          <div className="grid gap-x-8 gap-y-14 md:grid-cols-2">
+                            {group.members.map((member) => (
+                              <TeamProfile key={member.name} member={member} />
+                            ))}
+                          </div>
+                        </section>
+                      );
+                    })}
+                  </div>
+
+                  <AdditionalTeamGrid
+                    members={additionalMembers}
+                    label={`More of the ${location.name} team`}
+                  />
+                </section>
+              );
+            })}
           </div>
         </div>
       </section>
@@ -173,17 +287,17 @@ export default function TeamPage() {
           <div className="grid gap-8 md:grid-cols-[0.8fr_1.2fr] md:gap-14">
             <div>
               <p className="mb-4 text-[0.75rem] font-medium capitalize italic tracking-[0.08em] text-rose-dark">
-                More of the Rella team
+                Rella-wide team
               </p>
               <h2
                 id="additional-team-heading"
                 className="text-3xl font-bold uppercase tracking-[0.06em] text-ink md:text-4xl"
               >
-                More people behind Rella.
+                Across both locations.
               </h2>
             </div>
             <ul className="grid gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3">
-              {additionalTeamMembers.map((member) => (
+              {additionalTeamMembers.filter((member) => member.primaryLocation === "both").map((member) => (
                 <li key={member.name}>
                   <div className="relative aspect-[4/5] overflow-hidden bg-paper">
                     <Image
