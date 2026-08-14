@@ -72,7 +72,7 @@ describe("sitewide conversion foundation", () => {
     expect(source).toContain('href="mailto:info@experiencerella.com"');
     expect(source).toContain('name="location"');
     expect(source).toContain("Preferred Clinic");
-    expect(source).toContain("No preference — help me choose");
+    expect(source).toContain("No preference (help me choose)");
     expect(source).toContain("EXTRA_CONTACT_INTERESTS");
     expect(intentSource).toContain('membership: "Membership Questions"');
     expect(intentSource).toContain('"private-parties": "Private Party Questions"');

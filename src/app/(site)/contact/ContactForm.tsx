@@ -48,7 +48,7 @@ export function ContactForm({ initialServiceInterest = "" }: { initialServiceInt
   if (status === "sent") {
     return (
       <div className="border border-rose-light bg-rose-blush p-8 text-center" role="status" aria-live="polite">
-        <p className="font-medium text-ink text-lg mb-2">Thank you!</p>
+        <p className="font-medium text-rose text-lg mb-2">Thank you!</p>
         <p className="text-ink/70">Your message reached Rella. A member of our team will follow up.</p>
       </div>
     );
@@ -67,7 +67,7 @@ export function ContactForm({ initialServiceInterest = "" }: { initialServiceInt
         />
       </div>
       <div>
-        <label htmlFor="name" className="block text-sm font-medium text-ink mb-1">
+        <label htmlFor="name" className="block text-sm font-medium text-rose mb-1">
           Full Name
         </label>
         <input
@@ -80,7 +80,7 @@ export function ContactForm({ initialServiceInterest = "" }: { initialServiceInt
         />
       </div>
       <fieldset>
-        <legend className="block text-sm font-medium text-ink">
+        <legend className="block text-sm font-medium text-rose">
           Best way to reach you
         </legend>
         <p id="contact-method-help" className="mb-3 mt-1 text-xs leading-relaxed text-ink/70">
@@ -88,7 +88,7 @@ export function ContactForm({ initialServiceInterest = "" }: { initialServiceInt
         </p>
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
           <div>
-            <label htmlFor="email" className="mb-1 block text-sm font-medium text-ink">
+            <label htmlFor="email" className="mb-1 block text-sm font-medium text-rose">
               Email
             </label>
             <input
@@ -104,7 +104,7 @@ export function ContactForm({ initialServiceInterest = "" }: { initialServiceInt
             />
           </div>
           <div>
-            <label htmlFor="phone" className="mb-1 block text-sm font-medium text-ink">
+            <label htmlFor="phone" className="mb-1 block text-sm font-medium text-rose">
               Phone
             </label>
             <input
@@ -121,13 +121,13 @@ export function ContactForm({ initialServiceInterest = "" }: { initialServiceInt
           </div>
         </div>
         {contactMethodError && (
-          <p id="contact-method-error" role="alert" className="mt-3 text-sm font-medium text-rose-dark">
+          <p id="contact-method-error" role="alert" className="mt-3 text-sm font-medium text-ink">
             {contactMethodError}
           </p>
         )}
       </fieldset>
       <div>
-        <label htmlFor="service" className="block text-sm font-medium text-ink mb-1">
+        <label htmlFor="service" className="block text-sm font-medium text-rose mb-1">
           Service Interest
         </label>
         <select
@@ -151,8 +151,8 @@ export function ContactForm({ initialServiceInterest = "" }: { initialServiceInt
         </select>
       </div>
       <div>
-        <label htmlFor="location" className="block text-sm font-medium text-ink mb-1">
-          Preferred Clinic <span className="font-normal text-ink/70">(optional)</span>
+        <label htmlFor="location" className="block text-sm font-medium text-rose mb-1">
+          Preferred Clinic <span className="font-normal text-rose">(optional)</span>
         </label>
         <select
           id="location"
@@ -160,16 +160,16 @@ export function ContactForm({ initialServiceInterest = "" }: { initialServiceInt
           className="w-full border border-silver-light rounded px-4 py-3 text-ink bg-white focus:border-rose focus:ring-2 focus:ring-rose/20 transition-colors"
         >
           <option value="">Select a clinic</option>
-          <option value="Vacaville">Vacaville — 542 Main St</option>
-          <option value="Napa">Napa — 1541 3rd St</option>
-          <option value="No preference">No preference — help me choose</option>
+          <option value="Vacaville">Vacaville (542 Main St)</option>
+          <option value="Napa">Napa (1541 3rd St)</option>
+          <option value="No preference">No preference (help me choose)</option>
         </select>
         <p className="mt-2 text-xs leading-relaxed text-ink/70">
           This helps the team route your question to the right clinic. You can still change locations later.
         </p>
       </div>
       <div>
-        <label htmlFor="message" className="block text-sm font-medium text-ink mb-1">
+        <label htmlFor="message" className="block text-sm font-medium text-rose mb-1">
           Message
         </label>
         <textarea
@@ -185,7 +185,7 @@ export function ContactForm({ initialServiceInterest = "" }: { initialServiceInt
 
       {status === "error" && (
         <div role="alert" className="border border-rose-light bg-rose-blush p-4 text-sm leading-relaxed text-ink">
-          <p className="font-medium text-ink">Your message was not sent.</p>
+          <p className="font-medium text-rose">Your message was not sent.</p>
           <p>
             Please try again, call{" "}
             <a className="font-medium underline underline-offset-2" href="tel:+17073582928">
@@ -200,7 +200,11 @@ export function ContactForm({ initialServiceInterest = "" }: { initialServiceInt
         </div>
       )}
 
-      <Button type="submit" disabled={status === "sending"} className="w-full sm:w-auto">
+      <Button
+        type="submit"
+        disabled={status === "sending"}
+        className="w-full !text-white hover:!text-white sm:w-auto"
+      >
         {status === "sending" ? "Sending..." : "Send Message"}
       </Button>
     </form>

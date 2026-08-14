@@ -29,11 +29,11 @@ export function BlogCard({ slug, title, excerpt, date, category, image }: BlogCa
         )}
       </Link>
       <div className="p-6">
-        <p className="font-bold text-[0.625rem] tracking-[0.2em] uppercase text-silver mb-2">
+        <p className="font-bold text-[0.625rem] tracking-[0.2em] uppercase text-rose mb-2">
           {category}
         </p>
-        <h3 className="font-medium text-lg text-ink mb-2">
-          <Link href={`/blog/${slug}`} className="hover:text-rose-text transition-colors">
+        <h3 className="font-medium text-lg text-rose mb-2">
+          <Link href={`/blog/${slug}`} className="transition-colors hover:text-ink">
             {title}
           </Link>
         </h3>

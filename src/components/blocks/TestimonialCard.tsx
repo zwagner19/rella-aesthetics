@@ -20,7 +20,7 @@ export function TestimonialCard({ quote, name, source, rating = 5 }: Testimonial
         &ldquo;{quote}&rdquo;
       </blockquote>
       <cite className="not-italic">
-        <span className="block text-sm font-bold uppercase tracking-[0.1em] text-ink">{name}</span>
+        <span className="block text-sm font-bold uppercase tracking-[0.1em] text-rose">{name}</span>
         <span className="mt-1 block text-xs font-medium text-ink/70">{source}</span>
       </cite>
     </div>

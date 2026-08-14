@@ -6,13 +6,13 @@ import type { PortableTextBlock } from "next-sanity";
 const components: PortableTextComponents = {
   block: {
     h2: ({ children }) => (
-      <h2 className="font-medium text-2xl text-ink mt-10 mb-4">{children}</h2>
+      <h2 className="font-medium text-2xl text-rose mt-10 mb-4">{children}</h2>
     ),
     h3: ({ children }) => (
-      <h3 className="font-medium text-xl text-ink mt-8 mb-3">{children}</h3>
+      <h3 className="font-medium text-xl text-rose mt-8 mb-3">{children}</h3>
     ),
     h4: ({ children }) => (
-      <h4 className="font-medium text-lg text-ink mt-6 mb-2">{children}</h4>
+      <h4 className="font-medium text-lg text-rose mt-6 mb-2">{children}</h4>
     ),
     blockquote: ({ children }) => (
       <blockquote className="border-l-4 border-rose-light pl-6 my-6 italic text-ink/70">
@@ -27,7 +27,7 @@ const components: PortableTextComponents = {
     link: ({ children, value }) => (
       <a
         href={value?.href}
-        className="text-rose-text underline underline-offset-2 hover:text-rose-dark transition-colors"
+        className="text-rose underline underline-offset-2 hover:text-ink transition-colors"
         target={value?.href?.startsWith("http") ? "_blank" : undefined}
         rel={value?.href?.startsWith("http") ? "noopener noreferrer" : undefined}
       >

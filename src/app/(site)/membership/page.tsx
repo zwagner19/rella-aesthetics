@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
-import { SectionHeader } from "@/components/ui/SectionHeader";
-import { TierCard } from "@/components/blocks/TierCard";
 import { FaqAccordion, FaqSchema } from "@/components/blocks/FaqAccordion";
+import { Button } from "@/components/ui/Button";
 import { membershipTiers } from "@/lib/data";
 
 export const metadata: Metadata = {
@@ -29,10 +28,10 @@ export default function MembershipPage() {
       {/* Hero */}
       <section className="bg-rose-blush py-24 md:py-28">
         <div className="mx-auto max-w-[1200px] px-6 md:px-8 lg:px-12">
-          <p className="mb-4 text-[0.75rem] font-medium capitalize italic tracking-[0.08em] text-silver-dark">
+          <p className="mb-4 text-[0.75rem] font-medium capitalize italic tracking-[0.08em] text-rose">
             Membership
           </p>
-          <h1 className="mb-5 text-4xl font-bold uppercase leading-[1.08] tracking-[0.08em] text-ink md:text-6xl">
+          <h1 className="mb-5 text-4xl font-bold uppercase leading-[1.08] tracking-[0.08em] text-rose md:text-6xl">
             2026 Memberships
           </h1>
           <p className="max-w-[560px] text-lg font-light leading-relaxed text-ink/70">
@@ -44,28 +43,54 @@ export default function MembershipPage() {
       {/* Tiers */}
       <section className="py-20 md:py-28">
         <div className="mx-auto max-w-[1200px] px-6 md:px-8 lg:px-12">
-          <SectionHeader
-            eyebrow="2026 Public Plans"
-            title="Injectable Memberships"
-            description="Choose Tox, Filler, or the combined plan. Every option below is published with its monthly dues and one-year commitment."
-          />
+          <div className="mb-12 max-w-[680px]">
+            <p className="mb-4 text-sm font-medium italic tracking-[0.04em] text-rose">
+              2026 Public Plans
+            </p>
+            <h2 className="mb-5 text-3xl font-medium uppercase leading-[1.08] tracking-[0.08em] text-rose md:text-5xl">
+              Injectable Memberships
+            </h2>
+            <p className="max-w-[620px] leading-relaxed text-ink/70">
+              Choose Tox, Filler, or the combined plan. Every option below is published with its
+              monthly dues and one-year commitment.
+            </p>
+          </div>
           <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
             {membershipTiers.map((tier) => (
-              <TierCard
-                key={tier.name}
-                name={tier.name}
-                price={tier.price}
-                period={tier.period}
-                benefits={[...tier.benefits]}
-                featured={false}
-                ctaHref="/contact?intent=membership"
-                ctaText="Ask About Membership"
-              />
+              <article key={tier.name} className="flex flex-col border border-rose bg-white p-8">
+                <h3 className="mb-3 text-xl font-bold uppercase tracking-[0.08em] text-rose">
+                  {tier.name}
+                </h3>
+                <p className="mb-2">
+                  <span className="text-3xl font-bold text-rose">{tier.price}</span>
+                  <span className="text-sm font-light text-ink/60">/{tier.period}</span>
+                </p>
+                <ul className="my-6 flex-1 space-y-0">
+                  {tier.benefits.map((benefit) => (
+                    <li
+                      key={benefit}
+                      className="relative border-b border-rose/35 py-3 pl-6 text-sm font-light leading-relaxed text-ink/75"
+                    >
+                      <span className="absolute left-0 font-bold text-rose" aria-hidden="true">
+                        &#10003;
+                      </span>
+                      {benefit}
+                    </li>
+                  ))}
+                </ul>
+                <Button
+                  href="/contact?intent=membership"
+                  variant="ghost"
+                  className="w-full !border-rose !bg-white !text-rose hover:!bg-rose hover:!text-white"
+                >
+                  Ask About Membership
+                </Button>
+              </article>
             ))}
           </div>
-          <div className="mx-auto mt-12 max-w-[900px] border-y border-rose bg-rose-blush p-6 text-sm leading-7 text-silver-dark md:p-8">
+          <div className="mx-auto mt-12 max-w-[900px] border-y border-rose bg-rose-blush p-6 text-sm leading-7 text-ink/70 md:p-8">
             <p>
-              <strong>*Included HydraFacial timing:</strong> redeem after six months of on-time payments, or immediately if the full membership year is paid in advance. Tox and Filler include one Signature HydraFacial; Tox + Filler includes one Deluxe HydraFacial.
+              <strong className="text-rose">*Included HydraFacial timing:</strong> redeem after six months of on-time payments, or immediately if the full membership year is paid in advance. Tox and Filler include one Signature HydraFacial; Tox + Filler includes one Deluxe HydraFacial.
             </p>
             <p className="mt-3">
               Member rates apply under the complete membership agreement. Product choice and treatment plans are determined through an individual clinical assessment, and the proposed total is reviewed before treatment.
@@ -77,7 +102,9 @@ export default function MembershipPage() {
       {/* FAQ */}
       <section className="bg-rose-blush py-20 md:py-28">
         <div className="mx-auto max-w-[1200px] px-6 md:px-8 lg:px-12">
-          <SectionHeader title="Membership FAQ" />
+          <h2 className="mb-12 text-3xl font-medium uppercase leading-[1.08] tracking-[0.08em] text-rose md:text-5xl">
+            Membership FAQ
+          </h2>
           <FaqAccordion items={faq} />
         </div>
       </section>

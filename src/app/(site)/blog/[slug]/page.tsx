@@ -141,11 +141,11 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
       <section className="py-20 bg-rose-blush">
         <div className="mx-auto max-w-[1200px] px-6 md:px-8 lg:px-12">
           {post.categoryName && (
-            <p className="font-bold text-[0.6875rem] tracking-[0.2em] uppercase text-silver mb-3">
+            <p className="font-bold text-[0.6875rem] tracking-[0.2em] uppercase text-rose mb-3">
               {post.categoryName}
             </p>
           )}
-          <h1 className="font-bold text-3xl md:text-4xl lg:text-5xl tracking-[0.04em] text-ink mb-4 max-w-[800px] leading-[1.2]">
+          <h1 className="font-bold text-3xl md:text-4xl lg:text-5xl tracking-[0.04em] text-rose mb-4 max-w-[800px] leading-[1.2]">
             {post.title}
           </h1>
           <div className="flex items-center gap-4 text-sm text-silver">
@@ -187,9 +187,9 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
       </section>
 
       {/* Bottom CTA */}
-      <section className="bg-rose-cta py-16 text-center text-ink">
+      <section className="bg-rose-cta py-16 text-center text-white">
         <div className="mx-auto max-w-[600px] px-6">
-          <h2 className="font-bold text-2xl md:text-3xl tracking-[0.06em] uppercase mb-4">
+          <h2 className="font-bold text-2xl md:text-3xl tracking-[0.06em] uppercase mb-4 text-white">
             Questions? We&apos;re Here to Help
           </h2>
           <p className="font-light text-lg mb-6 opacity-90">
@@ -197,7 +197,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
           </p>
           <Button
             href={resolveBookingHref({})}
-            className="bg-white !text-ink hover:bg-white/90 hover:!text-ink"
+            className="!border-white !bg-white !text-rose hover:!border-white hover:!bg-white hover:!text-rose"
           >
             Book Consultation
           </Button>

@@ -16,11 +16,11 @@ export function SectionHeader({
   return (
     <div className="mb-12 max-w-[680px]">
       {eyebrow && (
-        <p className="mb-4 text-sm font-medium italic tracking-[0.04em] text-ink/70">
+        <p className="mb-4 text-sm font-medium italic tracking-[0.04em] text-rose">
           {eyebrow}
         </p>
       )}
-      <Heading className="mb-5 text-3xl font-medium uppercase leading-[1.08] tracking-[0.08em] text-ink md:text-5xl">
+      <Heading className="mb-5 text-3xl font-medium uppercase leading-[1.08] tracking-[0.08em] text-rose md:text-5xl">
         {title}
       </Heading>
       {description && <p className="max-w-[620px] leading-relaxed text-ink/70">{description}</p>}

@@ -19,11 +19,11 @@ type ButtonProps = ButtonAsButton | ButtonAsLink;
 
 const variantStyles: Record<ButtonVariant, string> = {
   primary:
-    "border-[1.5px] border-rose bg-rose text-ink hover:bg-rose/70",
+    "border-[1.5px] border-rose bg-rose text-white hover:bg-rose/85",
   ghost:
-    "border-[1.5px] border-ink bg-transparent text-ink hover:bg-ink hover:text-white",
+    "border-[1.5px] border-rose bg-white text-rose hover:bg-rose hover:text-white",
   light:
-    "border-[1.5px] border-paper bg-paper text-ink hover:border-rose hover:bg-rose",
+    "border-[1.5px] border-white bg-white text-rose hover:border-rose hover:bg-rose hover:text-white",
   dark:
     "border-[1.5px] border-ink bg-ink text-white hover:bg-ink/80",
 };

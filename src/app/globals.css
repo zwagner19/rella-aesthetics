@@ -6,13 +6,14 @@
    *
    * Compatibility names remain because the existing page catalog already uses
    * them, but every value below is one of the four colors or an alpha tint of
-   * one of them. New conversion actions use Rose with Ink text.
+   * one of them. The current designer-approved system uses Rose headings and
+   * Rose actions with White labels.
    */
   --color-rose: #F7A19A;
   --color-rose-dark: #1A1A1A;
   --color-rose-light: #F7A19A70;
   --color-rose-blush: rgba(247, 161, 154, 0.28);
-  --color-rose-text: #1A1A1A;
+  --color-rose-text: #F7A19A;
   --color-rose-cta: #F7A19A;
 
   --color-silver: #83888D;
@@ -48,10 +49,11 @@ body {
   color: var(--color-ink);
 }
 
-/* Focus visible for accessibility */
+/* Dual-contrast focus treatment stays visible on White, Rose, and Ink. */
 :focus-visible {
-  outline: 3px solid var(--color-rose);
+  outline: 2px solid var(--color-white);
   outline-offset: 2px;
+  box-shadow: 0 0 0 4px var(--color-ink);
 }
 
 /* Smooth scrolling */

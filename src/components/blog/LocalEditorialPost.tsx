@@ -132,10 +132,10 @@ export function LocalEditorialPost({
               </ol>
             </nav>
 
-            <p className="mb-5 text-[0.6875rem] font-bold uppercase tracking-[0.2em] text-rose-dark">
+            <p className="mb-5 text-[0.6875rem] font-bold uppercase tracking-[0.2em] text-rose">
               {post.eyebrow}
             </p>
-            <h1 className="max-w-[950px] text-[clamp(2.35rem,6vw,4.75rem)] font-medium leading-[1.02] tracking-[-0.055em] text-ink">
+            <h1 className="max-w-[950px] text-[clamp(2.35rem,6vw,4.75rem)] font-medium leading-[1.02] tracking-[-0.055em] text-rose">
               {post.title}
             </h1>
             <p className="mt-7 max-w-[760px] text-lg font-light leading-relaxed text-silver-dark md:text-xl">
@@ -183,7 +183,7 @@ export function LocalEditorialPost({
         <div className="mx-auto grid max-w-[1100px] gap-12 px-6 py-16 md:px-8 lg:grid-cols-[minmax(0,1fr)_300px] lg:px-12 lg:py-24">
           <div className="min-w-0">
             <section aria-labelledby="answer-first" className="border-l-4 border-rose bg-rose-blush p-6 md:p-8">
-              <p className="mb-3 text-[0.6875rem] font-bold uppercase tracking-[0.18em] text-rose-dark">
+              <p className="mb-3 text-[0.6875rem] font-bold uppercase tracking-[0.18em] text-rose">
                 The short answer
               </p>
               <h2 id="answer-first" className="sr-only">Current Rella Napa tox pricing</h2>
@@ -191,10 +191,10 @@ export function LocalEditorialPost({
             </section>
 
             <section aria-labelledby="pricing-table" className="mt-14">
-              <p className="mb-3 text-[0.6875rem] font-bold uppercase tracking-[0.18em] text-rose-dark">
+              <p className="mb-3 text-[0.6875rem] font-bold uppercase tracking-[0.18em] text-rose">
                 Transparent 2026 pricing
               </p>
-              <h2 id="pricing-table" className="text-3xl font-medium tracking-[-0.035em] text-ink">
+              <h2 id="pricing-table" className="text-3xl font-medium tracking-[-0.035em] text-rose">
                 Rella Napa price table
               </h2>
               <p className="mt-4 leading-relaxed text-silver-dark">
@@ -205,7 +205,7 @@ export function LocalEditorialPost({
 
             {post.sections.map((section, index) => (
               <section key={section.id} id={section.id} aria-labelledby={`${section.id}-heading`} className="scroll-mt-28 border-t border-silver-pale py-10 first:border-t-0">
-                <h2 id={`${section.id}-heading`} className="text-2xl font-medium tracking-[-0.025em] text-ink md:text-3xl">
+                <h2 id={`${section.id}-heading`} className="text-2xl font-medium tracking-[-0.025em] text-rose md:text-3xl">
                   {section.heading}
                 </h2>
                 <div className="mt-5 space-y-4">
@@ -254,10 +254,10 @@ export function LocalEditorialPost({
             ))}
 
             <section aria-labelledby="faq-heading" className="border-t border-silver-pale pt-10">
-              <p className="mb-3 text-[0.6875rem] font-bold uppercase tracking-[0.18em] text-rose-dark">
+              <p className="mb-3 text-[0.6875rem] font-bold uppercase tracking-[0.18em] text-rose">
                 Napa Botox pricing FAQ
               </p>
-              <h2 id="faq-heading" className="text-3xl font-medium tracking-[-0.035em] text-ink">
+              <h2 id="faq-heading" className="text-3xl font-medium tracking-[-0.035em] text-rose">
                 Questions before you book
               </h2>
               <div className="mt-7 divide-y divide-silver-pale border-y border-silver-pale">
@@ -282,7 +282,7 @@ export function LocalEditorialPost({
 
           <aside className="space-y-6 lg:sticky lg:top-28 lg:self-start" aria-label="Article actions and key facts">
             <div className="border-l-4 border-rose bg-rose-blush p-6">
-              <h2 className="text-lg font-medium text-ink">Key Napa facts</h2>
+              <h2 className="text-lg font-medium text-rose">Key Napa facts</h2>
               <ul className="mt-5 space-y-4">
                 {post.keyFacts.map((fact) => (
                   <li key={fact} className="border-b border-rose-light/70 pb-4 text-sm leading-6 text-silver-dark last:border-0 last:pb-0">
@@ -292,7 +292,7 @@ export function LocalEditorialPost({
               </ul>
             </div>
             <div className="border border-ink/12 p-6">
-              <h2 className="text-lg font-medium text-ink">Continue exploring</h2>
+              <h2 className="text-lg font-medium text-rose">Continue exploring</h2>
               <nav aria-label="Related Napa Botox pages" className="mt-4 flex flex-col gap-3 text-sm">
                 <Link href="/napa/botox" className="text-rose-text hover:text-rose-dark">Napa Botox treatment page →</Link>
                 <Link href="/membership" className="text-rose-text hover:text-rose-dark">2026 Tox Membership →</Link>
@@ -304,16 +304,16 @@ export function LocalEditorialPost({
         </div>
       </article>
 
-      <section className="bg-rose-cta py-16 text-ink">
+      <section className="bg-rose-cta py-16 text-white">
         <div className="mx-auto grid max-w-[900px] gap-7 px-6 md:grid-cols-[1fr_auto] md:items-center md:px-8">
           <div>
-            <p className="text-[0.6875rem] font-bold uppercase tracking-[0.18em] text-ink/75">
+            <p className="text-[0.6875rem] font-bold uppercase tracking-[0.18em] text-white">
               Rella Aesthetics · Downtown Napa
             </p>
             <h2 className="mt-3 text-3xl font-medium tracking-[-0.035em]">
               Ready for your exact price and plan?
             </h2>
-            <p className="mt-3 max-w-[580px] font-light leading-relaxed text-ink/75">
+            <p className="mt-3 max-w-[580px] font-light leading-relaxed text-white">
               Book the verified Napa new-patient tox path or call the team with a pricing question.
             </p>
           </div>
@@ -321,11 +321,11 @@ export function LocalEditorialPost({
             <Button
               href={NAPA_BOOKING_HREF}
               data-cta="service-booking"
-              className="rounded-full bg-white !text-ink hover:bg-white/90"
+              className="rounded-full !border-white !bg-white !text-rose hover:!border-white hover:!bg-white hover:!text-rose"
             >
               Book Napa Botox
             </Button>
-            <a href="tel:+17073582928" className="text-center text-sm font-medium text-ink underline decoration-ink/50 underline-offset-4">
+            <a href="tel:+17073582928" className="text-center text-sm font-medium text-white underline decoration-white underline-offset-4">
               (707) 358-2928
             </a>
           </div>

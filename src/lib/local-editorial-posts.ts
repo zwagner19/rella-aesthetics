@@ -60,9 +60,9 @@ export const LOCAL_EDITORIAL_POSTS: readonly LocalEditorialPost[] = [
     modifiedAt: "2026-08-03T12:00:00-07:00",
     authorName: "Rella Aesthetics",
     readingTime: "7 minute read",
-    coverImage: "/images/service-botox.jpg",
+    coverImage: "/images/clinic/rella-front-desk-consult.jpg",
     ogImage: "/images/og-botox-cost-napa.png",
-    coverAlt: "Botox and Dysport treatment at Rella Aesthetics",
+    coverAlt: "The reception and front-desk area at Rella Aesthetics in Vacaville",
     eyebrow: "Napa Botox pricing guide",
     dek:
       "The per-unit number matters, but it is not the whole quote. Here is the current Rella Napa pricing and the practical math to review before you book.",

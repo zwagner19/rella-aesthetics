@@ -41,7 +41,7 @@ export function Header({ weightLossExperience = false }: { weightLossExperience?
         <div className="mx-auto flex h-[76px] max-w-[1280px] items-center justify-between px-5 md:px-8 xl:h-[88px] xl:px-12">
           <Link href="/" className="flex shrink-0 items-center" aria-label="Rella Aesthetics — Home">
             <Image
-              src="/brand/rella-logo-black.svg"
+              src="/brand/rella-logo-rose.svg"
               alt=""
               width={360}
               height={176}
@@ -65,21 +65,21 @@ export function Header({ weightLossExperience = false }: { weightLossExperience?
           <Link
             href={booking.href}
             data-cta={booking.cta}
-            className="hidden items-center justify-center rounded-full border-[1.5px] border-rose bg-rose px-7 py-3 text-[0.6875rem] font-bold uppercase tracking-[0.18em] text-ink transition-colors hover:bg-rose/70 xl:inline-flex"
+            className="hidden items-center justify-center rounded-full border-[1.5px] border-rose bg-rose px-7 py-3 text-[0.6875rem] font-bold uppercase tracking-[0.18em] text-white transition-colors hover:bg-rose/85 xl:inline-flex"
           >
             {booking.label}
           </Link>
 
           <button
-            className="flex min-h-11 min-w-11 flex-col items-center justify-center gap-[5px] rounded-full border border-silver/35 p-2 xl:hidden"
+            className="flex min-h-11 min-w-11 flex-col items-center justify-center gap-[5px] rounded-full border border-rose/35 p-2 xl:hidden"
             onClick={() => setMobileOpen(true)}
             aria-label="Open menu"
             aria-expanded={mobileOpen}
             aria-controls="mobile-navigation"
           >
-            <span className="block h-px w-5 bg-ink" />
-            <span className="block h-px w-5 bg-ink" />
-            <span className="block h-px w-5 bg-ink" />
+            <span className="block h-px w-5 bg-rose" />
+            <span className="block h-px w-5 bg-rose" />
+            <span className="block h-px w-5 bg-rose" />
           </button>
         </div>
       </header>

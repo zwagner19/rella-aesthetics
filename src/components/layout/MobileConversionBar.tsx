@@ -27,19 +27,19 @@ export function MobileConversionBar({
   return (
     <nav
       aria-label="Quick booking actions"
-      className="fixed inset-x-0 bottom-0 z-40 grid grid-cols-[0.38fr_0.62fr] gap-2 border-t border-silver/35 bg-paper p-2 pb-[calc(0.5rem+env(safe-area-inset-bottom))] xl:hidden"
+      className="fixed inset-x-0 bottom-0 z-40 grid grid-cols-[0.38fr_0.62fr] gap-2 border-t border-rose/35 bg-white/90 p-2 pb-[calc(0.5rem+env(safe-area-inset-bottom))] text-rose xl:hidden"
     >
       <a
         href="tel:+17073582928"
         data-cta="phone"
-        className="inline-flex min-h-12 items-center justify-center rounded-full border-[1.5px] border-ink px-3 text-[0.6875rem] font-bold uppercase tracking-[0.16em] text-ink transition-colors hover:bg-ink hover:text-white"
+        className="inline-flex min-h-12 items-center justify-center rounded-full border-[1.5px] border-rose bg-white px-3 text-[0.6875rem] font-bold uppercase tracking-[0.16em] text-rose transition-colors hover:bg-rose hover:text-white"
       >
         Call Rella
       </a>
       <Link
         href={booking.href}
         data-cta={booking.cta}
-        className="inline-flex min-h-12 items-center justify-center rounded-full border-[1.5px] border-rose bg-rose px-3 text-center text-[0.6875rem] font-bold uppercase tracking-[0.14em] text-ink transition-colors hover:bg-rose/70"
+        className="inline-flex min-h-12 items-center justify-center rounded-full border-[1.5px] border-rose bg-rose px-3 text-center text-[0.6875rem] font-bold uppercase tracking-[0.14em] text-white transition-colors hover:bg-rose/85"
       >
         {booking.label}
       </Link>

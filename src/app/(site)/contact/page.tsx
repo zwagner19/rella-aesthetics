@@ -25,10 +25,10 @@ export default async function ContactPage({
       {/* Hero */}
       <section className="py-24 bg-rose-blush">
         <div className="mx-auto max-w-[1200px] px-6 md:px-8 lg:px-12">
-          <p className="mb-4 text-[0.6875rem] font-bold uppercase tracking-[0.2em] text-ink/70">
+          <p className="mb-4 text-[0.6875rem] font-bold uppercase tracking-[0.2em] text-rose">
             Contact
           </p>
-          <h1 className="font-bold text-4xl md:text-5xl tracking-[0.08em] uppercase text-rose-text mb-4 leading-[1.1]">
+          <h1 className="font-bold text-4xl md:text-5xl tracking-[0.08em] uppercase text-rose mb-4 leading-[1.1]">
             Get in Touch
           </h1>
           <p className="max-w-[560px] text-lg font-light leading-relaxed text-ink/70">
@@ -52,23 +52,23 @@ export default async function ContactPage({
               <SectionHeader title="Other Ways to Reach Us" />
               <div className="space-y-4 mb-8">
                 <p className="text-ink/70">
-                  <strong className="text-ink">Phone: </strong>
-                  <a href="tel:+17073582928" className="hover:text-rose-text transition-colors">
+                  <strong className="text-rose">Phone: </strong>
+                  <a href="tel:+17073582928" className="text-rose transition-colors hover:text-ink">
                     707.358.2928
                   </a>
                 </p>
                 <p className="text-ink/70">
-                  <strong className="text-ink">Email: </strong>
-                  <a href="mailto:info@experiencerella.com" className="hover:text-rose-text transition-colors">
+                  <strong className="text-rose">Email: </strong>
+                  <a href="mailto:info@experiencerella.com" className="text-rose transition-colors hover:text-ink">
                     info@experiencerella.com
                   </a>
                 </p>
               </div>
-              <h3 className="font-medium text-lg text-ink mb-4">Clinic Hours</h3>
+              <h3 className="font-medium text-lg text-rose mb-4">Clinic Hours</h3>
               <div className="space-y-2 text-sm text-ink/70">
                 {[locations.vacaville, locations.napa].map((location) => (
                   <p key={location.name}>
-                    <strong className="text-ink">{location.name}: </strong>
+                    <strong className="text-rose">{location.name}: </strong>
                     {location.hours[0]}
                   </p>
                 ))}
@@ -83,7 +83,7 @@ export default async function ContactPage({
       <section className="py-20 bg-rose-blush">
         <div className="mx-auto max-w-[1200px] px-6 md:px-8 lg:px-12">
           <SectionHeader eyebrow="Locations" title="Visit Us" />
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
             <LocationCard
               name={locations.vacaville.name}
               address={locations.vacaville.address}

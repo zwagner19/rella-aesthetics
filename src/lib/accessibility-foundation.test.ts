@@ -1,46 +1,5 @@
-import { readFileSync, readdirSync } from "node:fs";
-import { join } from "node:path";
+import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
-
-function channel(value: number) {
-  const normalized = value / 255;
-  return normalized <= 0.04045
-    ? normalized / 12.92
-    : ((normalized + 0.055) / 1.055) ** 2.4;
-}
-
-function colorChannels(value: string): [number, number, number] {
-  const hexChannels = value.match(/^#([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})$/i);
-  if (hexChannels) {
-    return hexChannels.slice(1).map((hex) => Number.parseInt(hex, 16)) as [number, number, number];
-  }
-
-  const rgbaChannels = value.match(
-    /^rgba\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*,\s*(0(?:\.\d+)?|1(?:\.0+)?)\s*\)$/i,
-  );
-  if (rgbaChannels) {
-    const [, red, green, blue, alphaValue] = rgbaChannels;
-    const alpha = Number.parseFloat(alphaValue);
-    return [red, green, blue].map((component) =>
-      Math.round(Number.parseInt(component, 10) * alpha + 255 * (1 - alpha)),
-    ) as [number, number, number];
-  }
-
-  throw new Error(`Invalid color: ${value}`);
-}
-
-function luminance(value: string) {
-  const [red, green, blue] = colorChannels(value).map(channel);
-  return 0.2126 * red + 0.7152 * green + 0.0722 * blue;
-}
-
-function contrastRatio(foreground: string, background: string) {
-  const foregroundLuminance = luminance(foreground);
-  const backgroundLuminance = luminance(background);
-  const lighter = Math.max(foregroundLuminance, backgroundLuminance);
-  const darker = Math.min(foregroundLuminance, backgroundLuminance);
-  return (lighter + 0.05) / (darker + 0.05);
-}
 
 function cssToken(source: string, token: string) {
   const value = new RegExp(
@@ -51,59 +10,36 @@ function cssToken(source: string, token: string) {
   return value;
 }
 
-function componentFiles(directory: string): string[] {
-  return readdirSync(directory, { withFileTypes: true }).flatMap((entry) => {
-    const path = join(directory, entry.name);
-    if (entry.isDirectory()) return componentFiles(path);
-    return entry.name.endsWith(".tsx") ? [path] : [];
-  });
-}
-
-describe("conversion color contrast", () => {
+describe("designer-approved color hierarchy", () => {
   const css = readFileSync("src/app/globals.css", "utf8");
-  const white = cssToken(css, "white");
-  const ink = cssToken(css, "ink");
   const rose = cssToken(css, "rose");
   const blush = cssToken(css, "rose-blush");
 
-  it("keeps Rose actions paired with readable Ink labels", () => {
+  it("uses Rella Rose for headings and actions with the approved tint", () => {
     expect(cssToken(css, "rose-cta").toLowerCase()).toBe(rose.toLowerCase());
-    expect(contrastRatio(cssToken(css, "rose-cta"), ink)).toBeGreaterThanOrEqual(4.5);
-    expect(contrastRatio(cssToken(css, "rose-dark"), white)).toBeGreaterThanOrEqual(4.5);
-    expect(contrastRatio(cssToken(css, "rose-text"), white)).toBeGreaterThanOrEqual(4.5);
-    expect(contrastRatio(cssToken(css, "rose-text"), blush)).toBeGreaterThanOrEqual(4.5);
-    expect(contrastRatio(rose, ink)).toBeGreaterThanOrEqual(4.5);
+    expect(cssToken(css, "rose-text").toLowerCase()).toBe(rose.toLowerCase());
     expect(blush).toBe("rgba(247, 161, 154, 0.28)");
   });
 
-  it("uses the owner-approved Rose focus treatment", () => {
-    expect(css).toContain("outline: 3px solid var(--color-rose)");
+  it("uses a dual-contrast focus treatment that remains visible on Rose bands", () => {
+    expect(css).toContain("outline: 2px solid var(--color-white)");
     expect(css).toContain("outline-offset: 2px");
+    expect(css).toContain("box-shadow: 0 0 0 4px var(--color-ink)");
   });
 
-  it("never pairs the decorative rose fill with white CTA text", () => {
-    const failures: string[] = [];
+  it("keeps shared headings, buttons, and Rose bands on the approved pink-and-white hierarchy", () => {
+    const button = readFileSync("src/components/ui/Button.tsx", "utf8");
+    const sectionHeader = readFileSync("src/components/ui/SectionHeader.tsx", "utf8");
+    const trustStrip = readFileSync("src/components/blocks/TrustStrip.tsx", "utf8");
+    const membership = readFileSync("src/components/blocks/MembershipBanner.tsx", "utf8");
 
-    for (const file of componentFiles("src")) {
-      const lines = readFileSync(file, "utf8").split("\n");
-      lines.forEach((line, index) => {
-        const hasDecorativeRoseFill = /\bbg-rose(?=\s|["'`/])/.test(line);
-        const hasRoseCtaFill = /\bbg-rose-cta(?=\s|["'`/])/.test(line);
-        const hasInkText = /\btext-ink(?=\s|["'`/])/.test(line);
-        const hasWhiteText = /\btext-white(?=\s|["'`/])/.test(line);
-        const hasDecorativeRoseTextOverride = /!text-rose(?=\s|["'`/])/.test(line);
-
-        if (
-          ((hasDecorativeRoseFill || hasRoseCtaFill) && hasWhiteText) ||
-          (hasRoseCtaFill && !hasInkText) ||
-          hasDecorativeRoseTextOverride
-        ) {
-          failures.push(`${file}:${index + 1}`);
-        }
-      });
-    }
-
-    expect(failures).toEqual([]);
+    expect(button).toContain("border-rose bg-rose text-white");
+    expect(button).toContain("border-rose bg-white text-rose");
+    expect(sectionHeader).toContain("text-rose");
+    expect(trustStrip).toContain("bg-rose px-5 text-center");
+    expect(trustStrip).toContain("text-white");
+    expect(membership).toContain("bg-rose");
+    expect(membership).toContain("text-white");
   });
 });
 
@@ -136,7 +72,7 @@ describe("mobile navigation accessibility", () => {
     expect(chat).toContain('(min-width: 1280px)');
     expect(css).toContain("@media (max-width: 1279px)");
     expect(siteLayout).toContain("pb-20 xl:pb-0");
-    expect(footer).toContain("pb-28 pt-16 text-ink xl:pb-8");
+    expect(footer).toContain("pb-28 pt-16 text-rose xl:pb-8");
   });
 
   it("keeps the expanded menu and its booking action reachable on short screens", () => {

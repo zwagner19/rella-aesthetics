@@ -81,15 +81,15 @@ export function MobileNav({
     <div
       id="mobile-navigation"
       ref={dialogRef}
-      className="fixed inset-0 z-[200] flex flex-col overflow-hidden bg-paper px-6 pb-8 pt-6"
+      className="fixed inset-0 z-[200] flex flex-col overflow-hidden bg-paper px-6 pb-8 pt-6 text-rose"
       role="dialog"
       aria-modal="true"
       aria-label="Mobile navigation"
     >
-      <div className="flex shrink-0 items-start justify-between border-b border-silver/25 pb-5">
+      <div className="flex shrink-0 items-start justify-between border-b border-rose/25 pb-5">
         <Link href="/" onClick={onClose} aria-label="Rella Aesthetics — Home">
           <Image
-            src="/brand/rella-logo-black.svg"
+            src="/brand/rella-logo-rose.svg"
             alt=""
             width={360}
             height={176}
@@ -99,7 +99,7 @@ export function MobileNav({
         </Link>
         <button
           ref={closeButtonRef}
-          className="flex min-h-11 min-w-11 items-center justify-center rounded-full border border-silver/35 p-2 text-2xl font-light leading-none text-ink"
+          className="flex min-h-11 min-w-11 items-center justify-center rounded-full border border-rose/35 p-2 text-2xl font-light leading-none text-rose"
           onClick={onClose}
           aria-label="Close menu"
         >
@@ -116,7 +116,7 @@ export function MobileNav({
             key={link.href}
             href={link.href}
             onClick={onClose}
-            className="border-b border-silver/25 py-4 text-lg font-medium uppercase tracking-[0.1em] text-ink transition-colors hover:bg-rose/15"
+            className="border-b border-rose/25 py-4 text-lg font-medium uppercase tracking-[0.1em] text-rose transition-colors hover:bg-rose/15"
           >
             {link.label}
           </Link>
@@ -127,7 +127,7 @@ export function MobileNav({
         href={booking.href}
         data-cta={booking.cta}
         onClick={onClose}
-        className="mt-7 inline-flex min-h-14 shrink-0 items-center justify-center rounded-full border-[1.5px] border-rose bg-rose px-10 py-4 text-[0.6875rem] font-bold uppercase tracking-[0.2em] text-ink transition-colors hover:bg-rose/70"
+        className="mt-7 inline-flex min-h-14 shrink-0 items-center justify-center rounded-full border-[1.5px] border-rose bg-rose px-10 py-4 text-[0.6875rem] font-bold uppercase tracking-[0.2em] text-white transition-colors hover:bg-rose/85"
       >
         {booking.label}
       </Link>

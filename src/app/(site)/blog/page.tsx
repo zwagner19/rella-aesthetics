@@ -130,10 +130,10 @@ export default async function BlogPage() {
       {/* Hero */}
       <section className="py-24 bg-rose-blush">
         <div className="mx-auto max-w-[1200px] px-6 md:px-8 lg:px-12">
-          <p className="font-bold text-[0.6875rem] tracking-[0.2em] uppercase text-silver mb-4">
+          <p className="font-bold text-[0.6875rem] tracking-[0.2em] uppercase text-rose mb-4">
             Education
           </p>
-          <h1 className="font-bold text-4xl md:text-5xl tracking-[0.08em] uppercase text-rose-text mb-4 leading-[1.1]">
+          <h1 className="font-bold text-4xl md:text-5xl tracking-[0.08em] uppercase text-rose mb-4 leading-[1.1]">
             Insights &amp; Guides
           </h1>
           <p className="text-lg font-light text-ink/70 max-w-[560px] leading-relaxed">
@@ -189,16 +189,16 @@ export default async function BlogPage() {
                   href={path.href}
                   className="group flex min-h-[260px] flex-col border border-ink/12 bg-white p-7 transition-colors hover:border-rose"
                 >
-                  <p className="mb-8 text-[0.625rem] font-bold uppercase tracking-[0.2em] text-rose-dark">
+                  <p className="mb-8 text-[0.625rem] font-bold uppercase tracking-[0.2em] text-rose">
                     {path.category}
                   </p>
-                  <h2 className="mb-3 text-xl font-medium leading-snug text-ink">
+                  <h2 className="mb-3 text-xl font-medium leading-snug text-rose">
                     {path.title}
                   </h2>
                   <p className="mb-6 flex-1 text-sm leading-relaxed text-ink/70">
                     {path.description}
                   </p>
-                  <span className="text-sm font-medium text-rose-text transition-colors group-hover:text-rose-dark">
+                  <span className="text-sm font-medium text-rose transition-colors group-hover:text-ink">
                     Read the verified guide →
                   </span>
                 </Link>
