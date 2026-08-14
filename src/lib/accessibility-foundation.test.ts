@@ -75,6 +75,11 @@ describe("conversion color contrast", () => {
 describe("mobile navigation accessibility", () => {
   const header = readFileSync("src/components/layout/Header.tsx", "utf8");
   const mobileNav = readFileSync("src/components/layout/MobileNav.tsx", "utf8");
+  const mobileBar = readFileSync("src/components/layout/MobileConversionBar.tsx", "utf8");
+  const chat = readFileSync("src/components/integrations/GhlChatWidget.tsx", "utf8");
+  const css = readFileSync("src/app/globals.css", "utf8");
+  const siteLayout = readFileSync("src/app/(site)/layout.tsx", "utf8");
+  const footer = readFileSync("src/components/layout/Footer.tsx", "utf8");
 
   it("connects the menu trigger to a modal dialog", () => {
     expect(header).toContain('aria-controls="mobile-navigation"');
@@ -88,5 +93,20 @@ describe("mobile navigation accessibility", () => {
     expect(mobileNav).toContain("closeButtonRef.current?.focus()");
     expect(mobileNav).toContain("previousActiveElement.focus()");
     expect(mobileNav).toContain("document.body.style.overflow = previousOverflow");
+  });
+
+  it("keeps every mobile-shell control on the same responsive boundary", () => {
+    expect(header).toContain("xl:hidden");
+    expect(mobileBar).toContain("xl:hidden");
+    expect(chat).toContain('(min-width: 1280px)');
+    expect(css).toContain("@media (max-width: 1279px)");
+    expect(siteLayout).toContain("pb-20 xl:pb-0");
+    expect(footer).toContain("pb-28 pt-16 text-ink xl:pb-8");
+  });
+
+  it("keeps the expanded menu and its booking action reachable on short screens", () => {
+    expect(mobileNav).toContain("min-h-0");
+    expect(mobileNav).toContain("overflow-y-auto");
+    expect(mobileNav).toContain("shrink-0");
   });
 });

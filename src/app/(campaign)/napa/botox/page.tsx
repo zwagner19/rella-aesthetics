@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { resolveBookingHref } from "@/lib/booking-routes";
 import {
   PRICING, VISIT, PAYMENT_DISCLOSURE, CANCELLATION_POLICY_URL,
-  TRUST, MARKETING_PHONE, NAPA, RESULTS, FAQS, PUBLIC_LINKS,
+  MARKETING_PHONE, NAPA, RESULTS, FAQS, PUBLIC_LINKS,
 } from "@/lib/napa-botox-facts";
 import { DEFAULT_SOCIAL_IMAGE } from "@/lib/social-card";
 import "./napa-botox.css";
@@ -32,7 +32,7 @@ const CANONICAL = "https://experiencerella.com/napa/botox";
 const LOGO = "/brand/rella-logo-black.svg";
 
 /**
- * Non-booking navigation, as ABSOLUTE public URLs.
+ * Non-booking navigation uses verified, root-relative public paths.
  *
  * Verified against `experiencerella.com` on 2026-07-27:
  *   /services              → 404   (was linked; broken)
@@ -41,19 +41,20 @@ const LOGO = "/brand/rella-logo-black.svg";
  *   /privacy-policy/       → 200   ✅ unchanged
  *   /terms-and-conditions/ → 200   ✅ the real terms page
  *
- * They are absolute rather than root-relative so the link target is identical
- * whether the document is served from a Vercel alias or proxied onto the public
- * WordPress host — a root-relative `/terms` would 404 in production.
+ * The legacy-safe path names are intentional: they resolve on WordPress when
+ * this document is proxied onto the public host, while remaining on the exact
+ * protected Vercel origin during preview review. Canonical metadata stays
+ * absolute and is intentionally separate from visitor navigation.
  */
 export const metadata: Metadata = {
-  title: "Botox in Napa — Physician-Owned Med Spa",
+  title: "Botox in Napa — Pricing & Visit Guide",
   description:
-    "Botox® and Dysport in downtown Napa at a physician-owned med spa. See Botox® at $18/unit, Dysport at $6/unit, and book a 30-minute new-patient visit.",
+    "Botox® and Dysport in downtown Napa. See Botox® at $18/unit, Dysport at $6/unit, and book a 30-minute new-patient visit.",
   alternates: { canonical: CANONICAL },
   openGraph: {
-    title: "Botox in Napa — Rella Aesthetics · Physician-Owned Med Spa",
+    title: "Botox in Napa — Rella Aesthetics",
     description:
-      "Natural-looking Botox® and Dysport from a physician-owned med spa on 3rd Street in downtown Napa.",
+      "Natural-looking Botox® and Dysport on 3rd Street in downtown Napa.",
     url: CANONICAL,
     type: "website",
     images: [DEFAULT_SOCIAL_IMAGE],
@@ -113,14 +114,13 @@ export default function NapaBotoxLandingPage() {
             Napa, let&rsquo;s keep it natural.
           </h1>
           <p className="nb-lede" style={{ marginTop: 18 }}>
-            Botox&reg; &amp; Dysport from a physician-owned med spa on 3rd Street &mdash; subtle results that
-            still look like you.
+            Botox&reg; &amp; Dysport on 3rd Street &mdash; subtle results that still look like you.
           </p>
           <div className="nb-actions">
             <BookCta />
             <CallCta />
           </div>
-          <p className="nb-body" style={{ marginTop: 16 }}>{TRUST.ownerCredential}</p>
+          <p className="nb-body" style={{ marginTop: 16 }}>30-minute new-patient visit · Downtown Napa</p>
 
           {/* Verified-facts card. The deposit sits in its own row with its own
               language — never folded into per-unit pricing. */}
@@ -210,16 +210,16 @@ export default function NapaBotoxLandingPage() {
         </div>
       </section>
 
-      {/* ── Physician-owned trust ──────────────────────────────────────────── */}
+      {/* ── Consultation and treatment-plan expectations ──────────────────── */}
       <section className="nb-section nb-section--tint" aria-labelledby="nb-h-trust">
         <div className="nb-wrap">
           <p className="nb-kicker">Get It Done Right</p>
-          <h2 id="nb-h-trust" className="nb-h2" style={{ marginTop: 10 }}>Physician-owned care</h2>
+          <h2 id="nb-h-trust" className="nb-h2" style={{ marginTop: 10 }}>Clear recommendations. No pressure.</h2>
           <p className="nb-lede" style={{ marginTop: 16, maxWidth: "62ch" }}>
-            {TRUST.physicianOwned} &mdash; {TRUST.ownerCredential}. Your consultation is free, your plan and
-            per-unit pricing are explained before anything is treated, and the visit stays warm and unhurried.
+            Your treating provider explains the proposed plan and per-unit pricing before anything is treated,
+            and the visit stays warm and unhurried.
           </p>
-          {/* Owner portrait and Napa photography are OPTIONAL modules and are OFF
+          {/* Napa photography is an OPTIONAL module and is OFF
               in the production-ready state. No stock stand-in, ever. */}
         </div>
       </section>
@@ -297,13 +297,11 @@ export default function NapaBotoxLandingPage() {
           <div className="nb-footer-row">
             {/* eslint-disable-next-line @next/next/no-img-element -- see header */}
             <img src={LOGO} alt="Rella Aesthetics" width={360} height={176} style={{ width: 96, height: "auto" }} decoding="async" />
-            {/* Footer destinations must resolve on the PUBLIC WordPress domain,
-                because this page is intended to be proxied onto
-                experiencerella.com while the rest of that host stays WordPress.
-                Verified live 2026-07-27: /services → 404 and /terms → 404, while
-                /botox/, /privacy-policy/ and /terms-and-conditions/ all → 200.
-                These are absolute public URLs precisely so they cannot silently
-                resolve against a Vercel alias in staging and 404 in production. */}
+            {/* These root-relative legacy paths resolve on the current public
+                WordPress host and keep protected-preview review on the exact
+                candidate origin. Verified live 2026-07-27: /services → 404 and
+                /terms → 404, while /botox/, /privacy-policy/ and
+                /terms-and-conditions/ all → 200. */}
             <div className="nb-footer-links">
               <a href={PUBLIC_LINKS.treatments}>Explore treatments</a>
               <a href={PUBLIC_LINKS.privacy}>Privacy Policy</a>

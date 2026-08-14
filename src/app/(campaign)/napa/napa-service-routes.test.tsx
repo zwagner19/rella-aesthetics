@@ -109,12 +109,23 @@ describe("Napa paid + local-search route preservation", () => {
 
     expect(text).toContain("1541 3rd St");
     expect(text).toContain("Napa, CA 94559");
-    expect(text).toContain("Physician-owned");
-    expect(text).toContain("Zachary Wagner, DO");
+    expect(text).not.toMatch(/physician[- ]owned|Zachary Wagner|Dr\. Wagner/i);
     expect(html).toContain('href="tel:+17073582928"');
     for (const price of route.prices) expect(text).toContain(price);
     expect(html).not.toMatch(/<form|<input|<textarea|<select/);
     expect(html).not.toMatch(/aggregateRating|ratingValue|reviewCount/);
+  });
+
+  it.each(routes)("/$slug keeps public-site navigation on the current origin", (route) => {
+    const html = renderToStaticMarkup(<route.Page />);
+    const anchorHrefs = [...html.matchAll(/<a\b[^>]*href="([^"]+)"/g)].map(
+      (match) => match[1],
+    );
+
+    expect(anchorHrefs.filter((href) => href.startsWith("https://experiencerella.com"))).toEqual([]);
+    expect(anchorHrefs).toEqual(
+      expect.arrayContaining(["/napa", "/privacy-policy/", "/terms-and-conditions/"]),
+    );
   });
 
   it.each(routes)("/$slug schema contains exactly its visible FAQs", (route) => {
@@ -154,6 +165,7 @@ describe("Napa campaign hub", () => {
     expect(hubMetadata.title).toBe("Napa Med Spa Services");
     expect(text).toContain("Rella Aesthetics — Napa");
     expect(text).not.toContain("American Board of Obesity Medicine diplomate");
+    expect(text).not.toMatch(/physician[- ]owned|Zachary Wagner|Dr\. Wagner/i);
     expect(text).toContain("1541 3rd St");
     expect(html).toContain('"@type":["MedicalBusiness","DaySpa"]');
     expect(html).toContain(`"@id":"${LOCATION_ENTITY_IDS.napa}"`);
@@ -176,6 +188,17 @@ describe("Napa campaign hub", () => {
     ]) {
       expect(html).toContain(`href="${href}"`);
     }
+  });
+
+  it("keeps hub navigation on the protected preview origin", () => {
+    const anchorHrefs = [...html.matchAll(/<a\b[^>]*href="([^"]+)"/g)].map(
+      (match) => match[1],
+    );
+
+    expect(anchorHrefs.filter((href) => href.startsWith("https://experiencerella.com"))).toEqual([]);
+    expect(anchorHrefs).toEqual(
+      expect.arrayContaining(["/about/", "/napa", "/privacy-policy/", "/terms-and-conditions/"]),
+    );
   });
 
   it("uses only the Napa-scoped custom booking entry", () => {

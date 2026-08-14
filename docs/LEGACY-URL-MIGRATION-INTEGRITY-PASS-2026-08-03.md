@@ -1,5 +1,7 @@
 # Legacy URL migration integrity pass — 2026-08-03
 
+> Historical verification record. The current release map supersedes this August 3 snapshot: Private Parties and Payment Plans now retain dedicated customer pages, while Events and Upcoming Events use owner-approved `410 Gone` responses. Use `POST_LAUNCH_CHECKLIST.md` and the live checker for release acceptance.
+
 ## Outcome
 
 The revamp now has an intentional destination for Rella's live WordPress URL inventory instead of relying on search engines and patients to discover post-cutover 404s. A centralized migration map protects 31 moved paths, and a production-mode checker follows every trailing-slash source to its final page.

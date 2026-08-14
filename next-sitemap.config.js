@@ -17,7 +17,9 @@ const publicRoutes = [
   "/napa/hydrafacial",
   "/napa/hyperhidrosis",
   "/napa/laser",
+  "/payment-plans",
   "/privacy-policy",
+  "/private-parties",
   "/services",
   "/services/botox",
   "/services/chemical-peels",
@@ -90,6 +92,8 @@ module.exports = {
       "/about": 0.8,
       "/team": 0.8,
       "/membership": 0.8,
+      "/payment-plans": 0.7,
+      "/private-parties": 0.8,
       "/cancellation-policy": 0.7,
     };
 

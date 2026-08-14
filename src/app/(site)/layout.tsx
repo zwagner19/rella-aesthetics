@@ -30,7 +30,7 @@ export default async function SiteLayout({ children }: Readonly<{ children: Reac
       <ConversionTracker />
       <SkipNav />
       <Header weightLossExperience={weightLossExperience} />
-      <main id="main" className="flex-1 pb-20 lg:pb-0">
+      <main id="main" className="flex-1 pb-20 xl:pb-0">
         {children}
       </main>
       <Footer weightLossExperience={weightLossExperience} />

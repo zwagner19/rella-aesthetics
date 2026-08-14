@@ -12,7 +12,7 @@ export function Footer({ weightLossExperience = false }: { weightLossExperience?
     weightLossExperience ? `https://experiencerella.com${path}` : path;
 
   return (
-    <footer className="border-t border-silver/25 bg-rose/20 pb-28 lg:pb-8 pt-16 text-ink">
+    <footer className="border-t border-silver/25 bg-rose/20 pb-28 pt-16 text-ink xl:pb-8">
       <div className="mx-auto max-w-[1280px] px-6 md:px-8 lg:px-12">
         <div className="mb-14 grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-[1.35fr_0.85fr_0.85fr_0.85fr]">
           {/* Brand */}
@@ -78,6 +78,8 @@ export function Footer({ weightLossExperience = false }: { weightLossExperience?
               <li><Link href={mainSiteHref("/gallery")} className="text-sm transition-colors hover:text-ink">Results</Link></li>
               <li><Link href={mainSiteHref("/blog")} className="text-sm transition-colors hover:text-ink">Education</Link></li>
               <li><Link href={mainSiteHref("/membership")} className="text-sm transition-colors hover:text-ink">Memberships</Link></li>
+              <li><Link href={mainSiteHref("/private-parties")} className="text-sm transition-colors hover:text-ink">Private Parties</Link></li>
+              <li><Link href={mainSiteHref("/payment-plans")} className="text-sm transition-colors hover:text-ink">Payment Plans</Link></li>
             </ul>
           </div>
 

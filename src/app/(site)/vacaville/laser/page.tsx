@@ -201,7 +201,7 @@ export default function VacavilleLaserPage() {
 
       <TrustStrip
         ariaLabel="Rella Vacaville laser visit facts"
-        items={["Physician-owned", "Verified consult path", "Current public pricing", "Downtown Vacaville"]}
+        items={["Consultation first", "Direct consult path", "Current public pricing", "Downtown Vacaville"]}
       />
 
       <section className="py-20 md:py-28" aria-labelledby="vacaville-laser-options">

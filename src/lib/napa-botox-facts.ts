@@ -14,8 +14,8 @@
  *     separate language.
  *  2. Nothing may be stated that the canon does not establish — no cancellation
  *     FEE amount beyond the retained-deposit sentence, no refund or
- *     deposit-application promise, no ratings, no credentials beyond the
- *     approved line, no delivery channel for confirmations.
+ *     deposit-application promise, no ratings, no unverified treatment-provider
+ *     claims, no delivery channel for confirmations.
  *
  * The repository's older `service-data.ts` still carries superseded 2023-era
  * figures ($13 / $4.33 as *standard*). Those are history; this file is canon.
@@ -50,19 +50,17 @@ export const CANCELLATION_POLICY =
   "Please give at least 48 hours’ notice if you need to cancel. Rella may retain your $50 deposit for " +
   "cancellations within 48 hours. Emergencies are reviewed individually.";
 
-export const CANCELLATION_POLICY_URL = "https://experiencerella.com/cancellation-policy/";
+/**
+ * Root-relative public path: stays inside a protected preview and resolves to
+ * the same WordPress URL when the campaign page is served on production.
+ */
+export const CANCELLATION_POLICY_URL = "/cancellation-policy/";
 
-/** Verified public destinations used by the campaign page footer. */
+/** Verified public WordPress paths, kept origin-relative for preview safety. */
 export const PUBLIC_LINKS = {
-  treatments: "https://experiencerella.com/botox/",
-  privacy: "https://experiencerella.com/privacy-policy/",
-  terms: "https://experiencerella.com/terms-and-conditions/",
-} as const;
-
-/** Approved credential + trust lines (D5). Nothing further may be claimed. */
-export const TRUST = {
-  ownerCredential: "Zachary Wagner, DO — Owner",
-  physicianOwned: "Physician-owned Rella Aesthetics",
+  treatments: "/botox/",
+  privacy: "/privacy-policy/",
+  terms: "/terms-and-conditions/",
 } as const;
 
 /**

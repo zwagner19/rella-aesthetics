@@ -24,7 +24,8 @@ describe("legacy WordPress redirect inventory", () => {
     expect(map.get("/facials")).toBe("/services/facials");
     expect(map.get("/radio-frequency-rf-microneedling")).toBe("/services/microneedling");
     expect(map.get("/become-a-vip")).toBe("/membership");
-    expect(map.get("/payment-plans")).toBe("/contact");
+    expect(map.has("/private-parties")).toBe(false);
+    expect(map.has("/payment-plans")).toBe(false);
     expect(map.get("/before-after")).toBe("/gallery");
     expect(map.get("/results")).toBe("/gallery");
     expect(map.has("/events")).toBe(false);

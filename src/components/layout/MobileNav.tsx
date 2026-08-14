@@ -81,12 +81,12 @@ export function MobileNav({
     <div
       id="mobile-navigation"
       ref={dialogRef}
-      className="fixed inset-0 z-[200] flex flex-col bg-paper px-6 pb-8 pt-6"
+      className="fixed inset-0 z-[200] flex flex-col overflow-hidden bg-paper px-6 pb-8 pt-6"
       role="dialog"
       aria-modal="true"
       aria-label="Mobile navigation"
     >
-      <div className="flex items-start justify-between border-b border-silver/25 pb-5">
+      <div className="flex shrink-0 items-start justify-between border-b border-silver/25 pb-5">
         <Link href="/" onClick={onClose} aria-label="Rella Aesthetics — Home">
           <Image
             src="/brand/rella-logo-black.svg"
@@ -107,7 +107,10 @@ export function MobileNav({
         </button>
       </div>
 
-      <nav className="mt-7 flex flex-1 flex-col" aria-label="Mobile menu links">
+      <nav
+        className="mt-7 flex min-h-0 flex-1 flex-col overflow-y-auto overscroll-contain"
+        aria-label="Mobile menu links"
+      >
         {links.map((link) => (
           <Link
             key={link.href}
@@ -124,7 +127,7 @@ export function MobileNav({
         href={booking.href}
         data-cta={booking.cta}
         onClick={onClose}
-        className="mt-7 inline-flex min-h-14 items-center justify-center rounded-full border-[1.5px] border-rose bg-rose px-10 py-4 text-[0.6875rem] font-bold uppercase tracking-[0.2em] text-ink transition-colors hover:bg-rose/70"
+        className="mt-7 inline-flex min-h-14 shrink-0 items-center justify-center rounded-full border-[1.5px] border-rose bg-rose px-10 py-4 text-[0.6875rem] font-bold uppercase tracking-[0.2em] text-ink transition-colors hover:bg-rose/70"
       >
         {booking.label}
       </Link>

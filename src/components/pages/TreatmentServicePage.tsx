@@ -53,15 +53,22 @@ export function TreatmentServicePage({ service }: TreatmentServicePageProps) {
           ? "/napa/botox"
           : service.slug === "dermal-fillers"
             ? "/napa/filler"
-            : service.slug === "facials"
-              ? "/napa/facials"
-            : "/locations/napa",
+            : service.slug === "laser-treatments"
+              ? "/napa/laser"
+              : service.slug === "hydrafacial"
+                ? "/napa/hydrafacial"
+                : service.slug === "facials"
+                  ? "/napa/facials"
+                  : "/locations/napa",
       detailsLabel:
         service.slug === "facials"
           ? "View Napa options & visit guide"
-          : service.slug === "botox" || service.slug === "dermal-fillers"
+          : service.slug === "botox" ||
+              service.slug === "dermal-fillers" ||
+              service.slug === "laser-treatments" ||
+              service.slug === "hydrafacial"
             ? "View Napa pricing & visit guide"
-          : "View Napa clinic details",
+            : "View Napa clinic details",
     },
   ]
     .filter((option) => availableLocations.includes(option.location))

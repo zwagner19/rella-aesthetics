@@ -7,11 +7,11 @@ import { DEFAULT_SOCIAL_IMAGE } from "@/lib/social-card";
 export const metadata: Metadata = {
   title: "Vacaville Med Spa",
   description:
-    "Physician-owned med spa in downtown Vacaville at 542 Main St. Explore Botox, fillers, laser treatments, skin care, and medical weight management.",
+    "Med spa in downtown Vacaville at 542 Main St. Explore Botox, fillers, laser treatments, skin care, and medical weight management.",
   alternates: { canonical: "/locations/vacaville" },
   openGraph: {
     title: "Vacaville Med Spa | Rella Aesthetics",
-    description: "Physician-owned aesthetic and wellness care in downtown Vacaville, California.",
+    description: "Aesthetic and wellness care in downtown Vacaville, California.",
     url: "/locations/vacaville",
     images: [DEFAULT_SOCIAL_IMAGE],
   },

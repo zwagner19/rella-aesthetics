@@ -13,7 +13,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "About Dr. Zachary Wagner | Rella Aesthetics",
     description:
-      "Physician-owned aesthetic and medical weight-management care in Vacaville and Napa, California.",
+      "Meet Rella Aesthetics founder and owner Dr. Zachary Wagner and the practice serving Vacaville and Napa, California.",
     url: "/about",
     images: [
       {
@@ -72,7 +72,7 @@ export default function AboutPage() {
         <div className="mx-auto grid max-w-[1200px] gap-14 px-6 py-20 md:px-8 md:py-28 lg:grid-cols-[1.05fr_0.95fr] lg:items-center lg:gap-24 lg:px-12">
           <div>
             <p className="mb-5 text-[0.75rem] font-medium capitalize italic tracking-[0.08em] text-rose-dark">
-              Physician-owned · Vacaville + Napa
+              Locally owned · Vacaville + Napa
             </p>
             <h1 className="mb-7 max-w-[720px] text-4xl font-bold uppercase leading-[1.04] tracking-[0.06em] text-ink md:text-6xl">
               Care built on judgment, honesty, and the right next step.
@@ -156,11 +156,10 @@ export default function AboutPage() {
               The people behind Rella
             </p>
             <h2 className="text-3xl font-bold uppercase tracking-[0.06em] text-ink md:text-4xl">
-              Meet the team by verified role.
+              Meet the people behind Rella.
             </h2>
             <p className="mt-4 leading-relaxed text-silver">
-              See Rella&apos;s leadership and care team without invented titles, biographies, or
-              treatment claims.
+              Get to know Rella&apos;s leadership and care team serving Vacaville and Napa.
             </p>
           </div>
           <Button href="/team" variant="ghost" className="shrink-0">

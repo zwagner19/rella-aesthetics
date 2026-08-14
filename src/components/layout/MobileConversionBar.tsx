@@ -27,7 +27,7 @@ export function MobileConversionBar({
   return (
     <nav
       aria-label="Quick booking actions"
-      className="fixed inset-x-0 bottom-0 z-40 grid grid-cols-[0.38fr_0.62fr] gap-2 border-t border-silver/35 bg-paper p-2 pb-[calc(0.5rem+env(safe-area-inset-bottom))] lg:hidden"
+      className="fixed inset-x-0 bottom-0 z-40 grid grid-cols-[0.38fr_0.62fr] gap-2 border-t border-silver/35 bg-paper p-2 pb-[calc(0.5rem+env(safe-area-inset-bottom))] xl:hidden"
     >
       <a
         href="tel:+17073582928"

@@ -6,10 +6,14 @@ import VacavillePage, {
   metadata as vacavilleMetadata,
 } from "./locations/vacaville/page";
 import { locations } from "@/lib/data";
-import { LOCATION_ENTITY_IDS, localBusinessSchema } from "@/lib/schemas";
+import {
+  LOCATION_ENTITY_IDS,
+  localBusinessSchema,
+  medicalBusinessSchema,
+  physicianOwnerSchema,
+} from "@/lib/schemas";
 import GalleryPage, { metadata as galleryMetadata } from "./gallery/page";
 import AboutPage, { metadata as aboutMetadata } from "./about/page";
-import { physicianOwnerSchema } from "@/lib/schemas";
 
 describe("local-search location pages", () => {
   it("renders a complete Napa visit and booking journey", () => {
@@ -58,6 +62,7 @@ describe("sitewide conversion foundation", () => {
 
   it("records a lead only after the contact API succeeds", () => {
     const source = readFileSync("src/app/(site)/contact/ContactForm.tsx", "utf8");
+    const intentSource = readFileSync("src/lib/contact-intents.ts", "utf8");
     const successCheck = source.indexOf("if (!res.ok)");
     const leadEvent = source.indexOf('dispatchConversion("contact_form_success")');
     expect(successCheck).toBeGreaterThan(-1);
@@ -68,7 +73,10 @@ describe("sitewide conversion foundation", () => {
     expect(source).toContain('name="location"');
     expect(source).toContain("Preferred Clinic");
     expect(source).toContain("No preference — help me choose");
-    expect(source).toContain('value="Membership Questions"');
+    expect(source).toContain("EXTRA_CONTACT_INTERESTS");
+    expect(intentSource).toContain('membership: "Membership Questions"');
+    expect(intentSource).toContain('"private-parties": "Private Party Questions"');
+    expect(intentSource).toContain('"payment-plans": "Payment Plan Questions"');
     expect(source).toContain("Please do not include sensitive medical information");
     expect(source).toContain("if (!email && !phone)");
     expect(source).toContain('autoComplete="name"');
@@ -87,6 +95,7 @@ describe("trust and indexation foundation", () => {
     expect(html).toContain("Individual results vary");
     expect(html).not.toContain("gallery-1.jpg");
     expect(html).not.toContain("Real patients, real results");
+    expect(html).not.toMatch(/medical oversight|physician-owned/i);
     expect(galleryMetadata.alternates).toEqual({ canonical: "/gallery" });
   });
 
@@ -100,10 +109,10 @@ describe("trust and indexation foundation", () => {
     expect(source).toContain("ABOM-certified physician");
   });
 
-  it("keeps the general About page focused on Rella and physician ownership", () => {
+  it("keeps the general About page factual about ownership and the treatment boundary", () => {
     const html = renderToStaticMarkup(<AboutPage />);
     expect(html).toContain("Zachary Wagner, DO");
-    expect(html).not.toContain("American Board of Obesity Medicine diplomate");
+    expect(html).not.toMatch(/American Board of Obesity Medicine diplomate|physician-owned/i);
     expect(html).toContain("/images/dr-zachary-wagner.jpg");
     expect(html).toContain("Founder &amp; Owner");
     expect(html).toContain("Medical Weight-Loss Physician");
@@ -112,6 +121,27 @@ describe("trust and indexation foundation", () => {
     expect(html).not.toContain("she leads");
     expect(html).not.toContain('class="aspect-[4/5] bg-silver-pale rounded-lg"');
     expect(aboutMetadata.alternates).toEqual({ canonical: "/about" });
+  });
+
+  it("keeps physician-authority sales framing out of general aesthetics surfaces and schema", () => {
+    const generalAestheticsFiles = [
+      "src/app/(site)/locations/vacaville/page.tsx",
+      "src/app/(site)/vacaville/botox/page.tsx",
+      "src/app/(site)/vacaville/filler/page.tsx",
+      "src/app/(site)/vacaville/hydrafacial/page.tsx",
+      "src/app/(site)/vacaville/laser/page.tsx",
+      "src/app/(site)/gallery/page.tsx",
+    ];
+
+    for (const file of generalAestheticsFiles) {
+      expect(readFileSync(file, "utf8"), file).not.toMatch(
+        /physician[- ]owned|medical oversight/i,
+      );
+    }
+
+    expect(JSON.stringify(medicalBusinessSchema())).not.toMatch(
+      /physician[- ]owned|medical oversight/i,
+    );
   });
 
   it("publishes Dr. Wagner's bounded owner role without weight-loss credentials", () => {

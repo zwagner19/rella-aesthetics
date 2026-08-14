@@ -4,7 +4,7 @@ import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import NapaBotoxLandingPage, { metadata } from "./page";
 import {
-  PRICING, VISIT, CANCELLATION_POLICY, CANCELLATION_POLICY_URL, MARKETING_PHONE, FAQS, TRUST,
+  PRICING, VISIT, CANCELLATION_POLICY, CANCELLATION_POLICY_URL, MARKETING_PHONE, FAQS,
 } from "@/lib/napa-botox-facts";
 import { CANONICAL_NAPA_TOX, resolveBookingHref } from "@/lib/booking-routes";
 
@@ -172,10 +172,10 @@ describe("no unverifiable claims", () => {
     }
   });
 
-  it("claims no credentials beyond the approved owner line", () => {
-    expect(decoded).toContain(TRUST.ownerCredential);
-    expect(decoded).not.toMatch(/board[- ]certified|fellowship|specialist in|MD, PhD/i);
-    expect(decoded).not.toMatch(/physician-led/i); // prohibited string; "physician-owned" is correct
+  it("keeps physician authority out of the aesthetics sales pitch", () => {
+    expect(decoded).not.toMatch(
+      /Zachary Wagner|Dr\. Wagner|ABOM|board[- ]certified|physician[- ](?:owned|led)|fellowship|specialist in|MD, PhD/i,
+    );
   });
 
   it("promises no SMS/text confirmation and no same-day availability", () => {
@@ -300,9 +300,10 @@ describe("marketing/booking privacy boundary", () => {
 
 describe("SEO metadata", () => {
   it("has unique Napa Botox metadata and the marketing canonical", () => {
-    expect(metadata.title).toBe("Botox in Napa — Physician-Owned Med Spa");
+    expect(metadata.title).toBe("Botox in Napa — Pricing & Visit Guide");
     expect(String(metadata.description)).toMatch(/Napa/);
     expect(String(metadata.description)).toMatch(/\$18\/unit/);
+    expect(`${metadata.title} ${metadata.description}`).not.toMatch(/physician[- ]owned/i);
     expect(metadata.alternates?.canonical).toBe("https://experiencerella.com/napa/botox");
   });
 

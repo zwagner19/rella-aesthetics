@@ -62,6 +62,6 @@ describe("public cancellation-policy integrity", () => {
     expect(footerHtml).toContain('href="/team"');
     expect(footerHtml).toContain("Reviews shared on this site span both Rella locations");
     expect(footerHtml).toContain("Individual results vary");
-    expect(footerHtml).toContain("pb-28 lg:pb-8");
+    expect(footerHtml).toContain("pb-28 pt-16 text-ink xl:pb-8");
   });
 });

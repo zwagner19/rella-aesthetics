@@ -243,6 +243,26 @@ describe("public pricing and claims integrity", () => {
     expect(html).toContain("Book in Napa");
   });
 
+  it("connects shared Napa HydraFacial and laser details to their real Napa pages", () => {
+    for (const [slug, detailsHref] of [
+      ["hydrafacial", "/napa/hydrafacial"],
+      ["laser-treatments", "/napa/laser"],
+    ] as const) {
+      const service = servicePages.find((candidate) => candidate.slug === slug);
+      const html = renderToStaticMarkup(
+        <TreatmentServicePage service={service!} />,
+      );
+
+      expect(html).toContain(`href="${detailsHref}"`);
+      expect(html).toContain("View Napa pricing &amp; visit guide");
+      expect(html).not.toMatch(
+        new RegExp(
+          `href="/locations/napa"[^>]*>View Napa pricing &amp; visit guide`,
+        ),
+      );
+    }
+  });
+
   it("keeps shared service copy free of universal outcomes and fixed recovery promises", () => {
     const publicCopy = JSON.stringify(servicePages);
 

@@ -2,7 +2,6 @@ import { resolveBookingHref } from "@/lib/booking-routes";
 import {
   MARKETING_PHONE,
   NAPA,
-  TRUST,
 } from "@/lib/napa-botox-facts";
 import {
   NAPA_CAMPAIGN_SERVICE_ORDER,
@@ -15,10 +14,15 @@ const LOGO = "/brand/rella-logo-black.svg";
 const DIRECTIONS_HREF =
   "https://maps.google.com/?q=1541+3rd+St+Napa+CA+94559";
 
+/**
+ * Keep protected previews on their reviewed origin. These root-relative paths
+ * are also the existing public WordPress paths, so production behavior is
+ * unchanged while canonical and structured-data URLs remain absolute below.
+ */
 const PUBLIC_LINKS = {
-  napa: "https://experiencerella.com/napa",
-  privacy: "https://experiencerella.com/privacy-policy/",
-  terms: "https://experiencerella.com/terms-and-conditions/",
+  napa: "/napa",
+  privacy: "/privacy-policy/",
+  terms: "/terms-and-conditions/",
 } as const;
 
 type BookCtaProps = {
@@ -272,10 +276,6 @@ export function NapaCampaignLandingPage({
               </BookCta>
               <CallCta />
             </div>
-            <p className="nb-body" style={{ marginTop: 16 }}>
-              {TRUST.physicianOwned} · {TRUST.ownerCredential}
-            </p>
-
             <div
               className="nb-card"
               style={{ marginTop: 28, maxWidth: "34rem" }}
@@ -400,7 +400,7 @@ export function NapaCampaignLandingPage({
 
         <section className="nb-section" aria-labelledby="nb-h-trust">
           <div className="nb-wrap">
-            <p className="nb-kicker">Physician-owned</p>
+            <p className="nb-kicker">Before treatment</p>
             <h2 id="nb-h-trust" className="nb-h2" style={{ marginTop: 10 }}>
               Clear recommendations. No pressure.
             </h2>
@@ -408,9 +408,9 @@ export function NapaCampaignLandingPage({
               className="nb-lede"
               style={{ marginTop: 16, maxWidth: "66ch" }}
             >
-              Rella Aesthetics is owned by Zachary Wagner, DO. The treating
-              provider reviews candidacy, the proposed plan, expected cost, and
-              relevant aftercare before you decide whether to proceed.
+              Your treating provider reviews candidacy, the proposed plan,
+              expected cost, and relevant aftercare before you decide whether
+              to proceed.
             </p>
           </div>
         </section>
@@ -549,8 +549,8 @@ export function NapaCampaignHub() {
               Rella Aesthetics — Napa
             </h1>
             <p className="nb-lede" style={{ marginTop: 18 }}>
-              Physician-owned aesthetic and wellness care with direct booking
-              paths, current public pricing, and a downtown Napa location.
+              Aesthetic and wellness care with direct booking paths, current
+              public pricing, and a downtown Napa location.
             </p>
             <div className="nb-actions">
               <BookCta href={bookingHref} service={trackingService}>
@@ -559,7 +559,7 @@ export function NapaCampaignHub() {
               <CallCta />
             </div>
             <p className="nb-body" style={{ marginTop: 16 }}>
-              Zachary Wagner, DO — Physician Owner
+              {NAPA.hoursCopy}
             </p>
           </div>
         </section>
@@ -628,28 +628,27 @@ export function NapaCampaignHub() {
 
         <section
           className="nb-section nb-section--tint"
-          aria-labelledby="nb-h-owner"
+          aria-labelledby="nb-h-guidance"
         >
           <div className="nb-wrap">
-            <p className="nb-kicker">Physician-owned</p>
-            <h2 id="nb-h-owner" className="nb-h2" style={{ marginTop: 10 }}>
-              A practice with an accountable owner
+            <p className="nb-kicker">Before treatment</p>
+            <h2 id="nb-h-guidance" className="nb-h2" style={{ marginTop: 10 }}>
+              A clear plan with your treating provider
             </h2>
             <p
               className="nb-lede"
               style={{ marginTop: 16, maxWidth: "66ch" }}
             >
-              Rella Aesthetics is locally owned by Zachary Wagner, DO. Aesthetic
-              treatment decisions remain with the appropriately licensed
-              treating provider, with a focus on clear guidance and an
-              appropriate plan for each patient.
+              Aesthetic treatment decisions remain with the appropriately
+              licensed treating provider, with a focus on clear guidance and
+              an appropriate plan for each patient.
             </p>
             <div className="nb-actions" style={{ marginTop: 22 }}>
               <a
                 className="nb-btn nb-btn--quiet"
-                href="https://experiencerella.com/about/"
+                href="/about/"
               >
-                Meet Dr. Wagner
+                About Rella
               </a>
             </div>
           </div>

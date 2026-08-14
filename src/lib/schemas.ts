@@ -18,7 +18,7 @@ export function medicalBusinessSchema() {
         "@id": "https://experiencerella.com/#organization",
         name: "Rella Aesthetics",
         description:
-          "Physician-owned aesthetic, skin, wellness, and medical weight-management care in Vacaville and Napa, California.",
+          "Aesthetic, skin, wellness, and medical weight-management care in Vacaville and Napa, California.",
         url: "https://experiencerella.com",
         telephone: "+17073582928",
         department: locationNodes.map((location) => ({

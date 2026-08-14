@@ -8,12 +8,12 @@ const CANONICAL = "https://experiencerella.com/napa";
 export const metadata: Metadata = {
   title: "Napa Med Spa Services",
   description:
-    "Explore physician-owned aesthetic and wellness care at Rella Aesthetics Napa, with focused paths for Botox, filler, laser, facials, HydraFacial, and sweating care.",
+    "Explore aesthetic and wellness care at Rella Aesthetics Napa, with focused paths for Botox, filler, laser, facials, HydraFacial, and sweating care.",
   alternates: { canonical: CANONICAL },
   openGraph: {
     title: "Napa Med Spa Services | Rella Aesthetics",
     description:
-      "Physician-owned aesthetic and wellness care with focused local service and booking paths in downtown Napa.",
+      "Aesthetic and wellness care with focused local service and booking paths in downtown Napa.",
     url: CANONICAL,
     type: "website",
     images: [DEFAULT_SOCIAL_IMAGE],

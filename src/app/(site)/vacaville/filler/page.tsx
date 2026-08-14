@@ -178,7 +178,7 @@ export default function VacavilleFillerPage() {
 
       <TrustStrip
         ariaLabel="Rella Vacaville filler visit facts"
-        items={["Physician-owned", "Current public pricing", "Downtown Vacaville", "Plan before treatment"]}
+        items={["Consultation-led plan", "Current public pricing", "Downtown Vacaville", "Plan before treatment"]}
       />
 
       <section className="py-20 md:py-28" aria-labelledby="vacaville-filler-pricing">

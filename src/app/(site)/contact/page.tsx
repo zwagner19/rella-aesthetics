@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import { SectionHeader } from "@/components/ui/SectionHeader";
 import { LocationCard } from "@/components/blocks/LocationCard";
-import { ContactForm, MEMBERSHIP_CONTACT_INTENT } from "./ContactForm";
+import { ContactForm } from "./ContactForm";
+import { resolveContactIntent } from "@/lib/contact-intents";
 import { locations } from "@/lib/data";
 
 export const metadata: Metadata = {
@@ -17,7 +18,7 @@ export default async function ContactPage({
   searchParams?: Promise<{ intent?: string | string[] }>;
 }) {
   const intent = (await searchParams)?.intent;
-  const initialServiceInterest = intent === "membership" ? MEMBERSHIP_CONTACT_INTENT : "";
+  const initialServiceInterest = resolveContactIntent(intent);
 
   return (
     <>

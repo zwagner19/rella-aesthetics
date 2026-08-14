@@ -44,7 +44,7 @@ export default function GalleryPage() {
             Results that still look like you.
           </h1>
           <p className="mx-auto mb-8 max-w-[700px] text-lg font-light leading-relaxed text-silver-dark md:text-xl">
-            Rella&apos;s work begins with honest guidance, medical oversight, and a treatment plan designed around your features and goals.
+            Rella&apos;s work begins with honest guidance, thoughtful consultation, and a treatment plan designed around your features and goals.
           </p>
           <Button href={resolveBookingHref({})} className="rounded-full">Book a Consultation</Button>
         </div>
@@ -52,7 +52,7 @@ export default function GalleryPage() {
 
       <TrustStrip
         ariaLabel="Rella Aesthetics results principles"
-        items={["Natural-looking goals", "Medical oversight", "Individualized plans", "Patient consent first"]}
+        items={["Natural-looking goals", "Consultation first", "Individualized plans", "Patient consent first"]}
       />
 
       <section className="py-20 md:py-28">

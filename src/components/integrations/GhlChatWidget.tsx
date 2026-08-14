@@ -16,7 +16,7 @@ const RESOURCES_ATTR =
 const widgetId = process.env.NEXT_PUBLIC_GHL_CHAT_WIDGET_ID ?? "";
 /** Legacy: full script URL if your embed uses a non-standard host */
 const legacyScriptUrl = process.env.NEXT_PUBLIC_GHL_CHAT_WIDGET_URL ?? "";
-const DESKTOP_WIDGET_QUERY = "(min-width: 1024px)";
+const DESKTOP_WIDGET_QUERY = "(min-width: 1280px)";
 
 export function GhlChatWidget() {
   useEffect(() => {

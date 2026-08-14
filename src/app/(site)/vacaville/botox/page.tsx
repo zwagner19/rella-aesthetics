@@ -16,7 +16,7 @@ const clinic = locations.vacaville;
 export const metadata: Metadata = {
   title: "Botox in Vacaville, CA | Pricing & Visit Guide",
   description:
-    "Explore current Botox and Dysport pricing, product-specific timing, and what to expect at physician-owned Rella Aesthetics, 542 Main St in Vacaville.",
+    "Explore current Botox and Dysport pricing, product-specific timing, and what to expect at Rella Aesthetics, 542 Main St in Vacaville.",
   alternates: { canonical: CANONICAL },
   openGraph: {
     title: "Botox in Vacaville, CA | Rella Aesthetics",
@@ -140,7 +140,7 @@ export default function VacavilleBotoxPage() {
               Botox &amp; Dysport in Vacaville.
             </h1>
             <p className="mb-8 max-w-[650px] text-lg font-light leading-relaxed text-silver-dark md:text-xl">
-              Current per-unit pricing, product-specific timing, and a consultation-led plan at physician-owned Rella Aesthetics on Main Street.
+              Current per-unit pricing, product-specific timing, and a consultation-led plan at Rella Aesthetics on Main Street.
             </p>
             <div className="flex flex-col gap-3 sm:flex-row">
               <Button href={BOOKING_HREF} data-cta="service-booking" className="rounded-full">
@@ -174,7 +174,7 @@ export default function VacavilleBotoxPage() {
 
       <TrustStrip
         ariaLabel="Rella Vacaville Botox visit facts"
-        items={["Physician-owned", "Current public pricing", "Downtown Vacaville", "Plan before treatment"]}
+        items={["Consultation first", "Current public pricing", "Downtown Vacaville", "Plan before treatment"]}
       />
 
       <section className="py-20 md:py-28" aria-labelledby="vacaville-botox-pricing">

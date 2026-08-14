@@ -2,10 +2,9 @@
 
 import { useState, type FormEvent } from "react";
 import { Button } from "@/components/ui/Button";
+import { EXTRA_CONTACT_INTERESTS } from "@/lib/contact-intents";
 import { services } from "@/lib/data";
 import { dispatchConversion } from "@/lib/conversion-tracking";
-
-export const MEMBERSHIP_CONTACT_INTENT = "Membership Questions";
 
 export function ContactForm({ initialServiceInterest = "" }: { initialServiceInterest?: string }) {
   const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">("idle");
@@ -144,7 +143,11 @@ export function ContactForm({ initialServiceInterest = "" }: { initialServiceInt
               {s.title}
             </option>
           ))}
-          <option value="Membership Questions">Membership Questions</option>
+          {EXTRA_CONTACT_INTERESTS.map((interest) => (
+            <option key={interest} value={interest}>
+              {interest}
+            </option>
+          ))}
         </select>
       </div>
       <div>

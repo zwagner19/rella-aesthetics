@@ -12,7 +12,7 @@ import { resolveBookingHref } from "@/lib/booking-routes";
 export const metadata: Metadata = {
   title: "Meet the Rella Aesthetics Team | Vacaville & Napa",
   description:
-    "Meet the Rella Aesthetics leadership and care team serving Vacaville and Napa, with verified roles stated clearly.",
+    "Meet the Rella Aesthetics leadership and care team serving Vacaville and Napa.",
   alternates: { canonical: "/team" },
   openGraph: {
     title: "Meet the Rella Aesthetics Team",
@@ -97,7 +97,7 @@ export default function TeamPage() {
               Care team
             </p>
             <h2 className="text-3xl font-bold uppercase tracking-[0.06em] text-ink md:text-5xl">
-              Verified roles, stated plainly.
+              The Rella care team.
             </h2>
           </div>
 
@@ -142,12 +142,8 @@ export default function TeamPage() {
                 id="additional-team-heading"
                 className="text-3xl font-bold uppercase tracking-[0.06em] text-ink md:text-4xl"
               >
-                Every role deserves accuracy.
+                More people behind Rella.
               </h2>
-              <p className="mt-5 max-w-[480px] leading-relaxed text-silver">
-                These confirmed team members are listed without titles or biographies because those
-                details have not yet been approved for publication.
-              </p>
             </div>
             <ul className="grid gap-x-8 sm:grid-cols-2">
               {additionalTeamMembers.map((name) => (

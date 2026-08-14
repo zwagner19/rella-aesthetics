@@ -46,7 +46,7 @@ describe("team roster integrity", () => {
     }
   });
 
-  it("keeps team members with unconfirmed roles name-only", () => {
+  it("presents team members whose public role is not shown by name only", () => {
     expect(additionalTeamMembers).toEqual([
       "Devyn",
       "Paula",
@@ -55,7 +55,9 @@ describe("team roster integrity", () => {
       "Ryan",
     ]);
     for (const name of additionalTeamMembers) expect(teamHtml).toContain(name);
-    expect(teamHtml).toContain("listed without titles or biographies");
+    expect(teamHtml).not.toMatch(
+      /verified roles|confirmed team members|approved for publication|listed without titles or biographies/i,
+    );
   });
 
   it("uses one verified portrait and no card effects or vendor destinations", () => {

@@ -21,7 +21,8 @@
 - [ ] `/upcoming-events/` returns the owner-approved exact `410 Gone`
 - [ ] `/results/` → `/gallery` (permanent redirect, then 200 OK)
 - [ ] `/our-team/` → `/team` (permanent redirect, then 200 OK)
-- [ ] `/private-parties/` follows the separately approved Private Parties migration decision; do not silently collapse it into generic Contact
+- [ ] `/private-parties/` loads the dedicated private-event inquiry page and does not expose an ordinary treatment-booking path
+- [ ] `/payment-plans/` loads the dedicated Cherry information/inquiry page without publishing unapproved lending terms
 - [ ] `/about/` → `/about` (200 OK)
 - [ ] `/contact/` → `/contact` (200 OK)
 

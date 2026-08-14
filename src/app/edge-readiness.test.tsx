@@ -18,7 +18,9 @@ vi.mock("next/font/google", () => ({
  * rest of that host stays WordPress. Three things follow, and each is asserted
  * here because each was a verified launch blocker:
  *
- *  - Root-relative navigation to `/services` or `/terms` 404s on the public host.
+ *  - The public host requires its verified legacy paths (`/botox/` and
+ *    `/terms-and-conditions/`), while protected previews must not escape to the
+ *    live WordPress origin.
  *  - The proxied document does NOT inherit WordPress's GTM, so campaign routes
  *    must carry their own container.
  *  - The `*.vercel.app` aliases must be noindex while the public response stays
@@ -36,10 +38,10 @@ const navLinks = [...html.matchAll(/<a\b([^>]*)>/g)]
 describe("the complete non-booking link matrix targets verified public destinations", () => {
   /** Verified live against experiencerella.com on 2026-07-27. */
   const APPROVED = new Set([
-    "https://experiencerella.com/botox/",
-    "https://experiencerella.com/privacy-policy/",
-    "https://experiencerella.com/terms-and-conditions/",
-    "https://experiencerella.com/cancellation-policy/",
+    "/botox/",
+    "/privacy-policy/",
+    "/terms-and-conditions/",
+    "/cancellation-policy/",
   ]);
 
   it("every rendered navigation link is an approved public destination", () => {
@@ -56,17 +58,25 @@ describe("the complete non-booking link matrix targets verified public destinati
   });
 
   it("privacy policy is preserved, at its trailing-slash public URL", () => {
-    expect(PUBLIC_LINKS.privacy).toBe("https://experiencerella.com/privacy-policy/");
-    expect(navLinks).toContain("https://experiencerella.com/privacy-policy/");
+    expect(PUBLIC_LINKS.privacy).toBe("/privacy-policy/");
+    expect(navLinks).toContain("/privacy-policy/");
   });
 
   it("treatments and terms point at the verified live pages", () => {
-    expect(PUBLIC_LINKS.treatments).toBe("https://experiencerella.com/botox/");
-    expect(PUBLIC_LINKS.terms).toBe("https://experiencerella.com/terms-and-conditions/");
+    expect(PUBLIC_LINKS.treatments).toBe("/botox/");
+    expect(PUBLIC_LINKS.terms).toBe("/terms-and-conditions/");
   });
 
-  it("no navigation link is root-relative, so none can 404 after proxying", () => {
-    for (const href of navLinks) expect(href.startsWith("/")).toBe(false);
+  it("keeps preview navigation on the candidate while preserving production paths", () => {
+    for (const href of navLinks) {
+      expect(href.startsWith("/")).toBe(true);
+      expect(new URL(href, "https://protected-preview.vercel.app").origin).toBe(
+        "https://protected-preview.vercel.app",
+      );
+      expect(new URL(href, "https://experiencerella.com").origin).toBe(
+        "https://experiencerella.com",
+      );
+    }
   });
 });
 

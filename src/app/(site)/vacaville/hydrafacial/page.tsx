@@ -203,7 +203,7 @@ export default function VacavilleHydraFacialPage() {
 
       <TrustStrip
         ariaLabel="Rella Vacaville HydraFacial visit facts"
-        items={["Physician-owned", "Three current tiers", "Direct Signature booking", "Downtown Vacaville"]}
+        items={["Skin goals first", "Three current tiers", "Direct Signature booking", "Downtown Vacaville"]}
       />
 
       <section className="py-20 md:py-28" aria-labelledby="vacaville-hydrafacial-pricing">
