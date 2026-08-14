@@ -28,6 +28,53 @@ export const metadata: Metadata = {
   },
 };
 
+type TeamProfileMember = (typeof teamRoleGroups)[number]["members"][number];
+
+function TeamProfile({ member }: { member: TeamProfileMember }) {
+  if (!member.image) {
+    return (
+      <article className="border-t border-silver/30 py-8 md:col-span-2 md:grid md:grid-cols-[0.65fr_1.35fr] md:gap-12">
+        <div>
+          <h4 className="text-2xl font-medium text-ink">{member.name}</h4>
+          <p className="mt-2 text-xs font-bold uppercase tracking-[0.12em] text-silver-dark">
+            {member.role}
+          </p>
+        </div>
+        <div className="mt-6 space-y-4 text-[0.9375rem] leading-relaxed text-ink/75 md:mt-0">
+          {member.bio.map((paragraph) => (
+            <p key={paragraph}>{paragraph}</p>
+          ))}
+        </div>
+      </article>
+    );
+  }
+
+  return (
+    <article className="border-t border-silver/30 pt-6">
+      <div className="relative aspect-[4/5] overflow-hidden bg-rose-blush">
+        <Image
+          src={member.image}
+          alt=""
+          fill
+          className="object-cover object-top"
+          sizes="(min-width: 1024px) 480px, (min-width: 768px) 45vw, 100vw"
+        />
+      </div>
+      <div className="pt-6">
+        <h4 className="text-2xl font-medium text-ink">{member.name}</h4>
+        <p className="mt-2 text-xs font-bold uppercase tracking-[0.12em] text-silver-dark">
+          {member.role}
+        </p>
+        <div className="mt-5 space-y-4 text-[0.9375rem] leading-relaxed text-ink/75">
+          {member.bio.map((paragraph) => (
+            <p key={paragraph}>{paragraph}</p>
+          ))}
+        </div>
+      </div>
+    </article>
+  );
+}
+
 export default function TeamPage() {
   return (
     <>
@@ -101,29 +148,19 @@ export default function TeamPage() {
             </h2>
           </div>
 
-          <div className="space-y-16">
+          <div className="space-y-20">
             {teamRoleGroups.map((group) => (
               <section key={group.title} aria-labelledby={`team-${group.title.toLowerCase().replaceAll(" ", "-").replaceAll("&", "and")}`}>
-                <div className="grid gap-6 md:grid-cols-[0.65fr_1.35fr] md:gap-12">
-                  <h3
-                    id={`team-${group.title.toLowerCase().replaceAll(" ", "-").replaceAll("&", "and")}`}
-                    className="text-sm font-bold uppercase tracking-[0.16em] text-silver-dark"
-                  >
-                    {group.title}
-                  </h3>
-                  <div>
-                    {group.members.map((member) => (
-                      <article
-                        key={member.name}
-                        className="grid gap-2 border-t border-silver/30 py-6 sm:grid-cols-[1fr_auto] sm:items-baseline sm:gap-8"
-                      >
-                        <h4 className="text-xl font-medium text-ink">{member.name}</h4>
-                        <p className="text-sm uppercase tracking-[0.1em] text-silver">
-                          {member.role}
-                        </p>
-                      </article>
-                    ))}
-                  </div>
+                <h3
+                  id={`team-${group.title.toLowerCase().replaceAll(" ", "-").replaceAll("&", "and")}`}
+                  className="mb-7 text-sm font-bold uppercase tracking-[0.16em] text-silver-dark"
+                >
+                  {group.title}
+                </h3>
+                <div className="grid gap-x-8 gap-y-14 md:grid-cols-2">
+                  {group.members.map((member) => (
+                    <TeamProfile key={member.name} member={member} />
+                  ))}
                 </div>
               </section>
             ))}
@@ -145,10 +182,21 @@ export default function TeamPage() {
                 More people behind Rella.
               </h2>
             </div>
-            <ul className="grid gap-x-8 sm:grid-cols-2">
-              {additionalTeamMembers.map((name) => (
-                <li key={name} className="border-t border-silver/35 py-5 text-lg font-medium text-ink">
-                  {name}
+            <ul className="grid gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3">
+              {additionalTeamMembers.map((member) => (
+                <li key={member.name}>
+                  <div className="relative aspect-[4/5] overflow-hidden bg-paper">
+                    <Image
+                      src={member.image}
+                      alt=""
+                      fill
+                      className="object-cover object-top"
+                      sizes="(min-width: 1024px) 180px, (min-width: 768px) 28vw, (min-width: 640px) 45vw, calc(100vw - 3rem)"
+                    />
+                  </div>
+                  <p className="border-t border-silver/35 py-5 text-lg font-medium text-ink">
+                    {member.name}
+                  </p>
                 </li>
               ))}
             </ul>

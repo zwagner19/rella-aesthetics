@@ -12,6 +12,15 @@ import {
 const teamHtml = renderToStaticMarkup(<TeamPage />);
 const teamSource = readFileSync("src/app/(site)/team/page.tsx", "utf8");
 
+function escapeHtmlText(value: string) {
+  return value
+    .replaceAll("&", "&amp;")
+    .replaceAll("'", "&#x27;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;");
+}
+
 describe("team roster integrity", () => {
   it("puts bounded leadership before the role groups", () => {
     expect(teamHtml.match(/<h1\b/g)).toHaveLength(1);
@@ -42,26 +51,33 @@ describe("team roster integrity", () => {
       for (const member of group.members) {
         expect(teamHtml).toContain(member.name);
         expect(teamHtml).toContain(member.role.replace("&", "&amp;"));
+        expect(member.bio.length).toBeGreaterThan(0);
+        for (const paragraph of member.bio) {
+          expect(teamHtml).toContain(escapeHtmlText(paragraph));
+        }
+        if (member.image) expect(existsSync(`public${member.image}`)).toBe(true);
       }
     }
   });
 
-  it("presents team members whose public role is not shown by name only", () => {
-    expect(additionalTeamMembers).toEqual([
-      "Devyn",
-      "Paula",
-      "Ayano",
-      "Natalie",
-      "Ryan",
+  it("presents the photo-only team members without inventing public roles or bios", () => {
+    expect(additionalTeamMembers.map((member) => member.name)).toEqual([
+      "Devyn Pickett", "Paula", "Ayano", "Natalie", "Ryan",
     ]);
-    for (const name of additionalTeamMembers) expect(teamHtml).toContain(name);
+    for (const member of additionalTeamMembers) {
+      expect(teamHtml).toContain(member.name);
+      expect(existsSync(`public${member.image}`)).toBe(true);
+    }
     expect(teamHtml).not.toMatch(
-      /verified roles|confirmed team members|approved for publication|listed without titles or biographies/i,
+      /Director of Ops|Front Desk|Nurse Injector|verified roles|confirmed team members|approved for publication|listed without titles or biographies/i,
     );
   });
 
-  it("uses one verified portrait and no card effects or vendor destinations", () => {
-    expect(teamSource.match(/<Image\b/g)).toHaveLength(1);
+  it("uses every supplied portrait once and keeps the portraitless profile honest", () => {
+    expect(teamHtml.match(/<img\b/g)).toHaveLength(12);
+    expect(teamHtml.match(/<img\b[^>]*alt=""/g)).toHaveLength(11);
+    expect(teamHtml).toContain("Hailey Butler");
+    expect(teamHtml).not.toMatch(/portrait coming soon|stock portrait|placeholder portrait/i);
     expect(teamSource).not.toMatch(/\b(?:rounded|shadow|gradient)-/);
     expect(teamSource).not.toMatch(/boulevard|joinblvd|rella-hq/i);
     expect(teamSource).toContain("resolveBookingHref({})");
