@@ -99,5 +99,6 @@ describe("Vacaville laser local-acquisition page", () => {
     expect(html).toContain('href="/services/laser-treatments"');
     expect(html).toContain('href="/locations/vacaville"');
     expect(html).toContain('href="/cancellation-policy"');
+    expect(text).not.toContain("Boulevard");
   });
 });

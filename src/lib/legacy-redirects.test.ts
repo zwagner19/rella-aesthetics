@@ -19,13 +19,16 @@ describe("legacy WordPress redirect inventory", () => {
     const map = new Map(legacyRedirects.map(({ source, destination }) => [source, destination]));
 
     expect(map.get("/about-us")).toBe("/about");
-    expect(map.get("/our-team")).toBe("/about");
+    expect(map.get("/our-team")).toBe("/team");
     expect(map.get("/chemical-peels")).toBe("/services/chemical-peels");
     expect(map.get("/facials")).toBe("/services/facials");
     expect(map.get("/radio-frequency-rf-microneedling")).toBe("/services/microneedling");
     expect(map.get("/become-a-vip")).toBe("/membership");
     expect(map.get("/payment-plans")).toBe("/contact");
     expect(map.get("/before-after")).toBe("/gallery");
+    expect(map.get("/results")).toBe("/gallery");
+    expect(map.has("/events")).toBe(false);
+    expect(map.has("/upcoming-events")).toBe(false);
     expect(map.get("/blog/semaglutide-weight-loss-consultation-what-to-expect")).toBe(
       "/services/weight-loss",
     );
@@ -37,6 +40,7 @@ describe("legacy WordPress redirect inventory", () => {
   it("expands each audited source into permanent slash and slashless rules", async () => {
     const configured = await nextConfig.redirects?.();
 
+    expect(nextConfig.skipTrailingSlashRedirect).toBe(true);
     expect(configured).toHaveLength(legacyRedirects.length * 2);
     for (const { source, destination } of legacyRedirects) {
       expect(configured).toContainEqual({ source, destination, permanent: true });

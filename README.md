@@ -1,6 +1,6 @@
 # Rella Aesthetics website
 
-Production Next.js website for Rella Aesthetics in Vacaville and Napa. The site includes service discovery, local landing pages, Boulevard booking routes, a HighLevel lead form, conversion measurement, and Sanity-backed content.
+Production Next.js website for Rella Aesthetics in Vacaville and Napa. The site includes service discovery, local landing pages, Rella-owned custom-booking routes, a HighLevel lead form, conversion measurement, and Sanity-backed content.
 
 ## Run and verify
 
@@ -30,7 +30,7 @@ npm run check:seo
 The production build also regenerates `public/sitemap.xml` through `next-sitemap`.
 `check:links` reads the generated sitemap from `http://localhost:3000` by default and fails if a public page or internal destination returns an error, an indexed page has no internal inlink, an indexed page is unreachable from the homepage, or homepage crawl depth exceeds three. Set `SITE_URL` to run the same read-only check against another local port or an approved preview.
 
-`check:booking-links` discovers the external booking URLs actually rendered by the sitemap pages, requires the two Rella-owned booking surfaces, follows each destination without submitting a form, and fails on unreachable responses, non-HTTPS links, or redirects outside those approved hosts. It requires outbound network access. Set `SITE_URL` the same way when the preview uses another port. For a protected booking preview, also set `BOOKING_CHECK_AESTHETICS_ORIGIN` to that exact preview origin.
+`check:booking-links` discovers the external booking URLs rendered in both website host contexts, requires the Rella-owned booking surfaces, rejects direct vendor/HQ links, follows each approved destination without submitting a form, and fails on unreachable responses, non-HTTPS links, or redirects outside those approved hosts. It requires outbound network access. A local exact build automatically checks both the aesthetics and weight-loss host branches by presenting the canonical weight-loss Host header. A hosted PR preview checks its actual aesthetics response only; do not override its Host, because that can route to a different deployment. After promotion, set `BOOKING_CHECK_WEIGHT_LOSS_SITE_URL=https://weightloss.experiencerella.com` to check the branded host separately. For a protected booking preview, also set `BOOKING_CHECK_AESTHETICS_ORIGIN` to that exact preview origin.
 
 ## Environment configuration
 

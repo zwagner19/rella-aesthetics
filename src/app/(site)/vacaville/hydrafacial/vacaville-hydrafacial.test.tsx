@@ -100,5 +100,6 @@ describe("Vacaville HydraFacial local-acquisition page", () => {
     expect(html).toContain('href="/membership"');
     expect(html).toContain('href="/locations/vacaville"');
     expect(html).toContain('href="/cancellation-policy"');
+    expect(text).not.toContain("Boulevard");
   });
 });

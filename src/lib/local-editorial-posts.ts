@@ -136,7 +136,7 @@ export const LOCAL_EDITORIAL_POSTS: readonly LocalEditorialPost[] = [
         id: "booking-deposit",
         heading: "What the $50 booking deposit is—and is not",
         paragraphs: [
-          "A card is required to book the 30-minute new-patient tox visit. Boulevard charges a $50 deposit when the appointment is confirmed. Card details are sent directly to Boulevard's secure payment vault and are not stored on Rella's servers.",
+          "A card is required to book the 30-minute new-patient tox visit. A $50 deposit is charged when the appointment is confirmed. Card details are handled by the secure booking provider and are not stored on Rella's servers.",
           "The deposit is separate from the per-unit Botox or Dysport treatment price. Rella does not describe it as credited, refundable, transferable, or automatically applied to treatment unless a separately approved policy says so. If you need to cancel, review the current cancellation policy before the 48-hour window.",
         ],
       },
@@ -199,7 +199,7 @@ export const LOCAL_EDITORIAL_POSTS: readonly LocalEditorialPost[] = [
       {
         question: "Is the $50 deposit part of the Botox price?",
         answer:
-          "No. It is a booking deposit charged by Boulevard when the new-patient appointment is confirmed, and it is separate from per-unit treatment pricing.",
+          "No. It is a booking deposit charged when the new-patient appointment is confirmed in Rella's secure booking experience, and it is separate from per-unit treatment pricing.",
       },
       {
         question: "Is the Rella Tox Membership month-to-month?",

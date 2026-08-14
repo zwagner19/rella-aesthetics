@@ -65,6 +65,14 @@ li::marker {
   color: var(--color-rose);
 }
 
+/* Keep the optional third-party launcher clear of mobile navigation and CTAs. */
+@media (max-width: 1023px) {
+  chat-widget,
+  div[data-chat-widget] {
+    display: none !important;
+  }
+}
+
 /* Respect motion preferences across both Tailwind utilities and native UI. */
 @media (prefers-reduced-motion: reduce) {
   html {

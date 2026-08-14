@@ -14,13 +14,13 @@ export default function CancellationPolicyPage() {
     <>
       <section className="py-24 bg-rose-blush">
         <div className="mx-auto max-w-[800px] px-6 md:px-8 lg:px-12">
-          <p className="font-bold text-[0.6875rem] tracking-[0.2em] uppercase text-silver mb-4">
+          <p className="mb-4 text-[0.6875rem] font-bold uppercase tracking-[0.2em] text-ink/70">
             Before Your Visit
           </p>
           <h1 className="font-bold text-3xl md:text-4xl tracking-[0.06em] uppercase text-rose-text mb-5">
             Cancellation Policy
           </h1>
-          <p className="text-lg font-light text-silver max-w-[680px] leading-relaxed">
+          <p className="max-w-[680px] text-lg font-light leading-relaxed text-ink/70">
             We reserve appointment time specifically for you. Advance notice helps our team care
             for every client and offer openings to people waiting to visit.
           </p>
@@ -29,7 +29,7 @@ export default function CancellationPolicyPage() {
 
       <section className="py-20">
         <div className="mx-auto max-w-[800px] px-6 md:px-8 lg:px-12">
-          <div className="prose prose-lg text-silver max-w-none space-y-6">
+          <div className="prose prose-lg max-w-none space-y-6 text-ink/70">
             <h2 className="font-medium text-xl text-silver-dark">Current Policy</h2>
             <p>
               Please give at least 48 hours&apos; notice if you need to cancel. Rella may retain the
@@ -42,7 +42,7 @@ export default function CancellationPolicyPage() {
             </h2>
             <p>{CANCELLATION_POLICY}</p>
             <p>
-              Boulevard charges this $50 booking deposit when the appointment is confirmed. The
+              A $50 booking deposit is charged when the appointment is confirmed. The
               deposit is separate from per-unit treatment pricing.
             </p>
 

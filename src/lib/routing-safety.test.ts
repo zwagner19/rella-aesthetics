@@ -96,13 +96,18 @@ describe("retired embedded Boulevard widget is deleted", () => {
     );
   });
 
-  it("the release validator never requires Boulevard or JoinBLVD customer hosts", () => {
+  it("the release validator rejects Boulevard, JoinBLVD, and Rella HQ customer hosts", () => {
     const validator = readFileSync(
       join(ROOT, "scripts/check-booking-links.mjs"),
       "utf8",
     );
-    expect(validator).not.toContain("dashboard.boulevard.io");
-    expect(validator).not.toContain("joinblvd.com");
+    expect(validator).toContain("dashboard.boulevard.io");
+    expect(validator).toContain("joinblvd.com");
+    expect(validator).toContain("rella-hq");
+    expect(validator).toContain("Forbidden customer destination");
+    expect(validator).toContain(
+      "BOOKING_CHECK_WEIGHT_LOSS_HOST may only be used with a local exact-build candidate",
+    );
     expect(validator).toContain("book.rellaweightloss.com");
     expect(validator).toContain("book.experiencerella.com");
   });

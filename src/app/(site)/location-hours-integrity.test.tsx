@@ -31,10 +31,10 @@ describe("binding two-clinic hours", () => {
     expect(NAPA.hoursCopy).toBe("Open Tuesday – Saturday · 9am – 5pm");
   });
 
-  it("renders the correct schedule on both location pages and Contact", () => {
+  it("renders the correct schedule on both location pages and Contact", async () => {
     const napa = visibleText(renderToStaticMarkup(<NapaPage />));
     const vacaville = visibleText(renderToStaticMarkup(<VacavillePage />));
-    const contact = visibleText(renderToStaticMarkup(<ContactPage />));
+    const contact = visibleText(renderToStaticMarkup(await ContactPage({})));
 
     expect(napa).toContain("Tuesday–Saturday: 9am–5pm");
     expect(napa).toContain("Sunday–Monday: Closed");

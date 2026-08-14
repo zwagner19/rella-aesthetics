@@ -148,7 +148,7 @@ function CampaignFooter({ legal }: { legal: string }) {
       <div className="nb-wrap">
         <p className="nb-footer-legal">
           {legal} Pricing shown is the approved public pricing verified July
-          24, 2026 and may change. Booking is completed through Boulevard; do
+          24, 2026 and may change. Booking is completed in Rella&apos;s secure booking experience; do
           not place sensitive medical information in advertising or analytics
           fields.
         </p>

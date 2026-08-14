@@ -95,6 +95,16 @@ describe("medical weight-loss subdomain", () => {
     );
   });
 
+  it("keeps trailing-slash SEO document variants on the weight-loss host", () => {
+    for (const path of ["/robots.txt/", "/sitemap.xml/", "/sitemap-0.xml/"]) {
+      const response = proxy(req(path, WEIGHT_LOSS));
+      expect(response.status, path).toBe(308);
+      expect(response.headers.get("location"), path).toBe(
+        `https://${WEIGHT_LOSS}${path.slice(0, -1)}`,
+      );
+    }
+  });
+
   it("does not change the main domains", () => {
     for (const host of ["experiencerella.com", "www.experiencerella.com"]) {
       const response = proxy(req("/", host));

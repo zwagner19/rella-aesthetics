@@ -173,7 +173,7 @@ export default function VacavilleLaserPage() {
                 Call 707.358.2928
               </Button>
             </div>
-            <p className="mt-5 text-xs leading-6 text-silver">
+            <p className="mt-5 text-xs leading-6 text-ink/70">
               This button opens Rella&apos;s live Vacaville Initial Laser Consult—not a generic clinic menu.
             </p>
           </div>
@@ -213,7 +213,7 @@ export default function VacavilleLaserPage() {
             <h2 id="vacaville-laser-options" className="mb-5 text-3xl font-medium tracking-[-0.04em] text-ink md:text-5xl">
               Different concerns need different paths.
             </h2>
-            <p className="text-lg font-light leading-relaxed text-silver">
+            <p className="text-lg font-light leading-relaxed text-ink/70">
               Rella&apos;s current Vacaville menu spans light-based treatment, resurfacing, hair removal, and targeted concerns. The consult narrows that menu responsibly.
             </p>
           </div>
@@ -221,7 +221,7 @@ export default function VacavilleLaserPage() {
             {treatmentPaths.map((path) => (
               <article key={path.title} className="border border-ink/12 bg-white p-7 md:p-8">
                 <h3 className="mb-4 text-xl font-medium text-ink">{path.title}</h3>
-                <p className="text-sm leading-7 text-silver">{path.body}</p>
+                <p className="text-sm leading-7 text-ink/70">{path.body}</p>
               </article>
             ))}
           </div>
@@ -237,7 +237,7 @@ export default function VacavilleLaserPage() {
             <h2 id="vacaville-laser-pricing" className="mb-5 text-3xl font-medium tracking-[-0.04em] text-ink md:text-5xl">
               Two verified amounts. No invented starting price.
             </h2>
-            <p className="text-lg font-light leading-relaxed text-silver">
+            <p className="text-lg font-light leading-relaxed text-ink/70">
               Other areas, devices, and packages depend on the selected plan. Rella reviews the current total before treatment.
             </p>
           </div>
@@ -245,12 +245,12 @@ export default function VacavilleLaserPage() {
             <article className="border border-ink/12 bg-white p-7">
               <p className="mb-3 text-4xl font-medium tracking-[-0.045em] text-ink">$420</p>
               <h3 className="mb-4 text-xs font-bold uppercase tracking-[0.16em] text-rose-dark">IPL full face</h3>
-              <p className="text-sm leading-7 text-silver">Current approved public amount for the full-face IPL service.</p>
+              <p className="text-sm leading-7 text-ink/70">Current approved public amount for the full-face IPL service.</p>
             </article>
             <article className="border border-rose bg-white p-7">
               <p className="mb-3 text-4xl font-medium tracking-[-0.045em] text-ink">$1,440</p>
               <h3 className="mb-4 text-xs font-bold uppercase tracking-[0.16em] text-rose-dark">CO2 CoolPeel full face</h3>
-              <p className="text-sm leading-7 text-silver">Current approved public amount for the full-face CoolPeel service.</p>
+              <p className="text-sm leading-7 text-ink/70">Current approved public amount for the full-face CoolPeel service.</p>
             </article>
           </div>
         </div>
@@ -288,14 +288,14 @@ export default function VacavilleLaserPage() {
             <h2 id="vacaville-laser-consult" className="mb-5 text-3xl font-medium tracking-[-0.04em] text-ink md:text-5xl">
               Start on the consult—not the wrong device.
             </h2>
-            <p className="text-lg font-light leading-relaxed text-silver">
+            <p className="text-lg font-light leading-relaxed text-ink/70">
               Rella&apos;s live Vacaville booking instructions require the Initial Laser Consult before IPL. The consult assesses suitability, reviews concerns and relevant history, and explains the available treatment path before you choose.
             </p>
           </div>
           <div className="border-l-4 border-rose bg-rose-blush p-7 md:p-10">
             <p className="mb-3 text-[0.6875rem] font-bold uppercase tracking-[0.18em] text-rose-dark">Direct booking handoff</p>
             <p className="mb-6 text-lg leading-8 text-silver-dark">
-              The button below opens the exact Vacaville Initial Laser Consult screen. Boulevard shows the current professional, timing, and booking terms before confirmation.
+              The button below opens the exact Vacaville Initial Laser Consult screen. Rella&apos;s booking experience shows the current professional, timing, and booking terms before confirmation.
             </p>
             <Button href={BOOKING_HREF} data-cta="service-booking" className="rounded-full">
               Book Initial Laser Consult
@@ -314,7 +314,7 @@ export default function VacavilleLaserPage() {
             <h2 id="visit-rella-vacaville-laser" className="mb-3 text-3xl font-medium tracking-[-0.035em] text-ink">
               542 Main St · Vacaville, CA 95688
             </h2>
-            <p className="text-silver">Wednesday–Saturday: 9am–5pm · Sunday–Tuesday: Closed</p>
+            <p className="text-ink/70">Wednesday–Saturday: 9am–5pm · Sunday–Tuesday: Closed</p>
           </div>
           <Button href={clinic.mapUrl} variant="ghost" className="rounded-full bg-white">Get Directions</Button>
         </div>

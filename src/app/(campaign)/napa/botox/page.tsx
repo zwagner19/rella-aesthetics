@@ -141,7 +141,7 @@ export default function NapaBotoxLandingPage() {
             </dl>
             <hr className="nb-rule" style={{ margin: "14px 0" }} />
             <p className="nb-body" style={{ margin: 0, fontSize: 13.5 }}>
-              The {VISIT.depositAmount} deposit is charged by Boulevard when you confirm. It is separate from
+              The {VISIT.depositAmount} deposit is charged when you confirm in Rella&apos;s secure booking experience. It is separate from
               per-unit treatment pricing.
             </p>
           </div>

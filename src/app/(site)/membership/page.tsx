@@ -17,7 +17,7 @@ const faq = [
   { question: "What are the Filler member rates?", answer: "Filler and Tox + Filler members pay $600 per Restylane syringe. Juvederm member rates are $600 or $700 depending on the product; the team can review the exact product-specific rate before treatment." },
   { question: "When can I use the complimentary HydraFacial?", answer: "The included HydraFacial can be redeemed after six months of on-time payments, or immediately when the full membership year is paid in advance. Tox and Filler include a Signature HydraFacial; Tox + Filler includes a Deluxe HydraFacial." },
   { question: "Is there a commitment?", answer: "Yes. These 2026 aesthetic memberships have a one-year commitment. Review the complete membership agreement before enrolling." },
-  { question: "Is a booking deposit part of the membership price?", answer: "No. A booking deposit and per-unit treatment prices are separate. Boulevard will show any booking requirement before you confirm an appointment." },
+  { question: "Is a booking deposit part of the membership price?", answer: "No. A booking deposit and per-unit treatment prices are separate. Rella’s secure booking experience will show any booking requirement before you confirm an appointment." },
   { question: "What if I already have a different Rella membership?", answer: "Legacy memberships may have different terms. Contact Rella so the team can review the plan attached to your account rather than assuming the 2026 new-member terms apply." },
 ];
 
@@ -35,7 +35,7 @@ export default function MembershipPage() {
           <h1 className="mb-5 text-4xl font-bold uppercase leading-[1.08] tracking-[0.08em] text-ink md:text-6xl">
             2026 Memberships
           </h1>
-          <p className="text-lg font-light text-silver max-w-[560px] leading-relaxed">
+          <p className="max-w-[560px] text-lg font-light leading-relaxed text-ink/70">
             Compare current injectable membership dues, member rates, included benefits, and the terms that matter before you enroll.
           </p>
         </div>
@@ -58,7 +58,7 @@ export default function MembershipPage() {
                 period={tier.period}
                 benefits={[...tier.benefits]}
                 featured={false}
-                ctaHref="/contact"
+                ctaHref="/contact?intent=membership"
                 ctaText="Ask About Membership"
               />
             ))}

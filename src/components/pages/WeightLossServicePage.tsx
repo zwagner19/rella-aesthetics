@@ -155,8 +155,8 @@ export function WeightLossServicePage() {
       />
 
       <section className="bg-ink text-white">
-        <div className="mx-auto grid max-w-[1160px] items-stretch xl:grid-cols-[1.15fr_0.85fr]">
-          <div className="relative z-10 flex flex-col justify-center px-5 py-16 md:px-8 md:py-24 xl:px-14 xl:py-28">
+        <div className="mx-auto grid max-w-[1160px] items-stretch lg:grid-cols-[1.15fr_0.85fr]">
+          <div className="relative z-10 flex flex-col justify-center px-5 py-16 md:px-8 md:py-24 lg:px-10 lg:py-20 xl:px-14 xl:py-28">
             <p className="mb-4 text-sm font-normal italic text-rose">
               30-minute phone consultation · Napa + Vacaville
             </p>

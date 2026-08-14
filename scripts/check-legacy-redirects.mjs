@@ -3,6 +3,7 @@ import { readFile } from "node:fs/promises";
 const siteUrl = (process.env.SITE_URL ?? "http://localhost:3000").replace(/\/$/, "");
 const redirectFile = new URL("../legacy-redirects.json", import.meta.url);
 const redirects = JSON.parse(await readFile(redirectFile, "utf8"));
+const retiredSources = ["/events", "/upcoming-events"];
 
 const failures = [];
 
@@ -27,6 +28,19 @@ for (const { source, destination } of redirects) {
     failures.push(`${source}/: final response was ${finalResponse.status}`);
   } else if (finalUrl.pathname !== destination) {
     failures.push(`${source}/: expected final path ${destination}, reached ${finalUrl.pathname}`);
+  }
+}
+
+for (const source of retiredSources) {
+  for (const path of [source, `${source}/`]) {
+    const response = await fetch(`${siteUrl}${path}`, { redirect: "manual" });
+    if (response.status !== 410) {
+      failures.push(`${path}: expected 410 Gone, received ${response.status}`);
+    } else if (response.headers.has("location")) {
+      failures.push(`${path}: retired URL must not redirect`);
+    } else if (response.headers.get("x-robots-tag") !== "noindex, nofollow") {
+      failures.push(`${path}: retired URL is missing noindex, nofollow`);
+    }
   }
 }
 
@@ -55,5 +69,5 @@ if (failures.length > 0) {
 }
 
 console.log(
-  `Legacy migration check passed: ${redirects.length} moved WordPress URLs and 2 preserved public records.`,
+  `Legacy migration check passed: ${redirects.length} moved WordPress URLs, ${retiredSources.length} retired URLs, and 2 preserved public records.`,
 );

@@ -40,10 +40,10 @@ export const VISIT = {
   depositAmount: "$50",
 } as const;
 
-/** Verbatim approved payment disclosure (FACTS-AND-CONTENT-TOKENS, D1). */
+/** Approved factual payment disclosure (FACTS-AND-CONTENT-TOKENS, D1). */
 export const PAYMENT_DISCLOSURE =
-  "A card is required to book. Boulevard will charge a $50 deposit when you confirm your appointment. " +
-  "Card details are sent directly to Boulevard’s secure payment vault and are not stored on Rella’s servers.";
+  "A card is required to book. A $50 deposit is charged when you confirm your appointment. " +
+  "Card details are handled by the secure booking provider and are not stored on Rella’s servers.";
 
 /** Verbatim approved cancellation policy (D3). No other fee is stated. */
 export const CANCELLATION_POLICY =

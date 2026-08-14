@@ -1,5 +1,9 @@
 # Booking destination health pass — 2026-08-03
 
+> Historical evidence only. The direct Boulevard destinations described below
+> were retired after this audit. Use `BOOKING-ROUTING-IMPLEMENTATION-MAP.md` and
+> the current `check:booking-links` output for release decisions.
+
 ## Outcome
 
 The release workflow can now discover and verify every external booking URL actually rendered by the production-mode site.

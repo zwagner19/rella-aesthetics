@@ -49,7 +49,7 @@ describe("2026 injectable membership integrity", () => {
       ...html.matchAll(/<a[^>]+href="([^"]+)"[^>]*>Ask About Membership<\/a>/g),
     ].map((match) => match[1]);
     expect(inquiryHrefs).toHaveLength(3);
-    expect(new Set(inquiryHrefs)).toEqual(new Set(["/contact"]));
+    expect(new Set(inquiryHrefs)).toEqual(new Set(["/contact?intent=membership"]));
     expect(html).not.toContain("Most Popular");
   });
 

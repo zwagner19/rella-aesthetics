@@ -1,5 +1,10 @@
 # Rendered booking-destination audit — 2026-08-03
 
+> Historical evidence only. The browser-side Boulevard handoffs documented
+> here were later replaced by the Rella-owned custom-booking application. Do
+> not use the destinations or test procedure below as the current release
+> contract.
+
 ## Outcome
 
 The old business-level Boulevard widget URL is not a safe booking destination. It returns HTTP 200 but renders Boulevard's `#/not-found` screen with “things have moved.” Rella's generic booking actions now open a first-party `/book` clinic chooser, and the Napa/Vacaville choices use location-pinned Boulevard menu routes that include `path=/cart/menu`.

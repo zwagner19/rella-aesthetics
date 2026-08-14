@@ -72,9 +72,11 @@ describe("visit facts", () => {
     expect(decoded).not.toMatch(/\d\s*minutes\S/);
   });
 
-  it("states the $50 deposit is charged at confirmation, by Boulevard", () => {
-    expect(decoded).toMatch(/Boulevard will charge a \$50 deposit when you confirm your appointment/);
-    expect(decoded).toMatch(/charged by Boulevard when you confirm/);
+  it("states the $50 deposit is charged at confirmation without exposing the vendor", () => {
+    expect(decoded).toMatch(/A \$50 deposit is charged when you confirm your appointment/);
+    expect(decoded).toMatch(/Card details are handled by the secure booking provider/);
+    expect(decoded).toMatch(/deposit is charged when you confirm in Rella's secure booking experience/);
+    expect(decoded).not.toContain("Boulevard");
   });
 
   it("makes no refund, credit, or deposit-application promise", () => {

@@ -175,7 +175,7 @@ export default function VacavilleHydraFacialPage() {
                 Call 707.358.2928
               </Button>
             </div>
-            <p className="mt-5 text-xs leading-6 text-silver">
+            <p className="mt-5 text-xs leading-6 text-ink/70">
               This button opens the live Vacaville Signature HydraFacial screen with Select a professional as the next step.
             </p>
           </div>
@@ -215,7 +215,7 @@ export default function VacavilleHydraFacialPage() {
             <h2 id="vacaville-hydrafacial-pricing" className="mb-5 text-3xl font-medium tracking-[-0.04em] text-ink md:text-5xl">
               Three tiers. One clear starting point.
             </h2>
-            <p className="text-lg font-light leading-relaxed text-silver">
+            <p className="text-lg font-light leading-relaxed text-ink/70">
               Signature is preselected for direct booking. Ask the Vacaville team whether another listed tier better fits your skin goals and schedule.
             </p>
           </div>
@@ -228,7 +228,7 @@ export default function VacavilleHydraFacialPage() {
                 <p className="mb-3 text-4xl font-medium tracking-[-0.045em] text-ink">{tier.price}</p>
                 <h3 className="mb-2 text-xl font-medium text-ink">{tier.name}</h3>
                 <p className="mb-4 text-xs font-bold uppercase tracking-[0.14em] text-rose-dark">{tier.timing}</p>
-                <p className="text-sm leading-7 text-silver">{tier.body}</p>
+                <p className="text-sm leading-7 text-ink/70">{tier.body}</p>
               </article>
             ))}
           </div>
@@ -265,12 +265,12 @@ export default function VacavilleHydraFacialPage() {
             <h2 id="vacaville-hydrafacial-booking" className="mb-5 text-3xl font-medium tracking-[-0.04em] text-ink md:text-5xl">
               Book Signature without searching the menu.
             </h2>
-            <p className="text-lg font-light leading-relaxed text-silver">
+            <p className="text-lg font-light leading-relaxed text-ink/70">
               Rella&apos;s live Vacaville menu currently lists Signature, Deluxe, and Platinum HydraFacial services. This page opens Signature directly while keeping the other tiers visible for comparison.
             </p>
           </div>
           <div className="border-l-4 border-rose bg-rose-blush p-7 md:p-10">
-            <p className="mb-3 text-[0.6875rem] font-bold uppercase tracking-[0.18em] text-rose-dark">Live Boulevard handoff</p>
+            <p className="mb-3 text-[0.6875rem] font-bold uppercase tracking-[0.18em] text-rose-dark">Live Rella booking handoff</p>
             <p className="mb-6 text-lg leading-8 text-silver-dark">
               The Signature screen shows the current treatment description, available add-ons, professional selection, timing, and booking terms before confirmation.
             </p>
@@ -291,7 +291,7 @@ export default function VacavilleHydraFacialPage() {
             <h2 id="vacaville-hydrafacial-membership" className="mb-3 text-3xl font-medium tracking-[-0.035em] text-ink">
               Compare the included HydraFacial terms before enrolling.
             </h2>
-            <p className="max-w-[700px] text-silver">
+            <p className="max-w-[700px] text-ink/70">
               Current injectable memberships include a specified HydraFacial tier after six months of on-time payments, or immediately when the full year is prepaid. Review the complete one-year terms first.
             </p>
           </div>

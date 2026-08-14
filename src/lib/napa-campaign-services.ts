@@ -365,7 +365,7 @@ export const NAPA_CAMPAIGN_SERVICES: Readonly<
       {
         value: "60 min",
         label: "active service length",
-        body: "The current Boulevard service definition lists a 60-minute appointment.",
+        body: "Rella’s current booking experience lists a 60-minute appointment.",
       },
       {
         value: "Consult first",

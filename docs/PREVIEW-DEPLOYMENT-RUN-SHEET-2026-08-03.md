@@ -84,11 +84,8 @@ npm run build
 npm run check:paid-search
 ```
 
-Prepared checkpoint expectation:
-
-- 32 test files and 351 tests pass;
-- Next.js 16.2.12 generates 47 routes;
-- sitemap generation completes.
+Record the actual test, route, and sitemap counts from the exact reviewed
+commit. Do not reuse the August 3 checkpoint counts as a pass condition.
 
 Record actual hosted-preview build evidence:
 
@@ -111,48 +108,60 @@ SITE_URL='https://approved-preview.example' npm run check:booking-links
 SITE_URL='https://approved-preview.example' npm run check:seo
 ```
 
+The protected hosted preview has its own Host header, so this hosted pass checks
+the aesthetics response only. Do not force the branded weight-loss Host onto a
+Vercel preview URL; that can route to a different deployment. The exact commit's
+weight-loss branch is covered by the local production-build check above. After
+an approved promotion, run the branded host check separately:
+
+```bash
+SITE_URL='https://experiencerella.com' \
+BOOKING_CHECK_WEIGHT_LOSS_SITE_URL='https://weightloss.experiencerella.com' \
+npm run check:booking-links
+```
+
 Prepared checkpoint expectation:
 
 - 31 moved legacy routes and 2 preserved records;
 - 36 sitemap pages and 47 unique internal destinations;
 - zero orphaned indexed pages and maximum homepage crawl depth no greater than three;
-- 20 unique external booking destinations on approved hosts;
-- 13 social images and 54 JSON-LD blocks.
+- both public host contexts inspected on the exact local build, plus the actual
+  hosted aesthetics preview response;
+- no direct Boulevard/JoinBLVD or Rella HQ destination;
+- social-image and JSON-LD counts recorded from the exact build.
 - Napa campaign provider schemas use the canonical `https://experiencerella.com/locations/napa#location` clinic entity, never `/napa#location`.
 
 Record actual results and attach the output. HTTP success does not replace rendered-browser booking checks.
 
 ## Gate F — visual and rendered booking checks
 
-Use no real patient's information. Never select a professional, formula, treatment area, add-on, date, payment, or form field unless a later specifically approved smoke test requires it.
+Use no real patient's information. Inspect navigation, chooser, and service-intro
+screens only. Stop before `Choose a date`; never create a cart, select a
+professional, formula, treatment area, add-on, date, payment, or form field
+unless a later specifically approved smoke test requires it.
 
-### Global and location paths
+### Website chooser
 
-- [ ] `/book` shows exactly Napa and Vacaville.
-- [ ] Napa opens the live Napa menu.
-- [ ] Vacaville opens the live Vacaville menu.
-- [ ] Repeat both after beginning—but not completing—a journey at the other clinic.
+- [ ] Website `/book` shows exactly the Napa and Vacaville clinic choices.
+- [ ] Each clinic choice stays on `book.experiencerella.com`.
+
+### Custom-booking application
+
+- [ ] Booking-app `/book` shows the approved 15-item catalog: 8 Napa and 7 Vacaville choices.
+- [ ] No chooser or service-intro page exposes a Boulevard/JoinBLVD or Rella HQ link.
+- [ ] IV remains call-assisted and `Anna (Event)` remains absent.
 
 ### Service paths
 
-- [ ] Napa Botox → hardened Napa Botox app.
-- [ ] Napa filler → `Dermal Fillers` and selectable next step.
-- [ ] Napa laser → live `Laser` category.
-- [ ] Napa HydraFacial → `Signature Hydrafacial` and selectable next step.
-- [ ] Napa hyperhidrosis → `New Patient Consult` and selectable next step.
-- [ ] Napa facials → `Initial Skin Health Consult` and selectable next step.
-- [ ] Napa IV → live `IV Hydration` category.
-- [ ] Vacaville Botox → `New Patient Tox` and selectable next step.
-- [ ] Vacaville filler → `Dermal Fillers` and selectable next step.
-- [ ] Vacaville laser → `Initial Laser Consult` and selectable next step.
-- [ ] Vacaville HydraFacial → `Signature Hydrafacial` and selectable next step.
-- [ ] Vacaville facials → `Initial Skin Health Consult` and selectable next step.
-- [ ] Vacaville microneedling → `Initial Microneedling Consult` and selectable next step.
-- [ ] Vacaville IV → live `IV Hydration` category.
-- [ ] Vacaville chemical peels → Vacaville menu, then visible `Peels` category; do not substitute the rejected shortcut.
+- [ ] Each of the 15 published aesthetics links opens its intended Rella service-intro route and returns 200.
+- [ ] Napa Botox opens the exact custom `/book/napa/botox` route.
+- [ ] Broad Vacaville chemical-peel intent remains a chooser; it must not silently force Universal Peel.
+- [ ] IV routes remain unavailable for direct self-booking and show the call-assisted alternative.
 - [ ] Napa and Vacaville weight-loss consultation and assessment routes load the intended city.
 
-Fail for the wrong clinic, wrong service, `#/not-found`, “things have moved,” empty shell, or no selectable next step. Record the Boulevard defects from `docs/BOULEVARD-ADMIN-CLEANUP-PACKET-2026-08-03.md`; routing success does not waive them.
+Fail for the wrong clinic, wrong service, 404, empty shell, a direct vendor/HQ
+link, or an exposed excluded workflow. Do not begin a cart merely to prove the
+intro screen.
 
 ### Visual baseline
 
@@ -194,7 +203,7 @@ Attach:
 - [ ] synthetic HighLevel record evidence with sensitive test values redacted;
 - [ ] analytics privacy evidence;
 - [ ] completed physician copy packet;
-- [ ] completed Boulevard cleanup packet;
+- [ ] current custom-booking catalog/provider-boundary evidence;
 - [ ] counsel-approved Terms/privacy record;
 - [ ] completed paid-acquisition owner decision card and a passing `npm run check:paid-search` result;
 - [ ] current Google Ads billing, payment method, enabled-campaign, budget, network, location-option, final-URL, and conversion-role evidence;

@@ -2,6 +2,10 @@ import type { NextConfig } from "next";
 import legacyRedirects from "./legacy-redirects.json";
 
 const nextConfig: NextConfig = {
+  // Let proxy return a direct 410 for both slash variants of retired URLs.
+  // The proxy preserves the existing slashless canonical redirect everywhere
+  // else, so this does not create duplicate public page routes.
+  skipTrailingSlashRedirect: true,
   images: {
     formats: ["image/avif", "image/webp"],
   },

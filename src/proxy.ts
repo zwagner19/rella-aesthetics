@@ -48,7 +48,9 @@ const ALLOWED_PREFIXES = ["/_next/static/"];
 
 const WEIGHT_LOSS_ASSET_PREFIXES = ["/_next/", "/brand/", "/images/", "/media/"];
 const WEIGHT_LOSS_EXACT_ASSETS = new Set(["/favicon.ico", "/opengraph-image", "/twitter-image"]);
+const WEIGHT_LOSS_SEO_DOCUMENTS = new Set(["/robots.txt", "/sitemap.xml", "/sitemap-0.xml"]);
 const WEIGHT_LOSS_SITEMAP = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"><url><loc>https://weightloss.experiencerella.com/</loc><changefreq>weekly</changefreq><priority>1.0</priority></url></urlset>`;
+const RETIRED_PUBLIC_PATHS = new Set(["/events", "/upcoming-events"]);
 
 export function isWeightLossAsset(pathname: string): boolean {
   return (
@@ -68,11 +70,31 @@ export function isAllowedOnReleaseOrigin(pathname: string): boolean {
   return ALLOWED_PREFIXES.some((p) => pathname.startsWith(p) && !pathname.includes(".."));
 }
 
+/** Match only the two owner-retired public paths, with an optional trailing slash. */
+export function isRetiredPublicPath(pathname: string): boolean {
+  if (RETIRED_PUBLIC_PATHS.has(pathname)) return true;
+  return pathname.endsWith("/") && RETIRED_PUBLIC_PATHS.has(pathname.slice(0, -1));
+}
+
+/** Preserve Next's prior slashless canonical behavior after opting out globally. */
+export function shouldNormalizeTrailingSlash(pathname: string): boolean {
+  if (pathname === "/" || !pathname.endsWith("/")) return false;
+  const slashless = pathname.slice(0, -1);
+  const finalSegment = slashless.split("/").at(-1) ?? "";
+  return !finalSegment.includes(".");
+}
+
 export function proxy(request: NextRequest) {
   const host = request.headers.get("host");
 
   if (isWeightLossHost(host)) {
     const { pathname } = request.nextUrl;
+
+    if (pathname.endsWith("/") && WEIGHT_LOSS_SEO_DOCUMENTS.has(pathname.slice(0, -1))) {
+      const canonicalUrl = new URL(request.url);
+      canonicalUrl.pathname = canonicalUrl.pathname.slice(0, -1);
+      return NextResponse.redirect(canonicalUrl, 308);
+    }
 
     if (pathname === "/robots.txt") {
       return new NextResponse(
@@ -112,7 +134,23 @@ export function proxy(request: NextRequest) {
     return NextResponse.redirect(mainSiteUrl, 308);
   }
 
-  if (!isReleaseOriginHost(host)) return NextResponse.next();
+  if (!isReleaseOriginHost(host)) {
+    if (isRetiredPublicPath(request.nextUrl.pathname)) {
+      return new NextResponse("Gone", {
+        status: 410,
+        headers: {
+          "content-type": "text/plain; charset=utf-8",
+          "x-robots-tag": "noindex, nofollow",
+        },
+      });
+    }
+    if (shouldNormalizeTrailingSlash(request.nextUrl.pathname)) {
+      const canonicalUrl = new URL(request.url);
+      canonicalUrl.pathname = canonicalUrl.pathname.slice(0, -1);
+      return NextResponse.redirect(canonicalUrl, 308);
+    }
+    return NextResponse.next();
+  }
 
   const { pathname } = request.nextUrl;
   if (isAllowedOnReleaseOrigin(pathname)) {

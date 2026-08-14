@@ -16,9 +16,16 @@ const RESOURCES_ATTR =
 const widgetId = process.env.NEXT_PUBLIC_GHL_CHAT_WIDGET_ID ?? "";
 /** Legacy: full script URL if your embed uses a non-standard host */
 const legacyScriptUrl = process.env.NEXT_PUBLIC_GHL_CHAT_WIDGET_URL ?? "";
+const DESKTOP_WIDGET_QUERY = "(min-width: 1024px)";
 
 export function GhlChatWidget() {
   useEffect(() => {
+    // Mobile and tablet routes already reserve the bottom of the viewport for
+    // Rella's persistent Call / Book actions and use a full-screen menu. The
+    // third-party launcher is intentionally desktop-only so it cannot cover
+    // either of those first-party controls.
+    if (!window.matchMedia(DESKTOP_WIDGET_QUERY).matches) return;
+
     const existing = document.querySelector(`script[data-ghl-chat="1"]`);
     if (existing) return;
 
