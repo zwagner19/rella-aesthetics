@@ -39,7 +39,7 @@ export default function GalleryPage() {
     <>
       <section className="bg-rose-blush py-20 md:py-28">
         <div className="mx-auto max-w-[1000px] px-6 text-center md:px-8">
-          <p className="mb-5 text-[0.75rem] font-medium capitalize italic tracking-[0.08em] text-rose">Our approach to results</p>
+          <p className="mb-5 text-[0.75rem] font-medium capitalize italic tracking-[0.08em] text-ink">Our approach to results</p>
           <h1 className="mb-6 text-[clamp(2.75rem,7vw,5rem)] font-bold uppercase leading-[0.98] tracking-[0.06em] text-rose">
             Results that still look like you.
           </h1>
@@ -58,7 +58,7 @@ export default function GalleryPage() {
       <section className="py-20 md:py-28">
         <div className="mx-auto max-w-[1200px] px-6 md:px-8 lg:px-12">
           <div className="mb-12 max-w-[760px]">
-            <p className="mb-4 text-[0.75rem] font-medium capitalize italic tracking-[0.08em] text-rose">What guides the work</p>
+            <p className="mb-4 text-[0.75rem] font-medium capitalize italic tracking-[0.08em] text-ink">What guides the work</p>
             <h2 className="text-3xl font-bold uppercase tracking-[0.06em] text-rose md:text-5xl">Natural does not mean one size fits all.</h2>
           </div>
           <div className="grid gap-px bg-silver-pale md:grid-cols-3">
@@ -79,7 +79,7 @@ export default function GalleryPage() {
         <section className="bg-ink py-20 text-white md:py-24">
           <div className="mx-auto grid max-w-[1000px] gap-8 px-6 md:grid-cols-[0.9fr_1.1fr] md:items-center md:px-8">
             <div>
-              <p className="mb-4 text-[0.75rem] font-medium capitalize italic tracking-[0.08em] text-rose">Before and after photography</p>
+              <p className="mb-4 text-[0.75rem] font-medium capitalize italic tracking-[0.08em] text-white">Before and after photography</p>
               <h2 className="text-3xl font-bold uppercase tracking-[0.06em] text-rose md:text-5xl">Real examples. Proper permission.</h2>
             </div>
             <div>
@@ -95,7 +95,7 @@ export default function GalleryPage() {
       <section className="bg-rose-blush py-20 md:py-24">
         <div className="mx-auto max-w-[1200px] px-6 md:px-8 lg:px-12">
           <div className="mb-10 max-w-[720px]">
-            <p className="mb-4 text-[0.75rem] font-medium capitalize italic tracking-[0.08em] text-rose">Patient perspective</p>
+            <p className="mb-4 text-[0.75rem] font-medium capitalize italic tracking-[0.08em] text-ink">Patient perspective</p>
             <h2 className="text-3xl font-bold uppercase tracking-[0.06em] text-rose md:text-5xl">What patients say about the experience.</h2>
           </div>
           <div className="grid gap-10 md:grid-cols-3">

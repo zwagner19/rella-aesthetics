@@ -14,11 +14,15 @@ const membershipSource = readFileSync(
 );
 
 describe("designer page color checklist", () => {
-  it("gives About pink titles, outlined care areas, and a solid-pink principles block", () => {
+  it("gives About the requested white hero/team titles and solid-pink sections", () => {
     const html = renderToStaticMarkup(<AboutPage />);
 
     expect(html).toContain("text-4xl font-bold uppercase");
-    expect(html).toContain("tracking-[0.06em] text-rose md:text-6xl");
+    expect(html).toContain("tracking-[0.06em] text-white md:text-6xl");
+    expect(aboutSource).toContain('className="overflow-hidden bg-rose"');
+    expect(aboutSource).toContain("font-medium text-white\">Dr. Zachary Wagner, DO");
+    expect(aboutSource).toContain("bg-rose py-16 md:py-20");
+    expect(aboutSource).toContain("tracking-[0.06em] text-white md:text-4xl");
     expect(aboutSource).toContain(
       "border-[1.5px] border-rose bg-white px-4 py-3",
     );
@@ -60,7 +64,7 @@ describe("designer page color checklist", () => {
     expect(html.match(/Learn more/g)).toHaveLength(services.length);
   });
 
-  it("gives memberships pink labels, titles, prices, and outlined inquiry buttons", () => {
+  it("gives memberships white hero/FAQ titles plus pink tier details", () => {
     const html = renderToStaticMarkup(<MembershipPage />);
 
     for (const tier of membershipTiers) {
@@ -68,6 +72,10 @@ describe("designer page color checklist", () => {
       expect(html).toContain(tier.price);
     }
     expect(membershipSource).toContain("text-3xl font-bold text-rose");
+    expect(membershipSource).toContain('className="bg-rose py-24 md:py-28"');
+    expect(membershipSource).toContain("tracking-[0.08em] text-white md:text-6xl");
+    expect(membershipSource).toContain('className="bg-rose py-20 md:py-28"');
+    expect(membershipSource).toContain("tracking-[0.08em] text-white md:text-5xl");
     expect(membershipSource).toContain(
       "w-full !border-rose !bg-white !text-rose",
     );

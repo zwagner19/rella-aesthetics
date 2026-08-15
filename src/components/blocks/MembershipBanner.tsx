@@ -6,7 +6,7 @@ export function MembershipBanner() {
       <div className="mx-auto max-w-[1160px] px-6 md:px-8 lg:px-0">
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
           <div>
-            <p className="mb-3 text-sm font-normal italic text-white">
+            <p className="mb-3 text-sm font-normal italic text-ink">
               2026 Injectable Memberships
             </p>
             <h2 className="mb-3 text-2xl font-bold uppercase leading-tight tracking-[0.08em] text-white md:text-3xl">

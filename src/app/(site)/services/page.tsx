@@ -30,7 +30,7 @@ export default function ServicesPage() {
         <div className="mx-auto max-w-[1200px] px-6 md:px-8 lg:px-12">
           <div className="max-w-[820px]">
             <div className="mb-12 max-w-[680px]">
-              <p className="mb-4 text-sm font-medium italic tracking-[0.04em] text-rose">
+              <p className="mb-4 text-sm font-medium italic tracking-[0.04em] text-ink">
                 Treatments
               </p>
               <h1 className="mb-5 text-3xl font-medium uppercase leading-[1.08] tracking-[0.08em] text-rose md:text-5xl">

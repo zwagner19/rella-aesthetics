@@ -35,10 +35,11 @@ describe("designer-approved color hierarchy", () => {
 
     expect(button).toContain("border-rose bg-rose text-white");
     expect(button).toContain("border-rose bg-white text-rose");
-    expect(sectionHeader).toContain("text-rose");
+    expect(sectionHeader).toContain("italic tracking-[0.04em] text-ink");
     expect(trustStrip).toContain("bg-rose px-5 text-center");
     expect(trustStrip).toContain("text-white");
     expect(membership).toContain("bg-rose");
+    expect(membership).toContain("italic text-ink");
     expect(membership).toContain("text-white");
   });
 });
@@ -72,7 +73,7 @@ describe("mobile navigation accessibility", () => {
     expect(chat).toContain('(min-width: 1280px)');
     expect(css).toContain("@media (max-width: 1279px)");
     expect(siteLayout).toContain("pb-20 xl:pb-0");
-    expect(footer).toContain("pb-28 pt-16 text-rose xl:pb-8");
+    expect(footer).toContain("pb-28 pt-16 text-ink xl:pb-8");
   });
 
   it("keeps the expanded menu and its booking action reachable on short screens", () => {

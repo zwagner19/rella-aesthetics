@@ -61,10 +61,12 @@ describe("designer homepage color and image checklist", () => {
     expect(serviceCard).toContain('<span aria-hidden="true">&rarr;</span>');
   });
 
-  it("keeps the footer pale with Rose copy and white-on-Rose-accent controls", () => {
+  it("keeps the footer pale with Ink copy and the Rose logo", () => {
     expect(footer).toContain("bg-rose/10");
-    expect(footer).toContain("text-rose");
+    expect(footer).toContain("pb-28 pt-16 text-ink xl:pb-8");
     expect(footer).toContain("border-white bg-white");
-    expect(footer).not.toContain("hover:text-ink");
+    expect(footer).toContain("tracking-[0.08em] text-ink");
+    expect(footer).toContain("hover:text-ink/70");
+    expect(footer).not.toContain("hover:text-rose");
   });
 });

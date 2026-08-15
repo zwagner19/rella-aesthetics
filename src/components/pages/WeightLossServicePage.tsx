@@ -114,7 +114,7 @@ function LocationCard({ option }: { option: LocationOption }) {
     <article className="border border-ink/15 bg-white p-6 md:p-8">
       <div className="mb-7 flex items-start justify-between gap-4">
         <div>
-          <p className="mb-2 text-sm font-normal italic text-rose-text">
+          <p className="mb-2 text-sm font-normal italic text-ink">
             Rella Aesthetics
           </p>
           <h3 className="text-3xl font-bold uppercase leading-tight tracking-[0.06em] text-ink">{option.name}</h3>
@@ -157,7 +157,7 @@ export function WeightLossServicePage() {
       <section className="bg-ink text-white">
         <div className="mx-auto grid max-w-[1160px] items-stretch lg:grid-cols-[1.15fr_0.85fr]">
           <div className="relative z-10 flex flex-col justify-center px-5 py-16 md:px-8 md:py-24 lg:px-10 lg:py-20 xl:px-14 xl:py-28">
-            <p className="mb-4 text-sm font-normal italic text-rose">
+            <p className="mb-4 text-sm font-normal italic text-white">
               30-minute phone consultation · Napa + Vacaville
             </p>
             <h1 className="mb-5 max-w-[720px] text-[clamp(2.2rem,4vw,3.4rem)] font-bold uppercase leading-[1.06] tracking-[0.055em] text-white">
@@ -195,7 +195,7 @@ export function WeightLossServicePage() {
                 sizes="(min-width: 1024px) 46vw, 92vw"
               />
               <div className="absolute inset-x-0 bottom-0 bg-ink/80 p-5 md:p-6">
-                <p className="mb-2 text-sm font-normal italic text-rose">Weight-Loss Qualification Call</p>
+                <p className="mb-2 text-sm font-normal italic text-white">Weight-Loss Qualification Call</p>
                 <p className="text-lg font-semibold leading-snug text-white">A medical decision—not a sales pitch.</p>
               </div>
           </div>
@@ -226,7 +226,7 @@ export function WeightLossServicePage() {
           </div>
 
           <div>
-            <p className="mb-4 text-sm font-normal italic text-rose-text">A real medical qualification consultation</p>
+            <p className="mb-4 text-sm font-normal italic text-ink">A real medical qualification consultation</p>
             <h2 id="qualification-heading" className="mb-5 text-[clamp(2rem,4vw,3rem)] font-bold uppercase leading-[1.15] tracking-[0.06em] text-ink">
               Get a medically grounded answer before choosing treatment.
             </h2>
@@ -264,7 +264,7 @@ export function WeightLossServicePage() {
         <div className="mx-auto max-w-[1160px] px-5 md:px-8">
           <div className="mb-10 grid gap-7 lg:grid-cols-[1fr_auto] lg:items-end">
             <div className="max-w-[760px]">
-              <p className="mb-4 text-sm font-normal italic text-rose-text">
+              <p className="mb-4 text-sm font-normal italic text-ink">
                 Real local patient experiences
               </p>
               <h2 id="weight-loss-reviews-heading" className="mb-4 text-[clamp(2rem,4vw,3rem)] font-bold uppercase leading-[1.15] tracking-[0.06em] text-ink">
@@ -322,7 +322,7 @@ export function WeightLossServicePage() {
           </div>
 
           <div className="max-w-[520px]">
-            <p className="mb-4 text-sm font-normal italic text-rose-text">{weightLossPatientStory.eyebrow}</p>
+            <p className="mb-4 text-sm font-normal italic text-ink">{weightLossPatientStory.eyebrow}</p>
             <h2 id="weight-loss-story-heading" className="mb-5 text-[clamp(2rem,4vw,3rem)] font-bold uppercase leading-[1.15] tracking-[0.06em] text-ink">
               {weightLossPatientStory.heading}
             </h2>
@@ -347,7 +347,7 @@ export function WeightLossServicePage() {
       <section id="how-it-works" className="scroll-mt-24 bg-ink/[0.03] py-[clamp(4rem,8vw,7rem)]">
         <div className="mx-auto max-w-[1160px] px-5 md:px-8">
           <div className="mb-12 max-w-[700px]">
-            <p className="mb-4 text-sm font-normal italic text-rose-text">How it works</p>
+            <p className="mb-4 text-sm font-normal italic text-ink">How it works</p>
             <h2 className="text-[clamp(2rem,4vw,3rem)] font-bold uppercase leading-[1.15] tracking-[0.06em] text-ink">A simpler path to the right next step.</h2>
           </div>
           <ol className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
@@ -368,7 +368,7 @@ export function WeightLossServicePage() {
       <section className="py-[clamp(4rem,8vw,7rem)]">
         <div className="mx-auto grid max-w-[1160px] gap-10 px-5 md:px-8 lg:grid-cols-[0.85fr_1.15fr] lg:gap-20">
           <div>
-            <p className="mb-4 text-sm font-normal italic text-rose-text">Clear expectations</p>
+            <p className="mb-4 text-sm font-normal italic text-ink">Clear expectations</p>
             <h2 className="mb-5 text-[clamp(2rem,4vw,3rem)] font-bold uppercase leading-[1.15] tracking-[0.06em] text-ink">Understand the investment before you commit.</h2>
           </div>
           <div className="border-t border-ink/15 bg-white py-7 md:p-9">
@@ -385,7 +385,7 @@ export function WeightLossServicePage() {
       <section id="weight-loss-faq" className="scroll-mt-24 bg-ink/[0.03] py-[clamp(4rem,8vw,7rem)]">
         <div className="mx-auto max-w-[1000px] px-5 md:px-8">
           <div className="mb-10">
-            <p className="mb-4 text-sm font-normal italic text-rose-text">Questions, answered</p>
+            <p className="mb-4 text-sm font-normal italic text-ink">Questions, answered</p>
             <h2 className="text-[clamp(2rem,4vw,3rem)] font-bold uppercase leading-[1.15] tracking-[0.06em] text-ink">Medical weight-loss FAQ</h2>
           </div>
           <FaqAccordion items={[...faq]} />
@@ -395,7 +395,7 @@ export function WeightLossServicePage() {
       <section id="consultation-options" className="scroll-mt-24 bg-rose py-[clamp(4rem,8vw,7rem)]">
         <div className="mx-auto max-w-[1160px] px-5 md:px-8">
           <div className="mx-auto mb-12 max-w-[760px] text-center">
-            <p className="mb-4 text-sm font-normal italic text-ink/70">Choose your clinic</p>
+            <p className="mb-4 text-sm font-normal italic text-ink">Choose your clinic</p>
             <h2 className="mb-5 text-[clamp(2rem,4vw,3rem)] font-bold uppercase leading-[1.15] tracking-[0.06em] text-ink">Choose your clinic and book your qualification call.</h2>
             <p className="text-lg font-light leading-[1.75] text-ink/70">
               Select Napa or Vacaville to see live times for your 30-minute phone consultation with Dr. Wagner. There is one clear next step and no card is required.
@@ -412,7 +412,7 @@ export function WeightLossServicePage() {
 
       <section className="bg-ink py-[clamp(4rem,8vw,6rem)] text-center text-white">
         <div className="mx-auto max-w-[760px] px-6">
-          <p className="mb-4 text-sm font-normal italic text-rose">The next step is medical qualification</p>
+          <p className="mb-4 text-sm font-normal italic text-white">The next step is medical qualification</p>
           <h2 className="mb-5 text-[clamp(2rem,4vw,3rem)] font-bold uppercase leading-[1.15] tracking-[0.06em]">Find out if you medically qualify.</h2>
           <p className="mb-8 text-lg font-light leading-[1.75] text-white/70">
             Choose the Rella clinic that is most convenient for your consultation and follow-up.

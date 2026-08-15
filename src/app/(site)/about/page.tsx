@@ -68,13 +68,13 @@ export default function AboutPage() {
         }}
       />
 
-      <section className="overflow-hidden bg-rose-blush">
+      <section className="overflow-hidden bg-rose">
         <div className="mx-auto grid max-w-[1200px] gap-14 px-6 py-20 md:px-8 md:py-28 lg:grid-cols-[1.05fr_0.95fr] lg:items-center lg:gap-24 lg:px-12">
           <div>
-            <p className="mb-5 text-[0.75rem] font-medium capitalize italic tracking-[0.08em] text-rose">
+            <p className="mb-5 text-[0.75rem] font-medium capitalize italic tracking-[0.08em] text-ink">
               Locally owned · Vacaville + Napa
             </p>
-            <h1 className="mb-7 max-w-[720px] text-4xl font-bold uppercase leading-[1.04] tracking-[0.06em] text-rose md:text-6xl">
+            <h1 className="mb-7 max-w-[720px] text-4xl font-bold uppercase leading-[1.04] tracking-[0.06em] text-white md:text-6xl">
               Care built on judgment, honesty, and the right next step.
             </h1>
             <p className="mb-7 max-w-[650px] text-lg font-light leading-relaxed text-ink/70 md:text-xl">
@@ -83,7 +83,7 @@ export default function AboutPage() {
               physician; Rella&apos;s aesthetics services are delivered by the aesthetics team.
             </p>
             <div className="mb-8 border-l-2 border-rose pl-5">
-              <p className="font-medium text-rose">Dr. Zachary Wagner, DO</p>
+              <p className="font-medium text-white">Dr. Zachary Wagner, DO</p>
               <p className="mt-1 text-sm leading-relaxed text-ink/70">
                 Founder &amp; Owner · Medical Weight-Loss Physician
               </p>
@@ -92,7 +92,10 @@ export default function AboutPage() {
               </p>
             </div>
             <div className="flex flex-col gap-3 sm:flex-row">
-              <Button href={resolveBookingHref({})} className="!text-white hover:!text-white">
+              <Button
+                href={resolveBookingHref({})}
+                className="!border-white !bg-rose !text-white hover:!border-white hover:!bg-rose hover:!text-white"
+              >
                 Book a Consultation
               </Button>
               <Button
@@ -130,7 +133,7 @@ export default function AboutPage() {
       <section className="py-20 md:py-28">
         <div className="mx-auto grid max-w-[1200px] gap-10 px-6 md:px-8 lg:grid-cols-[0.8fr_1.2fr] lg:gap-20 lg:px-12">
           <div>
-            <p className="mb-4 text-[0.75rem] font-medium capitalize italic tracking-[0.08em] text-rose">The Rella standard</p>
+            <p className="mb-4 text-[0.75rem] font-medium capitalize italic tracking-[0.08em] text-ink">The Rella standard</p>
             <h2 className="text-3xl font-bold uppercase leading-tight tracking-[0.06em] text-rose md:text-5xl">
               The best plan starts with a real conversation.
             </h2>
@@ -167,13 +170,13 @@ export default function AboutPage() {
         </div>
       </section>
 
-      <section className="border-y border-silver/20 py-16 md:py-20">
+      <section className="border-y border-silver/20 bg-rose py-16 md:py-20">
         <div className="mx-auto flex max-w-[1120px] flex-col gap-8 px-6 md:px-8 lg:flex-row lg:items-center lg:justify-between lg:px-12">
           <div className="max-w-[700px]">
-            <p className="mb-3 text-[0.75rem] font-medium capitalize italic tracking-[0.08em] text-rose">
+            <p className="mb-3 text-[0.75rem] font-medium capitalize italic tracking-[0.08em] text-ink">
               The people behind Rella
             </p>
-            <h2 className="text-3xl font-bold uppercase tracking-[0.06em] text-rose md:text-4xl">
+            <h2 className="text-3xl font-bold uppercase tracking-[0.06em] text-white md:text-4xl">
               Meet the people behind Rella.
             </h2>
             <p className="mt-4 leading-relaxed text-ink/70">
@@ -193,7 +196,7 @@ export default function AboutPage() {
       <section className="bg-rose py-20 text-white md:py-28">
         <div className="mx-auto max-w-[1200px] px-6 md:px-8 lg:px-12">
           <div className="mb-12 max-w-[720px]">
-            <p className="mb-4 text-[0.75rem] font-medium capitalize italic tracking-[0.08em] text-white">How Rella approaches care</p>
+            <p className="mb-4 text-[0.75rem] font-medium capitalize italic tracking-[0.08em] text-ink">How Rella approaches care</p>
             <h2 className="text-3xl font-bold uppercase tracking-[0.06em] text-white md:text-5xl">Four principles behind every patient experience.</h2>
           </div>
           <div className="grid gap-px bg-white/45 md:grid-cols-2">
@@ -211,12 +214,12 @@ export default function AboutPage() {
       <section className="py-20 md:py-28">
         <div className="mx-auto grid max-w-[1200px] gap-6 px-6 md:grid-cols-2 md:px-8 lg:px-12">
           <Link href="/locations/vacaville" className="group border-y border-silver-pale p-7 transition-colors hover:border-rose md:p-9">
-            <p className="mb-3 text-[0.75rem] font-medium capitalize italic tracking-[0.08em] text-rose">Vacaville</p>
+            <p className="mb-3 text-[0.75rem] font-medium capitalize italic tracking-[0.08em] text-ink">Vacaville</p>
             <h2 className="mb-3 text-2xl font-bold uppercase tracking-[0.06em] text-rose">542 Main Street</h2>
             <p className="text-sm text-ink/70">Explore the clinic, hours, services, and directions <span aria-hidden="true">→</span></p>
           </Link>
           <Link href="/locations/napa" className="group border-y border-silver-pale p-7 transition-colors hover:border-rose md:p-9">
-            <p className="mb-3 text-[0.75rem] font-medium capitalize italic tracking-[0.08em] text-rose">Napa</p>
+            <p className="mb-3 text-[0.75rem] font-medium capitalize italic tracking-[0.08em] text-ink">Napa</p>
             <h2 className="mb-3 text-2xl font-bold uppercase tracking-[0.06em] text-rose">1541 3rd Street</h2>
             <p className="text-sm text-ink/70">Explore the clinic, hours, services, and directions <span aria-hidden="true">→</span></p>
           </Link>
@@ -225,7 +228,7 @@ export default function AboutPage() {
 
       <section className="bg-rose py-16 text-white md:py-20">
         <div className="mx-auto flex max-w-[900px] flex-col items-center px-6 text-center">
-          <p className="mb-4 text-[0.75rem] font-medium capitalize italic tracking-[0.08em] text-white">Start with clarity</p>
+          <p className="mb-4 text-[0.75rem] font-medium capitalize italic tracking-[0.08em] text-ink">Start with clarity</p>
           <h2 className="mb-5 text-3xl font-bold uppercase tracking-[0.06em] md:text-5xl">Tell us what you want to work on.</h2>
           <p className="mb-8 max-w-[650px] font-light leading-relaxed text-white md:text-lg">
             Choose a live booking time or contact the team with a question. We&apos;ll help you find the most appropriate next step.

@@ -16,7 +16,7 @@ export default function BookPage() {
     <>
       <section className="relative overflow-hidden bg-rose-blush py-16 md:py-20">
         <div className="relative mx-auto max-w-[960px] px-6 text-center md:px-8">
-          <p className="mb-4 text-[0.75rem] font-medium capitalize italic tracking-[0.08em] text-rose-dark">
+          <p className="mb-4 text-[0.75rem] font-medium capitalize italic tracking-[0.08em] text-ink">
             Start your visit
           </p>
           <h1 className="mx-auto mb-5 max-w-[760px] text-[clamp(2.7rem,6.5vw,4.8rem)] font-bold uppercase leading-[0.98] tracking-[0.06em] text-ink">
@@ -46,7 +46,7 @@ export default function BookPage() {
                     0{index + 1}
                   </span>
                   <div className="relative">
-                    <p className="mb-8 text-[0.75rem] font-medium capitalize italic tracking-[0.08em] text-rose-dark">
+                    <p className="mb-8 text-[0.75rem] font-medium capitalize italic tracking-[0.08em] text-ink">
                       Rella Aesthetics
                     </p>
                     <h3 className="mb-3 text-4xl font-bold uppercase tracking-[0.06em] text-ink md:text-5xl">

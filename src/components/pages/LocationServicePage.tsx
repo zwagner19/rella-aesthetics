@@ -102,7 +102,7 @@ export function LocationServicePage({ location, slug }: LocationServicePageProps
       <section className="bg-paper py-[clamp(4rem,8vw,7rem)]">
         <div className="mx-auto grid max-w-[1160px] items-stretch gap-12 px-5 md:px-8 lg:grid-cols-[1.05fr_0.95fr] lg:gap-20">
           <div className="flex flex-col justify-center">
-            <p className="mb-5 text-sm font-normal italic text-rose-text">
+            <p className="mb-5 text-sm font-normal italic text-ink">
               Consultation-led care · Downtown {location.name}
             </p>
             <h1 className="mb-6 text-[clamp(2.5rem,6vw,4.5rem)] font-bold uppercase leading-[1.08] tracking-[0.08em] text-ink">
@@ -122,7 +122,7 @@ export function LocationServicePage({ location, slug }: LocationServicePageProps
           </div>
 
           <div className="relative overflow-hidden bg-ink px-7 py-12 text-white md:px-10 md:py-16">
-            <p className="mb-10 text-sm font-normal italic text-rose">
+            <p className="mb-10 text-sm font-normal italic text-white">
               Rella Aesthetics
             </p>
             <p aria-hidden="true" className="absolute -right-3 top-8 text-[6.5rem] font-bold uppercase leading-none tracking-[0.04em] text-white/[0.035] md:text-[8rem]">
@@ -152,7 +152,7 @@ export function LocationServicePage({ location, slug }: LocationServicePageProps
       <section className="py-[clamp(4rem,8vw,7rem)]">
         <div className="mx-auto max-w-[1160px] px-5 md:px-8">
           <div className="mb-12 max-w-[760px]">
-            <p className="mb-4 text-sm font-normal italic text-rose-text">Explore care</p>
+            <p className="mb-4 text-sm font-normal italic text-ink">Explore care</p>
             <h2 className="mb-5 text-[clamp(2rem,4vw,3rem)] font-bold uppercase leading-[1.15] tracking-[0.06em] text-ink">
               Start with the service that matches your goal.
             </h2>
@@ -190,7 +190,7 @@ export function LocationServicePage({ location, slug }: LocationServicePageProps
       <section className="bg-rose py-[clamp(4rem,8vw,6rem)]">
         <div className="mx-auto grid max-w-[1000px] gap-8 px-5 md:grid-cols-[1fr_auto] md:items-center md:px-8">
           <div>
-            <p className="mb-3 text-sm font-normal italic text-ink/70">Plan your visit</p>
+            <p className="mb-3 text-sm font-normal italic text-ink">Plan your visit</p>
             <h2 className="mb-3 text-3xl font-bold uppercase leading-tight tracking-[0.06em] text-ink">{fullAddress}</h2>
             <p className="text-ink/70">Choose a time online, call the team, or open directions before you leave.</p>
           </div>

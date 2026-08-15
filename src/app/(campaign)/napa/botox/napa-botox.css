@@ -220,7 +220,7 @@
 .nb-eyebrow span {
   font-size: clamp(13px, 3.4vw, 15px);
   font-style: italic;
-  color: var(--nb-clay);
+  color: var(--nb-ink);
 }
 .nb-kicker {
   font-size: 12px;

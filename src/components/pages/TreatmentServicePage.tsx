@@ -88,7 +88,7 @@ export function TreatmentServicePage({ service }: TreatmentServicePageProps) {
         <div className="mx-auto grid max-w-[1160px] items-stretch lg:grid-cols-2">
           <div className="relative z-10">
             <div className="flex h-full flex-col justify-center px-5 py-16 md:px-8 md:py-24 lg:px-14 lg:py-28">
-            <p className="mb-5 text-sm font-normal italic tracking-normal text-rose">
+            <p className="mb-5 text-sm font-normal italic tracking-normal text-white">
               {service.heroEyebrow} · {locationLabel}
             </p>
             <h1 className="mb-6 text-[clamp(2.5rem,5vw,4.25rem)] font-bold uppercase leading-[1.08] tracking-[0.08em] text-white">
@@ -122,7 +122,7 @@ export function TreatmentServicePage({ service }: TreatmentServicePageProps) {
                 sizes="(min-width: 1024px) 46vw, 92vw"
               />
               <div className="absolute inset-x-0 bottom-0 bg-ink/80 p-5 md:p-6">
-                <p className="mb-2 text-sm font-normal italic text-rose">Start with a consultation</p>
+                <p className="mb-2 text-sm font-normal italic text-white">Start with a consultation</p>
                 <p className="text-lg font-semibold leading-snug text-white">Understand the plan and price before treatment.</p>
               </div>
           </div>
@@ -142,12 +142,12 @@ export function TreatmentServicePage({ service }: TreatmentServicePageProps) {
       <section className="py-[clamp(4rem,8vw,7rem)]">
         <div className="mx-auto grid max-w-[1160px] gap-12 px-5 md:px-8 lg:grid-cols-[1.05fr_0.95fr] lg:gap-20">
           <div className="lg:pr-10">
-            <p className="mb-4 text-sm font-normal italic text-rose-text">About the treatment</p>
+            <p className="mb-4 text-sm font-normal italic text-ink">About the treatment</p>
             <h2 className="mb-5 text-[clamp(2rem,4vw,3rem)] font-bold uppercase leading-[1.15] tracking-[0.06em] text-ink">{service.whatItIs.heading}</h2>
             <p className="text-base font-light leading-[1.75] text-ink/70 md:text-lg">{service.whatItIs.body}</p>
           </div>
           <div className="border-l-4 border-rose bg-rose-blush p-7 md:p-10">
-            <p className="mb-3 text-sm font-normal italic text-ink/70">Common goals</p>
+            <p className="mb-3 text-sm font-normal italic text-ink">Common goals</p>
             <h2 className="mb-4 text-2xl font-bold uppercase leading-tight tracking-[0.06em] text-ink">{service.whoItsFor.heading}</h2>
             <p className="mb-6 text-sm leading-[1.75] text-ink/70">{service.whoItsFor.body}</p>
             <ul className="space-y-4">
@@ -165,7 +165,7 @@ export function TreatmentServicePage({ service }: TreatmentServicePageProps) {
       <section id="what-to-expect" className="scroll-mt-24 bg-ink py-[clamp(4rem,8vw,7rem)] text-white">
         <div className="mx-auto grid max-w-[1160px] gap-12 px-5 md:px-8 lg:grid-cols-[0.8fr_1.2fr] lg:gap-20">
           <div>
-            <p className="mb-4 text-sm font-normal italic text-rose">Your visit</p>
+            <p className="mb-4 text-sm font-normal italic text-white">Your visit</p>
             <h2 className="mb-5 text-[clamp(2rem,4vw,3rem)] font-bold uppercase leading-[1.15] tracking-[0.06em]">{service.whatToExpect.heading}</h2>
             <p className="text-base font-light leading-[1.75] text-white/70 md:text-lg">{service.whatToExpect.body}</p>
           </div>
@@ -183,7 +183,7 @@ export function TreatmentServicePage({ service }: TreatmentServicePageProps) {
       <section className="py-[clamp(4rem,8vw,7rem)]">
         <div className="mx-auto grid max-w-[1000px] gap-10 px-5 md:grid-cols-[0.8fr_1.2fr] md:items-start md:px-8">
           <div>
-            <p className="mb-4 text-sm font-normal italic text-rose-text">Clear pricing</p>
+            <p className="mb-4 text-sm font-normal italic text-ink">Clear pricing</p>
             <h2 className="text-[clamp(2rem,4vw,3rem)] font-bold uppercase leading-[1.15] tracking-[0.06em] text-ink">{service.pricing.heading}</h2>
           </div>
           <div className="border-t border-ink/15 bg-white py-7 md:p-9">
@@ -203,7 +203,7 @@ export function TreatmentServicePage({ service }: TreatmentServicePageProps) {
       >
         <div className="mx-auto max-w-[1000px] px-5 md:px-8">
           <div className="mb-10 max-w-[720px]">
-            <p className="mb-4 text-sm font-normal italic text-ink/70">
+            <p className="mb-4 text-sm font-normal italic text-ink">
               {hasMultipleLocations ? "Two locations" : "Current booking location"}
             </p>
             <h2 id="book-service-heading" className="mb-4 text-[clamp(2rem,4vw,3rem)] font-bold uppercase leading-[1.15] tracking-[0.06em] text-ink">
@@ -219,7 +219,7 @@ export function TreatmentServicePage({ service }: TreatmentServicePageProps) {
             {bookingOptions.map((location, index) => (
               <div key={location.name} className="border border-ink/15 bg-white p-6 md:p-8">
                 <div className="mb-8 flex items-start justify-between gap-4">
-                  <p className="text-sm font-normal italic text-ink/65">Rella Aesthetics</p>
+                  <p className="text-sm font-normal italic text-ink">Rella Aesthetics</p>
                   <span aria-hidden="true" className="text-2xl font-light text-ink/45">0{index + 1}</span>
                 </div>
                 <h3 className="mb-2 text-2xl font-medium tracking-[-0.025em] text-ink">{location.name}</h3>
@@ -247,7 +247,7 @@ export function TreatmentServicePage({ service }: TreatmentServicePageProps) {
 
       <section className="py-[clamp(4rem,8vw,7rem)]">
         <div className="mx-auto max-w-[900px] px-5 md:px-8">
-          <p className="mb-4 text-sm font-normal italic text-rose-text">Questions, answered</p>
+          <p className="mb-4 text-sm font-normal italic text-ink">Questions, answered</p>
           <h2 className="mb-8 text-[clamp(2rem,4vw,3rem)] font-bold uppercase leading-[1.15] tracking-[0.06em] text-ink">{service.title} FAQ</h2>
           <FaqAccordion items={service.faq} />
         </div>

@@ -24,7 +24,7 @@ export function BeforeAfterGallery({
     >
       <div className="mx-auto max-w-[1200px] px-6 md:px-8 lg:px-12">
         <div className="mb-10 max-w-[760px]">
-          <p className="mb-4 text-sm font-normal italic text-ink/70">
+          <p className="mb-4 text-sm font-normal italic text-ink">
             {eyebrow}
           </p>
           <h2 id="before-after-heading" className="mb-4 text-3xl font-bold uppercase leading-tight tracking-[0.08em] text-ink md:text-5xl">

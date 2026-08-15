@@ -62,7 +62,7 @@ function HomePageContent({ isWeightLoss }: { isWeightLoss: boolean }) {
       <section className="grid min-h-[70vh] bg-white md:min-h-[80vh] md:grid-cols-2">
         <div className="flex items-center px-6 py-20 md:px-8 md:py-24 lg:pl-[max(3rem,calc((100vw-1200px)/2))] lg:pr-16">
           <div className="max-w-[620px]">
-            <p className="mb-6 text-sm font-medium italic tracking-[0.04em] text-rose">
+            <p className="mb-6 text-sm font-medium italic tracking-[0.04em] text-ink">
               Northern California&apos;s Luxury Med Spa
             </p>
             <h1 className="mb-5 text-4xl font-bold uppercase leading-[1.04] tracking-[0.08em] text-rose md:text-5xl lg:text-6xl">
@@ -127,7 +127,7 @@ function HomePageContent({ isWeightLoss }: { isWeightLoss: boolean }) {
             />
           </div>
           <div className="lg:pl-6">
-            <p className="mb-5 text-[0.75rem] font-medium capitalize italic tracking-[0.08em] text-rose">
+            <p className="mb-5 text-[0.75rem] font-medium capitalize italic tracking-[0.08em] text-ink">
               Feel Comfortable
             </p>
             <h2 className="mb-6 text-3xl font-bold uppercase leading-[1.08] tracking-[0.06em] text-rose md:text-5xl">
@@ -173,7 +173,7 @@ function HomePageContent({ isWeightLoss }: { isWeightLoss: boolean }) {
             />
           </div>
           <div className="lg:pl-8">
-            <p className="mb-5 text-[0.75rem] font-medium capitalize italic tracking-[0.08em] text-white">
+            <p className="mb-5 text-[0.75rem] font-medium capitalize italic tracking-[0.08em] text-ink">
               Medical weight management
             </p>
             <h2 className="mb-6 text-3xl font-bold uppercase leading-[1.08] tracking-[0.06em] text-white md:text-5xl">
@@ -207,7 +207,7 @@ function HomePageContent({ isWeightLoss }: { isWeightLoss: boolean }) {
         <div className="mx-auto max-w-[1200px] px-6 md:px-8 lg:px-12">
           <div className="mb-12 grid gap-8 lg:grid-cols-[0.75fr_1.25fr] lg:items-end lg:gap-20">
             <div>
-              <p className="mb-4 text-[0.75rem] font-medium capitalize italic tracking-[0.08em] text-white">
+              <p className="mb-4 text-[0.75rem] font-medium capitalize italic tracking-[0.08em] text-ink">
                 Care should feel clear
               </p>
               <h2 className="text-4xl font-bold uppercase leading-[1.02] tracking-[0.08em] text-white md:text-6xl">
