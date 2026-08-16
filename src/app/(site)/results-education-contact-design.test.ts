@@ -11,6 +11,9 @@ describe("designer checklist for Results, Education, and Contact", () => {
     expect(source).toContain("!border-white !bg-transparent !text-white");
     expect(source).toContain("hover:!bg-transparent hover:!text-white");
     expect(source).toContain("bg-white px-5 py-2 text-base font-light text-rose");
+    expect(source).toContain(
+      'tracking-[0.06em] text-white md:text-5xl">What patients say about the experience.',
+    );
     expect(source).toContain('data-cta="gallery-booking"');
     expect(source).toContain("resolveBookingHref({})");
     expect(source).toContain("Individual results vary");
@@ -19,7 +22,7 @@ describe("designer checklist for Results, Education, and Contact", () => {
     );
   });
 
-  it("keeps Education titles pink and the three sidebar panels pink with white content", () => {
+  it("keeps the Education hero white, article titles pink, and sidebar panels pink with white content", () => {
     const page = read("src/app/(site)/blog/page.tsx");
     const post = read("src/app/(site)/blog/[slug]/page.tsx");
     const card = read("src/components/blog/BlogCard.tsx");
@@ -29,6 +32,9 @@ describe("designer checklist for Results, Education, and Contact", () => {
     const localPosts = read("src/lib/local-editorial-posts.ts");
 
     expect(page).toContain("uppercase text-rose mb-4");
+    expect(page).toContain(
+      "uppercase text-white mb-4 leading-[1.1]",
+    );
     expect(card).toContain("text-lg text-rose");
     expect(content).toContain("text-2xl text-rose");
     expect(content).toContain("text-xl text-rose");
@@ -53,10 +59,13 @@ describe("designer checklist for Results, Education, and Contact", () => {
     expect(localPost).toContain("text-lg font-medium text-rose");
   });
 
-  it("keeps Contact headings and field titles pink while preserving delivery and tracking", () => {
+  it("keeps the Contact hero white and field titles pink while preserving delivery and tracking", () => {
     const page = read("src/app/(site)/contact/page.tsx");
     const form = read("src/app/(site)/contact/ContactForm.tsx");
 
+    expect(page).toContain(
+      "uppercase text-white mb-4 leading-[1.1]",
+    );
     expect(page).toContain('<SectionHeader title="Send Us a Message" />');
     expect(page).toContain('<SectionHeader title="Other Ways to Reach Us" />');
     expect(page).toContain('href="tel:+17073582928"');

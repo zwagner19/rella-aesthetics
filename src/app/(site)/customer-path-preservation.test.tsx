@@ -8,11 +8,18 @@ import PrivatePartiesPage, { metadata as partyMetadata } from "./private-parties
 describe("preserved customer information paths", () => {
   it("preserves the sourced private-event path without exposing ordinary booking", () => {
     const html = renderToStaticMarkup(<PrivatePartiesPage />);
+    const source = readFileSync("src/app/(site)/private-parties/page.tsx", "utf8");
     expect(html).toContain("Private Parties");
     expect(html).toContain("minimum of six people");
     expect(html).toContain("707.358.2928");
     expect(html).toContain('href="/contact?intent=private-parties"');
     expect(html).not.toMatch(/Anna|data-cta="book"|book\.experiencerella|Boulevard/i);
+    expect(source).toContain(
+      'tracking-[0.08em] text-white md:text-6xl">',
+    );
+    expect(source).toContain(
+      'tracking-[0.07em] text-rose md:text-5xl">',
+    );
     expect(partyMetadata.alternates?.canonical).toBe("/private-parties");
   });
 

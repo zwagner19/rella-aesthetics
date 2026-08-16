@@ -17,7 +17,7 @@ export default function PrivatePartiesPage() {
           <p className="mb-4 text-sm font-medium italic tracking-[0.04em] text-ink">
             Private Events
           </p>
-          <h1 className="max-w-[760px] text-4xl font-bold uppercase leading-[1.08] tracking-[0.08em] text-ink md:text-6xl">
+          <h1 className="max-w-[760px] text-4xl font-bold uppercase leading-[1.08] tracking-[0.08em] text-white md:text-6xl">
             Private Parties
           </h1>
           <p className="mt-6 max-w-[620px] text-lg font-light leading-relaxed text-ink/70">
@@ -33,7 +33,7 @@ export default function PrivatePartiesPage() {
             <p className="mb-4 text-sm font-medium italic tracking-[0.04em] text-ink">
               Get in Touch
             </p>
-            <h2 className="text-3xl font-bold uppercase leading-[1.12] tracking-[0.07em] text-ink md:text-5xl">
+            <h2 className="text-3xl font-bold uppercase leading-[1.12] tracking-[0.07em] text-rose md:text-5xl">
               Start planning your event
             </h2>
             <p className="mt-6 max-w-[620px] leading-8 text-ink/70">

@@ -28,7 +28,7 @@ export default async function ContactPage({
           <p className="mb-4 text-[0.6875rem] font-bold uppercase tracking-[0.2em] text-rose">
             Contact
           </p>
-          <h1 className="font-bold text-4xl md:text-5xl tracking-[0.08em] uppercase text-rose mb-4 leading-[1.1]">
+          <h1 className="font-bold text-4xl md:text-5xl tracking-[0.08em] uppercase text-white mb-4 leading-[1.1]">
             Get in Touch
           </h1>
           <p className="max-w-[560px] text-lg font-light leading-relaxed text-ink/70">
