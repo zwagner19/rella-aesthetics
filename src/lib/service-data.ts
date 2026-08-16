@@ -12,6 +12,7 @@ export interface ServicePageData {
   pricing: { heading: string; body: string; note?: string };
   faq: { question: string; answer: string }[];
   image: string;
+  imageAlt: string;
   availableLocations?: readonly ("vacaville" | "napa")[];
 }
 
@@ -62,7 +63,8 @@ export const servicePages: ServicePageData[] = [
       { question: "What is the difference between Botox and Dysport?", answer: "Both temporarily reduce targeted muscle activity, but they are distinct prescription products with product-specific dosing and non-interchangeable units. Your provider will recommend the appropriate option for your goals." },
       { question: "When will I see results?", answer: "Botox softening may begin in 4–7 days, while Dysport can show results in 2–5 days. Full effect is assessed around two weeks, and individual response varies." },
     ],
-    image: "/images/service-botox.jpg",
+    image: "/images/treatments/botox-dysport.webp",
+    imageAlt: "A Rella Aesthetics team member holding Botox and Dysport vials",
   },
   {
     slug: "dermal-fillers",
@@ -108,7 +110,8 @@ export const servicePages: ServicePageData[] = [
       { question: "Can fillers be reversed?", answer: "Some hyaluronic acid filler may be reduced or dissolved with hyaluronidase when clinically indicated. Removal is not risk-free and may be difficult or impossible for some filler materials, so it requires an individual evaluation." },
       { question: "How much filler will I need?", answer: "This depends on your goals and the areas being treated. During your consultation, your provider will create a personalized treatment plan." },
     ],
-    image: "/images/service-fillers.jpg",
+    image: "/images/treatments/dermal-fillers.webp",
+    imageAlt: "A provider performing an injectable treatment near a patient's lips",
   },
   {
     slug: "chemical-peels",
@@ -153,7 +156,8 @@ export const servicePages: ServicePageData[] = [
       { question: "Is there downtime?", answer: "Downtime varies by product and individual response. Temporary redness, sensitivity, flaking, or peeling can occur; review the expected recovery for the exact peel before treatment." },
       { question: "Can I wear makeup after a peel?", answer: "Follow the aftercare instructions for the exact peel and your skin response. Ask your provider when makeup and active skin-care products can be resumed." },
     ],
-    image: "/images/service-peels.jpg",
+    image: "/images/treatments/chemical-peel.webp",
+    imageAlt: "A Rella provider applying an in-clinic facial treatment",
     availableLocations: ["vacaville"],
   },
   {
@@ -199,7 +203,8 @@ export const servicePages: ServicePageData[] = [
       { question: "Will I break out after a facial?", answer: "Skin response varies. Temporary redness, sensitivity, dryness, or breakouts can occur after some services. Tell your provider about current irritation or active concerns and contact Rella if a reaction is unexpected or persistent." },
       { question: "Can I combine a facial with other treatments?", answer: "Possibly, but the order and spacing depend on the exact products and procedures being considered. Your provider should review the combination before it is scheduled." },
     ],
-    image: "/images/service-facials.jpg",
+    image: "/images/treatments/facial.webp",
+    imageAlt: "A patient receiving red-light therapy during a facial",
   },
   {
     slug: "hydrafacial",
@@ -244,7 +249,8 @@ export const servicePages: ServicePageData[] = [
       { question: "How often should I get a HydraFacial?", answer: "Frequency should be individualized around your skin response, goals, products, other procedures, and budget. Your provider can discuss a one-time or ongoing plan without requiring a fixed schedule." },
       { question: "Is there any downtime?", answer: "Recovery varies. Temporary flushing, sensitivity, dryness, or irritation can occur, and timing around makeup, active products, sun exposure, and events should follow your provider's aftercare guidance." },
     ],
-    image: "/images/service-hydrafacial.jpg",
+    image: "/images/treatments/hydrafacial.webp",
+    imageAlt: "A Rella provider using a facial-treatment handpiece on a patient's cheek",
   },
   {
     slug: "microneedling",
@@ -289,7 +295,8 @@ export const servicePages: ServicePageData[] = [
       { question: "Does microneedling hurt?", answer: "Sensation varies with the device, depth, area, and person. Topical numbing may be used when appropriate; tell your provider about allergies or sensitivities to numbing medications." },
       { question: "When will I see results?", answer: "Response and timing vary, and the desired cosmetic outcome is not guaranteed. Your provider will explain what can reasonably be assessed after recovery and whether another procedure should be considered." },
     ],
-    image: "/images/service-microneedling.jpg",
+    image: "/images/treatments/microneedling-aftercare.webp",
+    imageAlt: "A patient checking her skin in a mirror after treatment",
     availableLocations: ["vacaville"],
   },
   {
@@ -333,7 +340,8 @@ export const servicePages: ServicePageData[] = [
       { question: "Is IV therapy appropriate for everyone?", answer: "No. IV hydration requires screening, and some health conditions, medications, symptoms, or ingredient considerations may make it inappropriate. The team will review what applies to you." },
       { question: "Will I feel an effect immediately?", answer: "Experiences vary by person, hydration status, formulation, and underlying circumstances. Rella does not promise a specific or immediate result." },
     ],
-    image: "/images/service-iv.jpg",
+    image: "/images/clinic/rella-consultation.webp",
+    imageAlt: "A Rella Aesthetics provider speaking with a patient during a consultation",
   },
   {
     slug: "laser-treatments",
@@ -378,7 +386,8 @@ export const servicePages: ServicePageData[] = [
       { question: "Does laser treatment hurt?", answer: "Sensation varies by modality, settings, area, and person. Your provider can explain the comfort options appropriate for the exact procedure being considered." },
       { question: "Can laser treatments be done on all skin types?", answer: "Safety and suitability depend on the device, wavelength, settings, treatment goal, and your skin type. A consultation is required to identify the appropriate option." },
     ],
-    image: "/images/service-laser.jpg",
+    image: "/images/treatments/laser-treatment.webp",
+    imageAlt: "A Rella provider performing a device-based skin treatment",
   },
   {
     slug: "weight-loss",
@@ -425,6 +434,7 @@ export const servicePages: ServicePageData[] = [
       { question: "Do I need a card to see consultation times?", answer: "No. The 30-minute medical qualification phone consultation does not require a card." },
       { question: "How much weight can I lose?", answer: "Results vary by person, treatment plan, health factors, and follow-through. Rella does not promise a specific result and will discuss realistic expectations for the plan being considered." },
     ],
-    image: "/images/service-weightloss.jpg",
+    image: "/images/clinic/rella-consultation.webp",
+    imageAlt: "A Rella Aesthetics provider speaking with a patient during a consultation",
   },
 ];

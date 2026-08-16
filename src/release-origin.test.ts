@@ -54,7 +54,7 @@ describe("medical weight-loss subdomain", () => {
   });
 
   it("keeps the root and required assets on the dedicated host", () => {
-    for (const path of ["/", "/images/service-weightloss.jpg", "/media/semaglutide-story.mp4"]) {
+    for (const path of ["/", "/images/clinic/rella-consultation.webp", "/media/semaglutide-story.mp4"]) {
       expect(isWeightLossAsset(path) || path === "/").toBe(true);
       const response = proxy(req(path, WEIGHT_LOSS));
       expect(response.headers.get("location")).toBeNull();

@@ -18,6 +18,33 @@ function decodeRenderedText(html: string) {
 }
 
 describe("polished service catalog", () => {
+  it("uses the curated clinic photography consistently across overview and detail data", () => {
+    expect(
+      Object.fromEntries(servicePages.map((service) => [service.slug, service.image])),
+    ).toEqual({
+      botox: "/images/treatments/botox-dysport.webp",
+      "dermal-fillers": "/images/treatments/dermal-fillers.webp",
+      "chemical-peels": "/images/treatments/chemical-peel.webp",
+      facials: "/images/treatments/facial.webp",
+      hydrafacial: "/images/treatments/hydrafacial.webp",
+      microneedling: "/images/treatments/microneedling-aftercare.webp",
+      "iv-hydration": "/images/clinic/rella-consultation.webp",
+      "laser-treatments": "/images/treatments/laser-treatment.webp",
+      "weight-loss": "/images/clinic/rella-consultation.webp",
+    });
+
+    expect(
+      services.map(({ slug, image, imageAlt }) => ({ slug, image, imageAlt })),
+    ).toEqual(
+      servicePages.map(({ slug, image, imageAlt }) => ({ slug, image, imageAlt })),
+    );
+
+    for (const service of servicePages) {
+      expect(service.imageAlt.trim().length, service.slug).toBeGreaterThan(0);
+      expect(existsSync(`public${service.image}`), service.image).toBe(true);
+    }
+  });
+
   it("renders every treatment as a complete visual booking journey", () => {
     expect(catalog).toHaveLength(8);
 
@@ -61,7 +88,7 @@ describe("polished service catalog", () => {
       });
       expect(metadata.alternates).toEqual({ canonical: `/services/${service.slug}` });
       expect(metadata.openGraph?.images).toEqual([
-        { url: service.image, alt: service.title },
+        { url: service.image, alt: service.imageAlt },
       ]);
 
       const schema = treatmentServiceSchema(service);

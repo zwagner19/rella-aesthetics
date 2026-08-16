@@ -145,6 +145,19 @@ export default function TeamPage() {
         </div>
       </section>
 
+      <section className="bg-white py-10 md:py-14" aria-label="Rella Aesthetics team photo">
+        <div className="mx-auto max-w-[1120px] px-6 md:px-8 lg:px-12">
+          <Image
+            src="/images/clinic/rella-team-storefront.webp"
+            alt="Rella Aesthetics team outside the Napa clinic"
+            width={1600}
+            height={900}
+            className="h-auto w-full"
+            sizes="(min-width: 1120px) 1024px, calc(100vw - 3rem)"
+          />
+        </div>
+      </section>
+
       <section className="py-20 md:py-28" aria-labelledby="leadership-heading">
         <div className="mx-auto grid max-w-[1120px] gap-12 px-6 md:px-8 lg:grid-cols-[0.8fr_1.2fr] lg:items-center lg:gap-20 lg:px-12">
           <div className="relative mx-auto aspect-[4/5] w-full max-w-[420px] overflow-hidden bg-rose-blush lg:mx-0">

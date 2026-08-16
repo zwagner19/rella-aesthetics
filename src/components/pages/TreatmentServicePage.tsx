@@ -104,7 +104,7 @@ export function TreatmentServicePage({ service }: TreatmentServicePageProps) {
               <Button
                 href="#what-to-expect"
                 variant="ghost"
-                className="!border-white !text-white hover:!bg-white hover:!text-ink"
+                className="!border-white"
               >
                 What to Expect
               </Button>
@@ -115,7 +115,7 @@ export function TreatmentServicePage({ service }: TreatmentServicePageProps) {
           <div className="relative min-h-[390px] w-full md:min-h-[520px]">
               <Image
                 src={service.image}
-                alt={`${service.title} consultation and treatment at Rella Aesthetics`}
+                alt={service.imageAlt}
                 fill
                 priority
                 className="object-cover"

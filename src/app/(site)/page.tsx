@@ -30,17 +30,6 @@ const mainSiteMetadata: Metadata = {
   },
 };
 
-const HOME_CLINIC_IMAGES = [
-  {
-    src: "/images/clinic/vacaville-treatment-room.jpg",
-    alt: "A treatment room inside Rella Aesthetics",
-  },
-  {
-    src: "/images/clinic/rella-front-desk-consult.jpg",
-    alt: "The reception and front-desk area at Rella Aesthetics in Vacaville",
-  },
-] as const;
-
 export async function generateMetadata(): Promise<Metadata> {
   const host = (await headers()).get("host");
   return isWeightLossHost(host) ? getServiceMetadata("weight-loss") : mainSiteMetadata;
@@ -96,20 +85,16 @@ function HomePageContent({ isWeightLoss }: { isWeightLoss: boolean }) {
             description="Explore aesthetic, skin, wellness, and medical weight-management options available through Rella."
           />
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {services.map((service, index) => {
-              const clinicImage = HOME_CLINIC_IMAGES[index % HOME_CLINIC_IMAGES.length];
-
-              return (
-                <ServiceCard
-                  key={service.slug}
-                  href={`/services/${service.slug}`}
-                  title={service.title}
-                  description={service.description}
-                  image={clinicImage.src}
-                  imageAlt={clinicImage.alt}
-                />
-              );
-            })}
+            {services.map((service) => (
+              <ServiceCard
+                key={service.slug}
+                href={`/services/${service.slug}`}
+                title={service.title}
+                description={service.description}
+                image={service.image}
+                imageAlt={service.imageAlt}
+              />
+            ))}
           </div>
         </div>
       </section>
@@ -165,8 +150,8 @@ function HomePageContent({ isWeightLoss }: { isWeightLoss: boolean }) {
         <div className="mx-auto grid max-w-[1200px] items-center gap-12 px-6 md:px-8 lg:grid-cols-2 lg:gap-20 lg:px-12">
           <div className="relative min-h-[380px] overflow-hidden md:min-h-[560px]">
             <Image
-              src="/images/clinic/rella-front-desk-consult.jpg"
-              alt="The reception and front-desk area at Rella Aesthetics in Vacaville"
+              src="/images/clinic/rella-consultation.webp"
+              alt="A Rella Aesthetics provider speaking with a patient during a consultation"
               fill
               className="object-cover"
               sizes="(min-width: 1024px) 50vw, 100vw"

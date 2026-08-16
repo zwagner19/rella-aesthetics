@@ -10,7 +10,7 @@ import {
 const source = readFileSync(join(__dirname, "HomeLocationVisual.tsx"), "utf8");
 
 describe("homepage location visual", () => {
-  it("uses the verified Vacaville still and does not mislabel a missing Napa exterior", () => {
+  it("uses the verified Napa storefront and Vacaville treatment-room still", () => {
     expect(HOME_LOCATION_VISUALS.map((location) => location.slug)).toEqual([
       "napa",
       "vacaville",
@@ -21,15 +21,13 @@ describe("homepage location visual", () => {
       (location) => location.slug === "vacaville",
     );
 
-    expect(napa?.image).toBeNull();
-    expect(napa?.imageAlt).toBeNull();
-    expect(vacaville?.image).toBe(
-      "/images/clinic/vacaville-treatment-room.jpg",
-    );
-    expect(vacaville?.imageAlt).toContain("Rella Aesthetics");
-    expect(existsSync(join(process.cwd(), "public", vacaville?.image ?? ""))).toBe(
-      true,
-    );
+    expect(napa?.image).toBe("/images/clinic/rella-team-storefront.webp");
+    expect(napa?.imageAlt).toBe("The Rella Aesthetics team outside the Napa clinic");
+    expect(vacaville?.image).toBe("/images/clinic/vacaville-treatment-room.jpg");
+    expect(vacaville?.imageAlt).toBe("A treatment room inside the Vacaville clinic");
+    for (const location of HOME_LOCATION_VISUALS) {
+      expect(existsSync(join(process.cwd(), "public", location.image))).toBe(true);
+    }
 
     expect(source).not.toMatch(/<video|\.mp4|autoplay/i);
   });
@@ -44,12 +42,7 @@ describe("homepage location visual", () => {
       expect(html).toContain('aria-label="Choose a Rella clinic view"');
       expect(html.match(/aria-pressed=/g)).toHaveLength(2);
       expect(html).toContain(location.address);
-      if (location.imageAlt) {
-        expect(html).toContain(location.imageAlt);
-      } else {
-        expect(html).toContain("Rella Aesthetics Napa");
-        expect(html).toContain("Downtown Napa");
-      }
+      expect(html).toContain(location.imageAlt);
     }
   });
 

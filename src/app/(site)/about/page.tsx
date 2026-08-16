@@ -139,8 +139,8 @@ export default function AboutPage() {
             </h2>
             <div className="relative mt-8 aspect-[4/3] overflow-hidden bg-rose-blush">
               <Image
-                src="/images/clinic/rella-front-desk-consult.jpg"
-                alt="The reception and front-desk area at Rella Aesthetics in Vacaville"
+                src="/images/clinic/rella-consultation.webp"
+                alt="A Rella Aesthetics provider speaking with a patient during a consultation"
                 fill
                 className="object-cover"
                 sizes="(min-width: 1024px) 440px, 90vw"

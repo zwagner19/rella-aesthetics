@@ -1,4 +1,4 @@
-import { readFileSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it } from "vitest";
 import AboutPage from "./about/page";
@@ -32,7 +32,7 @@ describe("designer page color checklist", () => {
     expect(aboutSource).toContain("bg-white/45 md:grid-cols-2");
     expect(aboutSource).toContain("bg-rose p-7 md:p-9");
     expect(aboutSource).toContain(
-      "/images/clinic/rella-front-desk-consult.jpg",
+      "/images/clinic/rella-consultation.webp",
     );
     expect(html).toContain('href="/book"');
     expect(html).toContain('href="tel:+17073582928"');
@@ -46,20 +46,15 @@ describe("designer page color checklist", () => {
     for (const service of services) {
       expect(html).toContain(`href="/services/${service.slug}"`);
       expect(html).toContain(service.title.replaceAll("&", "&amp;"));
+      expect(existsSync(`public${service.image}`), service.image).toBe(true);
+      expect(service.imageAlt.length).toBeGreaterThan(0);
     }
     expect(servicesSource).toContain("text-rose md:text-5xl");
     expect(servicesSource).toContain("group-hover:text-white");
     expect(servicesSource).toContain("group-focus-visible:text-white");
-    expect(servicesSource).toContain(
-      "/images/clinic/vacaville-treatment-room.jpg",
-    );
-    expect(servicesSource).toContain(
-      "/images/clinic/rella-front-desk-consult.jpg",
-    );
-    expect(servicesSource).toContain(
-      "clinicImages[index % clinicImages.length]",
-    );
-    expect(servicesSource).not.toContain("src={service.image}");
+    expect(servicesSource).toContain("src={service.image}");
+    expect(servicesSource).toContain("alt={service.imageAlt}");
+    expect(servicesSource).not.toContain("clinicImages[");
     expect(servicesSource).not.toContain("alt={service.title}");
     expect(html.match(/Learn more/g)).toHaveLength(services.length);
   });

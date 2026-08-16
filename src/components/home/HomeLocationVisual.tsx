@@ -8,15 +8,15 @@ export const HOME_LOCATION_VISUALS = [
     slug: "napa",
     name: "Napa",
     address: "1541 3rd St",
-    image: null,
-    imageAlt: null,
+    image: "/images/clinic/rella-team-storefront.webp",
+    imageAlt: "The Rella Aesthetics team outside the Napa clinic",
   },
   {
     slug: "vacaville",
     name: "Vacaville",
     address: "542 Main St",
     image: "/images/clinic/vacaville-treatment-room.jpg",
-    imageAlt: "A treatment room inside Rella Aesthetics",
+    imageAlt: "A treatment room inside the Vacaville clinic",
   },
 ] as const;
 
@@ -47,23 +47,7 @@ export function HomeLocationVisual({
             className="object-cover"
             sizes="(min-width: 768px) 50vw, 100vw"
           />
-        ) : (
-          <div className="absolute inset-0 flex flex-col items-center justify-center bg-rose-blush px-8 text-center">
-            <Image
-              src="/brand/rella-logo-rose.svg"
-              alt=""
-              width={190}
-              height={78}
-              className="h-auto w-[150px] md:w-[190px]"
-            />
-            <p className="mt-7 text-xs font-bold uppercase tracking-[0.18em] text-rose">
-              Rella Aesthetics Napa
-            </p>
-            <p className="mt-2 text-sm text-rose">
-              Downtown Napa
-            </p>
-          </div>
-        )}
+        ) : null}
         <div
           className="absolute inset-x-0 bottom-0 bg-white/90 px-5 py-4 md:px-7"
           aria-live="polite"

@@ -39,10 +39,10 @@ describe("designer checklist for Results, Education, and Contact", () => {
     expect(post).toContain("!bg-white !text-rose");
     expect(sidebar).toContain("resolveBookingHref({})");
     expect(localPosts).toContain(
-      'coverImage: "/images/clinic/rella-front-desk-consult.jpg"',
+      'coverImage: "/images/treatments/botox-dysport.webp"',
     );
     expect(localPosts).toContain(
-      'coverAlt: "The reception and front-desk area at Rella Aesthetics in Vacaville"',
+      'coverAlt: "A Rella Aesthetics team member holding Botox and Dysport vials"',
     );
     expect(localPost).toContain(
       'className="bg-rose-cta py-16 text-white"',

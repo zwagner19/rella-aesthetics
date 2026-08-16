@@ -12,17 +12,6 @@ export const metadata: Metadata = {
 
 const categories = ["Injectables", "Skin Care", "Body & Wellness"] as const;
 
-const clinicImages = [
-  {
-    src: "/images/clinic/vacaville-treatment-room.jpg",
-    alt: "Treatment room inside Rella Aesthetics in Vacaville",
-  },
-  {
-    src: "/images/clinic/rella-front-desk-consult.jpg",
-    alt: "The reception and front-desk area at Rella Aesthetics in Vacaville",
-  },
-] as const;
-
 export default function ServicesPage() {
   return (
     <>
@@ -62,9 +51,7 @@ export default function ServicesPage() {
                   {category}
                 </h2>
                 <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                  {categoryServices.map((service, index) => {
-                    const clinicImage = clinicImages[index % clinicImages.length];
-
+                  {categoryServices.map((service) => {
                     return (
                       <Link
                         key={service.slug}
@@ -73,8 +60,8 @@ export default function ServicesPage() {
                       >
                         <div className="relative aspect-[4/3] overflow-hidden bg-white">
                           <Image
-                            src={clinicImage.src}
-                            alt={clinicImage.alt}
+                            src={service.image}
+                            alt={service.imageAlt}
                             fill
                             className="object-cover"
                             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"

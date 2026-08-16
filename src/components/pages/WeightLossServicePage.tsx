@@ -8,6 +8,7 @@ import { approvedResultsFor } from "@/content/results";
 import { weightLossGoogleProof, weightLossPatientStory } from "@/content/social-proof";
 import { resolveBookingHref, type BookingLocation } from "@/lib/booking-routes";
 import { medicalWeightLossServiceSchema } from "@/lib/schemas";
+import { servicePages } from "@/lib/service-data";
 
 const steps = [
   {
@@ -33,6 +34,14 @@ const steps = [
 ] as const;
 
 const weightLossResults = approvedResultsFor("weight-loss");
+
+function getWeightLossService() {
+  const service = servicePages.find((candidate) => candidate.slug === "weight-loss");
+  if (!service) throw new Error("Medical weight-loss service data is missing");
+  return service;
+}
+
+const weightLossService = getWeightLossService();
 
 const faq = [
   {
@@ -187,8 +196,8 @@ export function WeightLossServicePage() {
 
           <div className="relative min-h-[390px] w-full md:min-h-[520px]">
               <Image
-                src="/images/service-weightloss.jpg"
-                alt="A patient having a supportive medical weight-loss consultation"
+                src={weightLossService.image}
+                alt={weightLossService.imageAlt}
                 fill
                 priority
                 className="object-cover object-center"

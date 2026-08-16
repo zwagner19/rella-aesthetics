@@ -1,5 +1,6 @@
 import { existsSync, readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
+import { services } from "@/lib/data";
 
 const homepage = readFileSync("src/app/(site)/page.tsx", "utf8");
 const header = readFileSync("src/components/layout/Header.tsx", "utf8");
@@ -20,18 +21,19 @@ describe("designer homepage color and image checklist", () => {
     expect(mobileNav).toContain('/brand/rella-logo-rose.svg');
   });
 
-  it("packages and uses only the approved authentic homepage clinic stills", () => {
-    const clinicImages = [
-      "/images/clinic/vacaville-treatment-room.jpg",
-      "/images/clinic/rella-front-desk-consult.jpg",
-    ];
-
-    for (const image of clinicImages) {
-      expect(existsSync(`public${image}`), image).toBe(true);
-      expect(homepage).toContain(image);
+  it("uses approved service photography and the in-clinic consultation image", () => {
+    for (const service of services) {
+      expect(existsSync(`public${service.image}`), service.image).toBe(true);
+      expect(service.imageAlt.length).toBeGreaterThan(0);
     }
 
-    expect(homepage).not.toMatch(/\/images\/service-(?:hydrafacial|weightloss)\.jpg/);
+    expect(new Set(services.map((service) => service.image)).size).toBe(8);
+    expect(homepage).toContain("image={service.image}");
+    expect(homepage).toContain("imageAlt={service.imageAlt}");
+    expect(homepage).toContain("/images/clinic/rella-consultation.webp");
+    expect(homepage).toContain("/images/clinic/vacaville-treatment-room.jpg");
+    expect(homepage).not.toContain("/images/clinic/rella-front-desk-consult.jpg");
+    expect(JSON.stringify(services)).not.toMatch(/\/images\/service-[a-z-]+\.jpg/);
   });
 
   it("uses Rose and white for the requested homepage hierarchy", () => {
