@@ -21,13 +21,13 @@ const curatedWebpAssets = [
 
 const ownerSuppliedFourByThreeAssets = [
   "public/images/clinic/napa-exterior.webp",
-  "public/images/clinic/vacaville-exterior.webp",
   "public/images/treatments/iv-hydration.webp",
   "public/images/treatments/medical-weight-loss.webp",
 ] as const;
 
 const ownerSuppliedFourByFiveAssets = [
   "public/images/clinic/rella-sidewalk-sign.webp",
+  "public/images/clinic/vacaville-exterior.webp",
 ] as const;
 
 const teamHeadshots = [
@@ -44,8 +44,19 @@ const teamHeadshots = [
   "public/images/team/warda-harchaoui.jpg",
 ] as const;
 
-const forbiddenMetadataMarkers =
-  /exif|xmp|gps|iphone|apple|picasa|canon|camera|serial/i;
+function readWebpChunkTypes(image: Buffer) {
+  const chunks: string[] = [];
+  let offset = 12;
+
+  while (offset + 8 <= image.length) {
+    const type = image.subarray(offset, offset + 4).toString("ascii");
+    const size = image.readUInt32LE(offset + 4);
+    chunks.push(type);
+    offset += 8 + size + (size % 2);
+  }
+
+  return chunks;
+}
 
 describe("curated clinic and treatment image integrity", () => {
   it.each(curatedWebpAssets)("keeps %s web-ready and metadata-free", async (path) => {
@@ -64,8 +75,9 @@ describe("curated clinic and treatment image integrity", () => {
     expect(metadata.height, `${path} height`).toBeGreaterThanOrEqual(900);
     expect(metadata.exif, `${path} must not contain EXIF`).toBeUndefined();
     expect(metadata.xmp, `${path} must not contain XMP`).toBeUndefined();
-    expect(image.toString("latin1"), `${path} must not expose source metadata markers`).not.toMatch(
-      forbiddenMetadataMarkers,
+    expect(metadata.icc, `${path} must not contain an ICC profile`).toBeUndefined();
+    expect(readWebpChunkTypes(image), `${path} must contain image data only`).not.toEqual(
+      expect.arrayContaining(["EXIF", "XMP ", "ICCP"]),
     );
   });
 

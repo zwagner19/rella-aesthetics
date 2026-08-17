@@ -10,6 +10,8 @@ export const HOME_LOCATION_VISUALS = [
     address: "1541 3rd St",
     image: "/images/clinic/napa-exterior.webp",
     imageAlt: "The historic exterior of the Rella Aesthetics Napa clinic",
+    imagePosition: "object-center",
+    frameAspect: "aspect-square",
   },
   {
     slug: "vacaville",
@@ -17,6 +19,8 @@ export const HOME_LOCATION_VISUALS = [
     address: "542 Main St",
     image: "/images/clinic/vacaville-exterior.webp",
     imageAlt: "The pink entrance door at the Rella Aesthetics Vacaville clinic",
+    imagePosition: "object-[50%_54%]",
+    frameAspect: "aspect-[4/5]",
   },
 ] as const;
 
@@ -36,7 +40,9 @@ export function HomeLocationVisual({
 
   return (
     <div className="flex h-full min-h-0 flex-col bg-white text-rose md:min-h-[420px]">
-      <div className="relative aspect-[4/3] w-full flex-none overflow-hidden md:min-h-[520px] md:flex-1 md:aspect-auto">
+      <div
+        className={`relative w-full flex-none overflow-hidden md:min-h-[520px] md:flex-1 md:aspect-auto ${activeVisual.frameAspect}`}
+      >
         {activeVisual.image && activeVisual.imageAlt ? (
           <Image
             key={activeVisual.slug}
@@ -44,7 +50,8 @@ export function HomeLocationVisual({
             alt={activeVisual.imageAlt}
             fill
             preload
-            className="object-cover object-center"
+            quality={90}
+            className={`object-cover ${activeVisual.imagePosition}`}
             sizes="(min-width: 768px) 50vw, 100vw"
           />
         ) : null}

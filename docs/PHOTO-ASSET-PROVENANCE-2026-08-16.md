@@ -16,7 +16,7 @@ These files were selected from the owner-supplied website-revamp folder for the 
 | `public/images/clinic/rella-consultation.webp` | `IMG_1454.JPG` (`1CKDGKZHxF2ekEqzTeaHHTgH0jXEsGNfV`) | Rella provider consulting with a seated patient | General consultation and About sections |
 | `public/images/clinic/rella-team-storefront.webp` | `F8C700C7-B199-4A91-9857-6CD9D358790A.png` (`1oXrtX70s2gSCSRyQMJ2SsF_D4QiPg_TN`) | Rella team posed outside the Napa storefront | Team page |
 | `public/images/clinic/napa-exterior.webp` | Owner-supplied exterior PNG | Historic clinic exterior; the web crop excludes the sidewalk sign | Napa location view |
-| `public/images/clinic/vacaville-exterior.webp` | Owner-supplied `542` entrance PNG | Centered crop of the pink entrance door | Vacaville location view |
+| `public/images/clinic/vacaville-exterior.webp` | Owner-supplied `542` entrance PNG | Clear 4:5 crop showing the full pink entrance door and surrounding trim | Vacaville location view |
 | `public/images/clinic/rella-sidewalk-sign.webp` | Owner-supplied clinic PNG | Rella sidewalk sign outside the clinic; cropped for the editorial portrait slot | Homepage “Your questions belong in the room” section |
 | `public/images/treatments/iv-hydration.webp` | Owner-supplied Canon photo | Rella-branded IV hydration bag; crop excludes lot, expiry, camera, and recipe details | IV hydration service |
 | `public/images/treatments/medical-weight-loss.webp` | Owner-supplied `IMG_2361.CR3` | Gloved Rella team member holding three prepared syringes | Medical-weight-loss sections, without identifying the syringe contents |

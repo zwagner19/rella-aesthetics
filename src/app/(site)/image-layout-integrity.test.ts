@@ -25,9 +25,12 @@ const localServicePages = [
 
 describe("responsive image-layout integrity", () => {
   it("reserves stable, source-appropriate space for the primary homepage photos", () => {
-    expect(locationVisualSource).toContain("aspect-[4/3]");
+    expect(locationVisualSource).toContain('frameAspect: "aspect-square"');
+    expect(locationVisualSource).toContain('frameAspect: "aspect-[4/5]"');
     expect(locationVisualSource).toContain("md:aspect-auto");
     expect(locationVisualSource).toContain("preload");
+    expect(locationVisualSource).toContain("quality={90}");
+    expect(locationVisualSource).toContain('imagePosition: "object-[50%_54%]"');
 
     expect(homeSource).toMatch(
       /aspect-\[4\/5\][\s\S]*?rella-sidewalk-sign\.webp[\s\S]*?object-cover object-center/,

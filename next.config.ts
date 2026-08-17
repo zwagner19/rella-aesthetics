@@ -8,6 +8,7 @@ const nextConfig: NextConfig = {
   skipTrailingSlashRedirect: true,
   images: {
     formats: ["image/avif", "image/webp"],
+    qualities: [75, 90],
   },
 
 

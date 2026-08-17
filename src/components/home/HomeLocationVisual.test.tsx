@@ -25,10 +25,14 @@ describe("homepage location visual", () => {
     expect(napa?.imageAlt).toBe(
       "The historic exterior of the Rella Aesthetics Napa clinic",
     );
+    expect(napa?.imagePosition).toBe("object-center");
+    expect(napa?.frameAspect).toBe("aspect-square");
     expect(vacaville?.image).toBe("/images/clinic/vacaville-exterior.webp");
     expect(vacaville?.imageAlt).toBe(
       "The pink entrance door at the Rella Aesthetics Vacaville clinic",
     );
+    expect(vacaville?.imagePosition).toBe("object-[50%_54%]");
+    expect(vacaville?.frameAspect).toBe("aspect-[4/5]");
     for (const location of HOME_LOCATION_VISUALS) {
       expect(existsSync(join(process.cwd(), "public", location.image))).toBe(true);
     }
@@ -51,6 +55,9 @@ describe("homepage location visual", () => {
   });
 
   it("keeps the homepage visual flat and free of booking-system ownership", () => {
+    expect(source).toContain('frameAspect: "aspect-square"');
+    expect(source).toContain('frameAspect: "aspect-[4/5]"');
+    expect(source).toContain("quality={90}");
     expect(source).not.toMatch(/gradient|shadow-/i);
     expect(source).not.toMatch(
       /dashboard\.boulevard\.io|joinblvd\.com|book\.experiencerella\.com|rella-hq/i,
