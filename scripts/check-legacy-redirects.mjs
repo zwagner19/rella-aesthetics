@@ -4,8 +4,19 @@ const siteUrl = (process.env.SITE_URL ?? "http://localhost:3000").replace(/\/$/,
 const redirectFile = new URL("../legacy-redirects.json", import.meta.url);
 const redirects = JSON.parse(await readFile(redirectFile, "utf8"));
 const retiredSources = ["/events", "/upcoming-events"];
+const requiredSitemapRedirects = new Map([
+  ["/sitemap_index.xml", "/sitemap.xml"],
+  ["/wp-sitemap.xml", "/sitemap.xml"],
+]);
 
 const failures = [];
+
+for (const [source, destination] of requiredSitemapRedirects) {
+  const configuredRedirect = redirects.find((redirect) => redirect.source === source);
+  if (configuredRedirect?.destination !== destination) {
+    failures.push(`${source}: required sitemap migration redirect to ${destination} is missing`);
+  }
+}
 
 for (const { source, destination } of redirects) {
   const firstResponse = await fetch(`${siteUrl}${source}`, { redirect: "manual" });
