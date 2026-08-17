@@ -1,18 +1,37 @@
 # Microsoft Clarity launch runbook
 
-Status: technically prepared, intentionally inactive.
+Status: project created and privacy settings prepared; tracking intentionally inactive.
 
 Clarity is not a launch requirement and must not be enabled merely because the code exists. The
 site requires both `CLARITY_ENABLED=true` and a valid server-side `CLARITY_PROJECT_ID`; neither
-belongs in Preview. The loader also requires the exact public `experiencerella.com` host, explicit
+belongs in Preview. The project ID is configured in Vercel Production, but the enable flag is
+absent, so no Clarity code can load. The loader also requires the exact public
+`experiencerella.com` host, explicit
 visitor consent, and a reviewed low-sensitivity route.
+
+## Current project record
+
+- Owner account: `info@experiencerella.com` (`Rella Aesthetics`).
+- Project: `Rella Aesthetics — Public Website`.
+- Project ID: `y3oafpgl31`.
+- Website: `https://experiencerella.com`.
+- Industry: Health & Wellness.
+- General Clarity Terms and the Health & Wellness Additional Terms were accepted on 2026-08-17
+  after Zach explicitly authorized acceptance.
+- Masking mode: **Strict** (all text masked).
+- Project cookies: **Off** by default; explicit Consent V2 remains required.
+- Microsoft Ads, Google Ads, and Google Analytics integrations: not connected.
+- `CLARITY_PROJECT_ID` exists in Vercel **Production only**. `CLARITY_ENABLED` does not exist.
+- Still required before activation: internal-IP exclusions, final privacy approval, exact public
+  release, and the complete clean-browser network/cookie smoke below.
 
 ## Owner/account gate
 
-1. Zach accepts Microsoft Clarity's Terms of Use personally. Codex must not accept legal terms.
-2. Create one project for `https://experiencerella.com` under the chosen Rella-owned account.
-3. Do not connect Microsoft Ads, Google Analytics, or an advertising audience at launch.
-4. Keep the booking app, weight-loss domains, and contact/intake systems out of the project.
+1. **Complete:** Zach explicitly authorized acceptance of Microsoft's Clarity Terms and the
+   Health & Wellness Additional Terms; the project was created under the Rella-owned account.
+2. Keep Microsoft Ads, Google Ads, Google Analytics, and advertising audiences disconnected at
+   launch.
+3. Keep the booking app, weight-loss domains, and contact/intake systems out of the project.
 
 ## Required project settings before activation
 
@@ -26,13 +45,14 @@ visitor consent, and a reviewed low-sensitivity route.
 
 ## Vercel configuration
 
-Add the following to the canonical `rella-aesthetics` project in **Production only**:
+The following is already present in the canonical `rella-aesthetics` project in **Production
+only**:
 
-- `CLARITY_PROJECT_ID=<the public project ID>`
-- `CLARITY_ENABLED=true`
+- `CLARITY_PROJECT_ID=y3oafpgl31`
 
-Do not add either value to Preview or Development. Redeploy the already approved release commit;
-do not promote a build compiled before these values existed.
+Do not add it to Preview or Development. Add `CLARITY_ENABLED=true` to Production only after every
+remaining gate in this runbook passes. Then redeploy the already approved release commit; do not
+promote a build compiled before the enable flag existed.
 
 ## Mandatory smoke test
 

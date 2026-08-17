@@ -35,7 +35,13 @@ this hardening pass.
 
 ### Clarity preparation
 
-- The website-side Microsoft Clarity integration is prepared but deliberately inactive.
+- The Rella-owned Microsoft Clarity project is created but deliberately inactive.
+- Account: `info@experiencerella.com`; project `Rella Aesthetics — Public Website`; project ID
+  `y3oafpgl31`.
+- Zach explicitly authorized acceptance of the general and Health & Wellness Additional Terms.
+- Strict masking is selected, cookies are off by default, and Ads/Analytics integrations remain
+  disconnected.
+- `CLARITY_PROJECT_ID` is configured in Vercel Production only; `CLARITY_ENABLED` is absent.
 - It requires an explicit server-side enable flag, a valid project ID, the exact public host,
   a closed low-sensitivity page allowlist, and visitor consent.
 - Protected previews, contact, booking, treatment details, campaigns, and weight-loss routes are
@@ -91,13 +97,12 @@ When evidence is unavailable, omit the claim rather than copying a stale value.
 - PR #27 must be released and verified on both production booking domains before the website sends
   public traffic into the reviewed booking experience.
 
-## Clarity account gate
+## Clarity activation gate
 
-Both available Google logins reach Microsoft's first-time Terms of Use screen, and no existing
-Clarity project ID was found in code, Vercel, WordPress, GTM, or local records. Zach must personally
-accept Microsoft's terms and choose the Rella-owned account. Codex will not accept a legal agreement
-on the owner's behalf. Clarity stays off until that account step, strict masking, Consent Mode,
-internal-IP exclusions, privacy approval, and the production network test are complete.
+Account creation, Terms acceptance, Strict masking, cookie-off mode, and the Production-only
+project ID are complete. Clarity stays off until internal-IP exclusions, final privacy approval,
+the exact public release, and the production network/cookie test are complete. Only then may
+`CLARITY_ENABLED=true` be added and the approved release redeployed.
 
 ## Controlled release order
 
