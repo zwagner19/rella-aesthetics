@@ -178,13 +178,13 @@ export default function VacavilleChemicalPeelsPage() {
             </p>
           </div>
 
-          <div className="relative min-h-[390px] overflow-hidden md:min-h-[520px]">
+          <div className="relative aspect-square self-center overflow-hidden bg-rose-blush sm:aspect-[4/3]">
             <Image
               src="/images/service-peels.jpg"
-              alt="Chemical peel consultation at Rella Aesthetics in Vacaville"
+              alt="A provider applying a facial peel treatment with a brush"
               fill
-              priority
-              className="object-cover"
+              preload
+              className="object-cover object-center"
               sizes="(min-width: 1024px) 46vw, 92vw"
             />
             <div className="absolute inset-x-0 bottom-0 border-t border-white/30 bg-white/94 p-5 md:p-6">

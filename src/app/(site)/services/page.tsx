@@ -32,13 +32,13 @@ export default function ServicesPage() {
             </div>
           </div>
 
-          <div className="relative mb-20 aspect-[16/7] overflow-hidden bg-rose-blush">
+          <div className="relative mb-20 aspect-[3/2] overflow-hidden bg-rose-blush md:aspect-[16/7]">
             <Image
               src="/images/clinic/vacaville-treatment-room.jpg"
               alt="Treatment chairs inside Rella Aesthetics in Vacaville"
               fill
-              priority
-              className="object-cover"
+              preload
+              className="object-cover object-center"
               sizes="(min-width: 1200px) 1104px, 92vw"
             />
           </div>
@@ -58,12 +58,12 @@ export default function ServicesPage() {
                         href={`/services/${service.slug}`}
                         className="group flex flex-col overflow-hidden border border-rose bg-white transition-colors duration-150 hover:bg-rose focus-visible:bg-rose"
                       >
-                        <div className="relative aspect-[4/3] overflow-hidden bg-white">
+                        <div className="relative aspect-[4/5] overflow-hidden bg-rose-blush">
                           <Image
                             src={service.image}
                             alt={service.imageAlt}
                             fill
-                            className="object-cover"
+                            className="object-cover object-center"
                             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                           />
                         </div>

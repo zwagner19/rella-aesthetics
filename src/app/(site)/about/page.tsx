@@ -115,7 +115,7 @@ export default function AboutPage() {
                 src="/images/dr-zachary-wagner.jpg"
                 alt="Zachary Wagner, DO, founder and owner of Rella Aesthetics"
                 fill
-                priority
+                preload
                 className="object-cover object-top"
                 sizes="(min-width: 1024px) 500px, 90vw"
               />
@@ -137,12 +137,12 @@ export default function AboutPage() {
             <h2 className="text-3xl font-bold uppercase leading-tight tracking-[0.06em] text-rose md:text-5xl">
               The best plan starts with a real conversation.
             </h2>
-            <div className="relative mt-8 aspect-[4/3] overflow-hidden bg-rose-blush">
+            <div className="relative mt-8 aspect-[3/4] overflow-hidden bg-rose-blush">
               <Image
                 src="/images/clinic/rella-consultation.webp"
                 alt="A Rella Aesthetics provider speaking with a patient during a consultation"
                 fill
-                className="object-cover"
+                className="object-cover object-center"
                 sizes="(min-width: 1024px) 440px, 90vw"
               />
             </div>

@@ -66,6 +66,93 @@ li::marker {
   color: var(--color-rose);
 }
 
+/*
+ * Review-only dialog. Native <dialog> puts the mobile sheet in the top layer,
+ * so it cannot collide with the fixed conversion bar or shift page content.
+ */
+html:has(.rella-preview-dialog) {
+  scrollbar-gutter: stable;
+}
+
+.rella-preview-dialog {
+  inset: auto 0 0;
+  width: 100%;
+  max-width: none;
+  max-height: calc(100dvh - max(0.75rem, env(safe-area-inset-top)));
+  margin: 0;
+  padding: 0;
+  overflow: auto;
+  border: 0;
+  border-radius: 1.75rem 1.75rem 0 0;
+  background: transparent;
+  color: var(--color-ink);
+  box-shadow: 0 -1.25rem 4rem rgba(26, 26, 26, 0.2);
+  overscroll-behavior: contain;
+}
+
+.rella-preview-dialog::backdrop {
+  background: rgba(26, 26, 26, 0.52);
+  backdrop-filter: blur(3px);
+}
+
+@media (min-width: 768px) {
+  .rella-preview-dialog {
+    inset: 0;
+    width: min(92vw, 44rem);
+    max-height: min(82dvh, 46rem);
+    margin: auto;
+    border-radius: 2rem;
+    box-shadow: 0 2rem 6rem rgba(26, 26, 26, 0.24);
+  }
+}
+
+@keyframes rella-dialog-enter-mobile {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 1.25rem, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes rella-dialog-backdrop-enter {
+  from { background: rgba(26, 26, 26, 0); }
+  to { background: rgba(26, 26, 26, 0.52); }
+}
+
+@keyframes rella-section-enter {
+  from {
+    opacity: 0.15;
+    transform: translate3d(0, 1.25rem, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .rella-preview-dialog[open] {
+    animation: rella-dialog-enter-mobile 320ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  }
+
+  .rella-preview-dialog[open]::backdrop {
+    animation: rella-dialog-backdrop-enter 260ms ease-out both;
+  }
+}
+
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    main[data-preview-motion="true"] .rella-preview-reveal {
+      animation: rella-section-enter linear both;
+      animation-timeline: view();
+      animation-range: entry 5% cover 28%;
+    }
+  }
+}
+
 /* Keep the optional third-party launcher clear of mobile navigation and CTAs. */
 @media (max-width: 1279px) {
   chat-widget,

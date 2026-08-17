@@ -108,6 +108,7 @@ export const locations = {
       },
     ],
     mapUrl: "https://maps.google.com/?q=542+Main+St+Vacaville+CA+95688",
+    googleReviewUrl: "https://g.page/r/CRzs_DqKMyuWEBM/review",
   },
   napa: {
     name: "Napa",
@@ -125,6 +126,7 @@ export const locations = {
       },
     ],
     mapUrl: "https://maps.google.com/?q=1541+3rd+St+Napa+CA+94559",
+    googleReviewUrl: "https://g.page/r/CcUDgqqvRr8MEBM/review",
   },
 } as const;
 

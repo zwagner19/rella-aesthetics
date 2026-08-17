@@ -28,6 +28,8 @@ describe("legacy WordPress redirect inventory", () => {
     expect(map.has("/payment-plans")).toBe(false);
     expect(map.get("/before-after")).toBe("/gallery");
     expect(map.get("/results")).toBe("/gallery");
+    expect(map.get("/sitemap_index.xml")).toBe("/sitemap.xml");
+    expect(map.get("/wp-sitemap.xml")).toBe("/sitemap.xml");
     expect(map.has("/events")).toBe(false);
     expect(map.has("/upcoming-events")).toBe(false);
     expect(map.get("/blog/semaglutide-weight-loss-consultation-what-to-expect")).toBe(

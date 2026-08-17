@@ -15,12 +15,12 @@ export function ServiceCard({ href, title, description, image, imageAlt }: Servi
       href={href}
       className="group flex flex-col overflow-hidden border border-ink/10 bg-white transition-colors duration-150 hover:border-rose hover:bg-rose focus-visible:border-rose focus-visible:bg-rose"
     >
-      <div className="relative aspect-[4/3] overflow-hidden">
+      <div className="relative aspect-[4/5] overflow-hidden bg-rose-blush">
         <Image
           src={image}
           alt={imageAlt}
           fill
-          className="object-cover"
+          className="object-cover object-center"
           sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
         />
       </div>

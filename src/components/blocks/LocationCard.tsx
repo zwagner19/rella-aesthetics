@@ -8,9 +8,19 @@ interface LocationCardProps {
   zip: string;
   hours: string[];
   href: string;
+  googleReviewUrl: string;
 }
 
-export function LocationCard({ name, address, city, state, zip, hours, href }: LocationCardProps) {
+export function LocationCard({
+  name,
+  address,
+  city,
+  state,
+  zip,
+  hours,
+  href,
+  googleReviewUrl,
+}: LocationCardProps) {
   return (
     <div className="border border-ink/10 border-t-2 border-t-rose bg-white p-8">
       <h3 className="mb-5 text-xl font-bold uppercase tracking-[0.08em] text-rose md:text-2xl">
@@ -31,7 +41,19 @@ export function LocationCard({ name, address, city, state, zip, hours, href }: L
           </span>
         ))}
       </address>
-      <LinkArrow href={href}>{name} details</LinkArrow>
+      <div className="flex flex-col items-start gap-5 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between">
+        <LinkArrow href={href}>{name} details</LinkArrow>
+        <a
+          href={googleReviewUrl}
+          target="_blank"
+          rel="noreferrer"
+          className="inline-flex min-h-11 w-full items-center justify-center gap-2 border border-ink bg-white px-4 py-3 text-center text-[0.6875rem] font-bold uppercase tracking-[0.12em] text-ink transition-colors hover:bg-rose focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink sm:w-auto"
+        >
+          Leave a Google review for Rella {name}
+          <span aria-hidden="true">↗</span>
+          <span className="sr-only"> (opens in a new tab)</span>
+        </a>
+      </div>
     </div>
   );
 }

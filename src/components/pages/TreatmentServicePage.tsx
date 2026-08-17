@@ -112,13 +112,13 @@ export function TreatmentServicePage({ service }: TreatmentServicePageProps) {
             </div>
           </div>
 
-          <div className="relative min-h-[390px] w-full md:min-h-[520px]">
+          <div className="relative aspect-[4/5] w-full overflow-hidden bg-ink md:aspect-[4/3] lg:h-full lg:min-h-[520px] lg:aspect-auto">
               <Image
                 src={service.image}
                 alt={service.imageAlt}
                 fill
-                priority
-                className="object-cover"
+                preload
+                className="object-cover object-center"
                 sizes="(min-width: 1024px) 46vw, 92vw"
               />
               <div className="absolute inset-x-0 bottom-0 bg-ink/80 p-5 md:p-6">

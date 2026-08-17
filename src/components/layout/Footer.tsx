@@ -33,7 +33,7 @@ export function Footer({ weightLossExperience = false }: { weightLossExperience?
             <div className="mt-5 flex flex-wrap gap-3">
               <a
                 aria-label="Rella Aesthetics on Instagram, @experiencerella"
-                className="rounded-full border border-white bg-white px-4 py-2 text-xs font-bold uppercase tracking-[0.08em] text-ink transition-colors hover:bg-white/80"
+                className="inline-flex min-h-11 items-center rounded-full border border-white bg-white px-4 py-2 text-xs font-bold uppercase tracking-[0.08em] text-ink transition-colors hover:bg-white/80"
                 href="https://www.instagram.com/experiencerella/"
                 rel="noreferrer"
                 target="_blank"
@@ -42,7 +42,7 @@ export function Footer({ weightLossExperience = false }: { weightLossExperience?
               </a>
               <a
                 aria-label="Rella Aesthetics on Facebook"
-                className="rounded-full border border-white bg-white px-4 py-2 text-xs font-bold uppercase tracking-[0.08em] text-ink transition-colors hover:bg-white/80"
+                className="inline-flex min-h-11 items-center rounded-full border border-white bg-white px-4 py-2 text-xs font-bold uppercase tracking-[0.08em] text-ink transition-colors hover:bg-white/80"
                 href="https://www.facebook.com/rellaaesthetics/"
                 rel="noreferrer"
                 target="_blank"
@@ -57,13 +57,13 @@ export function Footer({ weightLossExperience = false }: { weightLossExperience?
             <p className="mb-5 text-[0.6875rem] font-bold uppercase tracking-[0.2em] text-ink">
               Services
             </p>
-            <ul className="space-y-3 text-ink">
-              <li><Link href={mainSiteHref("/services/botox")} className="text-sm transition-colors hover:text-ink/70">Botox &amp; Dysport</Link></li>
-              <li><Link href={mainSiteHref("/services/dermal-fillers")} className="text-sm transition-colors hover:text-ink/70">Dermal Fillers</Link></li>
-              <li><Link href={weightLossExperience ? "/" : "/services/weight-loss"} className="text-sm transition-colors hover:text-ink/70">Weight Loss</Link></li>
-              <li><Link href={mainSiteHref("/services/laser-treatments")} className="text-sm transition-colors hover:text-ink/70">Laser Treatments</Link></li>
-              <li><Link href={mainSiteHref("/services/iv-hydration")} className="text-sm transition-colors hover:text-ink/70">IV Hydration</Link></li>
-              <li><Link href={mainSiteHref("/services")} className="text-sm transition-colors hover:text-ink/70">All Services</Link></li>
+            <ul className="space-y-1 text-ink">
+              <li><Link href={mainSiteHref("/services/botox")} className="inline-flex min-h-11 items-center text-sm transition-colors hover:text-ink/70">Botox &amp; Dysport</Link></li>
+              <li><Link href={mainSiteHref("/services/dermal-fillers")} className="inline-flex min-h-11 items-center text-sm transition-colors hover:text-ink/70">Dermal Fillers</Link></li>
+              <li><Link href={weightLossExperience ? "/" : "/services/weight-loss"} className="inline-flex min-h-11 items-center text-sm transition-colors hover:text-ink/70">Weight Loss</Link></li>
+              <li><Link href={mainSiteHref("/services/laser-treatments")} className="inline-flex min-h-11 items-center text-sm transition-colors hover:text-ink/70">Laser Treatments</Link></li>
+              <li><Link href={mainSiteHref("/services/iv-hydration")} className="inline-flex min-h-11 items-center text-sm transition-colors hover:text-ink/70">IV Hydration</Link></li>
+              <li><Link href={mainSiteHref("/services")} className="inline-flex min-h-11 items-center text-sm transition-colors hover:text-ink/70">All Services</Link></li>
             </ul>
           </div>
 
@@ -72,14 +72,14 @@ export function Footer({ weightLossExperience = false }: { weightLossExperience?
             <p className="mb-5 text-[0.6875rem] font-bold uppercase tracking-[0.2em] text-ink">
               Company
             </p>
-            <ul className="space-y-3 text-ink">
-              <li><Link href={mainSiteHref("/about")} className="text-sm transition-colors hover:text-ink/70">About</Link></li>
-              <li><Link href={mainSiteHref("/team")} className="text-sm transition-colors hover:text-ink/70">Team</Link></li>
-              <li><Link href={mainSiteHref("/gallery")} className="text-sm transition-colors hover:text-ink/70">Results</Link></li>
-              <li><Link href={mainSiteHref("/blog")} className="text-sm transition-colors hover:text-ink/70">Education</Link></li>
-              <li><Link href={mainSiteHref("/membership")} className="text-sm transition-colors hover:text-ink/70">Memberships</Link></li>
-              <li><Link href={mainSiteHref("/private-parties")} className="text-sm transition-colors hover:text-ink/70">Private Parties</Link></li>
-              <li><Link href={mainSiteHref("/payment-plans")} className="text-sm transition-colors hover:text-ink/70">Payment Plans</Link></li>
+            <ul className="space-y-1 text-ink">
+              <li><Link href={mainSiteHref("/about")} className="inline-flex min-h-11 items-center text-sm transition-colors hover:text-ink/70">About</Link></li>
+              <li><Link href={mainSiteHref("/team")} className="inline-flex min-h-11 items-center text-sm transition-colors hover:text-ink/70">Team</Link></li>
+              <li><Link href={mainSiteHref("/gallery")} className="inline-flex min-h-11 items-center text-sm transition-colors hover:text-ink/70">Results</Link></li>
+              <li><Link href={mainSiteHref("/blog")} className="inline-flex min-h-11 items-center text-sm transition-colors hover:text-ink/70">Education</Link></li>
+              <li><Link href={mainSiteHref("/membership")} className="inline-flex min-h-11 items-center text-sm transition-colors hover:text-ink/70">Memberships</Link></li>
+              <li><Link href={mainSiteHref("/private-parties")} className="inline-flex min-h-11 items-center text-sm transition-colors hover:text-ink/70">Private Parties</Link></li>
+              <li><Link href={mainSiteHref("/payment-plans")} className="inline-flex min-h-11 items-center text-sm transition-colors hover:text-ink/70">Payment Plans</Link></li>
             </ul>
           </div>
 
@@ -88,18 +88,18 @@ export function Footer({ weightLossExperience = false }: { weightLossExperience?
             <p className="mb-5 text-[0.6875rem] font-bold uppercase tracking-[0.2em] text-ink">
               Contact
             </p>
-            <ul className="space-y-3 text-ink">
-              <li><Link href={mainSiteHref("/contact")} className="text-sm transition-colors hover:text-ink/70">Get in Touch</Link></li>
+            <ul className="space-y-1 text-ink">
+              <li><Link href={mainSiteHref("/contact")} className="inline-flex min-h-11 items-center text-sm transition-colors hover:text-ink/70">Get in Touch</Link></li>
               <li>
                 <Link
                   href={booking.href}
                   data-cta={booking.cta}
-                  className="text-sm transition-colors hover:text-ink/70"
+                  className="inline-flex min-h-11 items-center text-sm transition-colors hover:text-ink/70"
                 >
                   {booking.label}
                 </Link>
               </li>
-              <li><a href="tel:+17073582928" className="text-sm transition-colors hover:text-ink/70">707.358.2928</a></li>
+              <li><a href="tel:+17073582928" className="inline-flex min-h-11 items-center text-sm transition-colors hover:text-ink/70">707.358.2928</a></li>
             </ul>
           </div>
         </div>
@@ -111,9 +111,9 @@ export function Footer({ weightLossExperience = false }: { weightLossExperience?
         <div className="flex flex-col gap-4 border-t border-rose/30 pt-6 text-[0.75rem] uppercase tracking-[0.08em] text-ink md:flex-row md:items-center md:justify-between">
           <p>&copy; {new Date().getFullYear()} Rella Aesthetics. All rights reserved.</p>
           <div className="flex flex-wrap gap-x-4 gap-y-2">
-            <Link href={mainSiteHref("/privacy-policy")} className="transition-colors hover:text-ink/70">Privacy Policy</Link>
-            <Link href={mainSiteHref("/cancellation-policy")} className="transition-colors hover:text-ink/70">Cancellation Policy</Link>
-            <Link href={mainSiteHref("/terms")} className="transition-colors hover:text-ink/70">Terms &amp; Conditions</Link>
+            <Link href={mainSiteHref("/privacy-policy")} className="inline-flex min-h-11 items-center transition-colors hover:text-ink/70">Privacy Policy</Link>
+            <Link href={mainSiteHref("/cancellation-policy")} className="inline-flex min-h-11 items-center transition-colors hover:text-ink/70">Cancellation Policy</Link>
+            <Link href={mainSiteHref("/terms")} className="inline-flex min-h-11 items-center transition-colors hover:text-ink/70">Terms &amp; Conditions</Link>
           </div>
         </div>
       </div>

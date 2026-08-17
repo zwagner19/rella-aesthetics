@@ -35,16 +35,16 @@ export function HomeLocationVisual({
     HOME_LOCATION_VISUALS[0];
 
   return (
-    <div className="flex h-full min-h-[420px] flex-col bg-white text-rose">
-      <div className="relative min-h-[340px] flex-1 md:min-h-[520px]">
+    <div className="flex h-full min-h-0 flex-col bg-white text-rose md:min-h-[420px]">
+      <div className="relative aspect-[4/3] w-full flex-none overflow-hidden md:min-h-[520px] md:flex-1 md:aspect-auto">
         {activeVisual.image && activeVisual.imageAlt ? (
           <Image
             key={activeVisual.slug}
             src={activeVisual.image}
             alt={activeVisual.imageAlt}
             fill
-            priority
-            className="object-cover"
+            preload
+            className="object-cover object-center"
             sizes="(min-width: 768px) 50vw, 100vw"
           />
         ) : null}

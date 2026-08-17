@@ -20,6 +20,8 @@
   { "source": "/terms-and-conditions", "destination": "/terms" },
   { "source": "/thank-you", "destination": "/contact" },
   { "source": "/wpbc-booking-received", "destination": "/book" },
+  { "source": "/sitemap_index.xml", "destination": "/sitemap.xml" },
+  { "source": "/wp-sitemap.xml", "destination": "/sitemap.xml" },
   { "source": "/blog/semaglutide-weight-loss-consultation-what-to-expect", "destination": "/services/weight-loss" },
   { "source": "/blog/botox-vs-dysport-which-is-right-for-you", "destination": "/services/botox" },
   { "source": "/blog/revolutionize-your-skin-microneedling-laser-for-a-radiant-glow", "destination": "/services/microneedling" },

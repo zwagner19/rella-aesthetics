@@ -35,14 +35,14 @@ describe("designer homepage color and image checklist", () => {
     expect(homepage).toContain(
       "A Rella Aesthetics sidewalk sign welcoming patients outside the clinic",
     );
-    expect(homepage).toContain('className="object-cover object-[60%_65%]"');
+    expect(homepage).toContain('className="object-cover object-center"');
     expect(homepage).not.toContain("/images/clinic/rella-front-desk-consult.jpg");
     expect(JSON.stringify(services)).not.toMatch(/\/images\/service-[a-z-]+\.jpg/);
   });
 
   it("uses Rose and white for the requested homepage hierarchy", () => {
     expect(homepage).toMatch(/<h1 className="[^"]*text-rose[^"]*">\s*Ageless Beauty/);
-    expect(homepage).toContain('className="bg-rose py-24 text-white');
+    expect(homepage).toContain('className="rella-preview-reveal bg-rose py-24 text-white');
     expect(homepage).toContain('variant="light" className="rounded-full"');
     expect(homepage).toContain('bg-rose py-20 text-center text-white');
     expect(homepage).not.toContain("elevated care —");

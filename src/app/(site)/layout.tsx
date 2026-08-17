@@ -7,6 +7,8 @@ import { GoogleAnalytics } from "@/components/integrations/GoogleAnalytics";
 import { MetaPixel } from "@/components/integrations/MetaPixel";
 import { ConversionTracker } from "@/components/integrations/ConversionTracker";
 import { MobileConversionBar } from "@/components/layout/MobileConversionBar";
+import { PreviewClinicChooser } from "@/components/preview/PreviewClinicChooser";
+import { isPreviewExperienceHost } from "@/lib/preview-experience";
 import { isWeightLossHost } from "@/lib/site-hosts";
 
 /**
@@ -19,7 +21,10 @@ import { isWeightLossHost } from "@/lib/site-hosts";
  * behaviour; route groups do not appear in the path.
  */
 export default async function SiteLayout({ children }: Readonly<{ children: React.ReactNode }>) {
-  const weightLossExperience = isWeightLossHost((await headers()).get("host"));
+  const host = (await headers()).get("host");
+  const weightLossExperience = isWeightLossHost(host);
+  const previewExperience =
+    !weightLossExperience && isPreviewExperienceHost(host);
 
   return (
     <>
@@ -30,12 +35,17 @@ export default async function SiteLayout({ children }: Readonly<{ children: Reac
       <ConversionTracker />
       <SkipNav />
       <Header weightLossExperience={weightLossExperience} />
-      <main id="main" className="flex-1 pb-20 xl:pb-0">
+      <main
+        id="main"
+        className="flex-1 pb-20 xl:pb-0"
+        data-preview-motion={previewExperience ? "true" : undefined}
+      >
         {children}
       </main>
       <Footer weightLossExperience={weightLossExperience} />
       <GhlChatWidget />
       <MobileConversionBar weightLossExperience={weightLossExperience} />
+      {previewExperience ? <PreviewClinicChooser /> : null}
     </>
   );
 }

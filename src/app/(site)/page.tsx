@@ -77,7 +77,7 @@ function HomePageContent({ isWeightLoss }: { isWeightLoss: boolean }) {
       />
 
       {/* Services Grid */}
-      <section className="border-y border-rose-light/60 bg-white py-24 md:py-32">
+      <section className="rella-preview-reveal border-y border-rose-light/60 bg-white py-24 md:py-32">
         <div className="mx-auto max-w-[1200px] px-6 md:px-8 lg:px-12">
           <SectionHeader
             eyebrow="Treatments"
@@ -100,14 +100,14 @@ function HomePageContent({ isWeightLoss }: { isWeightLoss: boolean }) {
       </section>
 
       {/* Feel Comfortable */}
-      <section className="bg-white py-24 md:py-32">
+      <section className="rella-preview-reveal bg-white py-24 md:py-32">
         <div className="mx-auto grid max-w-[1200px] items-center gap-12 px-6 md:px-8 lg:grid-cols-[0.95fr_1.05fr] lg:gap-20 lg:px-12">
-          <div className="relative min-h-[420px] overflow-hidden md:min-h-[580px]">
+          <div className="relative aspect-[4/5] overflow-hidden bg-rose-blush">
             <Image
               src="/images/clinic/rella-sidewalk-sign.webp"
               alt="A Rella Aesthetics sidewalk sign welcoming patients outside the clinic"
               fill
-              className="object-cover object-[60%_65%]"
+              className="object-cover object-center"
               sizes="(min-width: 1024px) 46vw, 100vw"
             />
           </div>
@@ -146,14 +146,14 @@ function HomePageContent({ isWeightLoss }: { isWeightLoss: boolean }) {
       </section>
 
       {/* Medical weight-loss feature */}
-      <section className="bg-rose py-24 text-white md:py-32">
+      <section className="rella-preview-reveal bg-rose py-24 text-white md:py-32">
         <div className="mx-auto grid max-w-[1200px] items-center gap-12 px-6 md:px-8 lg:grid-cols-2 lg:gap-20 lg:px-12">
-          <div className="relative min-h-[380px] overflow-hidden md:min-h-[560px]">
+          <div className="relative aspect-[4/3] overflow-hidden bg-white/20">
             <Image
               src="/images/treatments/medical-weight-loss.webp"
               alt="A gloved Rella team member holding three prepared syringes in the clinic"
               fill
-              className="object-cover"
+              className="object-cover object-center"
               sizes="(min-width: 1024px) 50vw, 100vw"
             />
           </div>
@@ -188,7 +188,7 @@ function HomePageContent({ isWeightLoss }: { isWeightLoss: boolean }) {
       </section>
 
       {/* We Get It */}
-      <section className="bg-rose py-24 md:py-32">
+      <section className="rella-preview-reveal bg-rose py-24 md:py-32">
         <div className="mx-auto max-w-[1200px] px-6 md:px-8 lg:px-12">
           <div className="mb-12 grid gap-8 lg:grid-cols-[0.75fr_1.25fr] lg:items-end lg:gap-20">
             <div>
@@ -226,7 +226,7 @@ function HomePageContent({ isWeightLoss }: { isWeightLoss: boolean }) {
       </div>
 
       {/* Locations */}
-      <section className="py-24 md:py-32">
+      <section className="rella-preview-reveal py-24 md:py-32">
         <div className="mx-auto max-w-[1200px] px-6 md:px-8 lg:px-12">
           <SectionHeader
             eyebrow="Two Locations"
@@ -242,6 +242,7 @@ function HomePageContent({ isWeightLoss }: { isWeightLoss: boolean }) {
               zip={locations.vacaville.zip}
               hours={[...locations.vacaville.hours]}
               href="/locations/vacaville"
+              googleReviewUrl={locations.vacaville.googleReviewUrl}
             />
             <LocationCard
               name={locations.napa.name}
@@ -251,13 +252,14 @@ function HomePageContent({ isWeightLoss }: { isWeightLoss: boolean }) {
               zip={locations.napa.zip}
               hours={[...locations.napa.hours]}
               href="/locations/napa"
+              googleReviewUrl={locations.napa.googleReviewUrl}
             />
           </div>
         </div>
       </section>
 
       {/* Final CTA */}
-      <section className="bg-rose py-20 text-center text-white md:py-24">
+      <section className="rella-preview-reveal bg-rose py-20 text-center text-white md:py-24">
         <div className="mx-auto max-w-[600px] px-6">
           <h2 className="mb-4 text-3xl font-bold uppercase tracking-[0.08em] md:text-4xl">
             Ready to Begin?

@@ -122,7 +122,7 @@ npm run check:booking-links
 
 Prepared checkpoint expectation:
 
-- 29 moved legacy routes, 2 retired routes, and 2 preserved records;
+- 31 moved legacy routes, including both former WordPress sitemap endpoints, 2 retired routes, and 2 preserved records;
 - 38 sitemap pages; record the exact internal-destination count from the candidate build;
 - zero orphaned indexed pages and maximum homepage crawl depth no greater than three;
 - both public host contexts inspected on the exact local build, plus the actual

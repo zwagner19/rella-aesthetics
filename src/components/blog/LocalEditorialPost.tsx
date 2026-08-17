@@ -167,13 +167,13 @@ export function LocalEditorialPost({
 
         <div className="mx-auto max-w-[1100px] px-6 md:px-8 lg:px-12">
           <div className="relative -mt-7 overflow-hidden border border-ink/12 bg-white">
-            <div className="relative aspect-[2/1] max-h-[470px] min-h-[240px]">
+            <div className="relative aspect-[1731/909] max-h-[470px] bg-white">
               <Image
                 src={post.coverImage}
                 alt={post.coverAlt}
                 fill
-                priority
-                className="object-cover"
+                preload
+                className="object-contain"
                 sizes="(max-width: 1100px) 100vw, 1100px"
               />
             </div>

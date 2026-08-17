@@ -92,6 +92,7 @@ export default async function ContactPage({
               zip={locations.vacaville.zip}
               hours={[...locations.vacaville.hours]}
               href="/locations/vacaville"
+              googleReviewUrl={locations.vacaville.googleReviewUrl}
             />
             <LocationCard
               name={locations.napa.name}
@@ -101,6 +102,7 @@ export default async function ContactPage({
               zip={locations.napa.zip}
               hours={[...locations.napa.hours]}
               href="/locations/napa"
+              googleReviewUrl={locations.napa.googleReviewUrl}
             />
           </div>
         </div>

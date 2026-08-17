@@ -194,12 +194,12 @@ export function WeightLossServicePage() {
             </p>
           </div>
 
-          <div className="relative min-h-[390px] w-full md:min-h-[520px]">
+          <div className="relative aspect-[4/3] w-full overflow-hidden bg-ink lg:h-full lg:min-h-[520px] lg:aspect-auto">
               <Image
                 src={weightLossService.image}
                 alt={weightLossService.imageAlt}
                 fill
-                priority
+                preload
                 className="object-cover object-center"
                 sizes="(min-width: 1024px) 46vw, 92vw"
               />
