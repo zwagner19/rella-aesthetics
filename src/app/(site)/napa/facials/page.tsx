@@ -106,7 +106,7 @@ const faqs = [
   {
     question: "Where is Rella Aesthetics in Napa?",
     answer:
-      "Rella Aesthetics is at 1541 3rd St in downtown Napa, CA 94559. Current published clinic hours are Tuesday through Saturday, 9am–5pm.",
+      "Rella Aesthetics is at 1541 3rd St in downtown Napa, CA 94559. Current published clinic hours are Thursday through Saturday, 9am–5pm.",
   },
 ] as const;
 
@@ -196,7 +196,7 @@ export default function NapaFacialsPage() {
                 Rella Aesthetics — Napa
               </p>
               <p className="text-lg font-medium leading-snug text-ink">
-                1541 3rd St · Tuesday–Saturday, 9am–5pm
+                1541 3rd St · Thursday–Saturday, 9am–5pm
               </p>
             </div>
           </div>

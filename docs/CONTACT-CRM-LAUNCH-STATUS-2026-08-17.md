@@ -2,13 +2,12 @@
 
 ## Decision
 
-**Blocked for public launch.** The form implementation fails closed correctly,
-but no Rella Aesthetics Vercel environment currently has the HighLevel delivery
-configuration, and no CRM-accepted synthetic lead has been verified on the
-release preview.
+**Preview acceptance passed; Production promotion remains a launch gate.** The
+protected Preview is configured for the intended Rella HighLevel sub-account and
+one labeled nonpatient lead completed the acceptance and cleanup sequence.
+Production remains intentionally unconfigured and untouched.
 
-This audit made no CRM record, environment-variable, production, DNS, merge, or
-deployment change. No credential value was read, copied, printed, or committed.
+No credential value or custom-field ID is printed or committed in this record.
 
 ## Verified evidence
 
@@ -16,17 +15,14 @@ deployment change. No credential value was read, copied, printed, or committed.
 - Production currently has `NEXT_PUBLIC_GA_MEASUREMENT_ID` and
   `NEXT_PUBLIC_GTM_ID`; it has none of the five `GHL_*` variables required by
   the contact form.
-- Preview currently has the branch-scoped booking origins and
-  `NEXT_PUBLIC_GA_MEASUREMENT_ID`; it has none of the five required `GHL_*`
-  variables.
+- Preview has the branch-scoped booking origins, `NEXT_PUBLIC_GA_MEASUREMENT_ID`,
+  and all five required server-side `GHL_*` variables.
 - Development currently has no hosted environment variables.
 - The separate `rella-hq` Vercel project has sensitive `GHL_PIT_TOKEN` and
   `GHL_LOCATION_ID` entries in Preview and Production. Sensitive Vercel values
   cannot be recovered through the CLI, and their presence in another project
   does not prove the correct location, `contacts.write` scope, or suitability
   for a public website form. They were not copied.
-- The only local HighLevel credential file found contains empty quoted
-  placeholders, not usable credentials.
 - `POST /api/leads` requires `GHL_API_KEY`, `GHL_LOCATION_ID`, and
   `GHL_CUSTOM_FIELD_MESSAGE_ID`, and returns a non-success response when any
   required delivery destination is absent.
@@ -36,15 +32,26 @@ deployment change. No credential value was read, copied, printed, or committed.
   `src/app/api/leads/route.test.ts` and
   `src/app/(site)/contact/ContactForm.test.tsx`.
 
-## Exact configuration still required
+## Preview acceptance evidence
 
-In the intended Rella HighLevel sub-account, an owner with HighLevel admin
-access must provide or mint a **sub-account Private Integration Token** with the
-minimum `contacts.write` scope. HighLevel documents that scope for
-`POST /contacts/upsert`.
+- Preview deployment: `dpl_9RBoAAq1BMzaJo5vw5uc699gNJ3y`.
+- Test submitted through the protected Preview `/contact` route on August 17,
+  2026 at approximately 10:30am PDT.
+- It used a clearly labeled nonpatient test identity and message, `Facials` as
+  the service interest, and `Napa` as the clinic preference.
+- HighLevel showed source `Rella Website — Contact Form`.
+- The dedicated message, service-interest, and clinic-preference fields were
+  populated correctly.
+- Tags were `website-lead`, `interest-facials`, and `location-napa`.
+- No opportunity or outbound conversation was created.
+- The synthetic contact was deleted after verification; HighLevel indicated it
+  remains recoverable for 60 days.
 
-The owner must also confirm the sub-account/location ID and the IDs of these
-contact fields:
+## Configured Preview contract
+
+The intended Rella HighLevel sub-account now has a Private Integration Token
+with the required contact-write access, its location ID, and these dedicated
+Contact fields:
 
 1. `Website Inquiry Message` — multiline or large-text field; required.
 2. `Website Service Interest` — text or approved single-select field; required
@@ -53,7 +60,8 @@ contact fields:
    accepts `Napa`, `Vacaville`, and `No preference`; required unless the owner
    explicitly accepts tag-only routing.
 
-Add the values to **Preview only** first, as sensitive server-side values:
+The corresponding values are stored in **Preview only** as sensitive
+server-side values:
 
 - `GHL_API_KEY`
 - `GHL_LOCATION_ID`
@@ -61,17 +69,16 @@ Add the values to **Preview only** first, as sensitive server-side values:
 - `GHL_CUSTOM_FIELD_SERVICE_ID`
 - `GHL_CUSTOM_FIELD_LOCATION_ID`
 
-Do not prefix any of them with `NEXT_PUBLIC_`. Do not reuse the separate
-`rella-hq` token merely because an entry with a similar purpose exists.
+None is prefixed with `NEXT_PUBLIC_`. Their secret values and field IDs must not
+be copied into source control or release notes.
 
-## Acceptance and cleanup sequence
+## Remaining Production sequence
 
-1. Redeploy the exact approved website commit after Preview receives the five
-   values.
-2. Use a unique nonpatient identity such as
-   `Rella Preview Test 20260817-<time>` and a dedicated test email/phone.
+1. Promote the same five verified values to Production when creating the exact
+   approved production candidate.
+2. Use a new unique nonpatient identity and dedicated test email/phone.
 3. Submit one `/contact` inquiry with a nonmedical test message, service, and
-   clinic preference.
+   clinic preference after the public cutover.
 4. Require browser success only after HighLevel accepts the request.
 5. In the intended HighLevel sub-account, verify exactly one contact, source
    `Rella Website — Contact Form`, intact message, service/clinic fields, and
@@ -79,12 +86,8 @@ Do not prefix any of them with `NEXT_PUBLIC_`. Do not reuse the separate
 6. Verify exactly one lead conversion and no form values in analytics.
 7. Delete the synthetic contact or retain it only under an owner-approved test
    convention, then record the evidence with test values redacted.
-8. Only after that pass, enter the verified values in Production and repeat one
-   immediate post-cutover smoke test.
-
-The current credentials are not a dedicated test credential and no verified
-cleanup path was available, so this audit deliberately did not submit a live
-synthetic lead.
+8. If contact delivery, fields, tags, or analytics privacy fail, restore the
+   previous public origin and investigate before accepting real inquiries.
 
 ## Authoritative API references
 
@@ -93,4 +96,3 @@ synthetic lead.
 - HighLevel contact custom fields (`locations/customFields.readonly` for
   read-only discovery):
   https://marketplace.gohighlevel.com/docs/ghl/locations/get-custom-fields/
-

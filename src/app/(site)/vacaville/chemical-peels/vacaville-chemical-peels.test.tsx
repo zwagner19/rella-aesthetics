@@ -54,7 +54,9 @@ describe("Vacaville chemical-peels local-acquisition page", () => {
       "Universal Peel",
       "current total before you confirm treatment",
       "542 Main St",
-      "Wednesday–Saturday, 9am–5pm",
+      "Tuesday–Friday, 9am–5pm",
+      "Saturday, 9am–1pm",
+      "Sunday–Monday: Closed",
     ]) {
       expect(text).toContain(fact);
     }

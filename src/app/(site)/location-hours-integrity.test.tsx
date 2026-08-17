@@ -19,16 +19,18 @@ function visibleText(html: string) {
 }
 
 describe("binding two-clinic hours", () => {
-  it("uses the approved July 15 public schedules as the data source", () => {
+  it("uses the approved Google Business Profile schedules as the data source", () => {
     expect(locations.napa.hours).toEqual([
-      "Tuesday–Saturday: 9am–5pm",
-      "Sunday–Monday: Closed",
+      "Thursday–Saturday: 9am–5pm",
+      "Sunday–Wednesday: Closed",
     ]);
     expect(locations.vacaville.hours).toEqual([
-      "Wednesday–Saturday: 9am–5pm",
-      "Sunday–Tuesday: Closed",
+      "Tuesday–Friday: 9am–5pm",
+      "Saturday: 9am–1pm",
+      "Sunday–Monday: Closed",
     ]);
-    expect(NAPA.hoursCopy).toBe("Open Tuesday – Saturday · 9am – 5pm");
+    expect(NAPA.hoursCopy).toBe("Open Thursday – Saturday · 9am – 5pm");
+    expect(NAPA.hoursCopy).not.toContain("Tuesday – Saturday");
   });
 
   it("renders the correct schedule on both location pages and Contact", async () => {
@@ -36,16 +38,22 @@ describe("binding two-clinic hours", () => {
     const vacaville = visibleText(renderToStaticMarkup(<VacavillePage />));
     const contact = visibleText(renderToStaticMarkup(await ContactPage({})));
 
-    expect(napa).toContain("Tuesday–Saturday: 9am–5pm");
-    expect(napa).toContain("Sunday–Monday: Closed");
-    expect(vacaville).toContain("Wednesday–Saturday: 9am–5pm");
-    expect(vacaville).toContain("Sunday–Tuesday: Closed");
-    expect(contact).toContain("Vacaville: Wednesday–Saturday: 9am–5pm");
-    expect(contact).toContain("Napa: Tuesday–Saturday: 9am–5pm");
+    expect(napa).toContain("Thursday–Saturday: 9am–5pm");
+    expect(napa).toContain("Sunday–Wednesday: Closed");
+    expect(vacaville).toContain("Tuesday–Friday: 9am–5pm");
+    expect(vacaville).toContain("Saturday: 9am–1pm");
+    expect(vacaville).toContain("Sunday–Monday: Closed");
+    expect(contact).toContain(
+      "Vacaville: Tuesday–Friday: 9am–5pm · Saturday: 9am–1pm · Sunday–Monday: Closed",
+    );
+    expect(contact).toContain(
+      "Napa: Thursday–Saturday: 9am–5pm · Sunday–Wednesday: Closed",
+    );
 
     for (const text of [napa, vacaville, contact]) {
       expect(text).not.toContain("Monday–Friday: 9am–5pm");
-      expect(text).not.toContain("Saturday: 9am–1pm");
+      expect(text).not.toContain("Tuesday–Saturday: 9am–5pm");
+      expect(text).not.toContain("Wednesday–Saturday: 9am–5pm");
     }
   });
 
@@ -56,7 +64,7 @@ describe("binding two-clinic hours", () => {
     expect(napa.openingHoursSpecification).toEqual([
       {
         "@type": "OpeningHoursSpecification",
-        dayOfWeek: ["Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
+        dayOfWeek: ["Thursday", "Friday", "Saturday"],
         opens: "09:00",
         closes: "17:00",
       },
@@ -64,9 +72,15 @@ describe("binding two-clinic hours", () => {
     expect(vacaville.openingHoursSpecification).toEqual([
       {
         "@type": "OpeningHoursSpecification",
-        dayOfWeek: ["Wednesday", "Thursday", "Friday", "Saturday"],
+        dayOfWeek: ["Tuesday", "Wednesday", "Thursday", "Friday"],
         opens: "09:00",
         closes: "17:00",
+      },
+      {
+        "@type": "OpeningHoursSpecification",
+        dayOfWeek: ["Saturday"],
+        opens: "09:00",
+        closes: "13:00",
       },
     ]);
 
@@ -87,10 +101,12 @@ describe("binding two-clinic hours", () => {
 
   it("keeps the local pricing article on the same Napa schedule", () => {
     const post = getLocalEditorialPost("botox-cost-napa");
-    expect(post?.keyFacts).toContain("Clinic hours: Tuesday–Saturday, 9am–5pm");
+    expect(post?.keyFacts).toContain("Clinic hours: Thursday–Saturday, 9am–5pm");
     expect(JSON.stringify(post?.sections)).toContain(
-      "Current clinic hours are Tuesday through Saturday, 9am to 5pm",
+      "Current clinic hours are Thursday through Saturday, 9am to 5pm",
     );
+    expect(JSON.stringify(post)).not.toContain("Tuesday through Saturday");
+    expect(JSON.stringify(post)).not.toContain("Tuesday–Saturday");
     expect(JSON.stringify(post)).not.toContain("Wednesday through Saturday");
   });
 });

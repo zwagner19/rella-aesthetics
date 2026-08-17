@@ -3,16 +3,17 @@
 ## Decision
 
 **Not approved for public cutover yet.** The technical website and booking candidates are healthy,
-but customer lead delivery, binding business facts, legal approval, and recorded human sign-off
-remain open. No production site, DNS, merge, appointment, payment, or ad setting was changed in
-this hardening pass.
+and Preview contact delivery plus clinic-hours alignment are now verified. Production CRM
+promotion, the remaining binding business facts, legal approval, and recorded human sign-off remain
+open. No production site, DNS, merge, appointment, payment, or ad setting was changed in this
+hardening pass.
 
 ## Green evidence
 
 ### Website PR #14
 
 - Draft PR #14 is mergeable and the protected Vercel builds are green.
-- Full current suite: 57 files / 538 tests, ESLint, TypeScript, and Next 16 webpack build pass.
+- Full current suite: 57 files / 539 tests, ESLint, TypeScript, and Next 16 production build pass.
 - Internal crawl: 38 sitemap pages, 58 destinations, zero orphans, maximum homepage depth two.
 - SEO gate: 38 pages, 19 social images, and 52 structured-data blocks pass.
 - Migration gate: 31 permanent WordPress mappings, two intentional `410 Gone` paths, and two
@@ -53,26 +54,29 @@ this hardening pass.
 
 ## Hard blockers
 
-### 1. Contact form delivery
+### 1. Contact form production delivery
 
-The `rella-aesthetics` Vercel project has no HighLevel variables in Preview, Production, or
-Development. The form fails safely, but accepted inquiries cannot reach the CRM.
+The `rella-aesthetics` Preview environment now has the five required HighLevel variables. One
+clearly labeled nonpatient lead was accepted by the intended Rella sub-account, its source, three
+custom fields, and tags were verified, and the test contact was deleted afterward. Production has
+not received those values and remains intentionally untouched.
 
-Required owner input:
-
-- Rella sub-account HighLevel Private Integration Token with `contacts.write`.
-- Correct location/sub-account ID.
-- Message, service-interest, and clinic-preference contact custom-field IDs.
-
-Configure Preview first, submit one clearly labeled synthetic lead, confirm field placement and
-routing, delete the lead, then promote the verified values to Production. Exact instructions are
-in `docs/CONTACT-CRM-LAUNCH-STATUS-2026-08-17.md`.
+Promote the same verified five server-side values to Production only when creating the immutable
+production candidate, then repeat one labeled post-cutover smoke test and clean it up. Exact evidence
+and the remaining procedure are in `docs/CONTACT-CRM-LAUNCH-STATUS-2026-08-17.md`.
 
 ### 2. Owner facts and clinical scope
 
-Zach must approve one binding source for:
+The following location facts were approved from the live Google Business Profile listings on
+August 17, 2026 and are now aligned in visible copy, KML, and structured data:
 
-- Clinic hours and Google Business Profile alignment. Repository hours conflict with the live site.
+- Napa: 1541 3rd St, Napa, CA 94559; Thursday–Saturday 9am–5pm; Sunday–Wednesday
+  closed; `(707) 358-2928`.
+- Vacaville: 542 Main St, Vacaville, CA 95688; Tuesday–Friday 9am–5pm; Saturday
+  9am–1pm; Sunday–Monday closed; `(707) 358-2928`.
+
+Zach must still approve one binding source for:
+
 - Botox/Dysport, filler, HydraFacial, laser, MiraDry, deposit, and membership pricing/terms.
 - Free consultation and complimentary touch-up promises.
 - Weight-loss eligibility, medication/compounding, labs, follow-up, and cost wording.
@@ -107,19 +111,18 @@ the exact public release, and the production network/cookie test are complete. O
 ## Controlled release order
 
 1. Close the owner facts/legal checklist and record approval against immutable commits.
-2. Configure Preview-only HighLevel credentials; pass and clean up one labeled lead test.
-3. Approve and release booking PR #27; smoke both booking domains and both weight-loss routes.
-4. Freeze PR #14, rerun the full website checks, and create the production candidate with exact
-   Production environment values.
-5. Capture the current Cloudflare/WP Engine configuration and Vercel deployment as rollback targets.
-6. Attach and verify apex/`www` in the canonical Vercel project without moving traffic.
-7. Run 390px mobile and desktop acceptance, links, redirects, 410s, sitemap/robots/canonicals,
+2. Approve and release booking PR #27; smoke both booking domains and both weight-loss routes.
+3. Freeze PR #14, rerun the full website checks, and create the production candidate with the
+   verified HighLevel values promoted to Production.
+4. Capture the current Cloudflare/WP Engine configuration and Vercel deployment as rollback targets.
+5. Attach and verify apex/`www` in the canonical Vercel project without moving traffic.
+6. Run 390px mobile and desktop acceptance, links, redirects, 410s, sitemap/robots/canonicals,
    contact delivery, booking handoff, analytics privacy, and performance on the exact candidate.
-8. In a staffed low-traffic window, switch only apex/`www`; leave mail, booking, and weight-loss DNS
+7. In a staffed low-traffic window, switch only apex/`www`; leave mail, booking, and weight-loss DNS
    untouched.
-9. Smoke immediately and at +15 minutes, +1 hour, +4 hours, and the next morning. Restore the prior
+8. Smoke immediately and at +15 minutes, +1 hour, +4 hours, and the next morning. Restore the prior
    WP Engine origin immediately if contact, booking, routing, attribution, or SEO checks fail.
-10. After the public host is stable, submit `/sitemap.xml` in Search Console, monitor old/new URLs,
+9. After the public host is stable, submit `/sitemap.xml` in Search Console, monitor old/new URLs,
     and measure real mobile Core Web Vitals. Activate Clarity only after every earlier gate is green.
 
 Google's site-move guidance remains the migration standard:

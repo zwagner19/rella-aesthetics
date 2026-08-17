@@ -64,7 +64,7 @@ const faqs = [
   {
     question: "Where is Rella Aesthetics in Vacaville?",
     answer:
-      "Rella Aesthetics is at 542 Main St in downtown Vacaville, CA 95688. Current published clinic hours are Wednesday through Saturday, 9am–5pm.",
+      "Rella Aesthetics is at 542 Main St in downtown Vacaville, CA 95688. The clinic is open Tuesday through Friday, 9am–5pm, and Saturday, 9am–1pm; it is closed Sunday and Monday.",
   },
 ] as const;
 
@@ -192,7 +192,7 @@ export default function VacavilleLaserPage() {
                 Rella Aesthetics — Vacaville
               </p>
               <p className="text-lg font-medium leading-snug text-ink">
-                542 Main St · Wednesday–Saturday, 9am–5pm
+                542 Main St · Tuesday–Friday, 9am–5pm · Saturday, 9am–1pm · Sunday–Monday: Closed
               </p>
             </div>
           </div>
@@ -314,7 +314,7 @@ export default function VacavilleLaserPage() {
             <h2 id="visit-rella-vacaville-laser" className="mb-3 text-3xl font-medium tracking-[-0.035em] text-ink">
               542 Main St · Vacaville, CA 95688
             </h2>
-            <p className="text-ink/70">Wednesday–Saturday: 9am–5pm · Sunday–Tuesday: Closed</p>
+            <p className="text-ink/70">Tuesday–Friday: 9am–5pm · Saturday: 9am–1pm · Sunday–Monday: Closed</p>
           </div>
           <Button href={clinic.mapUrl} variant="ghost" className="rounded-full bg-white">Get Directions</Button>
         </div>

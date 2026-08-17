@@ -7,7 +7,7 @@ import { DEFAULT_SOCIAL_IMAGE } from "@/lib/social-card";
 export const metadata: Metadata = {
   title: "Rella Aesthetics Napa | Hours, Address & Booking",
   description:
-    "Find Rella Aesthetics Napa at 1541 3rd St. View Tuesday–Saturday hours, directions, phone, service guides, and city-pinned booking.",
+    "Find Rella Aesthetics Napa at 1541 3rd St. View Thursday–Saturday hours, directions, phone, service guides, and city-pinned booking.",
   alternates: { canonical: "/locations/napa" },
   openGraph: {
     title: "Rella Aesthetics Napa | Hours, Address & Booking",

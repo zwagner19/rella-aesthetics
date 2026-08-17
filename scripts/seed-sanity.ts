@@ -45,7 +45,11 @@ async function seed() {
     zip: "95688",
     phone: "707.358.2928",
     email: "info@experiencerella.com",
-    hours: ["Monday–Friday: 9am–5pm", "Saturday: 9am–1pm"],
+    hours: [
+      "Tuesday–Friday: 9am–5pm",
+      "Saturday: 9am–1pm",
+      "Sunday–Monday: Closed",
+    ],
   });
   console.log("✓ Location: Vacaville");
 
@@ -60,7 +64,7 @@ async function seed() {
     zip: "94559",
     phone: "707.358.2928",
     email: "info@experiencerella.com",
-    hours: ["Monday–Friday: 9am–5pm", "Saturday: 9am–1pm"],
+    hours: ["Thursday–Saturday: 9am–5pm", "Sunday–Wednesday: Closed"],
   });
   console.log("✓ Location: Napa");
 

@@ -64,7 +64,7 @@ const faqs = [
   {
     question: "Where is Rella Aesthetics in Vacaville?",
     answer:
-      "Rella Aesthetics is at 542 Main St in downtown Vacaville, CA 95688. Current published clinic hours are Wednesday through Saturday, 9am–5pm.",
+      "Rella Aesthetics is at 542 Main St in downtown Vacaville, CA 95688. The clinic is open Tuesday through Friday, 9am–5pm, and Saturday, 9am–1pm; it is closed Sunday and Monday.",
   },
 ] as const;
 
@@ -194,7 +194,7 @@ export default function VacavilleHydraFacialPage() {
                 Rella Aesthetics — Vacaville
               </p>
               <p className="text-lg font-medium leading-snug text-ink">
-                542 Main St · Wednesday–Saturday, 9am–5pm
+                542 Main St · Tuesday–Friday, 9am–5pm · Saturday, 9am–1pm · Sunday–Monday: Closed
               </p>
             </div>
           </div>

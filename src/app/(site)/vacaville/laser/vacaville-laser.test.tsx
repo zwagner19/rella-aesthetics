@@ -58,7 +58,9 @@ describe("Vacaville laser local-acquisition page", () => {
       "spider-vein removal",
       "CO2 CoolPeel",
       "542 Main St",
-      "Wednesday–Saturday: 9am–5pm",
+      "Tuesday–Friday: 9am–5pm",
+      "Saturday: 9am–1pm",
+      "Sunday–Monday: Closed",
     ]) {
       expect(text).toContain(fact);
     }

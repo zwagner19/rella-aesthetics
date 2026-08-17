@@ -99,12 +99,21 @@ export const locations = {
     state: "CA",
     zip: "95688",
     phone: "707.358.2928",
-    hours: ["Wednesday–Saturday: 9am–5pm", "Sunday–Tuesday: Closed"],
+    hours: [
+      "Tuesday–Friday: 9am–5pm",
+      "Saturday: 9am–1pm",
+      "Sunday–Monday: Closed",
+    ],
     openingHours: [
       {
-        dayOfWeek: ["Wednesday", "Thursday", "Friday", "Saturday"],
+        dayOfWeek: ["Tuesday", "Wednesday", "Thursday", "Friday"],
         opens: "09:00",
         closes: "17:00",
+      },
+      {
+        dayOfWeek: ["Saturday"],
+        opens: "09:00",
+        closes: "13:00",
       },
     ],
     mapUrl: "https://maps.google.com/?q=542+Main+St+Vacaville+CA+95688",
@@ -117,10 +126,10 @@ export const locations = {
     state: "CA",
     zip: "94559",
     phone: "707.358.2928",
-    hours: ["Tuesday–Saturday: 9am–5pm", "Sunday–Monday: Closed"],
+    hours: ["Thursday–Saturday: 9am–5pm", "Sunday–Wednesday: Closed"],
     openingHours: [
       {
-        dayOfWeek: ["Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
+        dayOfWeek: ["Thursday", "Friday", "Saturday"],
         opens: "09:00",
         closes: "17:00",
       },

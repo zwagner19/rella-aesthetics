@@ -62,14 +62,23 @@ describe("first-party clinic booking chooser", () => {
   it("puts each live-times action before the lower-priority clinic hours", () => {
     const vacavilleCard = /data-booking-location="vacaville"([\s\S]*?)<\/article>/.exec(html)?.[1] ?? "";
     const napaCard = /data-booking-location="napa"([\s\S]*?)<\/article>/.exec(html)?.[1] ?? "";
+    const vacavilleHours = vacavilleCard.indexOf("Tuesday–Friday");
+    const napaHours = napaCard.indexOf("Thursday–Saturday");
 
     expect(vacavilleCard.indexOf('data-cta="location-booking"')).toBeGreaterThanOrEqual(0);
+    expect(vacavilleHours).toBeGreaterThanOrEqual(0);
     expect(vacavilleCard.indexOf('data-cta="location-booking"')).toBeLessThan(
-      vacavilleCard.indexOf("Wednesday–Saturday"),
+      vacavilleHours,
     );
+    expect(vacavilleCard).toContain("Saturday: 9am–1pm");
+    expect(vacavilleCard).toContain("Sunday–Monday: Closed");
+    expect(vacavilleCard).not.toContain("Wednesday–Saturday");
     expect(napaCard.indexOf('data-cta="location-booking"')).toBeGreaterThanOrEqual(0);
+    expect(napaHours).toBeGreaterThanOrEqual(0);
     expect(napaCard.indexOf('data-cta="location-booking"')).toBeLessThan(
-      napaCard.indexOf("Tuesday–Saturday"),
+      napaHours,
     );
+    expect(napaCard).toContain("Sunday–Wednesday: Closed");
+    expect(napaCard).not.toContain("Tuesday–Saturday");
   });
 });

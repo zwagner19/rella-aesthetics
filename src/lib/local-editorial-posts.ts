@@ -70,7 +70,7 @@ export const LOCAL_EDITORIAL_POSTS: readonly LocalEditorialPost[] = [
       "Rella's current published Napa price is $18 per unit for Botox® and $6 per unit for Dysport. The 2026 Tox Membership is $30 per month with a one-year commitment; members pay $13 per unit for Botox and $4.40 per unit for Dysport. A $50 booking deposit is charged when a new-patient tox appointment is confirmed, and it is separate from treatment pricing.",
     keyFacts: [
       "Downtown Napa: 1541 3rd St, Napa, CA 94559",
-      "Clinic hours: Tuesday–Saturday, 9am–5pm",
+      "Clinic hours: Thursday–Saturday, 9am–5pm",
       "New-patient tox visit: 30 minutes",
       "Free in-person consultation with the first visit",
       "Botox® and Dysport rewards programs accepted",
@@ -175,7 +175,7 @@ export const LOCAL_EDITORIAL_POSTS: readonly LocalEditorialPost[] = [
         id: "visit-napa",
         heading: "Booking Botox in downtown Napa",
         paragraphs: [
-          "Rella Aesthetics Napa is at 1541 3rd St, Napa, CA 94559, with street and garage parking within one block. Current clinic hours are Tuesday through Saturday, 9am to 5pm. Online booking is available at any time, even when the clinic is closed.",
+          "Rella Aesthetics Napa is at 1541 3rd St, Napa, CA 94559, with street and garage parking within one block. Current clinic hours are Thursday through Saturday, 9am to 5pm. Online booking is available at any time, even when the clinic is closed.",
           "If you already know you want a new-patient tox visit, use the Napa-specific booking path. If you still have a pricing or membership question, call Rella at (707) 358-2928 before confirming.",
         ],
       },

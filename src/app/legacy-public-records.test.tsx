@@ -28,8 +28,10 @@ describe("legacy public records", () => {
     expect(response.headers.get("content-type")).toContain("application/vnd.google-earth.kml+xml");
     expect(response.headers.get("x-robots-tag")).toBe("noindex, follow");
     expect(body).toContain("542 Main St, Vacaville, CA 95688");
-    expect(body).toContain("Wednesday–Saturday, 9am–5pm");
+    expect(body).toContain("Tuesday–Friday, 9am–5pm · Saturday, 9am–1pm");
     expect(body).toContain("1541 3rd St, Napa, CA 94559");
-    expect(body).toContain("Tuesday–Saturday, 9am–5pm");
+    expect(body).toContain("Thursday–Saturday, 9am–5pm");
+    expect(body).not.toContain("Wednesday–Saturday, 9am–5pm");
+    expect(body).not.toContain("Tuesday–Saturday, 9am–5pm");
   });
 });

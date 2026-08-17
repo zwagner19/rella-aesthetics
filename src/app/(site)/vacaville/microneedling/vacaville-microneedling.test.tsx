@@ -53,7 +53,9 @@ describe("Vacaville microneedling local-acquisition page", () => {
       "Initial Microneedling Consult",
       "Select a professional",
       "542 Main St",
-      "Wednesday–Saturday, 9am–5pm",
+      "Tuesday–Friday, 9am–5pm",
+      "Saturday, 9am–1pm",
+      "Sunday–Monday: Closed",
       "burns, scarring, fat loss, disfigurement, and nerve damage",
     ]) {
       expect(text).toContain(fact);

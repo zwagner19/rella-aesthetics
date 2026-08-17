@@ -58,7 +58,9 @@ describe("Vacaville filler local-acquisition page", () => {
       "Select a professional",
       "542 Main St",
       "Vacaville, CA 95688",
-      "Wednesday–Saturday: 9am–5pm",
+      "Tuesday–Friday: 9am–5pm",
+      "Saturday: 9am–1pm",
+      "Sunday–Monday: Closed",
     ]) {
       expect(text).toContain(fact);
     }

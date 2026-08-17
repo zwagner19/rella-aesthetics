@@ -188,7 +188,7 @@ export default function VacavilleMicroneedlingPage() {
                 Rella Aesthetics — Vacaville
               </p>
               <p className="text-lg font-medium leading-snug text-ink">
-                542 Main St · Wednesday–Saturday, 9am–5pm
+                542 Main St · Tuesday–Friday, 9am–5pm · Saturday, 9am–1pm · Sunday–Monday: Closed
               </p>
             </div>
           </div>

@@ -56,7 +56,7 @@ describe("Napa facials local-acquisition page", () => {
       "Select a professional",
       "current total before proceeding",
       "1541 3rd St",
-      "Tuesday–Saturday, 9am–5pm",
+      "Thursday–Saturday, 9am–5pm",
     ]) {
       expect(text).toContain(fact);
     }
@@ -71,6 +71,8 @@ describe("Napa facials local-acquisition page", () => {
       "cures acne",
       "treats acne",
       "same-week",
+      "Tuesday–Saturday",
+      "Tuesday through Saturday",
     ]) {
       expect(text.toLowerCase()).not.toContain(forbidden.toLowerCase());
     }

@@ -326,7 +326,8 @@ describe("SEO metadata", () => {
   it("states accurate Napa location facts", () => {
     expect(decoded).toContain("1541 3rd St");
     expect(decoded).toContain("Napa, CA 94559");
-    expect(decoded).toContain("Open Tuesday – Saturday · 9am – 5pm");
+    expect(decoded).toContain("Open Thursday – Saturday · 9am – 5pm");
+    expect(decoded).not.toContain("Open Tuesday – Saturday · 9am – 5pm");
   });
 });
 

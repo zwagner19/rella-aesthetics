@@ -56,7 +56,7 @@ const faqs = [
   {
     question: "Where is Rella Aesthetics in Vacaville?",
     answer:
-      "Rella Aesthetics is at 542 Main St in downtown Vacaville, CA 95688. Current published clinic hours are Wednesday through Saturday, 9am–5pm.",
+      "Rella Aesthetics is at 542 Main St in downtown Vacaville, CA 95688. The clinic is open Tuesday through Friday, 9am–5pm, and Saturday, 9am–1pm; it is closed Sunday and Monday.",
   },
   {
     question: "What happens when I select the booking button?",
@@ -166,7 +166,7 @@ export default function VacavilleBotoxPage() {
             />
             <div className="absolute inset-x-0 bottom-0 border-t border-white/30 bg-white/94 p-5 md:p-6">
               <p className="mb-2 text-[0.625rem] font-bold uppercase tracking-[0.2em] text-rose-dark">Rella Aesthetics — Vacaville</p>
-              <p className="text-lg font-medium leading-snug text-ink">542 Main St · Wednesday–Saturday, 9am–5pm</p>
+              <p className="text-lg font-medium leading-snug text-ink">542 Main St · Tuesday–Friday, 9am–5pm · Saturday, 9am–1pm · Sunday–Monday: Closed</p>
             </div>
           </div>
         </div>
@@ -268,7 +268,7 @@ export default function VacavilleBotoxPage() {
             <h2 id="visit-rella-vacaville" className="mb-3 text-3xl font-medium tracking-[-0.035em] text-ink">
               542 Main St · Vacaville, CA 95688
             </h2>
-            <p className="text-ink/70">Wednesday–Saturday: 9am–5pm · Sunday–Tuesday: Closed</p>
+            <p className="text-ink/70">Tuesday–Friday: 9am–5pm · Saturday: 9am–1pm · Sunday–Monday: Closed</p>
           </div>
           <div className="flex flex-col gap-3">
             <Button href={BOOKING_HREF} data-cta="service-booking" className="rounded-full">Book New Patient Tox</Button>

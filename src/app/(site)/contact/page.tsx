@@ -69,7 +69,7 @@ export default async function ContactPage({
                 {[locations.vacaville, locations.napa].map((location) => (
                   <p key={location.name}>
                     <strong className="text-rose">{location.name}: </strong>
-                    {location.hours[0]}
+                    {location.hours.join(" · ")}
                   </p>
                 ))}
                 <p className="pt-1">Online booking is available at any time.</p>
