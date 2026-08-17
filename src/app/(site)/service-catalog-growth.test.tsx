@@ -28,9 +28,9 @@ describe("polished service catalog", () => {
       facials: "/images/treatments/facial.webp",
       hydrafacial: "/images/treatments/hydrafacial.webp",
       microneedling: "/images/treatments/microneedling-aftercare.webp",
-      "iv-hydration": "/images/clinic/rella-consultation.webp",
+      "iv-hydration": "/images/treatments/iv-hydration.webp",
       "laser-treatments": "/images/treatments/laser-treatment.webp",
-      "weight-loss": "/images/clinic/rella-consultation.webp",
+      "weight-loss": "/images/treatments/medical-weight-loss.webp",
     });
 
     expect(

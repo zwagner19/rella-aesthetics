@@ -10,7 +10,7 @@ import {
 const source = readFileSync(join(__dirname, "HomeLocationVisual.tsx"), "utf8");
 
 describe("homepage location visual", () => {
-  it("uses the verified Napa storefront and Vacaville treatment-room still", () => {
+  it("uses the approved Napa and Vacaville exterior views", () => {
     expect(HOME_LOCATION_VISUALS.map((location) => location.slug)).toEqual([
       "napa",
       "vacaville",
@@ -21,10 +21,14 @@ describe("homepage location visual", () => {
       (location) => location.slug === "vacaville",
     );
 
-    expect(napa?.image).toBe("/images/clinic/rella-team-storefront.webp");
-    expect(napa?.imageAlt).toBe("The Rella Aesthetics team outside the Napa clinic");
-    expect(vacaville?.image).toBe("/images/clinic/vacaville-treatment-room.jpg");
-    expect(vacaville?.imageAlt).toBe("A treatment room inside the Vacaville clinic");
+    expect(napa?.image).toBe("/images/clinic/napa-exterior.webp");
+    expect(napa?.imageAlt).toBe(
+      "The historic exterior of the Rella Aesthetics Napa clinic",
+    );
+    expect(vacaville?.image).toBe("/images/clinic/vacaville-exterior.webp");
+    expect(vacaville?.imageAlt).toBe(
+      "The pink entrance door at the Rella Aesthetics Vacaville clinic",
+    );
     for (const location of HOME_LOCATION_VISUALS) {
       expect(existsSync(join(process.cwd(), "public", location.image))).toBe(true);
     }

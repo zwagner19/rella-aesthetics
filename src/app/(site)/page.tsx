@@ -150,8 +150,8 @@ function HomePageContent({ isWeightLoss }: { isWeightLoss: boolean }) {
         <div className="mx-auto grid max-w-[1200px] items-center gap-12 px-6 md:px-8 lg:grid-cols-2 lg:gap-20 lg:px-12">
           <div className="relative min-h-[380px] overflow-hidden md:min-h-[560px]">
             <Image
-              src="/images/clinic/rella-consultation.webp"
-              alt="A Rella Aesthetics provider speaking with a patient during a consultation"
+              src="/images/treatments/medical-weight-loss.webp"
+              alt="A gloved Rella team member holding three prepared syringes in the clinic"
               fill
               className="object-cover"
               sizes="(min-width: 1024px) 50vw, 100vw"

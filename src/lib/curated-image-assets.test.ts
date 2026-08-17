@@ -5,13 +5,24 @@ import { describe, expect, it } from "vitest";
 const curatedWebpAssets = [
   "public/images/clinic/rella-consultation.webp",
   "public/images/clinic/rella-team-storefront.webp",
+  "public/images/clinic/napa-exterior.webp",
+  "public/images/clinic/vacaville-exterior.webp",
   "public/images/treatments/botox-dysport.webp",
   "public/images/treatments/chemical-peel.webp",
   "public/images/treatments/dermal-fillers.webp",
   "public/images/treatments/facial.webp",
   "public/images/treatments/hydrafacial.webp",
+  "public/images/treatments/iv-hydration.webp",
   "public/images/treatments/laser-treatment.webp",
+  "public/images/treatments/medical-weight-loss.webp",
   "public/images/treatments/microneedling-aftercare.webp",
+] as const;
+
+const ownerSuppliedFourByThreeAssets = [
+  "public/images/clinic/napa-exterior.webp",
+  "public/images/clinic/vacaville-exterior.webp",
+  "public/images/treatments/iv-hydration.webp",
+  "public/images/treatments/medical-weight-loss.webp",
 ] as const;
 
 const teamHeadshots = [
@@ -28,7 +39,8 @@ const teamHeadshots = [
   "public/images/team/warda-harchaoui.jpg",
 ] as const;
 
-const forbiddenMetadataMarkers = /exif|xmp|gps|iphone|apple|picasa/i;
+const forbiddenMetadataMarkers =
+  /exif|xmp|gps|iphone|apple|picasa|canon|camera|serial/i;
 
 describe("curated clinic and treatment image integrity", () => {
   it.each(curatedWebpAssets)("keeps %s web-ready and metadata-free", async (path) => {
@@ -50,6 +62,16 @@ describe("curated clinic and treatment image integrity", () => {
     expect(image.toString("latin1"), `${path} must not expose source metadata markers`).not.toMatch(
       forbiddenMetadataMarkers,
     );
+  });
+
+  it.each(ownerSuppliedFourByThreeAssets)("keeps %s at the approved 4:3 crop", async (path) => {
+    expect(existsSync(path), `${path} must exist`).toBe(true);
+    if (!existsSync(path)) return;
+
+    const metadata = await sharp(path).metadata();
+    const width = metadata.width ?? 0;
+    const height = metadata.height ?? 0;
+    expect(width * 3, `${path} must be exactly 4:3`).toBe(height * 4);
   });
 
   it.each(teamHeadshots)("keeps %s free of private source metadata", async (path) => {

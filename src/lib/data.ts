@@ -52,8 +52,8 @@ export const services = [
     title: "IV Hydration",
     category: "Body & Wellness",
     description: "Clinician-guided IV hydration with screening, monitored administration, and an individualized formulation.",
-    image: "/images/clinic/rella-consultation.webp",
-    imageAlt: "A Rella Aesthetics provider speaking with a patient during a consultation",
+    image: "/images/treatments/iv-hydration.webp",
+    imageAlt: "A Rella-branded IV hydration bag prepared in the clinic",
   },
   {
     slug: "laser-treatments",
@@ -68,8 +68,8 @@ export const services = [
     title: "Medical Weight Loss",
     category: "Body & Wellness",
     description: "Physician-led weight management with a clear, no-pressure starting-point consultation.",
-    image: "/images/clinic/rella-consultation.webp",
-    imageAlt: "A Rella Aesthetics provider speaking with a patient during a consultation",
+    image: "/images/treatments/medical-weight-loss.webp",
+    imageAlt: "A gloved Rella team member holding three prepared syringes in the clinic",
   },
 ] as const;
 

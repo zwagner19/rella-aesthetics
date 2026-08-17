@@ -8,15 +8,15 @@ export const HOME_LOCATION_VISUALS = [
     slug: "napa",
     name: "Napa",
     address: "1541 3rd St",
-    image: "/images/clinic/rella-team-storefront.webp",
-    imageAlt: "The Rella Aesthetics team outside the Napa clinic",
+    image: "/images/clinic/napa-exterior.webp",
+    imageAlt: "The historic exterior of the Rella Aesthetics Napa clinic",
   },
   {
     slug: "vacaville",
     name: "Vacaville",
     address: "542 Main St",
-    image: "/images/clinic/vacaville-treatment-room.jpg",
-    imageAlt: "A treatment room inside the Vacaville clinic",
+    image: "/images/clinic/vacaville-exterior.webp",
+    imageAlt: "The pink entrance door at the Rella Aesthetics Vacaville clinic",
   },
 ] as const;
 

@@ -340,8 +340,8 @@ export const servicePages: ServicePageData[] = [
       { question: "Is IV therapy appropriate for everyone?", answer: "No. IV hydration requires screening, and some health conditions, medications, symptoms, or ingredient considerations may make it inappropriate. The team will review what applies to you." },
       { question: "Will I feel an effect immediately?", answer: "Experiences vary by person, hydration status, formulation, and underlying circumstances. Rella does not promise a specific or immediate result." },
     ],
-    image: "/images/clinic/rella-consultation.webp",
-    imageAlt: "A Rella Aesthetics provider speaking with a patient during a consultation",
+    image: "/images/treatments/iv-hydration.webp",
+    imageAlt: "A Rella-branded IV hydration bag prepared in the clinic",
   },
   {
     slug: "laser-treatments",
@@ -434,7 +434,7 @@ export const servicePages: ServicePageData[] = [
       { question: "Do I need a card to see consultation times?", answer: "No. The 30-minute medical qualification phone consultation does not require a card." },
       { question: "How much weight can I lose?", answer: "Results vary by person, treatment plan, health factors, and follow-through. Rella does not promise a specific result and will discuss realistic expectations for the plan being considered." },
     ],
-    image: "/images/clinic/rella-consultation.webp",
-    imageAlt: "A Rella Aesthetics provider speaking with a patient during a consultation",
+    image: "/images/treatments/medical-weight-loss.webp",
+    imageAlt: "A gloved Rella team member holding three prepared syringes in the clinic",
   },
 ];

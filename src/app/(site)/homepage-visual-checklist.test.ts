@@ -27,10 +27,10 @@ describe("designer homepage color and image checklist", () => {
       expect(service.imageAlt.length).toBeGreaterThan(0);
     }
 
-    expect(new Set(services.map((service) => service.image)).size).toBe(8);
+    expect(new Set(services.map((service) => service.image)).size).toBe(9);
     expect(homepage).toContain("image={service.image}");
     expect(homepage).toContain("imageAlt={service.imageAlt}");
-    expect(homepage).toContain("/images/clinic/rella-consultation.webp");
+    expect(homepage).toContain("/images/treatments/medical-weight-loss.webp");
     expect(homepage).toContain("/images/clinic/vacaville-treatment-room.jpg");
     expect(homepage).not.toContain("/images/clinic/rella-front-desk-consult.jpg");
     expect(JSON.stringify(services)).not.toMatch(/\/images\/service-[a-z-]+\.jpg/);
