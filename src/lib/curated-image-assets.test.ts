@@ -4,6 +4,7 @@ import { describe, expect, it } from "vitest";
 
 const curatedWebpAssets = [
   "public/images/clinic/rella-consultation.webp",
+  "public/images/clinic/rella-sidewalk-sign.webp",
   "public/images/clinic/rella-team-storefront.webp",
   "public/images/clinic/napa-exterior.webp",
   "public/images/clinic/vacaville-exterior.webp",
@@ -23,6 +24,10 @@ const ownerSuppliedFourByThreeAssets = [
   "public/images/clinic/vacaville-exterior.webp",
   "public/images/treatments/iv-hydration.webp",
   "public/images/treatments/medical-weight-loss.webp",
+] as const;
+
+const ownerSuppliedFourByFiveAssets = [
+  "public/images/clinic/rella-sidewalk-sign.webp",
 ] as const;
 
 const teamHeadshots = [
@@ -72,6 +77,16 @@ describe("curated clinic and treatment image integrity", () => {
     const width = metadata.width ?? 0;
     const height = metadata.height ?? 0;
     expect(width * 3, `${path} must be exactly 4:3`).toBe(height * 4);
+  });
+
+  it.each(ownerSuppliedFourByFiveAssets)("keeps %s at the approved 4:5 crop", async (path) => {
+    expect(existsSync(path), `${path} must exist`).toBe(true);
+    if (!existsSync(path)) return;
+
+    const metadata = await sharp(path).metadata();
+    const width = metadata.width ?? 0;
+    const height = metadata.height ?? 0;
+    expect(width * 5, `${path} must be exactly 4:5`).toBe(height * 4);
   });
 
   it.each(teamHeadshots)("keeps %s free of private source metadata", async (path) => {

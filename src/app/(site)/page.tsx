@@ -104,10 +104,10 @@ function HomePageContent({ isWeightLoss }: { isWeightLoss: boolean }) {
         <div className="mx-auto grid max-w-[1200px] items-center gap-12 px-6 md:px-8 lg:grid-cols-[0.95fr_1.05fr] lg:gap-20 lg:px-12">
           <div className="relative min-h-[420px] overflow-hidden md:min-h-[580px]">
             <Image
-              src="/images/clinic/vacaville-treatment-room.jpg"
-              alt="A treatment room inside Rella Aesthetics"
+              src="/images/clinic/rella-sidewalk-sign.webp"
+              alt="A Rella Aesthetics sidewalk sign welcoming patients outside the clinic"
               fill
-              className="object-cover"
+              className="object-cover object-[60%_65%]"
               sizes="(min-width: 1024px) 46vw, 100vw"
             />
           </div>

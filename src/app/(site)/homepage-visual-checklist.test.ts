@@ -21,7 +21,7 @@ describe("designer homepage color and image checklist", () => {
     expect(mobileNav).toContain('/brand/rella-logo-rose.svg');
   });
 
-  it("uses approved service photography and the in-clinic consultation image", () => {
+  it("uses approved service photography and the assigned questions-section image", () => {
     for (const service of services) {
       expect(existsSync(`public${service.image}`), service.image).toBe(true);
       expect(service.imageAlt.length).toBeGreaterThan(0);
@@ -31,7 +31,11 @@ describe("designer homepage color and image checklist", () => {
     expect(homepage).toContain("image={service.image}");
     expect(homepage).toContain("imageAlt={service.imageAlt}");
     expect(homepage).toContain("/images/treatments/medical-weight-loss.webp");
-    expect(homepage).toContain("/images/clinic/vacaville-treatment-room.jpg");
+    expect(homepage).toContain("/images/clinic/rella-sidewalk-sign.webp");
+    expect(homepage).toContain(
+      "A Rella Aesthetics sidewalk sign welcoming patients outside the clinic",
+    );
+    expect(homepage).toContain('className="object-cover object-[60%_65%]"');
     expect(homepage).not.toContain("/images/clinic/rella-front-desk-consult.jpg");
     expect(JSON.stringify(services)).not.toMatch(/\/images\/service-[a-z-]+\.jpg/);
   });
