@@ -6,10 +6,16 @@ import { GhlChatWidget } from "@/components/integrations/GhlChatWidget";
 import { GoogleAnalytics } from "@/components/integrations/GoogleAnalytics";
 import { MetaPixel } from "@/components/integrations/MetaPixel";
 import { ConversionTracker } from "@/components/integrations/ConversionTracker";
+import { ClarityAnalytics } from "@/components/integrations/ClarityAnalytics";
 import { MobileConversionBar } from "@/components/layout/MobileConversionBar";
 import { PreviewClinicChooser } from "@/components/preview/PreviewClinicChooser";
 import { isPreviewExperienceHost } from "@/lib/preview-experience";
 import { isWeightLossHost } from "@/lib/site-hosts";
+import {
+  getClarityProjectId,
+  isClarityEligibleHost,
+  isClarityEnabled,
+} from "@/lib/clarity-policy";
 
 /**
  * Global site chrome for every ordinary marketing route.
@@ -25,6 +31,11 @@ export default async function SiteLayout({ children }: Readonly<{ children: Reac
   const weightLossExperience = isWeightLossHost(host);
   const previewExperience =
     !weightLossExperience && isPreviewExperienceHost(host);
+  const clarityProjectId = getClarityProjectId(process.env.CLARITY_PROJECT_ID);
+  const clarityAvailable =
+    isClarityEnabled(process.env.CLARITY_ENABLED) &&
+    Boolean(clarityProjectId) &&
+    isClarityEligibleHost(host);
 
   return (
     <>
@@ -42,10 +53,16 @@ export default async function SiteLayout({ children }: Readonly<{ children: Reac
       >
         {children}
       </main>
-      <Footer weightLossExperience={weightLossExperience} />
+      <Footer
+        weightLossExperience={weightLossExperience}
+        clarityPreferencesAvailable={clarityAvailable}
+      />
       <GhlChatWidget />
       <MobileConversionBar weightLossExperience={weightLossExperience} />
       {previewExperience ? <PreviewClinicChooser /> : null}
+      {clarityAvailable && clarityProjectId ? (
+        <ClarityAnalytics projectId={clarityProjectId} />
+      ) : null}
     </>
   );
 }

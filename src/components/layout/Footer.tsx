@@ -4,8 +4,15 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { resolveGlobalBookingAction } from "@/lib/site-experience";
+import { CLARITY_PREFERENCES_EVENT } from "@/lib/clarity-policy";
 
-export function Footer({ weightLossExperience = false }: { weightLossExperience?: boolean }) {
+export function Footer({
+  weightLossExperience = false,
+  clarityPreferencesAvailable = false,
+}: {
+  weightLossExperience?: boolean;
+  clarityPreferencesAvailable?: boolean;
+}) {
   const pathname = usePathname();
   const booking = resolveGlobalBookingAction(pathname, weightLossExperience, "Book Online");
   const mainSiteHref = (path: string) =>
@@ -112,6 +119,15 @@ export function Footer({ weightLossExperience = false }: { weightLossExperience?
           <p>&copy; {new Date().getFullYear()} Rella Aesthetics. All rights reserved.</p>
           <div className="flex flex-wrap gap-x-4 gap-y-2">
             <Link href={mainSiteHref("/privacy-policy")} className="inline-flex min-h-11 items-center transition-colors hover:text-ink/70">Privacy Policy</Link>
+            {clarityPreferencesAvailable ? (
+              <button
+                type="button"
+                className="inline-flex min-h-11 items-center uppercase tracking-[0.08em] transition-colors hover:text-ink/70"
+                onClick={() => window.dispatchEvent(new Event(CLARITY_PREFERENCES_EVENT))}
+              >
+                Clarity Choices
+              </button>
+            ) : null}
             <Link href={mainSiteHref("/cancellation-policy")} className="inline-flex min-h-11 items-center transition-colors hover:text-ink/70">Cancellation Policy</Link>
             <Link href={mainSiteHref("/terms")} className="inline-flex min-h-11 items-center transition-colors hover:text-ink/70">Terms &amp; Conditions</Link>
           </div>

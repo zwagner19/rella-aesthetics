@@ -64,10 +64,15 @@ The HighLevel token must be a sub-account/private integration token with `contac
 | `NEXT_PUBLIC_GA_MEASUREMENT_ID` | Ordinary-site GA4 measurement |
 | `NEXT_PUBLIC_META_PIXEL_ID` | Meta measurement after privacy/compliance approval |
 | `NEXT_PUBLIC_GTM_ID` | Campaign-shell GTM container |
+| `CLARITY_ENABLED` | Explicit production-only gate for consented Clarity on approved public pages |
+| `CLARITY_PROJECT_ID` | Microsoft Clarity project ID; inert unless the explicit gate is `true` |
 | `NEXT_PUBLIC_GHL_CHAT_WIDGET_ID` | Optional HighLevel chat widget |
 | `NEXT_PUBLIC_AI_CHATBOT_URL` | Optional approved chatbot URL |
 
 Do not place names, emails, phone numbers, messages, provider selections, or health information into analytics events.
+Clarity is additionally restricted to an exact low-sensitivity page allowlist. It must stay disabled
+in Preview and on contact, booking, payment, treatment-detail, and weight-loss routes. See
+[`docs/CLARITY-LAUNCH-RUNBOOK-2026-08-16.md`](docs/CLARITY-LAUNCH-RUNBOOK-2026-08-16.md).
 
 ## Lead-delivery contract
 
