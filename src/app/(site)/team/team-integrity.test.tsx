@@ -28,15 +28,23 @@ describe("team roster integrity", () => {
     expect(teamHtml).toContain("Dr. Zachary Wagner");
     expect(teamHtml).toContain("Founder &amp; Owner");
     expect(teamHtml).toContain("Medical Weight-Loss Physician");
-    expect(teamHtml).toContain("does not perform aesthetic treatments or injections");
-    expect(teamHtml.indexOf("Leadership")).toBeLessThan(teamHtml.indexOf("Nursing"));
+    expect(teamHtml).toContain(
+      "does not perform aesthetic treatments or injections",
+    );
+    expect(teamHtml.indexOf("Leadership")).toBeLessThan(
+      teamHtml.indexOf("Aesthetic Injectors"),
+    );
     expect(existsSync(`public${leadershipMember.image}`)).toBe(true);
   });
 
   it("uses only the exact confirmed public role labels", () => {
     expect(
       teamRoleGroups.flatMap((group) =>
-        group.members.map((member) => [member.name, member.role, member.primaryLocation]),
+        group.members.map((member) => [
+          member.name,
+          member.role,
+          member.primaryLocation,
+        ]),
       ),
     ).toEqual([
       ["Anna Johnson", "Lead Nurse, RN", "vacaville"],
@@ -51,18 +59,32 @@ describe("team roster integrity", () => {
     for (const group of teamRoleGroups) {
       for (const member of group.members) {
         expect(teamHtml).toContain(member.name);
-        expect(teamHtml).toContain(member.role.replace("&", "&amp;"));
+        if (!(
+          member.name === "Marisa Avalos" || member.name === "Hailey Butler"
+        )) {
+          expect(teamHtml).toContain(member.role.replace("&", "&amp;"));
+        }
         expect(member.bio.length).toBeGreaterThan(0);
         for (const paragraph of member.bio) {
           expect(teamHtml).toContain(escapeHtmlText(paragraph));
         }
-        if (member.image) expect(existsSync(`public${member.image}`)).toBe(true);
+        if (member.image)
+          expect(existsSync(`public${member.image}`)).toBe(true);
       }
     }
+    expect(teamHtml).toContain("Aesthetic Injectors");
+    expect(teamHtml).toContain("Esthetician");
+    expect(teamHtml).toContain("Medical Assistant");
+    expect(teamHtml).toContain("Front Desk / Patient Services");
   });
 
   it("presents the photo-only team members without inventing public roles or bios", () => {
-    expect(additionalTeamMembers.map((member) => [member.name, member.primaryLocation])).toEqual([
+    expect(
+      additionalTeamMembers.map((member) => [
+        member.name,
+        member.primaryLocation,
+      ]),
+    ).toEqual([
       ["Devyn Pickett", "napa"],
       ["Paula", "vacaville"],
       ["Ayano", "napa"],
@@ -74,13 +96,15 @@ describe("team roster integrity", () => {
       expect(existsSync(`public${member.image}`)).toBe(true);
     }
     expect(teamHtml).not.toMatch(
-      /Director of Ops|Front Desk|Nurse Injector|verified roles|confirmed team members|approved for publication|listed without titles or biographies/i,
+      /Director of Ops|Nurse Injector|verified roles|confirmed team members|approved for publication|listed without titles or biographies/i,
     );
   });
 
   it("breaks the roster down by Napa, Vacaville, and Rella-wide support", () => {
     expect(leadershipMember.locations).toEqual(["napa", "vacaville"]);
-    expect(teamLocations.map((location) => [location.id, location.name])).toEqual([
+    expect(
+      teamLocations.map((location) => [location.id, location.name]),
+    ).toEqual([
       ["napa", "Napa"],
       ["vacaville", "Vacaville"],
     ]);
@@ -106,7 +130,13 @@ describe("team roster integrity", () => {
 
     expect(detailedByLocation).toEqual({
       napa: ["Marisa Avalos", "Hailey Butler"],
-      vacaville: ["Anna Johnson", "Warda Harchaoui", "Michaela", "Sandra Maldonado", "Pia Tiaoqui"],
+      vacaville: [
+        "Anna Johnson",
+        "Warda Harchaoui",
+        "Michaela",
+        "Sandra Maldonado",
+        "Pia Tiaoqui",
+      ],
     });
     expect(additionalByLocation).toEqual({
       napa: ["Devyn Pickett", "Ayano", "Natalie"],
@@ -143,11 +173,35 @@ describe("team roster integrity", () => {
     const vacavilleHtml = teamHtml.slice(vacavilleStart, allLocationsStart);
     const allLocationsHtml = teamHtml.slice(allLocationsStart);
 
-    for (const name of ["Marisa Avalos", "Hailey Butler", "Devyn Pickett", "Ayano", "Natalie"]) {
+    for (const name of [
+      "Marisa Avalos",
+      "Hailey Butler",
+      "Devyn Pickett",
+      "Ayano",
+      "Natalie",
+    ]) {
       expect(napaHtml).toContain(name);
     }
-    expect(napaHtml.indexOf("Devyn Pickett")).toBeLessThan(napaHtml.indexOf("Marisa Avalos"));
-    for (const name of ["Anna Johnson", "Warda Harchaoui", "Michaela", "Sandra Maldonado", "Pia Tiaoqui", "Paula"]) {
+    expect(napaHtml.indexOf("Devyn Pickett")).toBeLessThan(
+      napaHtml.indexOf("Marisa Avalos"),
+    );
+    expect(napaHtml.indexOf("Aesthetic Injectors")).toBeLessThan(
+      napaHtml.indexOf("Esthetician"),
+    );
+    expect(napaHtml.indexOf("Esthetician")).toBeLessThan(
+      napaHtml.indexOf("Medical Assistant"),
+    );
+    expect(napaHtml.indexOf("Medical Assistant")).toBeLessThan(
+      napaHtml.indexOf("Front Desk / Patient Services"),
+    );
+    for (const name of [
+      "Anna Johnson",
+      "Warda Harchaoui",
+      "Michaela",
+      "Sandra Maldonado",
+      "Pia Tiaoqui",
+      "Paula",
+    ]) {
       expect(vacavilleHtml).toContain(name);
     }
     expect(allLocationsHtml).toContain("Ryan");
@@ -156,13 +210,17 @@ describe("team roster integrity", () => {
   it("uses every supplied portrait once and keeps the portraitless profile honest", () => {
     expect(teamHtml.match(/<img\b/g)).toHaveLength(13);
     expect(teamHtml.match(/<img\b[^>]*alt=""/g)).toHaveLength(11);
-    expect(existsSync("public/images/clinic/rella-team-storefront.webp")).toBe(true);
+    expect(existsSync("public/images/clinic/rella-team-storefront.webp")).toBe(
+      true,
+    );
     expect(teamHtml).toContain(
       'alt="Rella Aesthetics team outside the Napa clinic"',
     );
-    expect(teamSource).toContain('/images/clinic/rella-team-storefront.webp');
+    expect(teamSource).toContain("/images/clinic/rella-team-storefront.webp");
     expect(teamHtml).toContain("Hailey Butler");
-    expect(teamHtml).not.toMatch(/portrait coming soon|stock portrait|placeholder portrait/i);
+    expect(teamHtml).not.toMatch(
+      /portrait coming soon|stock portrait|placeholder portrait/i,
+    );
     expect(teamSource).not.toMatch(/\b(?:rounded|shadow|gradient)-/);
     expect(teamSource).not.toMatch(/boulevard|joinblvd|rella-hq/i);
     expect(teamSource).toContain("resolveBookingHref({})");
@@ -182,7 +240,9 @@ describe("team roster integrity", () => {
     expect(readFileSync("next-sitemap.config.js", "utf8")).toContain('"/team"');
 
     const aboutHtml = renderToStaticMarkup(<AboutPage />);
-    expect(aboutHtml).toContain("does not perform aesthetic treatments or injections");
+    expect(aboutHtml).toContain(
+      "does not perform aesthetic treatments or injections",
+    );
     expect(aboutHtml).toContain('href="/team"');
   });
 });

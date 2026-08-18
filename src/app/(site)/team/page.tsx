@@ -31,6 +31,13 @@ export const metadata: Metadata = {
 
 type TeamProfileMember = (typeof teamRoleGroups)[number]["members"][number];
 type AdditionalTeamMember = (typeof additionalTeamMembers)[number];
+type DirectoryMember = {
+  readonly name: string;
+  readonly image: string | null;
+  readonly role: string;
+  readonly bio?: readonly string[];
+  readonly alsoServes?: "napa" | "vacaville" | null;
+};
 
 function locationName(locationId: "napa" | "vacaville") {
   return (
@@ -133,6 +140,65 @@ function AdditionalTeamGrid({
   );
 }
 
+function NapaRoleSection({
+  label,
+  names,
+  members,
+}: {
+  label: string;
+  names: readonly string[];
+  members: readonly DirectoryMember[];
+}) {
+  const selected = names
+    .map((name) => members.find((member) => member.name === name))
+    .filter((member): member is DirectoryMember => Boolean(member));
+
+  if (selected.length === 0) return null;
+
+  return (
+    <section className="mb-16" aria-label={`Napa ${label}`}>
+      <h4 className="mb-7 text-sm font-bold uppercase tracking-[0.16em] text-silver-dark">
+        {label}
+      </h4>
+      <div className="grid gap-x-8 gap-y-14 md:grid-cols-2">
+        {selected.map((member) => (
+          <article key={member.name} className="border-t border-silver/30 pt-6">
+            {member.image ? (
+              <div className="relative aspect-[4/5] overflow-hidden bg-rose-blush">
+                <Image
+                  src={member.image}
+                  alt=""
+                  fill
+                  className="object-cover object-top"
+                  sizes="(min-width: 1024px) 480px, (min-width: 768px) 45vw, 100vw"
+                />
+              </div>
+            ) : null}
+            <div className="pt-6">
+              <h5 className="text-2xl font-medium text-rose">{member.name}</h5>
+              <p className="mt-2 text-xs font-bold uppercase tracking-[0.12em] text-silver-dark">
+                {label}
+              </p>
+              {member.alsoServes ? (
+                <p className="mt-3 text-xs font-bold uppercase tracking-[0.12em] text-rose-dark">
+                  Also serves {locationName(member.alsoServes)}
+                </p>
+              ) : null}
+              {member.bio ? (
+                <div className="mt-5 space-y-4 text-[0.9375rem] leading-relaxed text-ink/75">
+                  {member.bio.map((paragraph) => (
+                    <p key={paragraph}>{paragraph}</p>
+                  ))}
+                </div>
+              ) : null}
+            </div>
+          </article>
+        ))}
+      </div>
+    </section>
+  );
+}
+
 export default function TeamPage() {
   return (
     <>
@@ -230,16 +296,37 @@ export default function TeamPage() {
 
           <div className="space-y-28">
             {teamLocations.map((location) => {
+              const directoryMembers: readonly DirectoryMember[] = [
+                ...(teamRoleGroups.flatMap(
+                  (group) =>
+                    group.members as unknown as readonly DirectoryMember[],
+                ) as DirectoryMember[]),
+                ...(additionalTeamMembers as unknown as readonly DirectoryMember[]),
+              ];
+              const napaCustomNames = new Set([
+                "Devyn Pickett",
+                "Marisa Avalos",
+                "Natalie",
+                "Hailey Butler",
+                "Ayano",
+              ]);
               const roleGroups = teamRoleGroups
                 .map((group) => ({
                   ...group,
                   members: group.members.filter(
-                    (member) => member.primaryLocation === location.id,
+                    (member) =>
+                      member.primaryLocation === location.id &&
+                      !(
+                        location.id === "napa" &&
+                        napaCustomNames.has(member.name)
+                      ),
                   ),
                 }))
                 .filter((group) => group.members.length > 0);
               const additionalMembers = additionalTeamMembers.filter(
-                (member) => member.primaryLocation === location.id,
+                (member) =>
+                  member.primaryLocation === location.id &&
+                  !(location.id === "napa" && napaCustomNames.has(member.name)),
               );
               const featuredMembers: TeamProfileMember[] =
                 location.id === "vacaville"
@@ -289,9 +376,34 @@ export default function TeamPage() {
                   </div>
 
                   {location.id === "napa" ? (
+                    <>
+                      <NapaRoleSection
+                        label="Aesthetic Injectors"
+                        names={["Devyn Pickett", "Marisa Avalos"]}
+                        members={directoryMembers}
+                      />
+                      <NapaRoleSection
+                        label="Esthetician"
+                        names={["Natalie"]}
+                        members={directoryMembers}
+                      />
+                      <NapaRoleSection
+                        label="Medical Assistant"
+                        names={["Hailey Butler"]}
+                        members={directoryMembers}
+                      />
+                      <NapaRoleSection
+                        label="Front Desk / Patient Services"
+                        names={["Ayano"]}
+                        members={directoryMembers}
+                      />
+                    </>
+                  ) : null}
+
+                  {location.id === "napa" && additionalMembers.length > 0 ? (
                     <AdditionalTeamGrid
                       members={additionalMembers}
-                      label="First look at the Napa team"
+                      label="Additional Napa team"
                     />
                   ) : null}
 
