@@ -33,7 +33,10 @@ type TeamProfileMember = (typeof teamRoleGroups)[number]["members"][number];
 type AdditionalTeamMember = (typeof additionalTeamMembers)[number];
 
 function locationName(locationId: "napa" | "vacaville") {
-  return teamLocations.find((location) => location.id === locationId)?.name ?? locationId;
+  return (
+    teamLocations.find((location) => location.id === locationId)?.name ??
+    locationId
+  );
 }
 
 function TeamProfile({ member }: { member: TeamProfileMember }) {
@@ -96,7 +99,10 @@ function AdditionalTeamGrid({
   if (members.length === 0) return null;
 
   return (
-    <section className="mt-16 border-t border-silver/25 pt-10" aria-label={label}>
+    <section
+      className="mt-16 border-t border-silver/25 pt-10"
+      aria-label={label}
+    >
       <h4 className="mb-7 text-sm font-bold uppercase tracking-[0.16em] text-silver-dark">
         {label}
       </h4>
@@ -139,13 +145,17 @@ export default function TeamPage() {
             Meet the people behind Rella.
           </h1>
           <p className="mt-7 max-w-[720px] text-lg font-light leading-relaxed text-ink/70 md:text-xl">
-            Rella brings together medical weight-loss care, nursing, advanced practice, esthetics,
-            medical assisting, and body-contouring support for our two local communities.
+            Rella brings together medical weight-loss care, nursing, advanced
+            practice, esthetics, medical assisting, and body-contouring support
+            for our two local communities.
           </p>
         </div>
       </section>
 
-      <section className="bg-white py-10 md:py-14" aria-label="Rella Aesthetics team photo">
+      <section
+        className="bg-white py-10 md:py-14"
+        aria-label="Rella Aesthetics team photo"
+      >
         <div className="mx-auto max-w-[1120px] px-6 md:px-8 lg:px-12">
           <Image
             src="/images/clinic/rella-team-storefront.webp"
@@ -188,9 +198,10 @@ export default function TeamPage() {
               {leadershipMember.focus}
             </p>
             <p className="mt-6 max-w-[620px] leading-relaxed text-ink/70">
-              Dr. Wagner founded and owns Rella Aesthetics. His clinical role at Rella is medical
-              weight-loss care. He does not perform aesthetic treatments or injections; those
-              services are provided by Rella&apos;s aesthetics team.
+              Dr. Wagner founded and owns Rella Aesthetics. His clinical role at
+              Rella is medical weight-loss care. He does not perform aesthetic
+              treatments or injections; those services are provided by
+              Rella&apos;s aesthetics team.
             </p>
             <Link
               href="/services/weight-loss"
@@ -212,8 +223,8 @@ export default function TeamPage() {
               Napa and Vacaville.
             </h2>
             <p className="mt-5 max-w-[650px] leading-relaxed text-ink/75">
-              Find the people based at each Rella location. Rella-wide leadership and support are
-              shown separately.
+              Find the people based at each Rella location. Rella-wide
+              leadership and support are shown separately.
             </p>
           </div>
 
@@ -230,6 +241,22 @@ export default function TeamPage() {
               const additionalMembers = additionalTeamMembers.filter(
                 (member) => member.primaryLocation === location.id,
               );
+              const featuredMembers: TeamProfileMember[] =
+                location.id === "vacaville"
+                  ? teamRoleGroups
+                      .reduce<TeamProfileMember[]>(
+                        (all, group) =>
+                          all.concat(
+                            group.members as unknown as TeamProfileMember[],
+                          ),
+                        [],
+                      )
+                      .filter(
+                        (member) =>
+                          member.name === "Anna Johnson" ||
+                          member.name === "Warda Harchaoui",
+                      )
+                  : [];
 
               return (
                 <section
@@ -249,7 +276,9 @@ export default function TeamPage() {
                       >
                         Meet the {location.name} team.
                       </h3>
-                      <p className="mt-4 leading-relaxed text-ink/75">{location.description}</p>
+                      <p className="mt-4 leading-relaxed text-ink/75">
+                        {location.description}
+                      </p>
                     </div>
                     <Link
                       href={location.href}
@@ -266,8 +295,31 @@ export default function TeamPage() {
                     />
                   ) : null}
 
+                  {featuredMembers.length > 0 ? (
+                    <section
+                      className="mb-16"
+                      aria-label="Featured Vacaville care team"
+                    >
+                      <h4 className="mb-7 text-sm font-bold uppercase tracking-[0.16em] text-silver-dark">
+                        Vacaville care team
+                      </h4>
+                      <div className="grid gap-x-8 gap-y-14 md:grid-cols-2">
+                        {featuredMembers.map((member) => (
+                          <TeamProfile key={member.name} member={member} />
+                        ))}
+                      </div>
+                    </section>
+                  ) : null}
+
                   <div className="space-y-16">
                     {roleGroups.map((group) => {
+                      const displayedMembers = group.members.filter(
+                        (member) =>
+                          !featuredMembers.some(
+                            (featured) => featured.name === member.name,
+                          ),
+                      );
+                      if (displayedMembers.length === 0) return null;
                       const groupId = `team-${location.id}-${group.title
                         .toLowerCase()
                         .replaceAll(" ", "-")
@@ -282,7 +334,7 @@ export default function TeamPage() {
                             {group.title}
                           </h4>
                           <div className="grid gap-x-8 gap-y-14 md:grid-cols-2">
-                            {group.members.map((member) => (
+                            {displayedMembers.map((member) => (
                               <TeamProfile key={member.name} member={member} />
                             ))}
                           </div>
@@ -304,7 +356,10 @@ export default function TeamPage() {
         </div>
       </section>
 
-      <section className="bg-rose-blush py-20 md:py-24" aria-labelledby="additional-team-heading">
+      <section
+        className="bg-rose-blush py-20 md:py-24"
+        aria-labelledby="additional-team-heading"
+      >
         <div className="mx-auto max-w-[1120px] px-6 md:px-8 lg:px-12">
           <div className="grid gap-8 md:grid-cols-[0.8fr_1.2fr] md:gap-14">
             <div>
@@ -319,22 +374,24 @@ export default function TeamPage() {
               </h2>
             </div>
             <ul className="grid gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3">
-              {additionalTeamMembers.filter((member) => member.primaryLocation === "both").map((member) => (
-                <li key={member.name}>
-                  <div className="relative aspect-[4/5] overflow-hidden bg-paper">
-                    <Image
-                      src={member.image}
-                      alt=""
-                      fill
-                      className="object-cover object-top"
-                      sizes="(min-width: 1024px) 180px, (min-width: 768px) 28vw, (min-width: 640px) 45vw, calc(100vw - 3rem)"
-                    />
-                  </div>
-                  <p className="border-t border-silver/35 py-5 text-lg font-medium text-rose">
-                    {member.name}
-                  </p>
-                </li>
-              ))}
+              {additionalTeamMembers
+                .filter((member) => member.primaryLocation === "both")
+                .map((member) => (
+                  <li key={member.name}>
+                    <div className="relative aspect-[4/5] overflow-hidden bg-paper">
+                      <Image
+                        src={member.image}
+                        alt=""
+                        fill
+                        className="object-cover object-top"
+                        sizes="(min-width: 1024px) 180px, (min-width: 768px) 28vw, (min-width: 640px) 45vw, calc(100vw - 3rem)"
+                      />
+                    </div>
+                    <p className="border-t border-silver/35 py-5 text-lg font-medium text-rose">
+                      {member.name}
+                    </p>
+                  </li>
+                ))}
             </ul>
           </div>
         </div>
@@ -349,7 +406,8 @@ export default function TeamPage() {
             Find the right next step.
           </h2>
           <p className="mb-8 mt-5 max-w-[650px] font-light leading-relaxed text-white/70 md:text-lg">
-            Book a consultation or contact Rella with a question about care in Vacaville or Napa.
+            Book a consultation or contact Rella with a question about care in
+            Vacaville or Napa.
           </p>
           <div className="flex flex-col gap-3 sm:flex-row">
             <Button
