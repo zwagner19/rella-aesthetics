@@ -6,13 +6,14 @@ import { Button } from "@/components/ui/Button";
 export const metadata: Metadata = {
   title: "About Rella Aesthetics",
   description:
-    "Meet the Rella Aesthetics team — physician-led luxury med spa in Vacaville and Napa, CA. Our mission, values, and approach.",
+    "Meet the Rella Aesthetics team — luxury med spa in Vacaville and Napa, CA. Our mission, values, and approach.",
 };
 
 const values = [
   {
-    title: "Physician-Led Care",
-    description: "Every treatment is physician-supervised, ensuring medical precision and patient safety at every step.",
+    title: "Expert Care",
+    description:
+      "Our team brings advanced aesthetic training and careful technique to every visit, with safety and precision at the center of what we do.",
   },
   {
     title: "Natural Results",
@@ -58,12 +59,12 @@ export default function AboutPage() {
               />
               <p className="text-silver leading-relaxed mb-4">
                 Rella Aesthetics was founded to bridge the gap between clinical
-                excellence and luxury patient experience. With years of medical training and an
-                artist&apos;s eye for facial anatomy, she leads a team dedicated to helping every
-                patient feel confident and cared for.
+                excellence and luxury patient experience. Our team combines advanced
+                aesthetic training with an artist&apos;s eye for facial anatomy, helping
+                every patient feel confident and cared for.
               </p>
               <p className="text-silver leading-relaxed">
-                We believe aesthetic medicine should be physician-led, evidence-based, and deeply
+                We believe aesthetic care should be thoughtful, evidence-informed, and deeply
                 personal. That&apos;s why we take the time to understand your goals before
                 recommending any treatment.
               </p>

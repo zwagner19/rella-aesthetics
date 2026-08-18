@@ -147,7 +147,7 @@ export function RellaRevealDialog() {
 
         <p className="text-eyebrow mb-3">Complimentary Consultation</p>
         <h2 id="rella-reveal-title" className="text-display text-xl sm:text-2xl mb-3">
-          Begin With a Physician-Led Plan
+          Begin With a Complimentary Consultation
         </h2>
         <p className="text-silver text-sm leading-relaxed mb-6">
           Schedule a no-pressure consultation with our team in Vacaville or Napa. We&apos;ll listen to
