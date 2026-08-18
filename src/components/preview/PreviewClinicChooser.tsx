@@ -230,7 +230,7 @@ export function PreviewClinicChooser() {
                   <button
                     key={option.label}
                     type="button"
-                    className="min-h-12 rounded-full border-[1.5px] border-ink bg-white px-4 py-3 text-left text-sm font-medium text-ink transition-colors hover:bg-rose focus-visible:bg-rose"
+                    className="min-h-12 rounded-full border-[1.5px] border-rose bg-white px-4 py-3 text-left text-sm font-medium text-rose transition-colors hover:bg-rose hover:text-white focus-visible:bg-rose focus-visible:text-white"
                     onClick={() => chooseInterest(option)}
                   >
                     {option.label}

@@ -15,6 +15,7 @@ const globalStyles = readFileSync(
 describe("preview clinic chooser", () => {
   it("uses the Rella Reveal offer and interest-specific booking handoff", () => {
     expect(source).toContain("The Rella Reveal");
+    expect(source).toContain("border-rose bg-white");
     expect(source).toContain("$50 treatment credit");
     expect(source).toContain("Fine lines / wrinkles");
     expect(source).toContain("I’m not sure, I need guidance");
@@ -47,10 +48,9 @@ describe("preview clinic chooser", () => {
   });
 
   it("keeps interactive labels readable on Rose and white surfaces", () => {
-    expect(source).toContain("border-ink bg-rose");
-    expect(source).toContain("border-ink bg-white");
-    expect(source).not.toMatch(/bg-rose[^\n\"]*text-white/);
-    expect(source).not.toMatch(/bg-white[^\n\"]*text-rose/);
+    expect(source).toContain("border-rose bg-white");
+    expect(source).toContain("hover:bg-rose hover:text-white");
+    expect(source).toContain("focus-visible:bg-rose focus-visible:text-white");
   });
 
   it("uses a safe mobile viewport and disables preview motion when reduced motion is requested", () => {

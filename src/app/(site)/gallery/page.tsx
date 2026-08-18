@@ -96,7 +96,7 @@ export default function GalleryPage() {
         <div className="mx-auto max-w-[1200px] px-6 md:px-8 lg:px-12">
           <div className="mb-10 max-w-[720px]">
             <p className="mb-4 text-[0.75rem] font-medium capitalize italic tracking-[0.08em] text-ink">Patient perspective</p>
-            <h2 className="text-3xl font-bold uppercase tracking-[0.06em] text-white md:text-5xl">What patients say about the experience.</h2>
+            <h2 className="text-3xl font-bold uppercase tracking-[0.06em] text-rose md:text-5xl">What patients say about the experience.</h2>
           </div>
           <div className="grid gap-10 md:grid-cols-3">
             {testimonials.map((item) => (
