@@ -30,7 +30,7 @@ describe("responsive image-layout integrity", () => {
     expect(locationVisualSource).toContain("md:aspect-auto");
     expect(locationVisualSource).toContain("preload");
     expect(locationVisualSource).toContain("quality={90}");
-    expect(locationVisualSource).toContain('imagePosition: "object-[50%_54%]"');
+    expect(locationVisualSource).toContain('imagePosition: "object-center"');
 
     expect(homeSource).toMatch(
       /aspect-\[4\/5\][\s\S]*?rella-sidewalk-sign\.webp[\s\S]*?object-cover object-center/,

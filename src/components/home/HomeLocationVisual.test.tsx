@@ -29,9 +29,9 @@ describe("homepage location visual", () => {
     expect(napa?.frameAspect).toBe("aspect-[4/5]");
     expect(vacaville?.image).toBe("/images/clinic/vacaville-exterior.webp");
     expect(vacaville?.imageAlt).toBe(
-      "The pink entrance door at the Rella Aesthetics Vacaville clinic",
+      "The Rella Aesthetics storefront and pink entrance at the Vacaville clinic",
     );
-    expect(vacaville?.imagePosition).toBe("object-[50%_54%]");
+    expect(vacaville?.imagePosition).toBe("object-center");
     expect(vacaville?.frameAspect).toBe("aspect-[4/5]");
     for (const location of HOME_LOCATION_VISUALS) {
       expect(existsSync(join(process.cwd(), "public", location.image))).toBe(true);

@@ -18,8 +18,8 @@ export const HOME_LOCATION_VISUALS = [
     name: "Vacaville",
     address: "542 Main St",
     image: "/images/clinic/vacaville-exterior.webp",
-    imageAlt: "The pink entrance door at the Rella Aesthetics Vacaville clinic",
-    imagePosition: "object-[50%_54%]",
+    imageAlt: "The Rella Aesthetics storefront and pink entrance at the Vacaville clinic",
+    imagePosition: "object-center",
     frameAspect: "aspect-[4/5]",
   },
 ] as const;
