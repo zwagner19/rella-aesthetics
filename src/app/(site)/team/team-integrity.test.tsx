@@ -146,6 +146,7 @@ describe("team roster integrity", () => {
     for (const name of ["Marisa Avalos", "Hailey Butler", "Devyn Pickett", "Ayano", "Natalie"]) {
       expect(napaHtml).toContain(name);
     }
+    expect(napaHtml.indexOf("Devyn Pickett")).toBeLessThan(napaHtml.indexOf("Marisa Avalos"));
     for (const name of ["Anna Johnson", "Warda Harchaoui", "Michaela", "Sandra Maldonado", "Pia Tiaoqui", "Paula"]) {
       expect(vacavilleHtml).toContain(name);
     }

@@ -259,6 +259,13 @@ export default function TeamPage() {
                     </Link>
                   </div>
 
+                  {location.id === "napa" ? (
+                    <AdditionalTeamGrid
+                      members={additionalMembers}
+                      label="First look at the Napa team"
+                    />
+                  ) : null}
+
                   <div className="space-y-16">
                     {roleGroups.map((group) => {
                       const groupId = `team-${location.id}-${group.title
@@ -284,10 +291,12 @@ export default function TeamPage() {
                     })}
                   </div>
 
-                  <AdditionalTeamGrid
-                    members={additionalMembers}
-                    label={`More of the ${location.name} team`}
-                  />
+                  {location.id !== "napa" ? (
+                    <AdditionalTeamGrid
+                      members={additionalMembers}
+                      label={`More of the ${location.name} team`}
+                    />
+                  ) : null}
                 </section>
               );
             })}
