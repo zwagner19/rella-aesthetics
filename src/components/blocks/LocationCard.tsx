@@ -1,5 +1,3 @@
-import { LinkArrow } from "@/components/ui/LinkArrow";
-
 interface LocationCardProps {
   name: string;
   address: string;
@@ -10,26 +8,34 @@ interface LocationCardProps {
   href: string;
 }
 
-export function LocationCard({ name, address, city, state, zip, hours, href }: LocationCardProps) {
+export function LocationCard({
+  name,
+  address,
+  city,
+  state,
+  zip,
+  hours,
+  href,
+}: LocationCardProps) {
   return (
-    <div className="p-8 bg-white border border-silver-pale rounded-lg">
-      <h3 className="font-medium text-xl text-silver-dark mb-4">{name}</h3>
-      <address className="not-italic text-[0.9375rem] text-silver leading-relaxed mb-4">
+    <div className="p-8 bg-white border border-silver-pale">
+      <h3 className="font-medium text-xl text-ink mb-2">{name}</h3>
+      <address className="not-italic text-silver text-sm leading-relaxed mb-4">
         {address}
         <br />
         {city}, {state} {zip}
-        <br />
-        <br />
-        <strong className="text-silver-dark">Hours</strong>
-        <br />
-        {hours.map((line, i) => (
-          <span key={i}>
-            {line}
-            <br />
-          </span>
-        ))}
       </address>
-      <LinkArrow href={href}>{name} details</LinkArrow>
+      <ul className="text-sm text-silver space-y-1 mb-6">
+        {hours.map((h) => (
+          <li key={h}>{h}</li>
+        ))}
+      </ul>
+      <a
+        href={href}
+        className="inline-flex min-h-11 items-center font-medium text-[0.8125rem] text-rose-text hover:text-ink transition-colors"
+      >
+        Location details &rarr;
+      </a>
     </div>
   );
 }

@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { client, projectId } from "@/sanity/client";
+import { client } from "@/sanity/client";
 import { allBlogPostsQuery, allCategoriesQuery } from "@/sanity/queries";
 import { urlFor } from "@/sanity/image";
 import { SectionHeader } from "@/components/ui/SectionHeader";
@@ -76,12 +76,12 @@ export default async function BlogPage() {
   return (
     <>
       {/* Hero */}
-      <section className="py-24 bg-rose-blush">
+      <section className="py-24 bg-white border-y border-silver-pale">
         <div className="mx-auto max-w-[1200px] px-6 md:px-8 lg:px-12">
-          <p className="font-bold text-[0.6875rem] tracking-[0.2em] uppercase text-silver mb-4">
+          <p className="text-eyebrow mb-4">
             Education
           </p>
-          <h1 className="font-bold text-4xl md:text-5xl tracking-[0.08em] uppercase text-rose-text mb-4 leading-[1.1]">
+          <h1 className="text-display text-4xl md:text-5xl mb-4 leading-[1.1]">
             Insights &amp; Guides
           </h1>
           <p className="text-lg font-light text-silver max-w-[560px] leading-relaxed">

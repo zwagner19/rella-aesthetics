@@ -34,12 +34,12 @@ export default async function ServicePage({ params }: ServicePageProps) {
       <FaqSchema items={service.faq} />
 
       {/* Hero */}
-      <section className="py-24 bg-rose-blush">
+      <section className="py-24 bg-white border-y border-silver-pale">
         <div className="mx-auto max-w-[1200px] px-6 md:px-8 lg:px-12">
-          <p className="font-bold text-[0.6875rem] tracking-[0.2em] uppercase text-silver mb-4">
+          <p className="text-eyebrow mb-4">
             {service.heroEyebrow}
           </p>
-          <h1 className="font-bold text-4xl md:text-5xl tracking-[0.08em] uppercase text-rose-text mb-4 leading-[1.1]">
+          <h1 className="text-display text-4xl md:text-5xl mb-4 leading-[1.1]">
             {service.heroTitle}
           </h1>
           <p className="text-lg font-light text-silver max-w-[560px] leading-relaxed mb-8">
@@ -64,7 +64,7 @@ export default async function ServicePage({ params }: ServicePageProps) {
       </section>
 
       {/* Section 2 — Who It's For */}
-      <section className="py-20 bg-rose-blush">
+      <section className="py-20 bg-white border-y border-silver-pale">
         <div className="mx-auto max-w-[1200px] px-6 md:px-8 lg:px-12">
           <div className="max-w-[720px]">
             <h2 className="font-medium text-2xl md:text-3xl text-silver-dark mb-4">
@@ -103,7 +103,7 @@ export default async function ServicePage({ params }: ServicePageProps) {
       </section>
 
       {/* Section 4 — Pricing */}
-      <section className="py-20 bg-rose-blush">
+      <section className="py-20 bg-white border-y border-silver-pale">
         <div className="mx-auto max-w-[1200px] px-6 md:px-8 lg:px-12">
           <div className="max-w-[720px]">
             <h2 className="font-medium text-2xl md:text-3xl text-silver-dark mb-4">
@@ -143,7 +143,7 @@ export default async function ServicePage({ params }: ServicePageProps) {
           </p>
           <Button
             href={resolveBookingHref({ service: service.slug })}
-            className="bg-white !text-rose hover:bg-white/90 hover:!text-rose-dark"
+            className="bg-white !text-ink hover:bg-white/90"
           >
             Book {service.title}
           </Button>

@@ -12,7 +12,7 @@ interface BlogCardProps {
 
 export function BlogCard({ slug, title, excerpt, date, category, image }: BlogCardProps) {
   return (
-    <article className="border border-silver-pale rounded-lg overflow-hidden hover:shadow-md hover:-translate-y-1 transition-all duration-300">
+    <article className="border border-silver-pale overflow-hidden hover:border-rose transition-colors duration-150">
       <Link href={`/blog/${slug}`}>
         {image ? (
           <div className="relative aspect-[16/9] overflow-hidden">
@@ -29,10 +29,8 @@ export function BlogCard({ slug, title, excerpt, date, category, image }: BlogCa
         )}
       </Link>
       <div className="p-6">
-        <p className="font-bold text-[0.625rem] tracking-[0.2em] uppercase text-silver mb-2">
-          {category}
-        </p>
-        <h3 className="font-medium text-lg text-silver-dark mb-2">
+        <p className="text-eyebrow mb-2">{category}</p>
+        <h3 className="font-medium text-lg text-ink mb-2">
           <Link href={`/blog/${slug}`} className="hover:text-rose-text transition-colors">
             {title}
           </Link>

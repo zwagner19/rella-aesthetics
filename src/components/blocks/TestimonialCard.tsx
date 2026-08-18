@@ -2,27 +2,16 @@ interface TestimonialCardProps {
   quote: string;
   name: string;
   source: string;
-  rating?: number;
 }
 
-export function TestimonialCard({ quote, name, source, rating = 5 }: TestimonialCardProps) {
+export function TestimonialCard({ quote, name, source }: TestimonialCardProps) {
   return (
-    <div className="bg-white border border-silver-pale rounded-lg p-8">
-      <div
-        className="text-rose text-sm tracking-wider mb-3"
-        aria-label={`${rating} out of 5 stars`}
-      >
-        {Array.from({ length: rating }, (_, i) => (
-          <span key={i}>&#9733;</span>
-        ))}
-      </div>
-      <blockquote className="text-silver-dark font-light italic leading-relaxed mb-6">
-        &ldquo;{quote}&rdquo;
-      </blockquote>
-      <cite className="not-italic">
-        <span className="block font-medium text-sm text-ink">{name}</span>
-        <span className="text-xs text-silver">{source}</span>
-      </cite>
+    <div className="bg-white border border-silver-pale p-8">
+      <blockquote className="text-silver leading-relaxed mb-6">&ldquo;{quote}&rdquo;</blockquote>
+      <footer>
+        <p className="font-medium text-silver-dark">{name}</p>
+        <p className="text-sm text-silver">{source}</p>
+      </footer>
     </div>
   );
 }

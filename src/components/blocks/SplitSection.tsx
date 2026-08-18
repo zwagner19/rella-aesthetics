@@ -14,7 +14,7 @@ export function SplitSection({ children, image, imageAlt, reverse = false }: Spl
         {children}
       </div>
       <div className={reverse ? "md:order-1" : ""}>
-        <div className="relative aspect-[7/5] rounded-lg overflow-hidden">
+        <div className="relative aspect-[7/5] overflow-hidden">
           <Image
             src={image}
             alt={imageAlt}

@@ -25,12 +25,12 @@ export default function MembershipPage() {
       <FaqSchema items={faq} />
 
       {/* Hero */}
-      <section className="py-24 bg-rose-blush">
+      <section className="py-24 bg-white border-y border-silver-pale">
         <div className="mx-auto max-w-[1200px] px-6 md:px-8 lg:px-12">
-          <p className="font-bold text-[0.6875rem] tracking-[0.2em] uppercase text-silver mb-4">
+          <p className="text-eyebrow mb-4">
             VIP Membership
           </p>
-          <h1 className="font-bold text-4xl md:text-5xl tracking-[0.08em] uppercase text-rose-text mb-4 leading-[1.1]">
+          <h1 className="text-display text-4xl md:text-5xl mb-4 leading-[1.1]">
             Elevated Care, Every Month
           </h1>
           <p className="text-lg font-light text-silver max-w-[560px] leading-relaxed">
@@ -65,7 +65,7 @@ export default function MembershipPage() {
       </section>
 
       {/* FAQ */}
-      <section className="py-20 bg-rose-blush">
+      <section className="py-20 bg-white border-y border-silver-pale">
         <div className="mx-auto max-w-[1200px] px-6 md:px-8 lg:px-12">
           <SectionHeader title="Membership FAQ" />
           <FaqAccordion items={faq} />

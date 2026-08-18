@@ -23,12 +23,8 @@ export function Hero({
     <section className="relative min-h-[70vh] md:min-h-[80vh] flex items-center py-24 overflow-hidden">
       <div className="mx-auto max-w-[1200px] px-6 md:px-8 lg:px-12 w-full">
         <div className="relative z-10 max-w-[640px]">
-          {eyebrow && (
-            <p className="font-bold text-[0.6875rem] tracking-[0.2em] uppercase text-silver mb-6">
-              {eyebrow}
-            </p>
-          )}
-          <h1 className="font-bold text-4xl md:text-5xl lg:text-6xl tracking-[0.08em] uppercase text-rose-text mb-4 leading-[1.1]">
+          {eyebrow && <p className="text-eyebrow mb-6">{eyebrow}</p>}
+          <h1 className="text-display text-4xl md:text-5xl lg:text-6xl mb-4 leading-[1.1]">
             {title}
           </h1>
           <p className="text-lg font-light text-silver mb-8 leading-relaxed max-w-[500px]">
