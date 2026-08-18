@@ -48,12 +48,87 @@ body {
   border-radius: 4px;
 }
 
-/* Smooth scrolling */
+/* Smooth scrolling + anchor offset for sticky header */
 html {
   scroll-behavior: smooth;
+  scroll-padding-top: 4.5rem;
+  overflow-x: clip;
 }
 
-/* List markers */
+@media (min-width: 1024px) {
+  html {
+    scroll-padding-top: 4.75rem;
+  }
+}
+
+body {
+  overflow-x: clip;
+}
+
+/* Reserve space above fixed chat widgets on small screens */
+@media (max-width: 1023px) {
+  #main {
+    padding-bottom: max(1.5rem, env(safe-area-inset-bottom));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+@keyframes rella-fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.rella-dialog-enter {
+  animation: rella-fade-up 280ms ease-out both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rella-dialog-enter {
+    animation: none;
+  }
+}
+
+/* Brand typography utilities */
+.text-eyebrow {
+  font-style: italic;
+  font-weight: 500;
+  font-size: 0.6875rem;
+  letter-spacing: 0.2em;
+  color: var(--color-silver);
+}
+
+.text-display {
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-ink);
+}
+
+.text-page-hero {
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-rose);
+}
 li::marker {
   color: var(--color-rose);
 }

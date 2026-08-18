@@ -23,12 +23,12 @@ export default function VacavillePage() {
         }}
       />
 
-      <section className="py-24 bg-rose-blush">
+      <section className="py-24 bg-white border-y border-silver-pale">
         <div className="mx-auto max-w-[1200px] px-6 md:px-8 lg:px-12">
-          <p className="font-bold text-[0.6875rem] tracking-[0.2em] uppercase text-silver mb-4">
+          <p className="text-eyebrow mb-4">
             Location
           </p>
-          <h1 className="font-bold text-4xl md:text-5xl tracking-[0.08em] uppercase text-rose-text mb-4 leading-[1.1]">
+          <h1 className="text-display text-4xl md:text-5xl mb-4 leading-[1.1]">
             Rella Aesthetics — Vacaville
           </h1>
           <p className="text-lg font-light text-silver max-w-[560px] leading-relaxed">
@@ -58,7 +58,7 @@ export default function VacavillePage() {
                 <Button href={resolveBookingHref({ location: "vacaville" })}>Book at Vacaville</Button>
               </div>
             </div>
-            <div className="aspect-[4/3] bg-silver-pale rounded-lg" />
+            <div className="aspect-[4/3] bg-silver-pale" />
           </div>
         </div>
       </section>

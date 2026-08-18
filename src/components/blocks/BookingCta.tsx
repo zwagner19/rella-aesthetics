@@ -18,13 +18,12 @@ export function BookingCta({
   location,
   className = "",
 }: BookingCtaProps) {
-  // Centralized, safety-guarded routing (never silently routes to Napa Tox).
   const href = resolveBookingHref({ location, service: serviceSlug ?? serviceName });
 
   return (
     <Link
       href={href}
-      className={`inline-flex items-center justify-center font-bold text-[0.6875rem] tracking-[0.18em] uppercase bg-rose text-white px-10 py-[18px] hover:bg-rose-dark transition-colors duration-150 ${className}`}
+      className={`inline-flex min-h-11 items-center justify-center font-bold text-[0.6875rem] tracking-[0.18em] uppercase bg-rose text-ink px-10 py-3 hover:bg-rose-dark transition-colors duration-150 ${className}`}
     >
       Book {serviceName}
     </Link>

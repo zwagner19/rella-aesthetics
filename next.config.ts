@@ -70,8 +70,6 @@ const nextConfig: NextConfig = {
       { source: "/membership/", destination: "/membership", permanent: true },
       { source: "/upcoming-events/", destination: "/", permanent: true },
       { source: "/upcoming-events", destination: "/", permanent: true },
-      { source: "/private-parties/", destination: "/contact", permanent: true },
-      { source: "/private-parties", destination: "/contact", permanent: true },
       { source: "/testimonials/", destination: "/gallery", permanent: true },
       { source: "/testimonials", destination: "/gallery", permanent: true },
       { source: "/about/", destination: "/about", permanent: true },

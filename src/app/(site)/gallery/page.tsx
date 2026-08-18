@@ -22,12 +22,12 @@ export default function GalleryPage() {
   return (
     <>
       {/* Hero */}
-      <section className="py-24 bg-rose-blush">
+      <section className="py-24 bg-white border-y border-silver-pale">
         <div className="mx-auto max-w-[1200px] px-6 md:px-8 lg:px-12">
-          <p className="font-bold text-[0.6875rem] tracking-[0.2em] uppercase text-silver mb-4">
+          <p className="text-eyebrow mb-4">
             Results
           </p>
-          <h1 className="font-bold text-4xl md:text-5xl tracking-[0.08em] uppercase text-rose-text mb-4 leading-[1.1]">
+          <h1 className="text-display text-4xl md:text-5xl mb-4 leading-[1.1]">
             Patient Gallery
           </h1>
           <p className="text-lg font-light text-silver max-w-[560px] leading-relaxed">
@@ -47,7 +47,7 @@ export default function GalleryPage() {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {galleryItems.map((item, i) => (
               <div key={i} className="relative group">
-                <div className="aspect-[4/3] bg-silver-pale rounded-lg overflow-hidden">
+                <div className="aspect-[4/3] bg-silver-pale overflow-hidden">
                   <div className="w-full h-full flex items-center justify-center text-silver-light text-sm">
                     {item.alt}
                   </div>
@@ -72,7 +72,7 @@ export default function GalleryPage() {
           </p>
           <Button
             href={resolveBookingHref({})}
-            className="bg-white !text-rose hover:bg-white/90 hover:!text-rose-dark"
+            className="bg-white !text-ink hover:bg-white/90"
           >
             Book Consultation
           </Button>

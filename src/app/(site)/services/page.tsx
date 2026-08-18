@@ -38,6 +38,7 @@ export default function ServicesPage() {
                       description={service.description}
                       image={service.image}
                       imageAlt={service.title}
+                      imagePosition={service.imagePosition}
                     />
                   ))}
                 </div>

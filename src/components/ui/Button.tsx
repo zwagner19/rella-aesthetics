@@ -19,14 +19,14 @@ type ButtonProps = ButtonAsButton | ButtonAsLink;
 
 const variantStyles: Record<ButtonVariant, string> = {
   primary:
-    "bg-rose text-white hover:bg-rose-dark",
+    "bg-rose text-ink hover:bg-rose-dark",
   ghost:
     "bg-transparent text-silver border-[1.5px] border-silver-light hover:border-rose hover:text-rose-text",
 };
 
 const sizeStyles: Record<ButtonSize, string> = {
-  default: "px-10 py-[18px]",
-  sm: "px-7 py-3",
+  default: "min-h-11 px-10 py-3",
+  sm: "min-h-11 px-7 py-3",
 };
 
 const base =

@@ -17,12 +17,14 @@ interface LeadPayload {
   phone?: string;
   service?: string;
   message?: string;
+  source?: string;
+  tags?: string[];
 }
 
 export async function POST(req: NextRequest) {
   try {
     const body: LeadPayload = await req.json();
-    const { name, email, phone, service, message } = body;
+    const { name, email, phone, service, message, source: leadSource, tags: extraTags } = body;
 
     if (!email && !phone) {
       return NextResponse.json(
@@ -57,6 +59,7 @@ export async function POST(req: NextRequest) {
 
     const tags = [
       "website-lead",
+      ...(Array.isArray(extraTags) ? extraTags : []),
       ...(service
         ? [`interest-${service.toLowerCase().replace(/[^a-z0-9]+/gi, "-").replace(/^-|-$/g, "")}`]
         : []),
@@ -70,7 +73,7 @@ export async function POST(req: NextRequest) {
       customFields.push({ id: GHL_CF_MESSAGE, value: message });
     }
 
-    let source = "Rella Website — Contact Form";
+    let source = leadSource?.trim() || "Rella Website — Contact Form";
     if (service && !GHL_CF_SERVICE) {
       source += ` | Service: ${service}`;
     }

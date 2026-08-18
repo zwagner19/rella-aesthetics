@@ -12,16 +12,16 @@ interface TierCardProps {
 export function TierCard({ name, price, period, benefits, featured = false, ctaHref }: TierCardProps) {
   return (
     <div
-      className={`relative flex flex-col bg-white border rounded-lg p-8 ${
+      className={`relative flex flex-col bg-white border p-8 ${
         featured ? "border-rose" : "border-silver-pale"
       }`}
     >
       {featured && (
-        <span className="absolute top-0 left-6 bg-rose text-white text-[0.625rem] font-bold tracking-[0.15em] uppercase px-4 py-1 rounded-b">
+        <span className="absolute top-0 left-6 bg-rose text-ink text-[0.625rem] font-bold tracking-[0.15em] uppercase px-4 py-1">
           Most Popular
         </span>
       )}
-      <h3 className="font-medium text-xl text-silver-dark mb-2">{name}</h3>
+      <h3 className="font-medium text-xl text-ink mb-2">{name}</h3>
       <p className="mb-2">
         <span className="font-bold text-3xl text-ink">{price}</span>
         <span className="font-light text-sm text-silver">/{period}</span>
