@@ -5,6 +5,7 @@ export const services = [
     category: "Injectables",
     description: "Reduce fine lines and prevent wrinkles with expertly administered neuromodulators.",
     image: "/images/service-botox.jpg",
+    imagePosition: "center 30%",
   },
   {
     slug: "dermal-fillers",
@@ -12,6 +13,7 @@ export const services = [
     category: "Injectables",
     description: "Restore lost volume in cheeks, lips, and jawline with natural-looking results.",
     image: "/images/service-fillers.jpg",
+    imagePosition: "center 35%",
   },
   {
     slug: "chemical-peels",
@@ -19,6 +21,7 @@ export const services = [
     category: "Skin Care",
     description: "Reveal smoother, brighter skin by removing damaged outer layers with medical-grade peels.",
     image: "/images/service-peels.jpg",
+    imagePosition: "center 40%",
   },
   {
     slug: "facials",
@@ -26,6 +29,7 @@ export const services = [
     category: "Skin Care",
     description: "Customized professional facials designed to target your unique skin concerns.",
     image: "/images/service-facials.jpg",
+    imagePosition: "center 45%",
   },
   {
     slug: "hydrafacial",
@@ -33,6 +37,7 @@ export const services = [
     category: "Skin Care",
     description: "Deep cleansing, exfoliation, and hydration in one advanced treatment session.",
     image: "/images/service-hydrafacial.jpg",
+    imagePosition: "center 40%",
   },
   {
     slug: "microneedling",
@@ -40,6 +45,7 @@ export const services = [
     category: "Skin Care",
     description: "Stimulate collagen production to improve texture, tone, and overall skin quality.",
     image: "/images/service-microneedling.jpg",
+    imagePosition: "center 35%",
   },
   {
     slug: "iv-hydration",
@@ -47,6 +53,7 @@ export const services = [
     category: "Body & Wellness",
     description: "Vitamin-infused IV therapy for energy, immunity, and recovery.",
     image: "/images/service-iv.jpg",
+    imagePosition: "center 50%",
   },
   {
     slug: "laser-treatments",
@@ -54,6 +61,7 @@ export const services = [
     category: "Body & Wellness",
     description: "IPL, spider vein removal, laser hair removal, and Erbium skin resurfacing.",
     image: "/images/service-laser.jpg",
+    imagePosition: "center 40%",
   },
   {
     slug: "weight-loss",
@@ -61,6 +69,7 @@ export const services = [
     category: "Body & Wellness",
     description: "Physician-supervised semaglutide program with weekly check-ins and personalized support.",
     image: "/images/service-weightloss.jpg",
+    imagePosition: "center 35%",
   },
 ] as const;
 

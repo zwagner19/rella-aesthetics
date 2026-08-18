@@ -42,7 +42,7 @@ function HomePageContent({ isWeightLoss }: { isWeightLoss: boolean }) {
       />
 
       {/* Services Grid */}
-      <section className="py-24 bg-rose-blush">
+      <section className="py-24 bg-white border-y border-silver-pale">
         <div className="mx-auto max-w-[1200px] px-6 md:px-8 lg:px-12">
           <SectionHeader
             eyebrow="Treatments"
@@ -58,6 +58,7 @@ function HomePageContent({ isWeightLoss }: { isWeightLoss: boolean }) {
                 description={service.description}
                 image={service.image}
                 imageAlt={service.title}
+                imagePosition={service.imagePosition}
               />
             ))}
           </div>
@@ -81,7 +82,7 @@ function HomePageContent({ isWeightLoss }: { isWeightLoss: boolean }) {
       </section>
 
       {/* Testimonials */}
-      <section className="py-24 bg-rose-blush">
+      <section className="py-24 bg-white border-y border-silver-pale">
         <div className="mx-auto max-w-[1200px] px-6 md:px-8 lg:px-12">
           <SectionHeader
             eyebrow="Results"
@@ -145,7 +146,7 @@ function HomePageContent({ isWeightLoss }: { isWeightLoss: boolean }) {
           </p>
           <Button
             href={resolveBookingHref({})}
-            className="bg-white !text-rose hover:bg-white/90 hover:!text-rose-dark"
+            className="bg-white !text-ink hover:bg-white/90"
           >
             Book Consultation
           </Button>
