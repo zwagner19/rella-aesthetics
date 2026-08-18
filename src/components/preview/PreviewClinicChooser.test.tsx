@@ -13,11 +13,13 @@ const globalStyles = readFileSync(
 );
 
 describe("preview clinic chooser", () => {
-  it("uses the city-pinned booking resolver for both equal clinic choices", () => {
+  it("uses the Rella Reveal offer and interest-specific booking handoff", () => {
+    expect(source).toContain("The Rella Reveal");
+    expect(source).toContain("$50 treatment credit");
+    expect(source).toContain("Fine lines / wrinkles");
+    expect(source).toContain("I’m not sure, I need guidance");
+    expect(source).toContain('resolveCustomBookingEntry({ service: interest.service })');
     expect(resolveBookingHref({ location: "napa" })).toContain("location=napa");
-    expect(resolveBookingHref({ location: "vacaville" })).toContain("location=vacaville");
-    expect(source).toContain('resolveBookingHref({ location: "napa" })');
-    expect(source).toContain('resolveBookingHref({ location: "vacaville" })');
   });
 
   it("is an accessible, dismissible, session-capped native modal", () => {
@@ -30,8 +32,18 @@ describe("preview clinic chooser", () => {
     expect(source).toContain("previous.focus({ preventScroll: true })");
   });
 
-  it("contains no form, offer, patient, or health-data collection", () => {
-    expect(source).not.toMatch(/<form|<input|<textarea|discount|percent off|medical question/i);
+  it("collects only the selected interest and email through the existing lead endpoint", () => {
+    expect(source).toContain('<form onSubmit={submitReveal}>');
+    expect(source).toContain('fetch("/api/leads"');
+    expect(source).toContain('name: "Rella Reveal Prospect"');
+    expect(source).toContain('location: "No preference"');
+    expect(source).not.toMatch(/patient|diagnosis|medical question/i);
+  });
+
+  it("delays the offer and supports scroll and desktop exit intent", () => {
+    expect(source).toContain("PREVIEW_CLINIC_CHOOSER_DELAY_MS = 35_000");
+    expect(source).toContain("window.scrollY / scrollable >= 0.4");
+    expect(source).toContain("event.clientY <= 0 && window.innerWidth >= 768");
   });
 
   it("keeps interactive labels readable on Rose and white surfaces", () => {
