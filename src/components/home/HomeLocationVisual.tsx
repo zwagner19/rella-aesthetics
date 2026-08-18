@@ -11,7 +11,7 @@ export const HOME_LOCATION_VISUALS = [
     image: "/images/clinic/napa-exterior.webp",
     imageAlt: "The historic exterior of the Rella Aesthetics Napa clinic",
     imagePosition: "object-center",
-    frameAspect: "aspect-square",
+    frameAspect: "aspect-[4/5]",
   },
   {
     slug: "vacaville",

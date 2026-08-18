@@ -26,7 +26,7 @@ describe("homepage location visual", () => {
       "The historic exterior of the Rella Aesthetics Napa clinic",
     );
     expect(napa?.imagePosition).toBe("object-center");
-    expect(napa?.frameAspect).toBe("aspect-square");
+    expect(napa?.frameAspect).toBe("aspect-[4/5]");
     expect(vacaville?.image).toBe("/images/clinic/vacaville-exterior.webp");
     expect(vacaville?.imageAlt).toBe(
       "The pink entrance door at the Rella Aesthetics Vacaville clinic",
@@ -55,7 +55,7 @@ describe("homepage location visual", () => {
   });
 
   it("keeps the homepage visual flat and free of booking-system ownership", () => {
-    expect(source).toContain('frameAspect: "aspect-square"');
+    expect(source).toContain('frameAspect: "aspect-[4/5]"');
     expect(source).toContain('frameAspect: "aspect-[4/5]"');
     expect(source).toContain("quality={90}");
     expect(source).not.toMatch(/gradient|shadow-/i);

@@ -25,7 +25,7 @@ const localServicePages = [
 
 describe("responsive image-layout integrity", () => {
   it("reserves stable, source-appropriate space for the primary homepage photos", () => {
-    expect(locationVisualSource).toContain('frameAspect: "aspect-square"');
+    expect(locationVisualSource).toContain('frameAspect: "aspect-[4/5]"');
     expect(locationVisualSource).toContain('frameAspect: "aspect-[4/5]"');
     expect(locationVisualSource).toContain("md:aspect-auto");
     expect(locationVisualSource).toContain("preload");

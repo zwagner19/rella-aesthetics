@@ -20,13 +20,13 @@ const curatedWebpAssets = [
 ] as const;
 
 const ownerSuppliedFourByThreeAssets = [
-  "public/images/clinic/napa-exterior.webp",
   "public/images/treatments/iv-hydration.webp",
   "public/images/treatments/medical-weight-loss.webp",
 ] as const;
 
 const ownerSuppliedFourByFiveAssets = [
   "public/images/clinic/rella-sidewalk-sign.webp",
+  "public/images/clinic/napa-exterior.webp",
   "public/images/clinic/vacaville-exterior.webp",
 ] as const;
 
