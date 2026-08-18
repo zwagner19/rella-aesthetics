@@ -286,8 +286,8 @@ export function WeightLossServicePage() {
               <p className="mb-4 text-[0.6875rem] font-bold uppercase tracking-[0.2em] text-rose-dark">
                 Real local patient experiences
               </p>
-              <h2 id="weight-loss-reviews-heading" className="mb-4 text-3xl font-medium leading-tight tracking-[-0.035em] text-ink md:text-5xl">
-                Care that patients describe as personal, responsive, and supportive.
+              <h2 id="weight-loss-reviews-heading" className="mb-4 text-3xl font-medium leading-tight tracking-[-0.035em] text-rose md:text-5xl">
+                What patients say about the experience
               </h2>
               <p className="text-base font-light leading-relaxed text-silver md:text-lg">
                 Short excerpts from Rella&apos;s public Google reviews that specifically discuss weight-loss care.

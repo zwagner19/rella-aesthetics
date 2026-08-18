@@ -122,6 +122,13 @@ body {
   text-transform: uppercase;
   color: var(--color-ink);
 }
+
+.text-page-hero {
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-rose);
+}
 li::marker {
   color: var(--color-rose);
 }

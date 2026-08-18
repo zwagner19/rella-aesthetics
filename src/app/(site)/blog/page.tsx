@@ -81,7 +81,7 @@ export default async function BlogPage() {
           <p className="text-eyebrow mb-4">
             Education
           </p>
-          <h1 className="text-display text-4xl md:text-5xl mb-4 leading-[1.1]">
+          <h1 className="text-page-hero text-4xl md:text-5xl mb-4 leading-[1.1]">
             Insights &amp; Guides
           </h1>
           <p className="text-lg font-light text-silver max-w-[560px] leading-relaxed">

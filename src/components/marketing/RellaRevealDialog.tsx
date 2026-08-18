@@ -208,7 +208,7 @@ export function RellaRevealDialog() {
                   type="button"
                   data-reveal-interest={option.id}
                   onClick={() => handleInterestSelect(option.id)}
-                  className="min-h-11 w-full border border-silver-light px-4 py-3 text-left text-sm text-ink hover:border-rose transition-colors"
+                  className="min-h-11 w-full border-2 border-rose bg-white px-4 py-3 text-left text-sm text-ink hover:bg-rose/10 transition-colors"
                 >
                   {option.label}
                 </button>

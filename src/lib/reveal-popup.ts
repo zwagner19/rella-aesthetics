@@ -15,6 +15,7 @@ export const REVEAL_EXCLUDED_PATHS = [
   "/booking",
   "/services/weight-loss",
   "/rella-reveal",
+  "/private-parties",
 ] as const;
 
 export const REVEAL_SCROLL_THRESHOLD = 0.4;

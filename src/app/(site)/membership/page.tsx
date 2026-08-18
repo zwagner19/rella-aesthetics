@@ -30,7 +30,7 @@ export default function MembershipPage() {
           <p className="text-eyebrow mb-4">
             VIP Membership
           </p>
-          <h1 className="text-display text-4xl md:text-5xl mb-4 leading-[1.1]">
+          <h1 className="text-page-hero text-4xl md:text-5xl mb-4 leading-[1.1]">
             Elevated Care, Every Month
           </h1>
           <p className="text-lg font-light text-silver max-w-[560px] leading-relaxed">

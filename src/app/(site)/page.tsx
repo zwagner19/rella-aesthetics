@@ -86,7 +86,8 @@ function HomePageContent({ isWeightLoss }: { isWeightLoss: boolean }) {
         <div className="mx-auto max-w-[1200px] px-6 md:px-8 lg:px-12">
           <SectionHeader
             eyebrow="Results"
-            title="What Our Patients Say"
+            title="What patients say about the experience"
+            titleTone="rose"
           />
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {testimonials.map((item, i) => (
