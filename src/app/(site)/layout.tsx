@@ -4,7 +4,7 @@ import { SkipNav } from "@/components/layout/SkipNav";
 import { GhlChatWidget } from "@/components/integrations/GhlChatWidget";
 import { GoogleAnalytics } from "@/components/integrations/GoogleAnalytics";
 import { MetaPixel } from "@/components/integrations/MetaPixel";
-import { RellaRevealDialog } from "@/components/marketing/RellaRevealDialog";
+import { SiteRevealPopup } from "@/components/marketing/SiteRevealPopup";
 
 /**
  * Global site chrome for every ordinary marketing route.
@@ -29,7 +29,7 @@ export default function SiteLayout({ children }: Readonly<{ children: React.Reac
       </main>
       <Footer />
       <GhlChatWidget />
-      <RellaRevealDialog />
+      <SiteRevealPopup />
     </>
   );
 }
