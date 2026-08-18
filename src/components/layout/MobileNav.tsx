@@ -3,23 +3,30 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { resolveBookingHref } from "@/lib/booking-routes";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 
 interface MobileNavProps {
   links: { href: string; label: string }[];
   isOpen: boolean;
   onClose: () => void;
+  menuTriggerRef: React.RefObject<HTMLButtonElement | null>;
 }
 
-export function MobileNav({ links, isOpen, onClose }: MobileNavProps) {
+const FOCUSABLE =
+  'a[href], button:not([disabled]), textarea, input, select, [tabindex]:not([tabindex="-1"])';
+
+export function MobileNav({ links, isOpen, onClose, menuTriggerRef }: MobileNavProps) {
   const pathname = usePathname();
   const isWeightLossPage = pathname === "/services/weight-loss";
   const bookingHref = isWeightLossPage ? "#consultation-options" : resolveBookingHref({});
   const bookingLabel = isWeightLossPage ? "See Call Times" : "Book Consultation";
+  const dialogRef = useRef<HTMLDivElement>(null);
+  const closeButtonRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = "hidden";
+      closeButtonRef.current?.focus();
     } else {
       document.body.style.overflow = "";
     }
@@ -29,24 +36,60 @@ export function MobileNav({ links, isOpen, onClose }: MobileNavProps) {
   }, [isOpen]);
 
   useEffect(() => {
+    if (!isOpen) return;
+
     function handleKey(e: KeyboardEvent) {
-      if (e.key === "Escape" && isOpen) onClose();
+      if (e.key === "Escape") {
+        e.preventDefault();
+        onClose();
+        menuTriggerRef.current?.focus();
+        return;
+      }
+
+      if (e.key !== "Tab" || !dialogRef.current) return;
+
+      const focusables = Array.from(
+        dialogRef.current.querySelectorAll<HTMLElement>(FOCUSABLE),
+      ).filter((el) => !el.hasAttribute("disabled") && el.offsetParent !== null);
+
+      if (focusables.length === 0) return;
+
+      const first = focusables[0];
+      const last = focusables[focusables.length - 1];
+
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
+      }
     }
+
     document.addEventListener("keydown", handleKey);
     return () => document.removeEventListener("keydown", handleKey);
-  }, [isOpen, onClose]);
+  }, [isOpen, onClose, menuTriggerRef]);
 
   if (!isOpen) return null;
 
+  function handleClose() {
+    onClose();
+    menuTriggerRef.current?.focus();
+  }
+
   return (
     <div
-      className="fixed inset-0 z-[200] bg-white flex flex-col px-6 pt-24 pb-6 gap-6"
+      ref={dialogRef}
+      className="fixed inset-0 z-[200] bg-white flex flex-col px-6 pt-24 pb-6 gap-2 overflow-y-auto overscroll-contain"
       role="dialog"
+      aria-modal="true"
       aria-label="Mobile navigation"
     >
       <button
-        className="absolute top-4 right-6 text-2xl text-silver-dark p-2"
-        onClick={onClose}
+        ref={closeButtonRef}
+        type="button"
+        className="absolute top-3 right-4 flex min-h-11 min-w-11 items-center justify-center text-2xl text-silver-dark"
+        onClick={handleClose}
         aria-label="Close menu"
       >
         &times;
@@ -56,8 +99,8 @@ export function MobileNav({ links, isOpen, onClose }: MobileNavProps) {
         <Link
           key={link.href}
           href={link.href}
-          onClick={onClose}
-          className="font-medium text-lg tracking-[0.06em] uppercase text-silver-dark py-3 border-b border-silver-pale hover:text-rose-text transition-colors"
+          onClick={handleClose}
+          className="flex min-h-11 items-center font-medium text-lg tracking-[0.06em] uppercase text-silver-dark py-2 border-b border-silver-pale hover:text-rose-text transition-colors"
         >
           {link.label}
         </Link>
@@ -66,8 +109,8 @@ export function MobileNav({ links, isOpen, onClose }: MobileNavProps) {
       <Link
         href={bookingHref}
         data-cta={isWeightLossPage ? "booking-flow-start" : undefined}
-        onClick={onClose}
-        className="mt-4 inline-flex items-center justify-center font-bold text-[0.6875rem] tracking-[0.18em] uppercase bg-rose text-white px-10 py-4 hover:bg-rose-dark transition-colors"
+        onClick={handleClose}
+        className="mt-4 inline-flex min-h-11 items-center justify-center font-bold text-[0.6875rem] tracking-[0.18em] uppercase bg-rose text-ink px-10 py-3 hover:bg-rose-dark transition-colors"
       >
         {bookingLabel}
       </Link>

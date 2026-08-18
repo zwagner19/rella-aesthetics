@@ -29,7 +29,7 @@ export function ContactForm() {
 
   if (status === "sent") {
     return (
-      <div className="bg-rose-blush border border-rose-light rounded-lg p-8 text-center">
+      <div className="bg-white border border-silver-pale p-8 text-center">
         <p className="font-medium text-silver-dark text-lg mb-2">Thank you!</p>
         <p className="text-silver">We&apos;ll be in touch within one business day.</p>
       </div>
@@ -47,7 +47,7 @@ export function ContactForm() {
           id="name"
           name="name"
           required
-          className="w-full border border-silver-light rounded px-4 py-3 text-silver-dark bg-white focus:border-rose focus:ring-2 focus:ring-rose/20 transition-colors"
+          className="w-full min-h-11 border border-silver-light rounded px-4 py-3 text-silver-dark bg-white focus:border-rose focus:ring-2 focus:ring-rose/20 transition-colors"
         />
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
@@ -60,7 +60,7 @@ export function ContactForm() {
             id="email"
             name="email"
             required
-            className="w-full border border-silver-light rounded px-4 py-3 text-silver-dark bg-white focus:border-rose focus:ring-2 focus:ring-rose/20 transition-colors"
+            className="w-full min-h-11 border border-silver-light rounded px-4 py-3 text-silver-dark bg-white focus:border-rose focus:ring-2 focus:ring-rose/20 transition-colors"
           />
         </div>
         <div>
@@ -71,7 +71,7 @@ export function ContactForm() {
             type="tel"
             id="phone"
             name="phone"
-            className="w-full border border-silver-light rounded px-4 py-3 text-silver-dark bg-white focus:border-rose focus:ring-2 focus:ring-rose/20 transition-colors"
+            className="w-full min-h-11 border border-silver-light rounded px-4 py-3 text-silver-dark bg-white focus:border-rose focus:ring-2 focus:ring-rose/20 transition-colors"
           />
         </div>
       </div>
@@ -82,7 +82,7 @@ export function ContactForm() {
         <select
           id="service"
           name="service"
-          className="w-full border border-silver-light rounded px-4 py-3 text-silver-dark bg-white focus:border-rose focus:ring-2 focus:ring-rose/20 transition-colors"
+          className="w-full min-h-11 border border-silver-light rounded px-4 py-3 text-silver-dark bg-white focus:border-rose focus:ring-2 focus:ring-rose/20 transition-colors"
         >
           <option value="">Select a service</option>
           {services.map((s) => (
@@ -100,7 +100,7 @@ export function ContactForm() {
           id="message"
           name="message"
           rows={4}
-          className="w-full border border-silver-light rounded px-4 py-3 text-silver-dark bg-white focus:border-rose focus:ring-2 focus:ring-rose/20 transition-colors resize-y"
+          className="w-full min-h-11 border border-silver-light rounded px-4 py-3 text-silver-dark bg-white focus:border-rose focus:ring-2 focus:ring-rose/20 transition-colors resize-y"
         />
       </div>
 

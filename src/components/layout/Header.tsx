@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { resolveBookingHref } from "@/lib/booking-routes";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { MobileNav } from "./MobileNav";
 
 const navLinks = [
@@ -17,6 +17,7 @@ const navLinks = [
 
 export function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const menuTriggerRef = useRef<HTMLButtonElement>(null);
   const pathname = usePathname();
   const isWeightLossPage = pathname === "/services/weight-loss";
   const bookingHref = isWeightLossPage ? "#consultation-options" : resolveBookingHref({});
@@ -36,30 +37,43 @@ export function Header() {
           </Link>
 
           <nav className="hidden lg:flex items-center gap-8" aria-label="Main navigation">
-            {navLinks.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                className="font-medium text-xs tracking-[0.1em] uppercase text-silver-dark hover:text-rose-text border-b-2 border-transparent hover:border-rose transition-all duration-150 py-1"
-              >
-                {link.label}
-              </Link>
-            ))}
+            {navLinks.map((link) => {
+              const active =
+                pathname === link.href ||
+                (pathname?.startsWith(`${link.href}/`) ?? false);
+              return (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  aria-current={active ? "page" : undefined}
+                  className={`font-medium text-xs tracking-[0.1em] uppercase py-1 border-b-2 transition-all duration-150 ${
+                    active
+                      ? "text-ink border-rose"
+                      : "text-silver-dark border-transparent hover:text-rose-text hover:border-rose"
+                  }`}
+                >
+                  {link.label}
+                </Link>
+              );
+            })}
           </nav>
 
           <Link
             href={bookingHref}
             data-cta={isWeightLossPage ? "booking-flow-start" : undefined}
-            className="hidden lg:inline-flex items-center justify-center font-bold text-[0.6875rem] tracking-[0.18em] uppercase bg-rose text-white px-7 py-3 hover:bg-rose-dark transition-colors duration-150"
+            className="hidden lg:inline-flex min-h-11 items-center justify-center font-bold text-[0.6875rem] tracking-[0.18em] uppercase bg-rose text-ink px-7 py-3 hover:bg-rose-dark transition-colors duration-150"
           >
             {bookingLabel}
           </Link>
 
           <button
-            className="lg:hidden flex flex-col gap-[5px] p-2"
+            ref={menuTriggerRef}
+            type="button"
+            className="lg:hidden flex min-h-11 min-w-11 flex-col items-center justify-center gap-[5px]"
             onClick={() => setMobileOpen(true)}
             aria-label="Open menu"
             aria-expanded={mobileOpen}
+            aria-controls="mobile-navigation"
           >
             <span className="block w-6 h-0.5 bg-silver-dark" />
             <span className="block w-6 h-0.5 bg-silver-dark" />
@@ -72,6 +86,7 @@ export function Header() {
         links={navLinks}
         isOpen={mobileOpen}
         onClose={() => setMobileOpen(false)}
+        menuTriggerRef={menuTriggerRef}
       />
     </>
   );
