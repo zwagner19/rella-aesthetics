@@ -24,7 +24,8 @@ const mainSiteMetadata: Metadata = {
   alternates: { canonical: "/" },
   openGraph: {
     title: "Rella Aesthetics Med Spa | Vacaville & Napa CA",
-    description: "Personalized aesthetic and wellness care in Vacaville and Napa, California.",
+    description:
+      "Personalized aesthetic and wellness care in Vacaville and Napa, California.",
     url: "/",
     images: [DEFAULT_SOCIAL_IMAGE],
   },
@@ -32,7 +33,9 @@ const mainSiteMetadata: Metadata = {
 
 export async function generateMetadata(): Promise<Metadata> {
   const host = (await headers()).get("host");
-  return isWeightLossHost(host) ? getServiceMetadata("weight-loss") : mainSiteMetadata;
+  return isWeightLossHost(host)
+    ? getServiceMetadata("weight-loss")
+    : mainSiteMetadata;
 }
 
 function HomePageContent({ isWeightLoss }: { isWeightLoss: boolean }) {
@@ -43,7 +46,10 @@ function HomePageContent({ isWeightLoss }: { isWeightLoss: boolean }) {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
-          __html: JSON.stringify(medicalBusinessSchema()).replace(/</g, "\\u003c"),
+          __html: JSON.stringify(medicalBusinessSchema()).replace(
+            /</g,
+            "\\u003c",
+          ),
         }}
       />
 
@@ -58,11 +64,15 @@ function HomePageContent({ isWeightLoss }: { isWeightLoss: boolean }) {
               Ageless Beauty
             </h1>
             <p className="mb-9 max-w-[520px] text-lg font-light leading-relaxed text-ink/70">
-              Personalized aesthetic and wellness treatments designed around your goals. Natural-looking results, elevated care in Vacaville and Napa.
+              Personalized aesthetic and wellness treatments designed around
+              your goals. Natural-looking results, elevated care in Vacaville
+              and Napa.
             </p>
             <div className="flex flex-wrap gap-4">
               <Button href={resolveBookingHref({})}>Book Consultation</Button>
-              <Button href="/services" variant="ghost">Explore Services</Button>
+              <Button href="/services" variant="ghost">
+                Explore Services
+              </Button>
             </div>
           </div>
         </div>
@@ -73,7 +83,12 @@ function HomePageContent({ isWeightLoss }: { isWeightLoss: boolean }) {
 
       <TrustStrip
         ariaLabel="Why patients choose Rella Aesthetics"
-        items={["Natural-looking results", "Two local clinics", "Thoughtful guidance", "Personalized plans"]}
+        items={[
+          "Natural-looking results",
+          "Two local clinics",
+          "Thoughtful guidance",
+          "Personalized plans",
+        ]}
       />
 
       {/* Services Grid */}
@@ -119,10 +134,14 @@ function HomePageContent({ isWeightLoss }: { isWeightLoss: boolean }) {
               Your questions belong in the room.
             </h2>
             <p className="mb-5 text-lg font-light leading-relaxed text-ink/70">
-              Aesthetic care can come with a lot of choices. Rella starts with what you want to work on, what you want explained, and how you want the experience to feel.
+              Aesthetic care can come with a lot of choices. Rella starts with
+              what you want to work on, what you want explained, and how you
+              want the experience to feel.
             </p>
             <p className="mb-8 leading-relaxed text-ink/65">
-              From skin care and injectables to wellness services, the goal is a clear conversation and a next step shaped around you, not a one-size-fits-all plan.
+              From skin care and injectables to wellness services, the goal is a
+              clear conversation and a next step shaped around you, not a
+              one-size-fits-all plan.
             </p>
             <div className="mb-9 grid gap-px bg-ink/10 sm:grid-cols-3">
               {[
@@ -138,9 +157,7 @@ function HomePageContent({ isWeightLoss }: { isWeightLoss: boolean }) {
                 </p>
               ))}
             </div>
-            <Button href="/about">
-              How Rella Cares
-            </Button>
+            <Button href="/about">How Rella Cares</Button>
           </div>
         </div>
       </section>
@@ -148,7 +165,7 @@ function HomePageContent({ isWeightLoss }: { isWeightLoss: boolean }) {
       {/* Medical weight-loss feature */}
       <section className="rella-preview-reveal bg-rose py-24 text-white md:py-32">
         <div className="mx-auto grid max-w-[1200px] items-center gap-12 px-6 md:px-8 lg:grid-cols-2 lg:gap-20 lg:px-12">
-          <div className="relative aspect-[4/3] overflow-hidden bg-white/20">
+          <div className="relative aspect-[4/5] overflow-hidden bg-white/20">
             <Image
               src="/images/treatments/medical-weight-loss.webp"
               alt="A gloved Rella team member holding three prepared syringes in the clinic"
@@ -165,7 +182,10 @@ function HomePageContent({ isWeightLoss }: { isWeightLoss: boolean }) {
               Built around more than medication.
             </h2>
             <p className="mb-7 text-lg font-light leading-relaxed text-white">
-              Start with a 30-minute phone consultation with Zachary Wagner, DO, an American Board of Obesity Medicine diplomate, to understand how Rella works and review the appropriate next step and costs before deciding.
+              Start with a 30-minute phone consultation with Zachary Wagner, DO,
+              an American Board of Obesity Medicine diplomate, to understand how
+              Rella works and review the appropriate next step and costs before
+              deciding.
             </p>
             <ul className="mb-8 space-y-3 text-sm text-white">
               {[
@@ -175,12 +195,18 @@ function HomePageContent({ isWeightLoss }: { isWeightLoss: boolean }) {
                 "Medication only when clinically appropriate",
               ].map((item) => (
                 <li key={item} className="flex gap-3">
-                  <span aria-hidden="true" className="text-white">✓</span>
+                  <span aria-hidden="true" className="text-white">
+                    ✓
+                  </span>
                   {item}
                 </li>
               ))}
             </ul>
-            <Button href="/services/weight-loss" variant="light" className="rounded-full">
+            <Button
+              href="/services/weight-loss"
+              variant="light"
+              className="rounded-full hover:!border-white hover:!bg-white hover:!text-rose"
+            >
               Explore Medical Weight Loss
             </Button>
           </div>
@@ -200,7 +226,9 @@ function HomePageContent({ isWeightLoss }: { isWeightLoss: boolean }) {
               </h2>
             </div>
             <p className="max-w-[700px] text-lg font-light leading-relaxed text-white md:text-xl">
-              It can be hard to sort through treatment options, timing, and expectations. Rella makes room for the questions, explains the choices plainly, and helps you decide what feels right for you.
+              It can be hard to sort through treatment options, timing, and
+              expectations. Rella makes room for the questions, explains the
+              choices plainly, and helps you decide what feels right for you.
             </p>
           </div>
           <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
@@ -265,12 +293,10 @@ function HomePageContent({ isWeightLoss }: { isWeightLoss: boolean }) {
             Ready to Begin?
           </h2>
           <p className="mb-8 text-lg font-light">
-            Schedule a consultation and discover the right next step for your goals.
+            Schedule a consultation and discover the right next step for your
+            goals.
           </p>
-          <Button
-            href={resolveBookingHref({})}
-            variant="light"
-          >
+          <Button href={resolveBookingHref({})} variant="light">
             Book Consultation
           </Button>
         </div>

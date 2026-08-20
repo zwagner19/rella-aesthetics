@@ -1,6 +1,12 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState, type FormEvent } from "react";
+import {
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+  type FormEvent,
+} from "react";
 import { usePathname } from "next/navigation";
 import { dispatchConversion } from "@/lib/conversion-tracking";
 import {
@@ -35,7 +41,9 @@ type Step = "interest" | "email" | "success";
 
 function hasSeenReveal(): boolean {
   try {
-    return window.sessionStorage.getItem(PREVIEW_CLINIC_CHOOSER_SESSION_KEY) === "1";
+    return (
+      window.sessionStorage.getItem(PREVIEW_CLINIC_CHOOSER_SESSION_KEY) === "1"
+    );
   } catch {
     return false;
   }
@@ -51,7 +59,8 @@ function rememberReveal(): void {
 
 function bookingHref(interest: Interest | null): string {
   if (!interest) return "/book";
-  if (interest.service === "weight loss") return `${WEIGHT_LOSS_BOOKING_ORIGIN}/book`;
+  if (interest.service === "weight loss")
+    return `${WEIGHT_LOSS_BOOKING_ORIGIN}/book`;
   return resolveCustomBookingEntry({ service: interest.service });
 }
 
@@ -78,21 +87,30 @@ export function PreviewClinicChooser() {
     hasOpenedRef.current = true;
     rememberReveal();
     restoreFocusRef.current =
-      document.activeElement instanceof HTMLElement ? document.activeElement : null;
+      document.activeElement instanceof HTMLElement
+        ? document.activeElement
+        : null;
     setIsOpen(true);
   }, []);
 
   useEffect(() => {
-    const eligible = shouldOfferPreviewClinicChooser(pathname, window.location.search);
+    const eligible = shouldOfferPreviewClinicChooser(
+      pathname,
+      window.location.search,
+    );
     if (!eligible) {
       if (dialogRef.current?.open) dialogRef.current.close();
       return;
     }
     if (hasOpenedRef.current || hasSeenReveal()) return;
 
-    const timer = window.setTimeout(openReveal, PREVIEW_CLINIC_CHOOSER_DELAY_MS);
+    const timer = window.setTimeout(
+      openReveal,
+      PREVIEW_CLINIC_CHOOSER_DELAY_MS,
+    );
     const onScroll = () => {
-      const scrollable = document.documentElement.scrollHeight - window.innerHeight;
+      const scrollable =
+        document.documentElement.scrollHeight - window.innerHeight;
       if (scrollable > 0 && window.scrollY / scrollable >= 0.4) openReveal();
     };
     const onMouseLeave = (event: MouseEvent) => {
@@ -113,7 +131,8 @@ export function PreviewClinicChooser() {
     const dialog = dialogRef.current;
     if (!dialog) return;
     const previousOverflow = document.documentElement.style.overflow;
-    const previousOverscroll = document.documentElement.style.overscrollBehavior;
+    const previousOverscroll =
+      document.documentElement.style.overscrollBehavior;
     document.documentElement.style.overflow = "hidden";
     document.documentElement.style.overscrollBehavior = "none";
     if (!dialog.open) dialog.showModal();
@@ -134,7 +153,9 @@ export function PreviewClinicChooser() {
     if (event.key !== "Tab") return;
     const dialog = dialogRef.current;
     if (!dialog) return;
-    const focusable = Array.from(dialog.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR));
+    const focusable = Array.from(
+      dialog.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR),
+    );
     if (!focusable.length) return;
     const first = focusable[0];
     const last = focusable[focusable.length - 1];
@@ -174,7 +195,9 @@ export function PreviewClinicChooser() {
       dispatchConversion("contact_form_success");
       setStep("success");
     } catch {
-      setError("We couldn’t save that just yet. Please try again or call Rella directly.");
+      setError(
+        "We couldn’t save that just yet. Please try again or call Rella directly.",
+      );
     } finally {
       setIsSubmitting(false);
     }
@@ -206,31 +229,49 @@ export function PreviewClinicChooser() {
             onClick={closeReveal}
             autoFocus
           >
-            <svg aria-hidden="true" viewBox="0 0 24 24" className="size-5" fill="none" stroke="currentColor" strokeWidth="1.8">
+            <svg
+              aria-hidden="true"
+              viewBox="0 0 24 24"
+              className="size-5"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.8"
+            >
               <path d="M6 6l12 12M18 6L6 18" />
             </svg>
           </button>
           <p className="mb-3 pr-12 text-[0.6875rem] font-bold uppercase tracking-[0.2em] text-ink">
             The Rella Reveal
           </p>
-          <h2 id="preview-clinic-chooser-title" className="max-w-[34rem] pr-10 text-3xl font-bold uppercase leading-[1.08] tracking-[0.05em] text-ink md:text-4xl">
-            {step === "success" ? "Your reveal is ready" : "Unlock your personal plan"}
+          <h2
+            id="preview-clinic-chooser-title"
+            className="max-w-[34rem] pr-10 text-3xl font-bold uppercase leading-[1.08] tracking-[0.05em] text-ink md:text-4xl"
+          >
+            {step === "success"
+              ? "Your reveal is ready"
+              : "Unlock your personal plan"}
           </h2>
         </div>
 
         <div className="px-6 pb-[calc(1.5rem+env(safe-area-inset-bottom))] pt-6 sm:px-8 md:px-10 md:pb-10 md:pt-8">
           {step === "interest" && (
             <>
-              <p id="preview-clinic-chooser-description" className="mb-6 max-w-[36rem] text-[0.9375rem] font-light leading-7 text-ink/80 md:text-base">
-                Get a personalized skin and confidence plan from our providers, plus a $50 treatment credit on your first visit over $250.
+              <p
+                id="preview-clinic-chooser-description"
+                className="mb-6 max-w-[36rem] text-[0.9375rem] font-light leading-7 text-ink/80 md:text-base"
+              >
+                Get a personalized skin and confidence plan from our providers,
+                plus a $50 treatment credit on your first visit over $250.
               </p>
-              <p className="mb-3 text-sm font-bold text-ink">What are you most interested in?</p>
+              <p className="mb-3 text-sm font-bold text-ink">
+                What are you most interested in?
+              </p>
               <div className="grid gap-2 sm:grid-cols-2">
                 {INTERESTS.map((option) => (
                   <button
                     key={option.label}
                     type="button"
-                    className="min-h-12 rounded-full border-[1.5px] border-rose bg-white px-4 py-3 text-left text-sm font-medium text-rose transition-colors hover:bg-rose hover:text-white focus-visible:bg-rose focus-visible:text-white"
+                    className="min-h-12 rounded-none border-2 border-rose bg-white px-4 py-3 text-left text-sm font-medium text-rose transition-colors hover:bg-white hover:text-rose focus-visible:bg-white focus-visible:text-rose"
                     onClick={() => chooseInterest(option)}
                   >
                     {option.label}
@@ -242,18 +283,50 @@ export function PreviewClinicChooser() {
 
           {step === "email" && interest && (
             <form onSubmit={submitReveal}>
-              <p id="preview-clinic-chooser-description" className="mb-6 max-w-[35rem] text-[0.9375rem] font-light leading-7 text-ink/80 md:text-base">
-                Great, we help with that every day. Enter your email so we can send your Rella Reveal and $50 credit details.
+              <p
+                id="preview-clinic-chooser-description"
+                className="mb-6 max-w-[35rem] text-[0.9375rem] font-light leading-7 text-ink/80 md:text-base"
+              >
+                Great, we help with that every day. Enter your email so we can
+                send your Rella Reveal and $50 credit details.
               </p>
               <p className="mb-2 text-sm font-bold text-ink">Your interest</p>
               <div className="mb-5 flex items-center justify-between gap-3 border-b border-ink/20 pb-3 text-sm text-ink">
                 <span>{interest.label}</span>
-                <button type="button" className="text-xs font-bold uppercase tracking-[0.12em] underline underline-offset-4" onClick={() => setStep("interest")}>Change</button>
+                <button
+                  type="button"
+                  className="text-xs font-bold uppercase tracking-[0.12em] underline underline-offset-4"
+                  onClick={() => setStep("interest")}
+                >
+                  Change
+                </button>
               </div>
-              <label htmlFor="rella-reveal-email" className="mb-2 block text-sm font-bold text-ink">Email address</label>
-              <input id="rella-reveal-email" name="email" type="email" required autoComplete="email" value={email} onChange={(event) => setEmail(event.target.value)} className="mb-3 min-h-12 w-full rounded-none border border-ink bg-white px-4 text-base text-ink outline-none focus-visible:ring-2 focus-visible:ring-rose" />
-              {error && <p role="alert" className="mb-3 text-sm font-medium text-ink">{error}</p>}
-              <button type="submit" disabled={isSubmitting} className="inline-flex min-h-12 w-full items-center justify-center rounded-full border-[1.5px] border-ink bg-rose px-5 text-center text-xs font-bold uppercase tracking-[0.15em] text-ink disabled:cursor-wait disabled:opacity-60">
+              <label
+                htmlFor="rella-reveal-email"
+                className="mb-2 block text-sm font-bold text-ink"
+              >
+                Email address
+              </label>
+              <input
+                id="rella-reveal-email"
+                name="email"
+                type="email"
+                required
+                autoComplete="email"
+                value={email}
+                onChange={(event) => setEmail(event.target.value)}
+                className="mb-3 min-h-12 w-full rounded-none border border-ink bg-white px-4 text-base text-ink outline-none focus-visible:ring-2 focus-visible:ring-rose"
+              />
+              {error && (
+                <p role="alert" className="mb-3 text-sm font-medium text-ink">
+                  {error}
+                </p>
+              )}
+              <button
+                type="submit"
+                disabled={isSubmitting}
+                className="inline-flex min-h-12 w-full items-center justify-center rounded-full border-[1.5px] border-ink bg-rose px-5 text-center text-xs font-bold uppercase tracking-[0.15em] text-ink disabled:cursor-wait disabled:opacity-60"
+              >
                 {isSubmitting ? "Saving…" : "Send my Rella Reveal"}
               </button>
             </form>
@@ -261,16 +334,28 @@ export function PreviewClinicChooser() {
 
           {step === "success" && interest && (
             <div>
-              <p id="preview-clinic-chooser-description" className="mb-6 max-w-[35rem] text-[0.9375rem] font-light leading-7 text-ink/80 md:text-base">
-                We’ll follow up with your personalized plan and credit details. Ready to take the next step?
+              <p
+                id="preview-clinic-chooser-description"
+                className="mb-6 max-w-[35rem] text-[0.9375rem] font-light leading-7 text-ink/80 md:text-base"
+              >
+                We’ll follow up with your personalized plan and credit details.
+                Ready to take the next step?
               </p>
-              <a href={bookingHref(interest)} data-cta="booking-flow-start" className="inline-flex min-h-12 w-full items-center justify-center rounded-full border-[1.5px] border-ink bg-rose px-5 text-center text-xs font-bold uppercase tracking-[0.15em] text-ink">
+              <a
+                href={bookingHref(interest)}
+                data-cta="booking-flow-start"
+                className="inline-flex min-h-12 w-full items-center justify-center rounded-full border-[1.5px] border-ink bg-rose px-5 text-center text-xs font-bold uppercase tracking-[0.15em] text-ink"
+              >
                 Book now
               </a>
             </div>
           )}
 
-          <button type="button" className="mx-auto mt-5 block min-h-11 px-3 text-xs font-medium text-ink underline decoration-rose decoration-2 underline-offset-4" onClick={closeReveal}>
+          <button
+            type="button"
+            className="mx-auto mt-5 block min-h-11 px-3 text-xs font-medium text-ink underline decoration-rose decoration-2 underline-offset-4"
+            onClick={closeReveal}
+          >
             Keep exploring the site
           </button>
         </div>

@@ -64,7 +64,10 @@ export default function AboutPage() {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
-          __html: JSON.stringify(physicianOwnerSchema()).replace(/</g, "\\u003c"),
+          __html: JSON.stringify(physicianOwnerSchema()).replace(
+            /</g,
+            "\\u003c",
+          ),
         }}
       />
 
@@ -78,9 +81,11 @@ export default function AboutPage() {
               Care built on judgment, honesty, and the right next step.
             </h1>
             <p className="mb-7 max-w-[650px] text-lg font-light leading-relaxed text-ink/70 md:text-xl">
-              Rella Aesthetics brings aesthetic care and medical weight management together under
-              founder and owner Dr. Zachary Wagner. Dr. Wagner is Rella&apos;s medical weight-loss
-              physician; Rella&apos;s aesthetics services are delivered by the aesthetics team.
+              Rella Aesthetics brings aesthetic care and medical weight
+              management together under founder and owner Dr. Zachary Wagner.
+              Dr. Wagner is Rella&apos;s medical weight-loss physician;
+              Rella&apos;s aesthetics services are delivered by the aesthetics
+              team.
             </p>
             <div className="mb-8 border-l-2 border-rose pl-5">
               <p className="font-medium text-white">Dr. Zachary Wagner, DO</p>
@@ -101,7 +106,7 @@ export default function AboutPage() {
               <Button
                 href="tel:+17073582928"
                 variant="ghost"
-                className="!border-rose !bg-white !text-rose hover:!bg-rose hover:!text-white"
+                className="!border-rose !bg-white !text-rose hover:!border-rose hover:!bg-white hover:!text-rose"
               >
                 Call 707.358.2928
               </Button>
@@ -109,7 +114,10 @@ export default function AboutPage() {
           </div>
 
           <div className="relative mx-auto w-full max-w-[500px] lg:mx-0">
-            <div className="absolute -inset-5 border border-rose/70" aria-hidden="true" />
+            <div
+              className="absolute -inset-5 border border-rose/70"
+              aria-hidden="true"
+            />
             <div className="relative aspect-[4/5] overflow-hidden bg-white">
               <Image
                 src="/images/dr-zachary-wagner.jpg"
@@ -133,28 +141,24 @@ export default function AboutPage() {
       <section className="py-20 md:py-28">
         <div className="mx-auto grid max-w-[1200px] gap-10 px-6 md:px-8 lg:grid-cols-[0.8fr_1.2fr] lg:gap-20 lg:px-12">
           <div>
-            <p className="mb-4 text-[0.75rem] font-medium capitalize italic tracking-[0.08em] text-ink">The Rella standard</p>
+            <p className="mb-4 text-[0.75rem] font-medium capitalize italic tracking-[0.08em] text-ink">
+              The Rella standard
+            </p>
             <h2 className="text-3xl font-bold uppercase leading-tight tracking-[0.06em] text-rose md:text-5xl">
               The best plan starts with a real conversation.
             </h2>
-            <div className="relative mt-8 aspect-[3/4] overflow-hidden bg-rose-blush">
-              <Image
-                src="/images/clinic/rella-consultation.webp"
-                alt="A Rella Aesthetics provider speaking with a patient during a consultation"
-                fill
-                className="object-cover object-center"
-                sizes="(min-width: 1024px) 440px, 90vw"
-              />
-            </div>
           </div>
           <div>
             <p className="mb-5 text-lg font-light leading-relaxed text-ink/70">
-              Rella is built around a simple idea: people should feel heard before they are asked to make a decision. That means beginning with the goal, explaining the options plainly, and recommending only the next step that makes sense for the individual.
+              Rella is built around a simple idea: people should feel heard
+              before they are asked to make a decision. That means beginning
+              with the goal, explaining the options plainly, and recommending
+              only the next step that makes sense for the individual.
             </p>
             <p className="leading-relaxed text-ink/70">
-              Rella&apos;s aesthetics team provides aesthetic treatments, while Dr. Wagner leads
-              medical weight-loss care. Across both areas, the practice is designed to feel clear,
-              respectful, and personal.
+              Rella&apos;s aesthetics team provides aesthetic treatments, while
+              Dr. Wagner leads medical weight-loss care. Across both areas, the
+              practice is designed to feel clear, respectful, and personal.
             </p>
             <div className="mt-8 flex flex-wrap gap-2">
               {careAreas.map((area) => (
@@ -180,13 +184,14 @@ export default function AboutPage() {
               Meet the people behind Rella.
             </h2>
             <p className="mt-4 leading-relaxed text-ink/70">
-              Get to know Rella&apos;s leadership and care team serving Vacaville and Napa.
+              Get to know Rella&apos;s leadership and care team serving
+              Vacaville and Napa.
             </p>
           </div>
           <Button
             href="/team"
             variant="ghost"
-            className="shrink-0 !border-rose !bg-white !text-rose hover:!bg-rose hover:!text-white"
+            className="shrink-0 !border-rose !bg-white !text-rose hover:!border-rose hover:!bg-white hover:!text-rose"
           >
             Meet the Team
           </Button>
@@ -196,15 +201,28 @@ export default function AboutPage() {
       <section className="bg-rose py-20 text-white md:py-28">
         <div className="mx-auto max-w-[1200px] px-6 md:px-8 lg:px-12">
           <div className="mb-12 max-w-[720px]">
-            <p className="mb-4 text-[0.75rem] font-medium capitalize italic tracking-[0.08em] text-ink">How Rella approaches care</p>
-            <h2 className="text-3xl font-bold uppercase tracking-[0.06em] text-white md:text-5xl">Four principles behind every patient experience.</h2>
+            <p className="mb-4 text-[0.75rem] font-medium capitalize italic tracking-[0.08em] text-ink">
+              How Rella approaches care
+            </p>
+            <h2 className="text-3xl font-bold uppercase tracking-[0.06em] text-white md:text-5xl">
+              Four principles behind every patient experience.
+            </h2>
           </div>
           <div className="grid gap-px bg-white/45 md:grid-cols-2">
             {values.map((value) => (
-              <article key={value.number} className="border-l-2 border-l-white/45 bg-rose p-7 md:p-9">
-                <p className="mb-8 text-xs font-bold tracking-[0.18em] text-white">{value.number}</p>
-                <h3 className="mb-3 text-xl font-bold uppercase tracking-[0.06em] text-white">{value.title}</h3>
-                <p className="leading-relaxed text-white">{value.description}</p>
+              <article
+                key={value.number}
+                className="border-l-2 border-l-white/45 bg-rose p-7 md:p-9"
+              >
+                <p className="mb-8 text-xs font-bold tracking-[0.18em] text-white">
+                  {value.number}
+                </p>
+                <h3 className="mb-3 text-xl font-bold uppercase tracking-[0.06em] text-white">
+                  {value.title}
+                </h3>
+                <p className="leading-relaxed text-white">
+                  {value.description}
+                </p>
               </article>
             ))}
           </div>
@@ -213,25 +231,50 @@ export default function AboutPage() {
 
       <section className="py-20 md:py-28">
         <div className="mx-auto grid max-w-[1200px] gap-6 px-6 md:grid-cols-2 md:px-8 lg:px-12">
-          <Link href="/locations/vacaville" className="group border-y border-silver-pale p-7 transition-colors hover:border-rose md:p-9">
-            <p className="mb-3 text-[0.75rem] font-medium capitalize italic tracking-[0.08em] text-ink">Vacaville</p>
-            <h2 className="mb-3 text-2xl font-bold uppercase tracking-[0.06em] text-rose">542 Main Street</h2>
-            <p className="text-sm text-ink/70">Explore the clinic, hours, services, and directions <span aria-hidden="true">→</span></p>
+          <Link
+            href="/locations/vacaville"
+            className="group border-y border-silver-pale p-7 transition-colors hover:border-rose md:p-9"
+          >
+            <p className="mb-3 text-[0.75rem] font-medium capitalize italic tracking-[0.08em] text-ink">
+              Vacaville
+            </p>
+            <h2 className="mb-3 text-2xl font-bold uppercase tracking-[0.06em] text-rose">
+              542 Main Street
+            </h2>
+            <p className="text-sm text-ink/70">
+              Explore the clinic, hours, services, and directions{" "}
+              <span aria-hidden="true">→</span>
+            </p>
           </Link>
-          <Link href="/locations/napa" className="group border-y border-silver-pale p-7 transition-colors hover:border-rose md:p-9">
-            <p className="mb-3 text-[0.75rem] font-medium capitalize italic tracking-[0.08em] text-ink">Napa</p>
-            <h2 className="mb-3 text-2xl font-bold uppercase tracking-[0.06em] text-rose">1541 3rd Street</h2>
-            <p className="text-sm text-ink/70">Explore the clinic, hours, services, and directions <span aria-hidden="true">→</span></p>
+          <Link
+            href="/locations/napa"
+            className="group border-y border-silver-pale p-7 transition-colors hover:border-rose md:p-9"
+          >
+            <p className="mb-3 text-[0.75rem] font-medium capitalize italic tracking-[0.08em] text-ink">
+              Napa
+            </p>
+            <h2 className="mb-3 text-2xl font-bold uppercase tracking-[0.06em] text-rose">
+              1541 3rd Street
+            </h2>
+            <p className="text-sm text-ink/70">
+              Explore the clinic, hours, services, and directions{" "}
+              <span aria-hidden="true">→</span>
+            </p>
           </Link>
         </div>
       </section>
 
       <section className="bg-rose py-16 text-white md:py-20">
         <div className="mx-auto flex max-w-[900px] flex-col items-center px-6 text-center">
-          <p className="mb-4 text-[0.75rem] font-medium capitalize italic tracking-[0.08em] text-ink">Start with clarity</p>
-          <h2 className="mb-5 text-3xl font-bold uppercase tracking-[0.06em] md:text-5xl">Tell us what you want to work on.</h2>
+          <p className="mb-4 text-[0.75rem] font-medium capitalize italic tracking-[0.08em] text-ink">
+            Start with clarity
+          </p>
+          <h2 className="mb-5 text-3xl font-bold uppercase tracking-[0.06em] md:text-5xl">
+            Tell us what you want to work on.
+          </h2>
           <p className="mb-8 max-w-[650px] font-light leading-relaxed text-white md:text-lg">
-            Choose a live booking time or contact the team with a question. We&apos;ll help you find the most appropriate next step.
+            Choose a live booking time or contact the team with a question.
+            We&apos;ll help you find the most appropriate next step.
           </p>
           <div className="flex flex-col gap-3 sm:flex-row">
             <Button

@@ -128,7 +128,7 @@ export default async function BlogPage() {
   return (
     <>
       {/* Hero */}
-      <section className="py-24 bg-rose-blush">
+      <section className="bg-rose py-24 text-white">
         <div className="mx-auto max-w-[1200px] px-6 md:px-8 lg:px-12">
           <p className="font-bold text-[0.6875rem] tracking-[0.2em] uppercase text-rose mb-4">
             Education
@@ -136,8 +136,9 @@ export default async function BlogPage() {
           <h1 className="font-bold text-4xl md:text-6xl tracking-[0.08em] uppercase text-white mb-4 leading-[1.08]">
             Insights &amp; Guides
           </h1>
-          <p className="text-lg font-light text-ink/70 max-w-[560px] leading-relaxed">
-            Local facts, transparent pricing, and practical questions to help you make a more informed treatment decision.
+          <p className="max-w-[560px] text-lg font-light leading-relaxed text-white">
+            Local facts, transparent pricing, and practical questions to help
+            you make a more informed treatment decision.
           </p>
         </div>
       </section>

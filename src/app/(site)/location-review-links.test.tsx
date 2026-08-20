@@ -41,8 +41,8 @@ describe("location-specific Google review links", () => {
       expect(html).toContain('rel="noreferrer"');
       expect(html).toContain(`Leave a Google review for Rella ${clinicName}`);
       expect(html).toContain("opens in a new tab");
-      expect(html).toContain("border-ink bg-white");
-      expect(html).toContain("text-ink");
+      expect(html).toContain("border-rose bg-white");
+      expect(html).toContain("text-rose");
       expect(html).toContain("↗");
       expect(html).not.toContain("&amp;NEARR;");
       expect(html).not.toMatch(/<form|<input|<textarea/);

@@ -13,13 +13,14 @@ export function MembershipBanner() {
               Tox plans from $30/month.
             </h2>
             <p className="max-w-lg font-light leading-relaxed text-white">
-              Compare Tox, Filler, and Tox + Filler plans with current member rates, included benefits, and one-year terms.
+              Compare Tox, Filler, and Tox + Filler plans with current member
+              rates, included benefits, and one-year terms.
             </p>
           </div>
           <Button
             href="/membership"
             variant="ghost"
-            className="shrink-0 border-white bg-white text-rose hover:border-white hover:bg-white hover:text-rose"
+            className="shrink-0 border-white bg-white text-rose hover:!border-white hover:!bg-white hover:!text-rose"
           >
             Compare Memberships
           </Button>

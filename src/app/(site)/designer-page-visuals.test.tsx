@@ -20,7 +20,9 @@ describe("designer page color checklist", () => {
     expect(html).toContain("text-4xl font-bold uppercase");
     expect(html).toContain("tracking-[0.06em] text-white md:text-6xl");
     expect(aboutSource).toContain('className="overflow-hidden bg-rose"');
-    expect(aboutSource).toContain("font-medium text-white\">Dr. Zachary Wagner, DO");
+    expect(aboutSource).toContain(
+      'font-medium text-white">Dr. Zachary Wagner, DO',
+    );
     expect(aboutSource).toContain("bg-rose py-16 md:py-20");
     expect(aboutSource).toContain("tracking-[0.06em] text-white md:text-4xl");
     expect(aboutSource).toContain(
@@ -31,9 +33,7 @@ describe("designer page color checklist", () => {
     );
     expect(aboutSource).toContain("bg-white/45 md:grid-cols-2");
     expect(aboutSource).toContain("bg-rose p-7 md:p-9");
-    expect(aboutSource).toContain(
-      "/images/clinic/rella-consultation.webp",
-    );
+    expect(aboutSource).not.toContain("/images/clinic/rella-consultation.webp");
     expect(html).toContain('href="/book"');
     expect(html).toContain('href="tel:+17073582928"');
     expect(html).toContain("Call Rella");
@@ -68,9 +68,13 @@ describe("designer page color checklist", () => {
     }
     expect(membershipSource).toContain("text-3xl font-bold text-rose");
     expect(membershipSource).toContain('className="bg-rose py-24 md:py-28"');
-    expect(membershipSource).toContain("tracking-[0.08em] text-white md:text-6xl");
+    expect(membershipSource).toContain(
+      "tracking-[0.08em] text-white md:text-6xl",
+    );
     expect(membershipSource).toContain('className="bg-rose py-20 md:py-28"');
-    expect(membershipSource).toContain("tracking-[0.08em] text-white md:text-5xl");
+    expect(membershipSource).toContain(
+      "tracking-[0.08em] text-white md:text-5xl",
+    );
     expect(membershipSource).toContain(
       "w-full !border-rose !bg-white !text-rose",
     );

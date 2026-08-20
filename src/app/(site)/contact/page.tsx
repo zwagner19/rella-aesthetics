@@ -23,7 +23,7 @@ export default async function ContactPage({
   return (
     <>
       {/* Hero */}
-      <section className="py-24 bg-rose-blush">
+      <section className="bg-rose py-24 text-white">
         <div className="mx-auto max-w-[1200px] px-6 md:px-8 lg:px-12">
           <p className="mb-4 text-[0.6875rem] font-bold uppercase tracking-[0.2em] text-rose">
             Contact
@@ -31,8 +31,9 @@ export default async function ContactPage({
           <h1 className="font-bold text-4xl md:text-6xl tracking-[0.08em] uppercase text-white mb-4 leading-[1.08]">
             Get in Touch
           </h1>
-          <p className="max-w-[560px] text-lg font-light leading-relaxed text-ink/70">
-            Questions about a treatment? Ready to schedule? We&apos;re here to help.
+          <p className="max-w-[560px] text-lg font-light leading-relaxed text-white">
+            Questions about a treatment? Ready to schedule? We&apos;re here to
+            help.
           </p>
         </div>
       </section>
@@ -53,18 +54,26 @@ export default async function ContactPage({
               <div className="space-y-4 mb-8">
                 <p className="text-ink/70">
                   <strong className="text-rose">Phone: </strong>
-                  <a href="tel:+17073582928" className="text-rose transition-colors hover:text-ink">
+                  <a
+                    href="tel:+17073582928"
+                    className="text-rose transition-colors hover:text-ink"
+                  >
                     707.358.2928
                   </a>
                 </p>
                 <p className="text-ink/70">
                   <strong className="text-rose">Email: </strong>
-                  <a href="mailto:info@experiencerella.com" className="text-rose transition-colors hover:text-ink">
+                  <a
+                    href="mailto:info@experiencerella.com"
+                    className="text-rose transition-colors hover:text-ink"
+                  >
                     info@experiencerella.com
                   </a>
                 </p>
               </div>
-              <h3 className="font-medium text-lg text-rose mb-4">Clinic Hours</h3>
+              <h3 className="font-medium text-lg text-rose mb-4">
+                Clinic Hours
+              </h3>
               <div className="space-y-2 text-sm text-ink/70">
                 {[locations.vacaville, locations.napa].map((location) => (
                   <p key={location.name}>

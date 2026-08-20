@@ -6,8 +6,14 @@ const homepage = readFileSync("src/app/(site)/page.tsx", "utf8");
 const header = readFileSync("src/components/layout/Header.tsx", "utf8");
 const footer = readFileSync("src/components/layout/Footer.tsx", "utf8");
 const mobileNav = readFileSync("src/components/layout/MobileNav.tsx", "utf8");
-const mobileBar = readFileSync("src/components/layout/MobileConversionBar.tsx", "utf8");
-const serviceCard = readFileSync("src/components/blocks/ServiceCard.tsx", "utf8");
+const mobileBar = readFileSync(
+  "src/components/layout/MobileConversionBar.tsx",
+  "utf8",
+);
+const serviceCard = readFileSync(
+  "src/components/blocks/ServiceCard.tsx",
+  "utf8",
+);
 
 describe("designer homepage color and image checklist", () => {
   it("uses the exact Rose logo without changing the official geometry", () => {
@@ -15,10 +21,12 @@ describe("designer homepage color and image checklist", () => {
     const roseLogo = readFileSync("public/brand/rella-logo-rose.svg", "utf8");
 
     expect(roseLogo).toContain('fill="#F7A19A"');
-    expect(roseLogo.replace(' fill="#F7A19A"', "").trimEnd()).toBe(blackLogo.trimEnd());
-    expect(header).toContain('/brand/rella-logo-rose.svg');
-    expect(footer).toContain('/brand/rella-logo-rose.svg');
-    expect(mobileNav).toContain('/brand/rella-logo-rose.svg');
+    expect(roseLogo.replace(' fill="#F7A19A"', "").trimEnd()).toBe(
+      blackLogo.trimEnd(),
+    );
+    expect(header).toContain("/brand/rella-logo-rose.svg");
+    expect(footer).toContain("/brand/rella-logo-rose.svg");
+    expect(mobileNav).toContain("/brand/rella-logo-rose.svg");
   });
 
   it("uses approved service photography and the assigned questions-section image", () => {
@@ -36,15 +44,23 @@ describe("designer homepage color and image checklist", () => {
       "A Rella Aesthetics sidewalk sign welcoming patients outside the clinic",
     );
     expect(homepage).toContain('className="object-cover object-center"');
-    expect(homepage).not.toContain("/images/clinic/rella-front-desk-consult.jpg");
-    expect(JSON.stringify(services)).not.toMatch(/\/images\/service-[a-z-]+\.jpg/);
+    expect(homepage).not.toContain(
+      "/images/clinic/rella-front-desk-consult.jpg",
+    );
+    expect(JSON.stringify(services)).not.toMatch(
+      /\/images\/service-[a-z-]+\.jpg/,
+    );
   });
 
   it("uses Rose and white for the requested homepage hierarchy", () => {
-    expect(homepage).toMatch(/<h1 className="[^"]*text-rose[^"]*">\s*Ageless Beauty/);
-    expect(homepage).toContain('className="rella-preview-reveal bg-rose py-24 text-white');
-    expect(homepage).toContain('variant="light" className="rounded-full"');
-    expect(homepage).toContain('bg-rose py-20 text-center text-white');
+    expect(homepage).toMatch(
+      /<h1 className="[^"]*text-rose[^"]*">\s*Ageless Beauty/,
+    );
+    expect(homepage).toContain(
+      'className="rella-preview-reveal bg-rose py-24 text-white',
+    );
+    expect(homepage).toContain('variant="light"');
+    expect(homepage).toContain("bg-rose py-20 text-center text-white");
     expect(homepage).not.toContain("elevated care —");
     expect(homepage).not.toContain("you—not");
   });

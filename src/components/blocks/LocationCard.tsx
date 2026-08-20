@@ -32,7 +32,9 @@ export function LocationCard({
         {city}, {state} {zip}
         <br />
         <br />
-        <strong className="text-xs font-bold uppercase tracking-[0.14em] text-ink/70">Hours</strong>
+        <strong className="text-xs font-bold uppercase tracking-[0.14em] text-ink/70">
+          Hours
+        </strong>
         <br />
         {hours.map((line, i) => (
           <span key={i}>
@@ -47,7 +49,7 @@ export function LocationCard({
           href={googleReviewUrl}
           target="_blank"
           rel="noreferrer"
-          className="inline-flex min-h-11 w-full items-center justify-center gap-2 border border-ink bg-white px-4 py-3 text-center text-[0.6875rem] font-bold uppercase tracking-[0.12em] text-ink transition-colors hover:bg-rose focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink sm:w-auto"
+          className="inline-flex min-h-11 w-full items-center justify-center gap-2 border border-rose bg-white px-4 py-3 text-center text-[0.6875rem] font-bold uppercase tracking-[0.12em] text-rose transition-colors hover:bg-white hover:text-rose focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink sm:w-auto"
         >
           Leave a Google review for Rella {name}
           <span aria-hidden="true">↗</span>
