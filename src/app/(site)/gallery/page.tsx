@@ -4,7 +4,8 @@ import { Button } from "@/components/ui/Button";
 import { TrustStrip } from "@/components/blocks/TrustStrip";
 import { TestimonialCard } from "@/components/blocks/TestimonialCard";
 import { BeforeAfterGallery } from "@/components/blocks/BeforeAfterGallery";
-import { approvedResultsFor } from "@/content/results";
+import { PatientResultImageGallery } from "@/components/blocks/PatientResultImageGallery";
+import { approvedPatientResultImages, approvedResultsFor } from "@/content/results";
 import { testimonials } from "@/lib/data";
 
 export const metadata: Metadata = {
@@ -33,6 +34,7 @@ const resultPrinciples = [
 ] as const;
 
 const mainGalleryResults = approvedResultsFor("main-gallery");
+const patientResultImages = approvedPatientResultImages("main-gallery");
 
 export default function GalleryPage() {
   return (
@@ -54,6 +56,8 @@ export default function GalleryPage() {
         ariaLabel="Rella Aesthetics results principles"
         items={["Natural looking goals", "Consultation first", "Individualized plans", "Patient consent first"]}
       />
+
+      <PatientResultImageGallery results={patientResultImages} />
 
       <section className="py-20 md:py-28">
         <div className="mx-auto max-w-[1200px] px-6 md:px-8 lg:px-12">

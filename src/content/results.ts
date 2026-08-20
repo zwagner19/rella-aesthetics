@@ -22,6 +22,26 @@ export interface BeforeAfterResult {
   afterAlt: string;
   caption: string;
 }
+
+export interface PatientResultImage {
+  id: string;
+  status: ResultStatus;
+  placement: readonly ResultPlacement[];
+  src: `/${string}`;
+  alt: string;
+  caption: string;
+}
+
+export const patientResultImages: readonly PatientResultImage[] = [
+  ...Array.from({ length: 9 }, (_, index) => ({
+    id: `patient-result-${String(index + 1).padStart(2, "0")}`,
+    status: "approved" as const,
+    placement: ["main-gallery"] as const,
+    src: `/images/results/patient-submissions/result-${String(index + 1).padStart(2, "0")}.jpg` as `/${string}`,
+    alt: "Patient before-and-after result photo shared with Rella Aesthetics",
+    caption: "Patient result shared with permission. Treatment details and timing are being confirmed.",
+  })),
+];
 /**
  * Add new results here as `draft`. Do not change one to `approved` until Rella
  * has verified written permission for public marketing use.
@@ -75,4 +95,10 @@ if (invalidApprovedResults.length > 0) {
 
 export function approvedResultsFor(placement: ResultPlacement): readonly BeforeAfterResult[] {
   return visibleResultsFor(beforeAfterResults, placement);
+}
+
+export function approvedPatientResultImages(placement: ResultPlacement): readonly PatientResultImage[] {
+  return patientResultImages.filter(
+    (result) => result.status === "approved" && result.placement.includes(placement),
+  );
 }

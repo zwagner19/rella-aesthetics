@@ -1,0 +1,37 @@
+import Image from "next/image";
+import type { PatientResultImage } from "@/content/results";
+
+export function PatientResultImageGallery({
+  results,
+}: {
+  results: readonly PatientResultImage[];
+}) {
+  if (results.length === 0) return null;
+
+  return (
+    <section className="bg-rose-blush py-20 md:py-24" aria-labelledby="patient-results-heading">
+      <div className="mx-auto max-w-[1200px] px-6 md:px-8 lg:px-12">
+        <div className="mb-10 max-w-[760px]">
+          <p className="mb-4 text-sm font-normal italic text-ink">Patient results</p>
+          <h2 id="patient-results-heading" className="mb-4 text-3xl font-bold uppercase leading-tight tracking-[0.08em] text-rose md:text-5xl">
+            Real examples. Shared with permission.
+          </h2>
+          <p className="text-base font-light leading-relaxed text-ink/70 md:text-lg">
+            These patient-submitted images are shown as shared. Treatment details and timing will be added after the clinical record is confirmed.
+          </p>
+        </div>
+        <div className="grid gap-7 sm:grid-cols-2 lg:grid-cols-3">
+          {results.map((result) => (
+            <figure key={result.id} className="overflow-hidden border border-ink/10 bg-white">
+              <div className="relative aspect-square overflow-hidden bg-silver-pale">
+                <Image src={result.src} alt={result.alt} fill sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw" className="object-cover" />
+              </div>
+              <figcaption className="p-5 text-sm leading-relaxed text-ink/70">{result.caption}</figcaption>
+            </figure>
+          ))}
+        </div>
+        <p className="mt-7 text-sm leading-relaxed text-ink/70">Individual results vary. Images are not a promise or guarantee of outcome.</p>
+      </div>
+    </section>
+  );
+}
