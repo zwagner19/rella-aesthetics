@@ -7,20 +7,44 @@ import {
   medicalWeightLossServiceSchema,
 } from "@/lib/schemas";
 import { generateMetadata } from "@/app/(site)/services/[slug]/page";
+import MedicalWeightLossNapaPage, {
+  metadata as napaMetadata,
+} from "@/app/(site)/medical-weight-loss-napa/page";
+import MedicalWeightLossVacavillePage, {
+  metadata as vacavilleMetadata,
+} from "@/app/(site)/medical-weight-loss-vacaville/page";
 
 const weightLossHtml = renderToStaticMarkup(<WeightLossServicePage />);
 
 describe("medical-weight-loss conversion foundation", () => {
-  it("publishes the branded subdomain as the canonical campaign URL", async () => {
+  it("publishes exact production canonical and Open Graph URLs", async () => {
     const metadata = await generateMetadata({
       params: Promise.resolve({ slug: "weight-loss" }),
     });
     const serviceSchema = medicalWeightLossServiceSchema();
 
+    expect(MEDICAL_WEIGHT_LOSS_CANONICAL_URL).toBe("https://rellaweightloss.com/");
     expect(metadata.alternates?.canonical).toBe(MEDICAL_WEIGHT_LOSS_CANONICAL_URL);
     expect(metadata.openGraph?.url).toBe(MEDICAL_WEIGHT_LOSS_CANONICAL_URL);
     expect(serviceSchema.url).toBe(MEDICAL_WEIGHT_LOSS_CANONICAL_URL);
     expect(serviceSchema["@id"]).toBe(`${MEDICAL_WEIGHT_LOSS_CANONICAL_URL}#service`);
+    expect(napaMetadata.alternates?.canonical).toBe(
+      "https://rellaweightloss.com/medical-weight-loss-napa/",
+    );
+    expect(napaMetadata.openGraph?.url).toBe(
+      "https://rellaweightloss.com/medical-weight-loss-napa/",
+    );
+    expect(vacavilleMetadata.alternates?.canonical).toBe(
+      "https://rellaweightloss.com/medical-weight-loss-vacaville/",
+    );
+    expect(vacavilleMetadata.openGraph?.url).toBe(
+      "https://rellaweightloss.com/medical-weight-loss-vacaville/",
+    );
+  });
+
+  it("renders the identical approved funnel at both visible city paths", () => {
+    expect(renderToStaticMarkup(<MedicalWeightLossNapaPage />)).toBe(weightLossHtml);
+    expect(renderToStaticMarkup(<MedicalWeightLossVacavillePage />)).toBe(weightLossHtml);
   });
   it("leads with a concise medical-qualification offer", () => {
     expect(weightLossHtml).toContain("Find out if you medically qualify for GLP-1 care.");

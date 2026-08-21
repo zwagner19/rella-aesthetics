@@ -32,6 +32,11 @@ describe("root layout owns no analytics at all", () => {
   it("does not render the campaign GTM either", () => {
     expect(code("layout.tsx")).not.toMatch(/CampaignGtm/);
   });
+  it("does not mount attribution or consent clients inherited by campaigns", () => {
+    expect(code("layout.tsx")).not.toMatch(
+      /CookieYesAttributionConsentBridge|AestheticsAttributionHandoff|WeightLossAttributionHandoff/,
+    );
+  });
   it("still owns the document and the font", () => {
     const c = code("layout.tsx");
     expect(c).toMatch(/<html/);
@@ -43,10 +48,32 @@ describe("(site) layout owns the direct GA and Meta components", () => {
   const c = code("(site)/layout.tsx");
   it("renders GoogleAnalytics", () => expect(c).toMatch(/<GoogleAnalytics\s*\/>/));
   it("renders MetaPixel", () => expect(c).toMatch(/<MetaPixel\s*\/>/));
+  it("owns the consent bridge and both host-guarded attribution clients", () => {
+    const bridge = c.indexOf("<CookieYesAttributionConsentBridge />");
+    const aesthetics = c.indexOf("<AestheticsAttributionHandoff />");
+    const weightLoss = c.indexOf("<WeightLossAttributionHandoff />");
+    expect(bridge).toBeGreaterThan(-1);
+    expect(bridge).toBeLessThan(aesthetics);
+    expect(bridge).toBeLessThan(weightLoss);
+  });
   it("keeps the existing site chrome", () => {
     for (const x of ["SkipNav", "Header", "Footer", "GhlChatWidget"]) expect(c).toContain(x);
   });
   it("does NOT render the campaign GTM", () => expect(c).not.toMatch(/CampaignGtm/));
+  it("suppresses every direct analytics writer for the exact weight-loss host", () => {
+    expect(c).toContain("const weightLossExperience = isWeightLossHost(host)");
+    expect(c).toMatch(/!weightLossExperience\s*\?\s*\([\s\S]*<GoogleAnalytics\s*\/>[\s\S]*<MetaPixel\s*\/>[\s\S]*<ConversionTracker\s*\/>[\s\S]*\)\s*:\s*null/);
+  });
+
+  it("suppresses LeadConnector chat for the exact weight-loss host", () => {
+    expect(c).toMatch(/!weightLossExperience\s*\?\s*<GhlChatWidget\s*\/>\s*:\s*null/);
+  });
+
+  it("keeps all three writers in the ordinary aesthetics branch", () => {
+    expect(c.match(/<GoogleAnalytics\s*\/>/g)).toHaveLength(1);
+    expect(c.match(/<MetaPixel\s*\/>/g)).toHaveLength(1);
+    expect(c.match(/<ConversionTracker\s*\/>/g)).toHaveLength(1);
+  });
 });
 
 describe("(campaign) layout owns CampaignGtm and nothing else", () => {
@@ -56,7 +83,11 @@ describe("(campaign) layout owns CampaignGtm and nothing else", () => {
     expect(c).toMatch(/<CampaignGtmNoScript\s*\/>/);
   });
   it("renders no direct GA, Meta, GHL chat, or CallRail", () => {
-    for (const banned of ["GoogleAnalytics", "MetaPixel", "GhlChatWidget", "callrail", "CallRail"]) {
+    for (const banned of [
+      "GoogleAnalytics", "MetaPixel", "GhlChatWidget", "callrail", "CallRail",
+      "CookieYesAttributionConsentBridge", "AestheticsAttributionHandoff",
+      "WeightLossAttributionHandoff",
+    ]) {
       expect(c, `campaign layout must not contain ${banned}`).not.toContain(banned);
     }
   });

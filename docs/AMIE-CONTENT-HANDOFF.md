@@ -5,7 +5,7 @@
 One codebase now contains both customer-facing experiences:
 
 1. The full Rella Aesthetics replacement site for `experiencerella.com` (still a nonpublic staging project until Zach approves a future cutover).
-2. The medical weight-loss experience at `weightloss.experiencerella.com`.
+2. The medical weight-loss experience at `rellaweightloss.com`.
 
 The employee-only Rella HQ app is a different repository and is not part of this workspace.
 

@@ -116,7 +116,7 @@ an approved promotion, run the branded host check separately:
 
 ```bash
 SITE_URL='https://experiencerella.com' \
-BOOKING_CHECK_WEIGHT_LOSS_SITE_URL='https://weightloss.experiencerella.com' \
+BOOKING_CHECK_WEIGHT_LOSS_SITE_URL='https://rellaweightloss.com' \
 npm run check:booking-links
 ```
 

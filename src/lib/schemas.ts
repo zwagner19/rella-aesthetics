@@ -148,7 +148,7 @@ export function physicianOwnerSchema() {
   };
 }
 
-export const MEDICAL_WEIGHT_LOSS_CANONICAL_URL = "https://weightloss.experiencerella.com/";
+export const MEDICAL_WEIGHT_LOSS_CANONICAL_URL = "https://rellaweightloss.com/";
 
 export function medicalWeightLossServiceSchema() {
   return {

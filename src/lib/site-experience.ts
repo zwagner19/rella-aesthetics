@@ -1,4 +1,5 @@
 import { resolveBookingHref } from "@/lib/booking-routes";
+import { isWeightLossLandingPath } from "@/lib/site-hosts";
 
 export interface GlobalBookingAction {
   href: string;
@@ -11,7 +12,8 @@ export function resolveGlobalBookingAction(
   ordinaryLabel: "Book Consultation" | "Book Online",
 ): GlobalBookingAction {
   const isWeightLossLanding =
-    pathname === "/services/weight-loss" || (weightLossExperience && pathname === "/");
+    pathname === "/services/weight-loss" ||
+    (weightLossExperience && isWeightLossLandingPath(pathname));
 
   if (isWeightLossLanding) {
     return { href: "#consultation-options", label: "See Call Times", cta: "booking-flow-start" };

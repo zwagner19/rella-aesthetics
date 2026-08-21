@@ -120,7 +120,7 @@
       "LOOKALIKE_SEGMENTS",
       "AUDIENCE_EXPANSION"
     ],
-    "finalUrlSuffix": "utm_source=google&utm_medium=cpc&utm_campaign={campaignid}&utm_adgroup={adgroupid}&utm_term={keyword}&utm_content={creative}&utm_matchtype={matchtype}&utm_device={device}",
+    "finalUrlSuffix": "campaignid={campaignid}&adgroupid={adgroupid}",
     "conversionRoles": {
       "bookingCtaClick": "SECONDARY",
       "qualifiedCall": "SECONDARY_UNTIL_CALL_QUALITY_IS_VERIFIED",

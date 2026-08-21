@@ -61,17 +61,9 @@ for (const audience of forbiddenAudiences) {
   }
 }
 
-for (const valueTrack of [
-  "{campaignid}",
-  "{adgroupid}",
-  "{keyword}",
-  "{creative}",
-  "{matchtype}",
-  "{device}",
-]) {
-  if (!plan.accountControls.finalUrlSuffix.includes(valueTrack)) {
-    fail(`Final URL suffix is missing ${valueTrack}.`);
-  }
+const approvedFinalUrlSuffix = "campaignid={campaignid}&adgroupid={adgroupid}";
+if (plan.accountControls.finalUrlSuffix !== approvedFinalUrlSuffix) {
+  fail(`Final URL suffix must equal ${approvedFinalUrlSuffix}.`);
 }
 
 const allowedPaths = new Set([

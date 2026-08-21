@@ -1,4 +1,7 @@
 import { CUSTOM_BOOKING_ORIGIN } from "./booking-routes";
+import { isAestheticsHost, WEIGHT_LOSS_HOST } from "./site-hosts";
+import type { AttributionConsentState } from "./attribution-consent";
+import { isAttributionRevocationHandle } from "./attribution-revocation-handle";
 
 /**
  * Privacy-minimized attribution handoff for general aesthetics traffic.
@@ -6,45 +9,49 @@ import { CUSTOM_BOOKING_ORIGIN } from "./booking-routes";
  * browser session until the first-party booking server acknowledges capture.
  */
 
-const CLICK_ID_FIELDS = ["gclid", "gbraid", "wbraid", "gclsrc"] as const;
-const MARKETING_FIELDS = [
+const CLICK_ID_FIELDS = ["gclid", "gbraid", "wbraid"] as const;
+const CAMPAIGN_ID_FIELDS = ["campaignid", "adgroupid"] as const;
+const APPROVED_FIELDS = [...CLICK_ID_FIELDS, ...CAMPAIGN_ID_FIELDS] as const;
+const LEGACY_UNSAFE_FIELDS = [
+  "gclsrc",
   "utm_source",
   "utm_medium",
   "utm_campaign",
   "utm_content",
   "utm_term",
-  "campaignid",
-  "adgroupid",
   "keyword",
   "matchtype",
   "device",
   "network",
+  "gad_keyword",
+  "gad_matchtype",
+  "gad_device",
+  "gad_network",
 ] as const;
-const APPROVED_FIELDS = [...CLICK_ID_FIELDS, ...MARKETING_FIELDS] as const;
 
-type MarketingField = (typeof MARKETING_FIELDS)[number];
+type CampaignIdField = (typeof CAMPAIGN_ID_FIELDS)[number];
 type ApprovedField = (typeof APPROVED_FIELDS)[number];
 
-const MARKETING_ALIASES: Readonly<Record<string, MarketingField>> = {
+const CAMPAIGN_ID_ALIASES: Readonly<Record<string, CampaignIdField>> = {
   gad_campaignid: "campaignid",
   gad_adgroupid: "adgroupid",
-  gad_keyword: "keyword",
-  gad_matchtype: "matchtype",
-  gad_device: "device",
-  gad_network: "network",
 };
 
 const CLICK_ID_RE = /^[\w.~-]{1,200}$/;
-const MARKETING_PARAM_RE = /^[A-Za-z0-9_ .~:+/-]{1,200}$/;
-const EMAIL_LIKE = /[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/i;
-const PHONE_LIKE = /(?:\+?1[-.\s]?)?\(?\d{3}\)?[-.\s]\d{3}[-.\s]\d{4}/;
+const NUMERIC_ID_RE = /^\d{1,30}$/;
 
 export const AESTHETICS_ATTRIBUTION_STORAGE_KEY =
   "rella_aesthetics_attribution_v1";
 export const AESTHETICS_MARKETING_ORIGIN = "https://experiencerella.com";
+export const AESTHETICS_WWW_MARKETING_ORIGIN =
+  "https://www.experiencerella.com";
+const AESTHETICS_MARKETING_ORIGINS = new Set([
+  AESTHETICS_MARKETING_ORIGIN,
+  AESTHETICS_WWW_MARKETING_ORIGIN,
+]);
 export const AESTHETICS_ATTRIBUTION_ENDPOINT =
   `${CUSTOM_BOOKING_ORIGIN}/api/booking-v2/attribution`;
-export const WEIGHT_LOSS_MARKETING_HOST = "weightloss.experiencerella.com";
+export const WEIGHT_LOSS_MARKETING_HOST = WEIGHT_LOSS_HOST;
 
 export type AestheticsAttribution = Partial<Record<ApprovedField, string>>;
 export type AestheticsLocation = "napa" | "vacaville" | "unknown";
@@ -60,21 +67,26 @@ export type AttributionFetch = (
   init: RequestInit,
 ) => Promise<Pick<Response, "ok" | "json">>;
 
-function isApprovedMarketingValue(value: string): boolean {
-  return (
-    MARKETING_PARAM_RE.test(value) &&
-    !EMAIL_LIKE.test(value) &&
-    !PHONE_LIKE.test(value)
-  );
-}
-
 function approvedValue(field: ApprovedField, raw: unknown): string | null {
   if (typeof raw !== "string") return null;
   const value = raw.trim();
   if (!value) return null;
   return (CLICK_ID_FIELDS as readonly string[]).includes(field)
     ? CLICK_ID_RE.test(value) ? value : null
-    : isApprovedMarketingValue(value) ? value : null;
+    : NUMERIC_ID_RE.test(value) ? value : null;
+}
+
+function hasExactlyOneClickIdentifier(
+  attribution: AestheticsAttribution,
+): boolean {
+  return (
+    CLICK_ID_FIELDS.filter((field) => Boolean(attribution[field])).length === 1
+  );
+}
+
+function hasIncomingClickIdentifierField(search: string): boolean {
+  const incoming = new URLSearchParams(search);
+  return CLICK_ID_FIELDS.some((field) => incoming.has(field));
 }
 
 function sanitizeAttributionObject(candidate: unknown): AestheticsAttribution {
@@ -87,7 +99,7 @@ function sanitizeAttributionObject(candidate: unknown): AestheticsAttribution {
     const value = approvedValue(field, input[field]);
     if (value) approved[field] = value;
   }
-  return approved;
+  return hasExactlyOneClickIdentifier(approved) ? approved : {};
 }
 
 /** Parse only explicitly approved, bounded attribution values from a query. */
@@ -101,12 +113,12 @@ export function parseAestheticsAttribution(
     const value = approvedValue(field, incoming.get(field));
     if (value) approved[field] = value;
   }
-  for (const [alias, canonical] of Object.entries(MARKETING_ALIASES)) {
+  for (const [alias, canonical] of Object.entries(CAMPAIGN_ID_ALIASES)) {
     if (approved[canonical]) continue;
     const value = approvedValue(canonical, incoming.get(alias));
     if (value) approved[canonical] = value;
   }
-  return approved;
+  return hasExactlyOneClickIdentifier(approved) ? approved : {};
 }
 
 /**
@@ -125,9 +137,17 @@ export function resolveAestheticsAttribution(
         JSON.stringify(incoming),
       );
     } catch {
-      // Current-page query forwarding still works when storage is denied.
+      // The current page retains the values for a later consent-gated retry.
     }
     return incoming;
+  }
+  if (hasIncomingClickIdentifierField(search)) {
+    try {
+      storage?.removeItem(AESTHETICS_ATTRIBUTION_STORAGE_KEY);
+    } catch {
+      // The conflicting current URL still remains the authoritative no-touch.
+    }
+    return {};
   }
 
   try {
@@ -163,103 +183,43 @@ export function inferAestheticsLocation(pathname: string): AestheticsLocation {
   return "unknown";
 }
 
-/** The independent weight-loss host keeps its existing handoff unchanged. */
+/** Run the global aesthetics handoff only on its exact production hosts. */
 export function isGeneralAestheticsHost(hostname: string): boolean {
-  return hostname.trim().toLowerCase().replace(/\.$/, "") !== WEIGHT_LOSS_MARKETING_HOST;
-}
-
-function configuredBookingOrigin(): string | null {
-  try {
-    return new URL(CUSTOM_BOOKING_ORIGIN).origin;
-  } catch {
-    return null;
-  }
-}
-
-function isBookingPath(pathname: string): boolean {
-  return pathname === "/book" || pathname === "/book/" || pathname.startsWith("/book/");
-}
-
-function isAestheticsBookingDestination(
-  destination: URL,
-  marketingOrigin: string,
-): boolean {
-  const localChooser =
-    destination.origin === marketingOrigin &&
-    (destination.pathname === "/book" || destination.pathname === "/book/");
-  const customBooking =
-    destination.origin === configuredBookingOrigin() &&
-    isBookingPath(destination.pathname);
-  return localChooser || customBooking;
-}
-
-/** Decorate only local `/book` or the exact configured aesthetics booking app. */
-export function withAestheticsAttribution(
-  href: string,
-  attribution: AestheticsAttribution,
-  marketingOrigin: string,
-): string {
-  if (Object.keys(attribution).length === 0) return href;
-  let currentOrigin: string;
-  let destination: URL;
-  try {
-    currentOrigin = new URL(marketingOrigin).origin;
-    destination = new URL(href, currentOrigin);
-  } catch {
-    return href;
-  }
-  if (!isAestheticsBookingDestination(destination, currentOrigin)) return href;
-
-  for (const field of APPROVED_FIELDS) {
-    const value = approvedValue(field, attribution[field]);
-    if (value) destination.searchParams.set(field, value);
-  }
-  return destination.toString();
-}
-
-/** Remove fallback attribution from an already-decorated booking link. */
-export function stripAestheticsAttributionFromBookingHref(
-  href: string,
-  marketingOrigin: string,
-): string {
-  let currentOrigin: string;
-  let destination: URL;
-  try {
-    currentOrigin = new URL(marketingOrigin).origin;
-    destination = new URL(href, currentOrigin);
-  } catch {
-    return href;
-  }
-  if (!isAestheticsBookingDestination(destination, currentOrigin)) return href;
-  for (const field of APPROVED_FIELDS) destination.searchParams.delete(field);
-  for (const alias of Object.keys(MARKETING_ALIASES)) {
-    destination.searchParams.delete(alias);
-  }
-  return destination.toString();
+  return isAestheticsHost(hostname);
 }
 
 /** Strip raw Google click identifiers only after the server acknowledges them. */
-export function stripAestheticsClickIds(href: string): string {
+export function stripAestheticsAttributionFromPageHref(href: string): string {
   let url: URL;
   try {
     url = new URL(href);
   } catch {
     return href;
   }
-  for (const field of CLICK_ID_FIELDS) url.searchParams.delete(field);
+  for (const field of APPROVED_FIELDS) url.searchParams.delete(field);
+  for (const alias of Object.keys(CAMPAIGN_ID_ALIASES)) {
+    url.searchParams.delete(alias);
+  }
+  for (const field of LEGACY_UNSAFE_FIELDS) url.searchParams.delete(field);
   return url.toString();
 }
 
 /**
  * Capture only from the exact production marketing origin. Preview deployments
- * retain the session/query fallback and never write into production capture.
+ * never write into production capture.
  */
 export async function postAestheticsAttribution(args: {
   attribution: AestheticsAttribution;
+  consentState: AttributionConsentState;
   marketingOrigin: string;
   pathname: string;
   fetchImpl: AttributionFetch;
+  revocationHandle: string;
+  revocationPredecessorHandle?: string | null;
+  signal?: AbortSignal;
 }): Promise<boolean> {
+  if (args.consentState !== "granted") return false;
+
   let origin: string;
   try {
     origin = new URL(args.marketingOrigin).origin;
@@ -267,9 +227,68 @@ export async function postAestheticsAttribution(args: {
     return false;
   }
   const attribution = sanitizeAttributionObject(args.attribution);
+  const predecessor = args.revocationPredecessorHandle;
   if (
-    origin !== AESTHETICS_MARKETING_ORIGIN ||
-    Object.keys(attribution).length === 0
+    !AESTHETICS_MARKETING_ORIGINS.has(origin) ||
+    Object.keys(attribution).length === 0 ||
+    !isAttributionRevocationHandle(args.revocationHandle) ||
+    (predecessor != null &&
+      (!isAttributionRevocationHandle(predecessor) ||
+        predecessor === args.revocationHandle))
+  ) {
+    return false;
+  }
+  try {
+    const response = await args.fetchImpl(AESTHETICS_ATTRIBUTION_ENDPOINT, {
+      method: "POST",
+      credentials: "include",
+      keepalive: true,
+      signal: args.signal,
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        location: inferAestheticsLocation(args.pathname),
+        consentAdUserData: "granted",
+        revocationHandle: args.revocationHandle,
+        ...(predecessor
+          ? { revocationPredecessorHandle: predecessor }
+          : {}),
+        ...attribution,
+      }),
+    });
+    if (!response.ok) return false;
+    const result: unknown = await response.json();
+    return Boolean(
+      result &&
+        typeof result === "object" &&
+        (result as Record<string, unknown>).ok === true &&
+        typeof (result as Record<string, unknown>).attributionId === "string" &&
+        ((result as Record<string, unknown>).attributionId as string).trim() &&
+        (result as Record<string, unknown>).consentAdUserData === "granted" &&
+        (result as Record<string, unknown>).clickIdentifiersStored === true,
+    );
+  } catch {
+    return false;
+  }
+}
+
+/** Revoke server attribution after an explicit completed advertising denial. */
+export async function revokeAestheticsAttribution(args: {
+  marketingOrigin: string;
+  pathname: string;
+  fetchImpl: AttributionFetch;
+  revocationHandle?: string | null;
+  signal?: AbortSignal;
+}): Promise<boolean> {
+  let origin: string;
+  try {
+    origin = new URL(args.marketingOrigin).origin;
+  } catch {
+    return false;
+  }
+  if (!AESTHETICS_MARKETING_ORIGINS.has(origin)) return false;
+  if (
+    args.revocationHandle != null &&
+    !isAttributionRevocationHandle(args.revocationHandle)
   ) {
     return false;
   }
@@ -279,20 +298,26 @@ export async function postAestheticsAttribution(args: {
       method: "POST",
       credentials: "include",
       keepalive: true,
+      signal: args.signal,
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         location: inferAestheticsLocation(args.pathname),
-        ...attribution,
+        consentAdUserData: "denied",
+        ...(args.revocationHandle
+          ? { revocationHandle: args.revocationHandle }
+          : {}),
       }),
     });
     if (!response.ok) return false;
     const result: unknown = await response.json();
     return Boolean(
       result &&
-      typeof result === "object" &&
-      (result as Record<string, unknown>).ok === true &&
-      typeof (result as Record<string, unknown>).attributionId === "string" &&
-      (result as Record<string, unknown>).attributionId,
+        typeof result === "object" &&
+        (result as Record<string, unknown>).ok === true &&
+        (result as Record<string, unknown>).consentAdUserData === "denied" &&
+        typeof (result as Record<string, unknown>).revoked === "boolean" &&
+        (result as Record<string, unknown>).clickIdentifiersStored === false &&
+        (result as Record<string, unknown>).revocationFinalized === true,
     );
   } catch {
     return false;

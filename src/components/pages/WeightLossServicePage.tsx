@@ -3,7 +3,6 @@ import { Button } from "@/components/ui/Button";
 import { FaqAccordion, FaqSchema } from "@/components/blocks/FaqAccordion";
 import { BeforeAfterGallery } from "@/components/blocks/BeforeAfterGallery";
 import { TrustStrip } from "@/components/blocks/TrustStrip";
-import { WeightLossConversionTracker } from "@/components/integrations/WeightLossConversionTracker";
 import { approvedResultsFor } from "@/content/results";
 import { weightLossGoogleProof, weightLossPatientStory } from "@/content/social-proof";
 import { resolveBookingHref, type BookingLocation } from "@/lib/booking-routes";
@@ -154,7 +153,6 @@ function LocationCard({ option }: { option: LocationOption }) {
 export function WeightLossServicePage() {
   return (
     <>
-      <WeightLossConversionTracker />
       <FaqSchema items={[...faq]} />
       <script
         type="application/ld+json"

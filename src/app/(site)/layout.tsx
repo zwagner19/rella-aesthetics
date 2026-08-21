@@ -1,4 +1,6 @@
 import { headers } from "next/headers";
+import { AestheticsAttributionHandoff } from "@/components/integrations/AestheticsAttributionHandoff";
+import { CookieYesAttributionConsentBridge } from "@/components/integrations/CookieYesAttributionConsentBridge";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { SkipNav } from "@/components/layout/SkipNav";
@@ -6,6 +8,7 @@ import { GhlChatWidget } from "@/components/integrations/GhlChatWidget";
 import { GoogleAnalytics } from "@/components/integrations/GoogleAnalytics";
 import { MetaPixel } from "@/components/integrations/MetaPixel";
 import { ConversionTracker } from "@/components/integrations/ConversionTracker";
+import { WeightLossAttributionHandoff } from "@/components/integrations/WeightLossAttributionHandoff";
 import { ClarityAnalytics } from "@/components/integrations/ClarityAnalytics";
 import { MobileConversionBar } from "@/components/layout/MobileConversionBar";
 import { PreviewClinicChooser } from "@/components/preview/PreviewClinicChooser";
@@ -39,11 +42,17 @@ export default async function SiteLayout({ children }: Readonly<{ children: Reac
 
   return (
     <>
-      {/* Direct GA + Meta belong to ordinary marketing routes ONLY. Moved here
-          from the root layout so the campaign group cannot inherit them. */}
-      <GoogleAnalytics />
-      <MetaPixel />
-      <ConversionTracker />
+      <CookieYesAttributionConsentBridge />
+      <AestheticsAttributionHandoff />
+      <WeightLossAttributionHandoff />
+      {/* Direct analytics and third-party chat belong to aesthetics routes only. */}
+      {!weightLossExperience ? (
+        <>
+          <GoogleAnalytics />
+          <MetaPixel />
+          <ConversionTracker />
+        </>
+      ) : null}
       <SkipNav />
       <Header weightLossExperience={weightLossExperience} />
       <main
@@ -57,7 +66,7 @@ export default async function SiteLayout({ children }: Readonly<{ children: Reac
         weightLossExperience={weightLossExperience}
         clarityPreferencesAvailable={clarityAvailable}
       />
-      <GhlChatWidget />
+      {!weightLossExperience ? <GhlChatWidget /> : null}
       <MobileConversionBar weightLossExperience={weightLossExperience} />
       {previewExperience ? <PreviewClinicChooser /> : null}
       {clarityAvailable && clarityProjectId ? (

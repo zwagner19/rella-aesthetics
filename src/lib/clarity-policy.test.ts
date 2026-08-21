@@ -15,6 +15,7 @@ describe("Clarity public-page policy", () => {
     expect(isClarityEligibleHost("experiencerella.com")).toBe(true);
     expect(isClarityEligibleHost("www.experiencerella.com:443")).toBe(true);
     for (const host of [
+      "rellaweightloss.com",
       "weightloss.experiencerella.com",
       "book.experiencerella.com",
       "rella-aesthetics.vercel.app",

@@ -42,8 +42,14 @@ describe("owner-retired public event paths", () => {
   });
 
   it("does not widen the public 410 rule to the isolated weight-loss host", () => {
-    const response = proxy(request("/events", "weightloss.experiencerella.com"));
+    const response = proxy(request("/events", "rellaweightloss.com"));
     expect(response.status).toBe(308);
     expect(response.headers.get("location")).toBe("https://experiencerella.com/events");
+  });
+
+  it("canonicalizes the legacy weight-loss host before applying path policy", () => {
+    const response = proxy(request("/events", "weightloss.experiencerella.com"));
+    expect(response.status).toBe(308);
+    expect(response.headers.get("location")).toBe("https://rellaweightloss.com/events");
   });
 });

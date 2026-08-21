@@ -6,7 +6,7 @@ const configuredWeightLossSiteUrl = process.env.BOOKING_CHECK_WEIGHT_LOSS_SITE_U
 const weightLossSiteUrl = new URL(
   configuredWeightLossSiteUrl ?? baseUrl,
 );
-const weightLossMarketingHost = "weightloss.experiencerella.com";
+const weightLossMarketingHost = "rellaweightloss.com";
 const localCandidateHosts = new Set(["localhost", "127.0.0.1", "::1"]);
 const isLocalWeightLossCandidate = localCandidateHosts.has(weightLossSiteUrl.hostname);
 const checkWeightLossContext =
