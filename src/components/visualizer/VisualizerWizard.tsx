@@ -263,13 +263,15 @@ export function VisualizerWizard() {
         <div className="space-y-6">
           {mode === "demo" && (
             <p className="text-xs text-center text-silver bg-silver-pale rounded px-3 py-2">
-              Demo preview mode — configure OPENAI_API_KEY for live AI edits.
+              Preview used a conservative fallback. Live AI editing is active when OpenAI responds
+              successfully.
             </p>
           )}
           <BeforeAfterSlider
             beforeSrc={beforeDataUrl}
             afterSrc={afterDataUrl}
             blurred={!unlocked}
+            demoEffect={mode === "demo"}
           />
           {!unlocked && (
             <p className="text-sm text-silver text-center">
@@ -374,7 +376,7 @@ export function VisualizerWizard() {
           <h2 className="font-bold text-xl tracking-[0.06em] uppercase text-rose-text">
             Your Preview Is Ready
           </h2>
-          <BeforeAfterSlider beforeSrc={beforeDataUrl} afterSrc={afterDataUrl} />
+          <BeforeAfterSlider beforeSrc={beforeDataUrl} afterSrc={afterDataUrl} demoEffect={mode === "demo"} />
           <VisualizerDisclaimer compact />
           <p className="text-sm text-silver">
             The {RELLA_BRAND.name} team will follow up shortly. When you&apos;re ready, book a

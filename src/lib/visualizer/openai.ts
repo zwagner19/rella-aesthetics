@@ -1,6 +1,5 @@
 import OpenAI from "openai";
 import { buildAnalysisPrompt } from "@/lib/visualizer/prompts";
-import { getSharp } from "@/lib/visualizer/sharp-loader";
 import { DEFAULT_ZONE_REGIONS } from "@/lib/visualizer/treatments";
 import type { BotoxZone, FaceAnalysis, MaskRegion } from "@/lib/visualizer/types";
 import { isValidBotoxZone } from "@/lib/visualizer/treatments";
@@ -57,6 +56,16 @@ function parseAnalysisJson(raw: string): FaceAnalysis {
   }
 }
 
+function bufferToDataUrl(buffer: Buffer, mimeType: string): string {
+  return `data:${mimeType};base64,${buffer.toString("base64")}`;
+}
+
+function mimeToExtension(mimeType: string): string {
+  if (mimeType.includes("png")) return "png";
+  if (mimeType.includes("webp")) return "webp";
+  return "jpg";
+}
+
 export async function analyzeSelfie(
   imageBuffer: Buffer,
   mimeType: string
@@ -65,9 +74,7 @@ export async function analyzeSelfie(
   if (!client) return defaultAnalysis();
 
   try {
-    const sharp = await getSharp();
-    const pngBuffer = await sharp(imageBuffer).rotate().png().toBuffer();
-    const dataUrl = `data:image/png;base64,${pngBuffer.toString("base64")}`;
+    const dataUrl = bufferToDataUrl(imageBuffer, mimeType);
 
     const response = await client.chat.completions.create({
       model: "gpt-4o",
@@ -95,24 +102,22 @@ export async function analyzeSelfie(
 export async function generateEditedImage(
   imageBuffer: Buffer,
   mimeType: string,
-  maskBuffer: Buffer,
+  maskBuffer: Buffer | null,
   prompt: string
 ): Promise<Buffer | null> {
   const client = getOpenAIClient();
   if (!client) return null;
 
   try {
-    const sharp = await getSharp();
-    const pngImage = await sharp(imageBuffer).rotate().png().toBuffer();
-    const pngMask = await sharp(maskBuffer).png().toBuffer();
-
-    const imageFile = new File([pngImage], "selfie.png", { type: "image/png" });
-    const maskFile = new File([pngMask], "mask.png", { type: "image/png" });
+    const ext = mimeToExtension(mimeType);
+    const imageFile = new File([new Uint8Array(imageBuffer)], `selfie.${ext}`, { type: mimeType });
 
     const result = await client.images.edit({
       model: "gpt-image-1",
       image: imageFile,
-      mask: maskFile,
+      ...(maskBuffer
+        ? { mask: new File([new Uint8Array(maskBuffer)], "mask.png", { type: "image/png" }) }
+        : {}),
       prompt,
       size: "1024x1024",
     });

@@ -1,14 +1,23 @@
 "use client";
 
 import { useCallback, useRef, useState } from "react";
+import { WATERMARK_LABEL } from "@/lib/visualizer/brand";
 
 interface BeforeAfterSliderProps {
   beforeSrc: string;
   afterSrc: string;
   blurred?: boolean;
+  demoEffect?: boolean;
+  showWatermark?: boolean;
 }
 
-export function BeforeAfterSlider({ beforeSrc, afterSrc, blurred = false }: BeforeAfterSliderProps) {
+export function BeforeAfterSlider({
+  beforeSrc,
+  afterSrc,
+  blurred = false,
+  demoEffect = false,
+  showWatermark = true,
+}: BeforeAfterSliderProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [position, setPosition] = useState(50);
 
@@ -44,9 +53,14 @@ export function BeforeAfterSlider({ beforeSrc, afterSrc, blurred = false }: Befo
           <img
             src={afterSrc}
             alt="After simulation"
-            className={`absolute inset-0 w-full h-full object-cover ${blurred ? "blur-md scale-105" : ""}`}
+            className={`absolute inset-0 w-full h-full object-cover ${blurred ? "blur-md scale-105" : ""} ${demoEffect ? "brightness-105 contrast-[0.98] saturate-[0.92]" : ""}`}
           />
         </div>
+        {showWatermark && (
+          <span className="absolute bottom-3 left-3 bg-black/50 text-white text-[0.625rem] font-bold tracking-widest uppercase px-2 py-1 rounded pointer-events-none">
+            {WATERMARK_LABEL}
+          </span>
+        )}
         <div
           className="absolute top-0 bottom-0 w-0.5 bg-white shadow-md"
           style={{ left: `${position}%` }}
