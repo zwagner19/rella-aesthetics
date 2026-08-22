@@ -19,7 +19,7 @@ type Step =
   | "preview"
   | "intake"
   | "contact"
-  | "complete";
+  | "done";
 
 const STEP_LABELS: Record<Step, string> = {
   intro: "Welcome",
@@ -29,7 +29,7 @@ const STEP_LABELS: Record<Step, string> = {
   preview: "Preview",
   intake: "Goals",
   contact: "Contact",
-  complete: "Complete",
+  done: "Done",
 };
 
 function createSessionId(): string {
@@ -50,7 +50,7 @@ export function VisualizerWizard() {
   const [beforeDataUrl, setBeforeDataUrl] = useState<string | null>(null);
   const [afterDataUrl, setAfterDataUrl] = useState<string | null>(null);
   const [mode, setMode] = useState<"live" | "demo" | null>(null);
-  const [unlocked, setUnlocked] = useState(false);
+  const [followUpSubmitted, setFollowUpSubmitted] = useState(false);
   const [goal, setGoal] = useState("");
   const [timeline, setTimeline] = useState("");
   const [budget, setBudget] = useState("");
@@ -152,8 +152,8 @@ export function VisualizerWizard() {
       });
       const data = await readVisualizerResponse<{ error?: string }>(res);
       if (!res.ok) throw new Error(data.error ?? "Submission failed");
-      setUnlocked(true);
-      setStep("complete");
+      setFollowUpSubmitted(true);
+      setStep("done");
     } catch (err) {
       setError(err instanceof Error ? err.message : "Submission failed");
     } finally {
@@ -161,7 +161,7 @@ export function VisualizerWizard() {
     }
   }, [budget, email, goal, intensity, name, phone, sessionId, timeline, zones]);
 
-  const progressSteps: Step[] = ["intro", "upload", "treatment", "preview", "intake", "contact", "complete"];
+  const progressSteps: Step[] = ["intro", "upload", "treatment", "preview", "done"];
   const progressIndex = progressSteps.indexOf(step === "generating" ? "treatment" : step);
 
   return (
@@ -270,21 +270,16 @@ export function VisualizerWizard() {
           <BeforeAfterSlider
             beforeSrc={beforeDataUrl}
             afterSrc={afterDataUrl}
-            blurred={!unlocked}
             demoEffect={mode === "demo"}
           />
-          {!unlocked && (
-            <p className="text-sm text-silver text-center">
-              Complete a short intake to unlock your full-resolution preview and save your results.
-            </p>
-          )}
           <VisualizerDisclaimer compact />
-          <div className="flex justify-center gap-3">
+          <div className="flex flex-col sm:flex-row justify-center gap-3">
             <Button type="button" variant="ghost" onClick={() => setStep("treatment")}>
               Adjust
             </Button>
-            <Button type="button" onClick={() => setStep("intake")}>
-              Continue
+            <Button href={bookingHref}>Book Consultation</Button>
+            <Button type="button" variant="ghost" onClick={() => setStep("intake")}>
+              Get Follow-up (Optional)
             </Button>
           </div>
         </div>
@@ -292,6 +287,10 @@ export function VisualizerWizard() {
 
       {step === "intake" && (
         <div className="space-y-6">
+          <p className="text-sm text-silver text-center max-w-md mx-auto">
+            Optional — share your goals if you&apos;d like the {RELLA_BRAND.name} team to follow up.
+            You can use the preview without submitting anything.
+          </p>
           <IntakeForm
             goal={goal}
             timeline={timeline}
@@ -302,7 +301,10 @@ export function VisualizerWizard() {
           />
           <div className="flex justify-center gap-3">
             <Button type="button" variant="ghost" onClick={() => setStep("preview")}>
-              Back
+              Back to Preview
+            </Button>
+            <Button type="button" variant="ghost" onClick={() => setStep("preview")}>
+              Skip
             </Button>
             <Button type="button" onClick={() => setStep("contact")}>
               Continue
@@ -314,7 +316,8 @@ export function VisualizerWizard() {
       {step === "contact" && (
         <div className="space-y-6">
           <p className="text-sm text-silver text-center">
-            Enter your details to unlock your preview and connect with the {RELLA_BRAND.name} team.
+            Optional — share contact info only if you want {RELLA_BRAND.name} to follow up about your
+            preview.
           </p>
           <div className="space-y-4 max-w-md mx-auto">
             <div>
@@ -360,30 +363,38 @@ export function VisualizerWizard() {
             <Button type="button" variant="ghost" onClick={() => setStep("intake")}>
               Back
             </Button>
+            <Button type="button" variant="ghost" onClick={() => setStep("preview")}>
+              Skip
+            </Button>
             <Button
               type="button"
               disabled={loading || !name || (!email && !phone)}
               onClick={() => void submitLead()}
             >
-              {loading ? "Saving..." : "Unlock Preview"}
+              {loading ? "Saving..." : "Send Follow-up Request"}
             </Button>
           </div>
         </div>
       )}
 
-      {step === "complete" && beforeDataUrl && afterDataUrl && (
+      {step === "done" && beforeDataUrl && afterDataUrl && (
         <div className="space-y-6 text-center">
           <h2 className="font-bold text-xl tracking-[0.06em] uppercase text-rose-text">
-            Your Preview Is Ready
+            {followUpSubmitted ? "We&apos;ll Be In Touch" : "Your Preview"}
           </h2>
           <BeforeAfterSlider beforeSrc={beforeDataUrl} afterSrc={afterDataUrl} demoEffect={mode === "demo"} />
           <VisualizerDisclaimer compact />
           <p className="text-sm text-silver">
-            The {RELLA_BRAND.name} team will follow up shortly. When you&apos;re ready, book a
-            consultation at our {RELLA_BRAND.locations} locations to discuss your personalized
-            treatment plan.
+            {followUpSubmitted
+              ? `The ${RELLA_BRAND.name} team will follow up shortly about your preview.`
+              : `Share this link with anyone — no account required. Book when you&apos;re ready.`}
           </p>
-          <Button href={bookingHref}>Book at Rella</Button>
+          <div className="flex flex-col sm:flex-row justify-center gap-3">
+            <Button href={bookingHref}>Book at Rella</Button>
+            <Button type="button" variant="ghost" onClick={() => setStep("preview")}>
+              Back to Preview
+            </Button>
+          </div>
         </div>
       )}
     </div>
