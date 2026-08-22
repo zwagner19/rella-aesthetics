@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from "next/server";
-import sharp from "sharp";
 import {
   applyDemoTreatmentEffect,
   addSimulationWatermark,
@@ -14,6 +13,7 @@ import {
 import { buildEditMaskPng, resolveZoneRegions } from "@/lib/visualizer/mask";
 import { generateEditedImage } from "@/lib/visualizer/openai";
 import { buildEditPrompt } from "@/lib/visualizer/prompts";
+import { getSharp } from "@/lib/visualizer/sharp-loader";
 import {
   isValidBotoxZone,
   isValidIntensity,
@@ -22,6 +22,7 @@ import {
 import type { BotoxZone, IntensityPreset, MaskRegion } from "@/lib/visualizer/types";
 
 export const maxDuration = 60;
+export const runtime = "nodejs";
 
 interface GenerateBody {
   image?: string;
@@ -53,6 +54,7 @@ export async function POST(req: NextRequest) {
     const sessionId = body.sessionId ?? crypto.randomUUID();
     const { buffer, mimeType } = parseDataUrl(body.image);
 
+    const sharp = await getSharp();
     const meta = await sharp(buffer).metadata();
     const width = meta.width ?? 1024;
     const height = meta.height ?? 1024;

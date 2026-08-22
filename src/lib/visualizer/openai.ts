@@ -1,6 +1,6 @@
 import OpenAI from "openai";
-import sharp from "sharp";
 import { buildAnalysisPrompt } from "@/lib/visualizer/prompts";
+import { getSharp } from "@/lib/visualizer/sharp-loader";
 import { DEFAULT_ZONE_REGIONS } from "@/lib/visualizer/treatments";
 import type { BotoxZone, FaceAnalysis, MaskRegion } from "@/lib/visualizer/types";
 import { isValidBotoxZone } from "@/lib/visualizer/treatments";
@@ -64,26 +64,32 @@ export async function analyzeSelfie(
   const client = getOpenAIClient();
   if (!client) return defaultAnalysis();
 
-  const pngBuffer = await sharp(imageBuffer).rotate().png().toBuffer();
-  const dataUrl = `data:image/png;base64,${pngBuffer.toString("base64")}`;
+  try {
+    const sharp = await getSharp();
+    const pngBuffer = await sharp(imageBuffer).rotate().png().toBuffer();
+    const dataUrl = `data:image/png;base64,${pngBuffer.toString("base64")}`;
 
-  const response = await client.chat.completions.create({
-    model: "gpt-4o",
-    response_format: { type: "json_object" },
-    messages: [
-      {
-        role: "user",
-        content: [
-          { type: "text", text: buildAnalysisPrompt() },
-          { type: "image_url", image_url: { url: dataUrl } },
-        ],
-      },
-    ],
-    max_tokens: 500,
-  });
+    const response = await client.chat.completions.create({
+      model: "gpt-4o",
+      response_format: { type: "json_object" },
+      messages: [
+        {
+          role: "user",
+          content: [
+            { type: "text", text: buildAnalysisPrompt() },
+            { type: "image_url", image_url: { url: dataUrl } },
+          ],
+        },
+      ],
+      max_tokens: 500,
+    });
 
-  const content = response.choices[0]?.message?.content ?? "{}";
-  return parseAnalysisJson(content);
+    const content = response.choices[0]?.message?.content ?? "{}";
+    return parseAnalysisJson(content);
+  } catch (error) {
+    console.error("[visualizer] OpenAI analysis failed:", error);
+    return defaultAnalysis();
+  }
 }
 
 export async function generateEditedImage(
@@ -95,13 +101,14 @@ export async function generateEditedImage(
   const client = getOpenAIClient();
   if (!client) return null;
 
-  const pngImage = await sharp(imageBuffer).rotate().png().toBuffer();
-  const pngMask = await sharp(maskBuffer).png().toBuffer();
-
-  const imageFile = new File([pngImage], "selfie.png", { type: "image/png" });
-  const maskFile = new File([pngMask], "mask.png", { type: "image/png" });
-
   try {
+    const sharp = await getSharp();
+    const pngImage = await sharp(imageBuffer).rotate().png().toBuffer();
+    const pngMask = await sharp(maskBuffer).png().toBuffer();
+
+    const imageFile = new File([pngImage], "selfie.png", { type: "image/png" });
+    const maskFile = new File([pngMask], "mask.png", { type: "image/png" });
+
     const result = await client.images.edit({
       model: "gpt-image-1",
       image: imageFile,

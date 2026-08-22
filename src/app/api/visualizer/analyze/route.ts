@@ -3,6 +3,7 @@ import { analyzeSelfie } from "@/lib/visualizer/openai";
 import { parseDataUrl } from "@/lib/visualizer/image-utils";
 
 export const maxDuration = 60;
+export const runtime = "nodejs";
 
 export async function POST(req: NextRequest) {
   try {

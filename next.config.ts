@@ -12,6 +12,8 @@ const nextConfig: NextConfig = {
     proxyClientMaxBodySize: "4mb",
   },
 
+  serverExternalPackages: ["sharp"],
+
 
   /**
    * Host-aware response headers for the campaign route.

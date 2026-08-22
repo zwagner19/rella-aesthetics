@@ -1,4 +1,4 @@
-import sharp from "sharp";
+import { getSharp } from "./sharp-loader";
 import { DEFAULT_ZONE_REGIONS } from "./treatments";
 import type { BotoxZone, MaskRegion } from "./types";
 
@@ -42,6 +42,7 @@ export async function buildEditMaskPng(
   height: number,
   regions: MaskRegion[]
 ): Promise<Buffer> {
+  const sharp = await getSharp();
   const svg = ellipseSvg(width, height, regions, "white");
   return sharp(Buffer.from(svg)).png().toBuffer();
 }
@@ -52,6 +53,7 @@ export async function buildBlendMaskPng(
   height: number,
   regions: MaskRegion[]
 ): Promise<Buffer> {
+  const sharp = await getSharp();
   const svg = ellipseSvg(width, height, regions, "white");
   return sharp(Buffer.from(svg)).png().toBuffer();
 }

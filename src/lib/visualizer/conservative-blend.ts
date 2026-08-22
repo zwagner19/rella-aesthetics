@@ -1,4 +1,4 @@
-import sharp from "sharp";
+import { getSharp } from "./sharp-loader";
 import { WATERMARK_LABEL } from "./brand";
 import type { IntensityPreset } from "./types";
 import { INTENSITY_BLEND } from "./treatments";
@@ -12,6 +12,7 @@ export async function blendConservative(
   intensity: IntensityPreset,
   regionOverrides?: Partial<Record<BotoxZone, MaskRegion>>
 ): Promise<Buffer> {
+  const sharp = await getSharp();
   const meta = await sharp(originalBuffer).metadata();
   const width = meta.width ?? 1024;
   const height = meta.height ?? 1024;
@@ -50,6 +51,7 @@ export async function applyDemoTreatmentEffect(
   intensity: IntensityPreset,
   regionOverrides?: Partial<Record<BotoxZone, MaskRegion>>
 ): Promise<Buffer> {
+  const sharp = await getSharp();
   const meta = await sharp(originalBuffer).metadata();
   const width = meta.width ?? 1024;
   const height = meta.height ?? 1024;
@@ -88,6 +90,7 @@ export async function applyDemoTreatmentEffect(
 }
 
 export async function addSimulationWatermark(imageBuffer: Buffer): Promise<Buffer> {
+  const sharp = await getSharp();
   const meta = await sharp(imageBuffer).metadata();
   const width = meta.width ?? 1024;
   const height = meta.height ?? 1024;
