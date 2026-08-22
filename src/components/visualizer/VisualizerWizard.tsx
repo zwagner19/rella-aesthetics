@@ -4,6 +4,7 @@ import { useCallback, useMemo, useState } from "react";
 import { Button } from "@/components/ui/Button";
 import { resolveBookingHref } from "@/lib/booking-routes";
 import { RELLA_BRAND, VISUALIZER_INTRO_COPY } from "@/lib/visualizer/brand";
+import { readVisualizerResponse } from "@/lib/visualizer/fetch-json";
 import type { BotoxZone, FaceAnalysis, IntensityPreset } from "@/lib/visualizer/types";
 import { BeforeAfterSlider } from "./BeforeAfterSlider";
 import { SelfieCapture } from "./SelfieCapture";
@@ -70,8 +71,11 @@ export function VisualizerWizard() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ image: dataUrl }),
       });
-      const data = await res.json();
-      if (!res.ok) {
+      const data = await readVisualizerResponse<{
+        analysis?: FaceAnalysis;
+        error?: string;
+      }>(res);
+      if (!res.ok || !data.analysis) {
         throw new Error(data.analysis?.notes ?? data.error ?? "Photo analysis failed");
       }
       setAnalysis(data.analysis);
@@ -103,12 +107,20 @@ export function VisualizerWizard() {
           regions: analysis?.regions,
         }),
       });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error ?? "Generation failed");
+      const data = await readVisualizerResponse<{
+        beforeDataUrl?: string;
+        afterDataUrl?: string;
+        sessionId?: string;
+        mode?: "live" | "demo";
+        error?: string;
+      }>(res);
+      if (!res.ok || !data.beforeDataUrl || !data.afterDataUrl) {
+        throw new Error(data.error ?? "Generation failed");
+      }
       setBeforeDataUrl(data.beforeDataUrl);
       setAfterDataUrl(data.afterDataUrl);
-      setSessionId(data.sessionId);
-      setMode(data.mode);
+      setSessionId(data.sessionId ?? sessionId);
+      setMode(data.mode ?? "demo");
       setStep("preview");
     } catch (err) {
       setError(err instanceof Error ? err.message : "Generation failed");
@@ -138,7 +150,7 @@ export function VisualizerWizard() {
           consent: true,
         }),
       });
-      const data = await res.json();
+      const data = await readVisualizerResponse<{ error?: string }>(res);
       if (!res.ok) throw new Error(data.error ?? "Submission failed");
       setUnlocked(true);
       setStep("complete");

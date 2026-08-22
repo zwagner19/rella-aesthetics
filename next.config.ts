@@ -5,6 +5,13 @@ const nextConfig: NextConfig = {
     formats: ["image/avif", "image/webp"],
   },
 
+  experimental: {
+    serverActions: {
+      bodySizeLimit: "4mb",
+    },
+    proxyClientMaxBodySize: "4mb",
+  },
+
 
   /**
    * Host-aware response headers for the campaign route.

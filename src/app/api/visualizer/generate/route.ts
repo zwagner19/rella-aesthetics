@@ -21,6 +21,8 @@ import {
 } from "@/lib/visualizer/treatments";
 import type { BotoxZone, IntensityPreset, MaskRegion } from "@/lib/visualizer/types";
 
+export const maxDuration = 60;
+
 interface GenerateBody {
   image?: string;
   zones?: string[];

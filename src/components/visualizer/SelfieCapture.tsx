@@ -2,6 +2,7 @@
 
 import { useCallback, useRef, useState } from "react";
 import { Button } from "@/components/ui/Button";
+import { compressImageForUpload } from "@/lib/visualizer/compress-image";
 import { MIN_IMAGE_DIMENSION } from "@/lib/visualizer/treatments";
 
 interface SelfieCaptureProps {
@@ -51,8 +52,9 @@ export function SelfieCapture({ onCapture, disabled }: SelfieCaptureProps) {
       }
 
       try {
-        const dataUrl = await readFileAsDataUrl(file);
-        await validateImageDimensions(dataUrl);
+        const rawDataUrl = await readFileAsDataUrl(file);
+        await validateImageDimensions(rawDataUrl);
+        const dataUrl = await compressImageForUpload(rawDataUrl);
         setPreview(dataUrl);
         onCapture(dataUrl);
       } catch (err) {

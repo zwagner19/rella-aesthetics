@@ -4,6 +4,8 @@ Conservative selfie-based Botox preview funnel at **https://experiencerella.com/
 
 ## Environment variables
 
+See **[docs/VERCEL-VISUALIZER-ENV.md](./VERCEL-VISUALIZER-ENV.md)** for step-by-step Vercel setup.
+
 Add to `.env.local` (or Vercel project settings):
 
 ```bash

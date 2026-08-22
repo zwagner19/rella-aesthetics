@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { analyzeSelfie } from "@/lib/visualizer/openai";
 import { parseDataUrl } from "@/lib/visualizer/image-utils";
 
+export const maxDuration = 60;
+
 export async function POST(req: NextRequest) {
   try {
     const body = (await req.json()) as { image?: string };
