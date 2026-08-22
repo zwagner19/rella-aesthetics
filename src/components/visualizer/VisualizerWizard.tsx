@@ -4,7 +4,7 @@ import { useCallback, useMemo, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/Button";
 import { resolveBookingHref } from "@/lib/booking-routes";
-import { RELLA_BRAND, VISUALIZER_INTRO_COPY } from "@/lib/visualizer/brand";
+import { VISUALIZER_DISCLAIMER } from "@/lib/visualizer/brand";
 import { readVisualizerResponse } from "@/lib/visualizer/fetch-json";
 import {
   getDefaultZonesForTreatment,
@@ -14,33 +14,16 @@ import {
 import type { FaceAnalysis, IntensityPreset, TreatmentType, TreatmentZoneId } from "@/lib/visualizer/types";
 import { BeforeAfterSlider } from "./BeforeAfterSlider";
 import { SelfieCapture } from "./SelfieCapture";
-import {
-  IntakeForm,
-  TreatmentPicker,
-  TreatmentTypePicker,
-} from "./TreatmentPicker";
-import { PhotoConsent, VisualizerDisclaimer } from "./VisualizerDisclaimer";
+import { IntakeForm, TreatmentPicker, TreatmentTypePicker } from "./TreatmentPicker";
+import { PhotoConsent } from "./VisualizerDisclaimer";
 
-type Step =
-  | "intro"
-  | "upload"
-  | "treatment"
-  | "generating"
-  | "preview"
-  | "intake"
-  | "contact"
-  | "done";
+type Step = "upload" | "treatment" | "generating" | "preview" | "intake" | "contact" | "done";
 
-const STEP_LABELS: Record<Step, string> = {
-  intro: "Welcome",
-  upload: "Upload",
-  treatment: "Treatment",
-  generating: "Generating",
-  preview: "Preview",
-  intake: "Goals",
-  contact: "Contact",
-  done: "Done",
-};
+const PROGRESS: { key: Step; label: string }[] = [
+  { key: "upload", label: "Photo" },
+  { key: "treatment", label: "Customize" },
+  { key: "preview", label: "Preview" },
+];
 
 function createSessionId(): string {
   if (typeof crypto !== "undefined" && crypto.randomUUID) {
@@ -56,9 +39,15 @@ function initialTreatmentType(searchParams: ReturnType<typeof useSearchParams>):
   return "botox";
 }
 
+function progressIndex(step: Step): number {
+  if (step === "generating") return 1;
+  if (step === "intake" || step === "contact" || step === "done") return 2;
+  return PROGRESS.findIndex((s) => s.key === step);
+}
+
 export function VisualizerWizard() {
   const searchParams = useSearchParams();
-  const [step, setStep] = useState<Step>("intro");
+  const [step, setStep] = useState<Step>("upload");
   const [consent, setConsent] = useState(false);
   const [treatmentType, setTreatmentType] = useState<TreatmentType>(() =>
     initialTreatmentType(searchParams)
@@ -199,44 +188,23 @@ export function VisualizerWizard() {
     }
   }, [budget, email, goal, intensity, name, phone, sessionId, timeline, treatmentType, zones]);
 
-  const progressSteps: Step[] = ["intro", "upload", "treatment", "preview", "done"];
-  const progressIndex = progressSteps.indexOf(step === "generating" ? "treatment" : step);
+  const currentProgress = progressIndex(step);
 
   return (
-    <div className="max-w-3xl mx-auto">
-      {step !== "generating" && (
-        <div className="flex justify-between mb-10 text-[0.625rem] font-bold tracking-[0.15em] uppercase text-silver-light">
-          {progressSteps
-            .filter((s) => s !== "generating")
-            .map((s, i) => (
-              <span key={s} className={i <= progressIndex ? "text-rose" : undefined}>
-                {STEP_LABELS[s]}
-              </span>
-            ))}
+    <div className="max-w-lg mx-auto">
+      {step !== "generating" && step !== "intake" && step !== "contact" && (
+        <div className="flex justify-center gap-8 mb-8 text-[0.625rem] font-bold tracking-[0.15em] uppercase">
+          {PROGRESS.map((s, i) => (
+            <span key={s.key} className={i <= currentProgress ? "text-rose" : "text-silver-light"}>
+              {s.label}
+            </span>
+          ))}
         </div>
       )}
 
       {error && (
-        <div className="mb-6 p-4 bg-rose-blush border border-rose-light rounded-lg text-sm text-rose-dark">
+        <div className="mb-6 p-3 bg-rose-blush border border-rose-light rounded-lg text-sm text-rose-dark text-center">
           {error}
-        </div>
-      )}
-
-      {step === "intro" && (
-        <div className="space-y-6 text-center">
-          <p className="text-sm text-silver leading-relaxed max-w-lg mx-auto">
-            {VISUALIZER_INTRO_COPY}
-          </p>
-          <VisualizerDisclaimer />
-          <PhotoConsent checked={consent} onChange={setConsent} />
-          <Button
-            type="button"
-            disabled={!consent}
-            onClick={() => setStep("upload")}
-            className="mx-auto"
-          >
-            Get Started
-          </Button>
         </div>
       )}
 
@@ -252,16 +220,15 @@ export function VisualizerWizard() {
               setImageDataUrl(dataUrl);
             }}
           />
-          <div className="flex justify-center gap-3">
-            <Button type="button" variant="ghost" onClick={() => setStep("intro")}>
-              Back
-            </Button>
+          <PhotoConsent checked={consent} onChange={setConsent} />
+          <div className="flex justify-center">
             <Button
               type="button"
-              disabled={!imageDataUrl || loading}
+              disabled={!imageDataUrl || !consent || loading}
               onClick={() => imageDataUrl && void runAnalysis(imageDataUrl)}
+              className="min-w-[160px]"
             >
-              {loading ? "Analyzing..." : "Continue"}
+              {loading ? "Analyzing…" : "Continue"}
             </Button>
           </div>
         </div>
@@ -272,10 +239,8 @@ export function VisualizerWizard() {
           <TreatmentTypePicker
             treatmentType={treatmentType}
             onTreatmentTypeChange={handleTreatmentTypeChange}
+            compact
           />
-          {analysis?.notes && (
-            <p className="text-sm text-silver text-center">{analysis.notes}</p>
-          )}
           <TreatmentPicker
             treatmentType={treatmentType}
             selectedZones={zones}
@@ -288,43 +253,33 @@ export function VisualizerWizard() {
               Back
             </Button>
             <Button type="button" disabled={loading} onClick={() => void runGenerate()}>
-              Generate Preview
+              Preview
             </Button>
           </div>
         </div>
       )}
 
       {step === "generating" && (
-        <div className="py-16 text-center space-y-4">
-          <div className="w-12 h-12 border-2 border-rose border-t-transparent rounded-full animate-spin mx-auto" />
-          <p className="text-silver">
-            Creating your conservative {treatmentOption.label} preview…
-          </p>
-          <p className="text-xs text-silver-light">This usually takes 10–20 seconds</p>
+        <div className="py-20 text-center space-y-4">
+          <div className="w-10 h-10 border-2 border-rose border-t-transparent rounded-full animate-spin mx-auto" />
+          <p className="text-sm text-silver">Creating preview…</p>
         </div>
       )}
 
       {step === "preview" && beforeDataUrl && afterDataUrl && (
         <div className="space-y-6">
-          {mode === "demo" && (
-            <p className="text-xs text-center text-silver bg-silver-pale rounded px-3 py-2">
-              Preview used a conservative fallback. Live AI editing is active when OpenAI responds
-              successfully.
-            </p>
-          )}
           <BeforeAfterSlider
             beforeSrc={beforeDataUrl}
             afterSrc={afterDataUrl}
             demoEffect={mode === "demo"}
           />
-          <VisualizerDisclaimer compact />
-          <div className="flex flex-col sm:flex-row justify-center gap-3">
+          <div className="flex flex-col sm:flex-row justify-center gap-2">
             <Button type="button" variant="ghost" onClick={() => setStep("treatment")}>
               Adjust
             </Button>
-            <Button href={bookingHref}>Book Consultation</Button>
+            <Button href={bookingHref}>Book</Button>
             <Button type="button" variant="ghost" onClick={() => setStep("intake")}>
-              Get Follow-up (Optional)
+              Follow Up
             </Button>
           </div>
         </div>
@@ -332,10 +287,7 @@ export function VisualizerWizard() {
 
       {step === "intake" && (
         <div className="space-y-6">
-          <p className="text-sm text-silver text-center max-w-md mx-auto">
-            Optional — share your goals if you&apos;d like the {RELLA_BRAND.name} team to follow up
-            about your {treatmentOption.label} preview.
-          </p>
+          <p className="text-sm text-silver text-center">Optional follow-up</p>
           <IntakeForm
             goal={goal}
             timeline={timeline}
@@ -347,10 +299,7 @@ export function VisualizerWizard() {
           />
           <div className="flex justify-center gap-3">
             <Button type="button" variant="ghost" onClick={() => setStep("preview")}>
-              Back to Preview
-            </Button>
-            <Button type="button" variant="ghost" onClick={() => setStep("preview")}>
-              Skip
+              Back
             </Button>
             <Button type="button" onClick={() => setStep("contact")}>
               Continue
@@ -361,14 +310,10 @@ export function VisualizerWizard() {
 
       {step === "contact" && (
         <div className="space-y-6">
-          <p className="text-sm text-silver text-center">
-            Optional — share contact info only if you want {RELLA_BRAND.name} to follow up about
-            your {treatmentOption.label} preview.
-          </p>
           <div className="space-y-4 max-w-md mx-auto">
             <div>
               <label htmlFor="viz-name" className="block text-sm font-medium text-silver-dark mb-1">
-                Full Name
+                Name
               </label>
               <input
                 id="viz-name"
@@ -376,7 +321,7 @@ export function VisualizerWizard() {
                 required
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                className="w-full border border-silver-light rounded px-4 py-3 text-silver-dark bg-white focus:border-rose focus:ring-2 focus:ring-rose/20"
+                className="w-full border border-silver-light rounded px-4 py-3 text-sm text-silver-dark bg-white focus:border-rose focus:ring-2 focus:ring-rose/20"
               />
             </div>
             <div>
@@ -388,7 +333,7 @@ export function VisualizerWizard() {
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full border border-silver-light rounded px-4 py-3 text-silver-dark bg-white focus:border-rose focus:ring-2 focus:ring-rose/20"
+                className="w-full border border-silver-light rounded px-4 py-3 text-sm text-silver-dark bg-white focus:border-rose focus:ring-2 focus:ring-rose/20"
               />
             </div>
             <div>
@@ -400,10 +345,9 @@ export function VisualizerWizard() {
                 type="tel"
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
-                className="w-full border border-silver-light rounded px-4 py-3 text-silver-dark bg-white focus:border-rose focus:ring-2 focus:ring-rose/20"
+                className="w-full border border-silver-light rounded px-4 py-3 text-sm text-silver-dark bg-white focus:border-rose focus:ring-2 focus:ring-rose/20"
               />
             </div>
-            <p className="text-xs text-silver">Email or phone is required.</p>
           </div>
           <div className="flex justify-center gap-3 flex-wrap">
             <Button type="button" variant="ghost" onClick={() => setStep("intake")}>
@@ -417,7 +361,7 @@ export function VisualizerWizard() {
               disabled={loading || !name || (!email && !phone)}
               onClick={() => void submitLead()}
             >
-              {loading ? "Saving..." : "Send Follow-up Request"}
+              {loading ? "Sending…" : "Send"}
             </Button>
           </div>
         </div>
@@ -425,28 +369,21 @@ export function VisualizerWizard() {
 
       {step === "done" && beforeDataUrl && afterDataUrl && (
         <div className="space-y-6 text-center">
-          <h2 className="font-bold text-xl tracking-[0.06em] uppercase text-rose-text">
-            {followUpSubmitted ? "We'll Be In Touch" : "Your Preview"}
+          <h2 className="font-bold text-lg tracking-[0.06em] uppercase text-rose-text">
+            {followUpSubmitted ? "Thank You" : "Your Preview"}
           </h2>
           <BeforeAfterSlider
             beforeSrc={beforeDataUrl}
             afterSrc={afterDataUrl}
             demoEffect={mode === "demo"}
           />
-          <VisualizerDisclaimer compact />
-          <p className="text-sm text-silver">
-            {followUpSubmitted
-              ? `The ${RELLA_BRAND.name} team will follow up shortly about your ${treatmentOption.label} preview.`
-              : `Share this link with anyone — no account required. Book when you're ready.`}
-          </p>
-          <div className="flex flex-col sm:flex-row justify-center gap-3">
-            <Button href={bookingHref}>Book at Rella</Button>
-            <Button type="button" variant="ghost" onClick={() => setStep("preview")}>
-              Back to Preview
-            </Button>
-          </div>
+          <Button href={bookingHref}>Book Consultation</Button>
         </div>
       )}
+
+      <p className="mt-10 text-center text-[0.625rem] text-silver-light leading-relaxed max-w-sm mx-auto">
+        {VISUALIZER_DISCLAIMER}
+      </p>
     </div>
   );
 }

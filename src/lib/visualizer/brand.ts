@@ -9,20 +9,16 @@ export const RELLA_BRAND = {
   phone: "707.358.2928",
 } as const;
 
-export const VISUALIZER_EYEBROW = "Rella Aesthetics · AI Preview";
+export const VISUALIZER_EYEBROW = "Rella Aesthetics";
 
 export const VISUALIZER_HERO_TITLE = "See Your Results";
 
-export const VISUALIZER_HERO_DESCRIPTION =
-  "Free to try — upload a selfie and preview conservative results on your own face. Explore Botox, Dysport, or laser pigmentation treatments. No account required.";
-
-export const VISUALIZER_INTRO_COPY =
-  "This free preview tool from Rella Aesthetics helps you explore natural-looking neuromodulator outcomes before your consultation. Results are simulations only — your Rella provider will confirm what's right for you in person.";
+export const VISUALIZER_HERO_DESCRIPTION = "Upload a selfie. Preview your treatment.";
 
 export const VISUALIZER_DISCLAIMER =
-  "Rella Aesthetics simulation only. Individual results vary. An in-person evaluation with our physician-led team is required for final treatment recommendations.";
+  "Simulation only. Individual results vary. In-person consultation required.";
 
 export const PHOTO_CONSENT_TEXT =
-  "I am 18 or older and agree to upload my photo to Rella Aesthetics (experiencerella.com) for a simulated preview. This is not medical advice. My photo will be processed securely and deleted within 24 hours.";
+  "I'm 18+ and consent to a one-time photo preview. Deleted within 24 hours.";
 
 export const WATERMARK_LABEL = "RELLA · SIMULATION";

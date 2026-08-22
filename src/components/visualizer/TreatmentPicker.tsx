@@ -7,21 +7,24 @@ import {
 } from "@/lib/visualizer/treatments";
 import type { IntensityPreset, TreatmentType, TreatmentZoneId } from "@/lib/visualizer/types";
 
+const sectionLabel =
+  "font-bold text-[0.625rem] tracking-[0.2em] uppercase text-silver mb-3";
+
 interface TreatmentTypePickerProps {
   treatmentType: TreatmentType;
   onTreatmentTypeChange: (type: TreatmentType) => void;
+  compact?: boolean;
 }
 
 export function TreatmentTypePicker({
   treatmentType,
   onTreatmentTypeChange,
+  compact = false,
 }: TreatmentTypePickerProps) {
   return (
-    <div className="space-y-3">
-      <h3 className="font-bold text-xs tracking-[0.15em] uppercase text-silver mb-4">
-        What are you exploring?
-      </h3>
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+    <div>
+      {!compact && <p className={sectionLabel}>Treatment</p>}
+      <div className={`grid grid-cols-2 gap-2 ${compact ? "" : "sm:gap-3"}`}>
         {TREATMENT_OPTIONS.map((option) => {
           const active = treatmentType === option.id;
           return (
@@ -29,14 +32,13 @@ export function TreatmentTypePicker({
               key={option.id}
               type="button"
               onClick={() => onTreatmentTypeChange(option.id)}
-              className={`text-left p-4 rounded-lg border transition-all ${
+              className={`text-center py-3 px-3 rounded-lg border text-sm font-medium transition-all ${
                 active
-                  ? "border-rose bg-rose-blush"
-                  : "border-silver-pale bg-white hover:border-rose-light"
+                  ? "border-rose bg-rose-blush text-silver-dark"
+                  : "border-silver-pale bg-white text-silver hover:border-rose-light"
               }`}
             >
-              <span className="block font-medium text-silver-dark text-sm">{option.label}</span>
-              <span className="block text-xs text-silver mt-1">{option.description}</span>
+              {option.id === "botox" ? "Botox" : "Laser"}
             </button>
           );
         })}
@@ -72,12 +74,10 @@ export function TreatmentPicker({
   };
 
   return (
-    <div className="space-y-8 max-w-lg mx-auto">
+    <div className="space-y-8 max-w-md mx-auto">
       <div>
-        <h3 className="font-bold text-xs tracking-[0.15em] uppercase text-silver mb-4">
-          Areas of concern
-        </h3>
-        <div className="space-y-3">
+        <p className={sectionLabel}>Areas</p>
+        <div className="flex flex-wrap gap-2">
           {zoneOptions.map((zone) => {
             const active = selectedZones.includes(zone.id);
             return (
@@ -85,14 +85,13 @@ export function TreatmentPicker({
                 key={zone.id}
                 type="button"
                 onClick={() => toggleZone(zone.id)}
-                className={`w-full text-left p-4 rounded-lg border transition-all ${
+                className={`py-2.5 px-4 rounded-full border text-sm transition-all ${
                   active
-                    ? "border-rose bg-rose-blush"
-                    : "border-silver-pale bg-white hover:border-rose-light"
+                    ? "border-rose bg-rose-blush text-silver-dark font-medium"
+                    : "border-silver-pale bg-white text-silver hover:border-rose-light"
                 }`}
               >
-                <span className="block font-medium text-silver-dark text-sm">{zone.label}</span>
-                <span className="block text-xs text-silver mt-1">{zone.description}</span>
+                {zone.label}
               </button>
             );
           })}
@@ -100,16 +99,14 @@ export function TreatmentPicker({
       </div>
 
       <div>
-        <h3 className="font-bold text-xs tracking-[0.15em] uppercase text-silver mb-4">
-          Preview intensity
-        </h3>
-        <div className="flex gap-3">
+        <p className={sectionLabel}>Intensity</p>
+        <div className="flex gap-2">
           {(["subtle", "moderate"] as const).map((preset) => (
             <button
               key={preset}
               type="button"
               onClick={() => onIntensityChange(preset)}
-              className={`flex-1 py-3 px-4 rounded-lg border text-sm font-medium capitalize transition-all ${
+              className={`flex-1 py-2.5 px-4 rounded-lg border text-sm font-medium capitalize transition-all ${
                 intensity === preset
                   ? "border-rose bg-rose-blush text-silver-dark"
                   : "border-silver-pale text-silver hover:border-rose-light"
@@ -119,9 +116,6 @@ export function TreatmentPicker({
             </button>
           ))}
         </div>
-        <p className="text-xs text-silver mt-2">
-          Subtle is recommended for a conservative, clinic-realistic preview.
-        </p>
       </div>
     </div>
   );
@@ -145,18 +139,16 @@ export function IntakeForm({
   onBudgetChange: (v: string) => void;
 }) {
   const fieldClass =
-    "w-full border border-silver-light rounded px-4 py-3 text-silver-dark bg-white focus:border-rose focus:ring-2 focus:ring-rose/20 transition-colors";
+    "w-full border border-silver-light rounded px-4 py-3 text-silver-dark bg-white focus:border-rose focus:ring-2 focus:ring-rose/20 transition-colors text-sm";
 
   const goalPlaceholder =
-    treatmentType === "laser-pigmentation"
-      ? "e.g. fade sun spots and even out my skin tone"
-      : "e.g. soften forehead lines for a refreshed look";
+    treatmentType === "laser-pigmentation" ? "Even skin tone" : "Softer expression lines";
 
   return (
-    <div className="space-y-5 max-w-md mx-auto">
+    <div className="space-y-4 max-w-md mx-auto">
       <div>
         <label htmlFor="goal" className="block text-sm font-medium text-silver-dark mb-1">
-          What is your main goal?
+          Goal
         </label>
         <input
           id="goal"
@@ -169,7 +161,7 @@ export function IntakeForm({
       </div>
       <div>
         <label htmlFor="timeline" className="block text-sm font-medium text-silver-dark mb-1">
-          When are you hoping to start?
+          Timeline
         </label>
         <select
           id="timeline"
@@ -177,15 +169,15 @@ export function IntakeForm({
           onChange={(e) => onTimelineChange(e.target.value)}
           className={fieldClass}
         >
-          <option value="">Select timeline</option>
+          <option value="">Select</option>
           <option value="within-2-weeks">Within 2 weeks</option>
           <option value="within-1-month">Within 1 month</option>
-          <option value="exploring">Just exploring</option>
+          <option value="exploring">Exploring</option>
         </select>
       </div>
       <div>
         <label htmlFor="budget" className="block text-sm font-medium text-silver-dark mb-1">
-          Budget comfort level
+          Budget
         </label>
         <select
           id="budget"
@@ -193,10 +185,10 @@ export function IntakeForm({
           onChange={(e) => onBudgetChange(e.target.value)}
           className={fieldClass}
         >
-          <option value="">Select range</option>
-          <option value="ready-to-invest">Ready to invest in treatment</option>
-          <option value="moderate">Moderate — want to understand options</option>
-          <option value="exploring-budget">Still exploring budget</option>
+          <option value="">Select</option>
+          <option value="ready-to-invest">Ready to invest</option>
+          <option value="moderate">Moderate</option>
+          <option value="exploring-budget">Exploring</option>
         </select>
       </div>
     </div>

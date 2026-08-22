@@ -77,8 +77,7 @@ export function SelfieCapture({ onCapture, disabled }: SelfieCaptureProps) {
           <img src={preview} alt="Your uploaded selfie" className="w-full h-full object-cover" />
         ) : (
           <div className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center">
-            <p className="text-sm text-silver mb-2">Front-facing selfie, good lighting</p>
-            <p className="text-xs text-silver-light">No filters · Hair away from face · Neutral expression</p>
+            <p className="text-sm text-silver">Front-facing · Good lighting</p>
           </div>
         )}
       </div>
@@ -102,7 +101,7 @@ export function SelfieCapture({ onCapture, disabled }: SelfieCaptureProps) {
           disabled={disabled}
           onClick={() => inputRef.current?.click()}
         >
-          {preview ? "Choose Different Photo" : "Upload Selfie"}
+          {preview ? "Change Photo" : "Upload Selfie"}
         </Button>
       </div>
 

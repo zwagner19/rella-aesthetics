@@ -80,7 +80,9 @@ export function BeforeAfterSlider({
           After
         </span>
       </div>
-      <p className="text-xs text-silver text-center">Drag to compare before and after</p>
+      <p className="text-[0.625rem] text-silver-light text-center tracking-wide">
+        Slide to compare
+      </p>
     </div>
   );
 }
