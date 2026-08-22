@@ -38,7 +38,7 @@ function HomePageContent({ isWeightLoss }: { isWeightLoss: boolean }) {
         description="Physician-led aesthetic treatments designed around your goals. Natural results, elevated care — in Vacaville and Napa."
         ctaText="Book Consultation"
         ctaHref={resolveBookingHref({})}
-        secondaryCta={{ text: "Explore Services", href: "/services" }}
+        secondaryCta={{ text: "See Your Results", href: "/see-your-results" }}
       />
 
       {/* Services Grid */}

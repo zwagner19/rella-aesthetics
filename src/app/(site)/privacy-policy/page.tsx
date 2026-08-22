@@ -30,6 +30,15 @@ export default function PrivacyPolicyPage() {
             website. This may include your name, email address, phone number, and service interests.
           </p>
 
+          <h2 className="font-medium text-xl text-silver-dark mt-8">AI Treatment Preview Tool</h2>
+          <p>
+            If you use our &ldquo;See Your Results&rdquo; preview tool, you may upload a selfie and
+            provide intake information such as treatment goals, timeline, and budget preferences.
+            Photos are processed securely on our servers to generate a simulated preview. Images are
+            not used to train AI models and are automatically deleted within 24 hours. Preview
+            results are simulations only and do not constitute medical advice or guaranteed outcomes.
+          </p>
+
           <h2 className="font-medium text-xl text-silver-dark mt-8">How We Use Your Information</h2>
           <p>
             We use the information we collect to schedule appointments, respond to inquiries,
