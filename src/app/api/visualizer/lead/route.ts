@@ -5,11 +5,14 @@ import {
   buildGhlContactBody,
 } from "@/lib/ghl";
 import { buildLeadSource, scoreVisualizerLead } from "@/lib/visualizer/lead-scoring";
+import { normalizeTreatmentType } from "@/lib/visualizer/openai";
 import {
-  isValidBotoxZone,
+  getTreatmentOption,
   isValidIntensity,
+  isValidTreatmentType,
+  isValidTreatmentZone,
 } from "@/lib/visualizer/treatments";
-import type { BotoxZone, IntensityPreset, VisualizerLeadPayload } from "@/lib/visualizer/types";
+import type { IntensityPreset, TreatmentType, TreatmentZoneId, VisualizerLeadPayload } from "@/lib/visualizer/types";
 
 export const runtime = "nodejs";
 
@@ -20,8 +23,14 @@ const GHL_CF_MESSAGE = process.env.GHL_CUSTOM_FIELD_MESSAGE_ID ?? "";
 const GHL_CF_SESSION = process.env.GHL_CUSTOM_FIELD_VISUALIZER_SESSION_ID ?? "";
 
 function parsePayload(body: Record<string, unknown>): VisualizerLeadPayload | null {
+  const treatmentType: TreatmentType = isValidTreatmentType(String(body.treatmentType ?? ""))
+    ? (body.treatmentType as TreatmentType)
+    : normalizeTreatmentType(undefined);
+
   const zones = Array.isArray(body.zones)
-    ? body.zones.filter((z): z is BotoxZone => isValidBotoxZone(String(z)))
+    ? body.zones.filter((z): z is TreatmentZoneId =>
+        isValidTreatmentZone(treatmentType, String(z))
+      )
     : [];
 
   const intensityRaw = String(body.intensity ?? "subtle");
@@ -41,6 +50,7 @@ function parsePayload(body: Record<string, unknown>): VisualizerLeadPayload | nu
     name,
     email,
     phone,
+    treatmentType,
     zones,
     intensity,
     goal: body.goal ? String(body.goal) : undefined,
@@ -64,6 +74,7 @@ export async function POST(req: NextRequest) {
 
     const { score, tags } = scoreVisualizerLead(payload);
     const source = buildLeadSource(payload);
+    const treatment = getTreatmentOption(payload.treatmentType);
 
     if (!GHL_API_KEY || !GHL_LOCATION_ID) {
       if (process.env.NODE_ENV === "development") {
@@ -84,13 +95,14 @@ export async function POST(req: NextRequest) {
 
     const customFields: { id: string; value: string }[] = [];
     if (GHL_CF_SERVICE) {
-      customFields.push({ id: GHL_CF_SERVICE, value: "Botox & Dysport" });
+      customFields.push({ id: GHL_CF_SERVICE, value: treatment.ghlServiceName });
     }
     if (GHL_CF_MESSAGE) {
       const summary = [
         payload.goal && `Goal: ${payload.goal}`,
         payload.timeline && `Timeline: ${payload.timeline}`,
         payload.budget && `Budget: ${payload.budget}`,
+        `Treatment: ${treatment.label}`,
         `Zones: ${payload.zones.join(", ")}`,
         `Score: ${score}/5`,
       ]

@@ -1,6 +1,13 @@
 # AI Treatment Visualizer — Rella Aesthetics
 
-Conservative selfie-based Botox preview funnel at **https://experiencerella.com/see-your-results**.
+Conservative selfie-based treatment preview funnel at **https://experiencerella.com/see-your-results**.
+
+Supported treatments:
+
+- **Botox & Dysport** — forehead, frown lines, crow's feet
+- **Laser — Pigmentation** — sun spots, melasma, uneven tone (IPL/laser simulation)
+
+Deep link for laser: `/see-your-results?treatment=laser-pigmentation` (also accepts `?treatment=laser`).
 
 ## Environment variables
 
@@ -31,7 +38,7 @@ GHL_CUSTOM_FIELD_VISUALIZER_SESSION_ID=
 2. Vision analysis validates photo quality and suggests treatment zones
 3. Masked image edit + conservative blend produces a subtle preview
 4. Short intake + contact info unlocks full preview and creates a GHL lead
-5. Booking CTA routes via `resolveBookingHref({ service: "botox" })`
+5. Booking CTA routes via `resolveBookingHref({ service })` — `botox` or `laser-treatments`
 
 ## Compliance
 

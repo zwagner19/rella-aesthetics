@@ -1,4 +1,5 @@
-import type { BotoxZone, IntensityPreset } from "./types";
+import type { IntensityPreset, TreatmentType, TreatmentZoneId } from "./types";
+import { getZonesForTreatment, isValidTreatmentZone } from "./treatments";
 
 import { RELLA_BRAND } from "./brand";
 
@@ -18,7 +19,7 @@ Tone:
 - Avoid guaranteeing results
 - Emphasize natural-looking outcomes, patient safety, and realistic expectations`;
 
-const ZONE_EDIT_INSTRUCTIONS: Record<BotoxZone, string> = {
+const BOTOX_ZONE_INSTRUCTIONS: Record<string, string> = {
   forehead:
     "soften horizontal forehead lines by approximately 10–20%, keeping natural forehead movement",
   glabella:
@@ -27,24 +28,46 @@ const ZONE_EDIT_INSTRUCTIONS: Record<BotoxZone, string> = {
     "soften fine lines at the outer eye corners by approximately 10–20%, without changing eye shape",
 };
 
+const LASER_PIGMENTATION_ZONE_INSTRUCTIONS: Record<string, string> = {
+  cheeks:
+    "subtly reduce visible sun spots, melasma patches, and uneven discoloration on the cheeks by approximately 15–25%",
+  "forehead-spots":
+    "subtly fade brown sun spots and uneven pigmentation on the forehead by approximately 15–25%",
+  perioral:
+    "subtly reduce melasma or pigmentation around the mouth and upper lip area by approximately 15–25%",
+  "overall-tone":
+    "subtly even overall facial skin tone and reduce visible sun damage by approximately 10–20%, without changing natural skin tone",
+};
+
 const INTENSITY_MODIFIER: Record<IntensityPreset, string> = {
   subtle: "Make the change very subtle — barely noticeable, clinic-realistic preview only.",
   moderate: "Make a moderate but still natural change — never dramatic or filtered-looking.",
 };
 
-export function buildAnalysisPrompt(): string {
+function zoneIdsForPrompt(treatmentType: TreatmentType): string {
+  return getZonesForTreatment(treatmentType)
+    .map((z) => `"${z.id}"`)
+    .join(" | ");
+}
+
+export function buildAnalysisPrompt(treatmentType: TreatmentType): string {
+  const zoneIds = zoneIdsForPrompt(treatmentType);
+  const treatmentLabel =
+    treatmentType === "botox"
+      ? "neuromodulator (Botox/Dysport) lines"
+      : "laser/IPL pigmentation and sun damage";
+
   return `Analyze this selfie for Rella Aesthetics' conservative medical aesthetics preview tool on experiencerella.com.
+The patient is exploring ${treatmentLabel}.
 
 Return ONLY valid JSON with this shape:
 {
   "quality": "good" | "fair" | "poor",
   "faceDetected": boolean,
-  "zones": ["forehead" | "glabella" | "crows-feet"],
+  "zones": [${zoneIds}],
   "notes": "brief guidance for the patient about photo quality or positioning",
   "regions": {
-    "forehead": { "cx": 0.0-1.0, "cy": 0.0-1.0, "rx": 0.0-1.0, "ry": 0.0-1.0 },
-    "glabella": { "cx": 0.0-1.0, "cy": 0.0-1.0, "rx": 0.0-1.0, "ry": 0.0-1.0 },
-    "crows-feet": { "cx": 0.0-1.0, "cy": 0.0-1.0, "rx": 0.0-1.0, "ry": 0.0-1.0 }
+    "<zone-id>": { "cx": 0.0-1.0, "cy": 0.0-1.0, "rx": 0.0-1.0, "ry": 0.0-1.0 }
   }
 }
 
@@ -53,15 +76,30 @@ Only include regions you can confidently locate. Prefer conservative regions.
 If no face is detected, set faceDetected to false and quality to "poor".`;
 }
 
-export function buildEditPrompt(zones: BotoxZone[], intensity: IntensityPreset): string {
-  const zoneInstructions = zones
-    .map((zone) => `- ${ZONE_EDIT_INSTRUCTIONS[zone]}`)
-    .join("\n");
+function zoneInstructions(
+  treatmentType: TreatmentType,
+  zones: TreatmentZoneId[]
+): string {
+  const map =
+    treatmentType === "botox"
+      ? BOTOX_ZONE_INSTRUCTIONS
+      : LASER_PIGMENTATION_ZONE_INSTRUCTIONS;
 
-  return `Edit this patient's photo conservatively for a Rella Aesthetics neuromodulator (Botox/Dysport) simulation.
+  return zones.map((zone) => `- ${map[zone] ?? `address ${zone} conservatively`}`).join("\n");
+}
+
+export function buildEditPrompt(
+  treatmentType: TreatmentType,
+  zones: TreatmentZoneId[],
+  intensity: IntensityPreset
+): string {
+  const zoneLines = zoneInstructions(treatmentType, zones);
+
+  if (treatmentType === "botox") {
+    return `Edit this patient's photo conservatively for a Rella Aesthetics neuromodulator (Botox/Dysport) simulation.
 
 Apply ONLY to the masked treatment areas:
-${zoneInstructions}
+${zoneLines}
 
 ${INTENSITY_MODIFIER[intensity]}
 
@@ -71,4 +109,30 @@ Critical rules:
 - Result must look natural and clinic-appropriate — not filtered, not plastic
 - Do not make the person look more than 3 years younger
 - No makeup changes, no skin smoothing outside treatment zones`;
+  }
+
+  return `Edit this patient's photo conservatively for a Rella Aesthetics laser/IPL pigmentation treatment simulation.
+
+Apply ONLY to the masked treatment areas:
+${zoneLines}
+
+${INTENSITY_MODIFIER[intensity]}
+
+Critical rules:
+- Preserve exact facial identity, bone structure, hair, lighting, and natural skin tone
+- Reduce the appearance of hyperpigmentation, sun spots, and melasma — do NOT lighten overall ethnicity or base skin color
+- Keep realistic skin texture and pores — avoid plastic smoothing or beauty-filter look
+- Do not remove freckles entirely unless they fall inside obvious sun-spot clusters
+- Do not change lip color, eye color, or facial features
+- Result must look like a conservative clinic preview after a series of treatments, not a filter`;
+}
+
+export function parseAnalysisZones(
+  treatmentType: TreatmentType,
+  rawZones: unknown
+): TreatmentZoneId[] {
+  if (!Array.isArray(rawZones)) return [];
+  return rawZones.filter((z): z is TreatmentZoneId =>
+    isValidTreatmentZone(treatmentType, String(z))
+  );
 }

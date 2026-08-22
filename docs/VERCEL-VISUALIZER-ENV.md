@@ -2,6 +2,20 @@
 
 The visualizer needs a few secrets in Vercel before live AI previews and GHL lead capture work on the preview/production URLs.
 
+## Share publicly (anyone with the link)
+
+The visualizer at `/see-your-results` is **public** — no login, no paywall, and no contact info required to see a preview.
+
+### If visitors hit a Vercel login wall
+
+Preview URLs (`*.vercel.app`) may be blocked by **Vercel Deployment Protection**. To let anyone with the link use it:
+
+1. Open [Vercel → rella-nextjs → Settings → Deployment Protection](https://vercel.com/zwagner19s-projects/rella-nextjs/settings/deployment-protection)
+2. For **Preview** deployments, set protection to **Off** (or use a shared password for testers)
+3. Redeploy or re-share the preview URL
+
+Production (`https://experiencerella.com/see-your-results`) is public once merged.
+
 ## Step 1 — Open Vercel project settings
 
 1. Go to [vercel.com/zwagner19s-projects/rella-nextjs](https://vercel.com/zwagner19s-projects/rella-nextjs)
@@ -39,7 +53,8 @@ Env vars are baked in at **build/runtime** for serverless functions — a redepl
 ## Step 4 — Verify
 
 1. Open `/see-your-results` on the Vercel preview URL
-2. Upload a selfie and click **Continue**
+2. Try **Botox** and **Laser — Pigmentation** (or `/see-your-results?treatment=laser`)
+3. Upload a selfie and click **Continue**
 3. **Without** `OPENAI_API_KEY`: you should see "Demo preview mode" and a subtle blur preview
 4. **With** `OPENAI_API_KEY`: demo banner should be gone; preview takes ~10–20s
 

@@ -1,22 +1,68 @@
 "use client";
 
-import { BOTOX_ZONES, isValidIntensity } from "@/lib/visualizer/treatments";
-import type { BotoxZone, IntensityPreset } from "@/lib/visualizer/types";
+import {
+  getZonesForTreatment,
+  isValidIntensity,
+  TREATMENT_OPTIONS,
+} from "@/lib/visualizer/treatments";
+import type { IntensityPreset, TreatmentType, TreatmentZoneId } from "@/lib/visualizer/types";
+
+interface TreatmentTypePickerProps {
+  treatmentType: TreatmentType;
+  onTreatmentTypeChange: (type: TreatmentType) => void;
+}
+
+export function TreatmentTypePicker({
+  treatmentType,
+  onTreatmentTypeChange,
+}: TreatmentTypePickerProps) {
+  return (
+    <div className="space-y-3">
+      <h3 className="font-bold text-xs tracking-[0.15em] uppercase text-silver mb-4">
+        What are you exploring?
+      </h3>
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        {TREATMENT_OPTIONS.map((option) => {
+          const active = treatmentType === option.id;
+          return (
+            <button
+              key={option.id}
+              type="button"
+              onClick={() => onTreatmentTypeChange(option.id)}
+              className={`text-left p-4 rounded-lg border transition-all ${
+                active
+                  ? "border-rose bg-rose-blush"
+                  : "border-silver-pale bg-white hover:border-rose-light"
+              }`}
+            >
+              <span className="block font-medium text-silver-dark text-sm">{option.label}</span>
+              <span className="block text-xs text-silver mt-1">{option.description}</span>
+            </button>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
 
 interface TreatmentPickerProps {
-  selectedZones: BotoxZone[];
+  treatmentType: TreatmentType;
+  selectedZones: TreatmentZoneId[];
   intensity: IntensityPreset;
-  onZonesChange: (zones: BotoxZone[]) => void;
+  onZonesChange: (zones: TreatmentZoneId[]) => void;
   onIntensityChange: (intensity: IntensityPreset) => void;
 }
 
 export function TreatmentPicker({
+  treatmentType,
   selectedZones,
   intensity,
   onZonesChange,
   onIntensityChange,
 }: TreatmentPickerProps) {
-  const toggleZone = (zone: BotoxZone) => {
+  const zoneOptions = getZonesForTreatment(treatmentType);
+
+  const toggleZone = (zone: TreatmentZoneId) => {
     if (selectedZones.includes(zone)) {
       if (selectedZones.length === 1) return;
       onZonesChange(selectedZones.filter((z) => z !== zone));
@@ -32,7 +78,7 @@ export function TreatmentPicker({
           Areas of concern
         </h3>
         <div className="space-y-3">
-          {BOTOX_ZONES.map((zone) => {
+          {zoneOptions.map((zone) => {
             const active = selectedZones.includes(zone.id);
             return (
               <button
@@ -85,6 +131,7 @@ export function IntakeForm({
   goal,
   timeline,
   budget,
+  treatmentType,
   onGoalChange,
   onTimelineChange,
   onBudgetChange,
@@ -92,12 +139,18 @@ export function IntakeForm({
   goal: string;
   timeline: string;
   budget: string;
+  treatmentType: TreatmentType;
   onGoalChange: (v: string) => void;
   onTimelineChange: (v: string) => void;
   onBudgetChange: (v: string) => void;
 }) {
   const fieldClass =
     "w-full border border-silver-light rounded px-4 py-3 text-silver-dark bg-white focus:border-rose focus:ring-2 focus:ring-rose/20 transition-colors";
+
+  const goalPlaceholder =
+    treatmentType === "laser-pigmentation"
+      ? "e.g. fade sun spots and even out my skin tone"
+      : "e.g. soften forehead lines for a refreshed look";
 
   return (
     <div className="space-y-5 max-w-md mx-auto">
@@ -110,7 +163,7 @@ export function IntakeForm({
           type="text"
           value={goal}
           onChange={(e) => onGoalChange(e.target.value)}
-          placeholder="e.g. soften forehead lines for a refreshed look"
+          placeholder={goalPlaceholder}
           className={fieldClass}
         />
       </div>

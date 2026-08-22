@@ -1,23 +1,24 @@
 import { getSharp } from "./sharp-loader";
 import { WATERMARK_LABEL } from "./brand";
-import type { IntensityPreset } from "./types";
-import { INTENSITY_BLEND } from "./treatments";
-import { buildBlendMaskPng, resolveZoneRegions } from "./mask";
-import type { BotoxZone, MaskRegion } from "./types";
+import type { IntensityPreset, TreatmentType, TreatmentZoneId } from "./types";
+import { INTENSITY_BLEND, resolveZoneRegions } from "./treatments";
+import { buildBlendMaskPng } from "./mask";
+import type { MaskRegion } from "./types";
 
 export async function blendConservative(
   originalBuffer: Buffer,
   editedBuffer: Buffer,
-  zones: BotoxZone[],
+  treatmentType: TreatmentType,
+  zones: TreatmentZoneId[],
   intensity: IntensityPreset,
-  regionOverrides?: Partial<Record<BotoxZone, MaskRegion>>
+  regionOverrides?: Partial<Record<TreatmentZoneId, MaskRegion>>
 ): Promise<Buffer> {
   const sharp = await getSharp();
   const meta = await sharp(originalBuffer).metadata();
   const width = meta.width ?? 1024;
   const height = meta.height ?? 1024;
 
-  const regions = resolveZoneRegions(zones, regionOverrides);
+  const regions = resolveZoneRegions(treatmentType, zones, regionOverrides);
   const editWeight = INTENSITY_BLEND[intensity];
 
   const [original, edited, maskPng] = await Promise.all([
@@ -47,9 +48,10 @@ export async function blendConservative(
 /** Demo fallback when OpenAI is unavailable: subtle blur in treatment zones only. */
 export async function applyDemoTreatmentEffect(
   originalBuffer: Buffer,
-  zones: BotoxZone[],
+  treatmentType: TreatmentType,
+  zones: TreatmentZoneId[],
   intensity: IntensityPreset,
-  regionOverrides?: Partial<Record<BotoxZone, MaskRegion>>
+  regionOverrides?: Partial<Record<TreatmentZoneId, MaskRegion>>
 ): Promise<Buffer> {
   const sharp = await getSharp();
   const meta = await sharp(originalBuffer).metadata();
@@ -57,7 +59,7 @@ export async function applyDemoTreatmentEffect(
   const height = meta.height ?? 1024;
 
   const blurSigma = intensity === "subtle" ? 1.2 : 2;
-  const regions = resolveZoneRegions(zones, regionOverrides);
+  const regions = resolveZoneRegions(treatmentType, zones, regionOverrides);
 
   const [base, blurred, maskPng] = await Promise.all([
     sharp(originalBuffer).resize(width, height, { fit: "cover" }).ensureAlpha().raw().toBuffer(),

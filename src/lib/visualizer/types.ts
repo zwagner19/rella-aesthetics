@@ -1,6 +1,17 @@
 export type IntensityPreset = "subtle" | "moderate";
 
+export type TreatmentType = "botox" | "laser-pigmentation";
+
 export type BotoxZone = "forehead" | "glabella" | "crows-feet";
+
+/** Laser / IPL pigmentation concern areas. */
+export type LaserPigmentationZone =
+  | "cheeks"
+  | "forehead-spots"
+  | "perioral"
+  | "overall-tone";
+
+export type TreatmentZoneId = BotoxZone | LaserPigmentationZone;
 
 export type PhotoQuality = "good" | "fair" | "poor";
 
@@ -14,14 +25,16 @@ export interface MaskRegion {
 export interface FaceAnalysis {
   quality: PhotoQuality;
   faceDetected: boolean;
-  zones: BotoxZone[];
+  treatmentType: TreatmentType;
+  zones: TreatmentZoneId[];
   notes: string;
-  regions?: Partial<Record<BotoxZone, MaskRegion>>;
+  regions?: Partial<Record<TreatmentZoneId, MaskRegion>>;
 }
 
 export interface VisualizerSession {
   sessionId: string;
-  zones: BotoxZone[];
+  treatmentType: TreatmentType;
+  zones: TreatmentZoneId[];
   intensity: IntensityPreset;
   goal?: string;
   timeline?: string;
@@ -41,7 +54,8 @@ export interface VisualizerLeadPayload {
   name: string;
   email?: string;
   phone?: string;
-  zones: BotoxZone[];
+  treatmentType: TreatmentType;
+  zones: TreatmentZoneId[];
   intensity: IntensityPreset;
   goal?: string;
   timeline?: string;

@@ -14,7 +14,7 @@ export const VISUALIZER_EYEBROW = "Rella Aesthetics · AI Preview";
 export const VISUALIZER_HERO_TITLE = "See Your Results";
 
 export const VISUALIZER_HERO_DESCRIPTION =
-  "Free to try — upload a selfie and preview conservative, physician-led Botox & Dysport results on your own face. No account required. Share this link with anyone.";
+  "Free to try — upload a selfie and preview conservative results on your own face. Explore Botox, Dysport, or laser pigmentation treatments. No account required.";
 
 export const VISUALIZER_INTRO_COPY =
   "This free preview tool from Rella Aesthetics helps you explore natural-looking neuromodulator outcomes before your consultation. Results are simulations only — your Rella provider will confirm what's right for you in person.";

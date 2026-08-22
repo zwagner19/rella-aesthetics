@@ -1,8 +1,18 @@
 import OpenAI from "openai";
-import { buildAnalysisPrompt } from "@/lib/visualizer/prompts";
-import { DEFAULT_ZONE_REGIONS } from "@/lib/visualizer/treatments";
-import type { BotoxZone, FaceAnalysis, MaskRegion } from "@/lib/visualizer/types";
-import { isValidBotoxZone } from "@/lib/visualizer/treatments";
+import {
+  buildAnalysisPrompt,
+  parseAnalysisZones,
+} from "@/lib/visualizer/prompts";
+import {
+  getDefaultZonesForTreatment,
+  isValidTreatmentType,
+} from "@/lib/visualizer/treatments";
+import type {
+  FaceAnalysis,
+  MaskRegion,
+  TreatmentType,
+  TreatmentZoneId,
+} from "@/lib/visualizer/types";
 
 function getOpenAIClient(): OpenAI | null {
   const apiKey = process.env.OPENAI_API_KEY;
@@ -10,36 +20,37 @@ function getOpenAIClient(): OpenAI | null {
   return new OpenAI({ apiKey });
 }
 
-function defaultAnalysis(): FaceAnalysis {
+function defaultAnalysis(treatmentType: TreatmentType): FaceAnalysis {
   return {
     quality: "good",
     faceDetected: true,
-    zones: ["forehead", "glabella", "crows-feet"],
+    treatmentType,
+    zones: getDefaultZonesForTreatment(treatmentType),
     notes: "Face detected. For best results, use even lighting and a front-facing photo.",
   };
 }
 
-function parseAnalysisJson(raw: string): FaceAnalysis {
-  const fallback = defaultAnalysis();
+function parseAnalysisJson(
+  treatmentType: TreatmentType,
+  raw: string
+): FaceAnalysis {
+  const fallback = defaultAnalysis(treatmentType);
   try {
     const parsed = JSON.parse(raw) as Partial<FaceAnalysis> & {
       regions?: Record<string, MaskRegion>;
     };
 
-    const zones = Array.isArray(parsed.zones)
-      ? parsed.zones.filter((z): z is BotoxZone => isValidBotoxZone(String(z)))
-      : fallback.zones;
-
+    const zones = parseAnalysisZones(treatmentType, parsed.zones);
     const quality =
       parsed.quality === "good" || parsed.quality === "fair" || parsed.quality === "poor"
         ? parsed.quality
         : fallback.quality;
 
-    const regions: Partial<Record<BotoxZone, MaskRegion>> = {};
+    const regions: Partial<Record<TreatmentZoneId, MaskRegion>> = {};
     if (parsed.regions) {
       for (const [key, value] of Object.entries(parsed.regions)) {
-        if (isValidBotoxZone(key) && value && typeof value === "object") {
-          regions[key] = value;
+        if (value && typeof value === "object") {
+          regions[key as TreatmentZoneId] = value;
         }
       }
     }
@@ -47,6 +58,7 @@ function parseAnalysisJson(raw: string): FaceAnalysis {
     return {
       quality,
       faceDetected: parsed.faceDetected !== false,
+      treatmentType,
       zones: zones.length ? zones : fallback.zones,
       notes: typeof parsed.notes === "string" ? parsed.notes : fallback.notes,
       regions: Object.keys(regions).length ? regions : undefined,
@@ -68,10 +80,11 @@ function mimeToExtension(mimeType: string): string {
 
 export async function analyzeSelfie(
   imageBuffer: Buffer,
-  mimeType: string
+  mimeType: string,
+  treatmentType: TreatmentType
 ): Promise<FaceAnalysis> {
   const client = getOpenAIClient();
-  if (!client) return defaultAnalysis();
+  if (!client) return defaultAnalysis(treatmentType);
 
   try {
     const dataUrl = bufferToDataUrl(imageBuffer, mimeType);
@@ -83,7 +96,7 @@ export async function analyzeSelfie(
         {
           role: "user",
           content: [
-            { type: "text", text: buildAnalysisPrompt() },
+            { type: "text", text: buildAnalysisPrompt(treatmentType) },
             { type: "image_url", image_url: { url: dataUrl } },
           ],
         },
@@ -92,10 +105,10 @@ export async function analyzeSelfie(
     });
 
     const content = response.choices[0]?.message?.content ?? "{}";
-    return parseAnalysisJson(content);
+    return parseAnalysisJson(treatmentType, content);
   } catch (error) {
     console.error("[visualizer] OpenAI analysis failed:", error);
-    return defaultAnalysis();
+    return defaultAnalysis(treatmentType);
   }
 }
 
@@ -110,7 +123,9 @@ export async function generateEditedImage(
 
   try {
     const ext = mimeToExtension(mimeType);
-    const imageFile = new File([new Uint8Array(imageBuffer)], `selfie.${ext}`, { type: mimeType });
+    const imageFile = new File([new Uint8Array(imageBuffer)], `selfie.${ext}`, {
+      type: mimeType,
+    });
 
     const result = await client.images.edit({
       model: "gpt-image-1",
@@ -131,17 +146,7 @@ export async function generateEditedImage(
   }
 }
 
-export function regionsForZones(
-  zones: BotoxZone[],
-  analysisRegions?: Partial<Record<BotoxZone, MaskRegion>>
-): MaskRegion[] {
-  const regions: MaskRegion[] = [];
-  for (const zone of zones) {
-    if (analysisRegions?.[zone]) {
-      regions.push(analysisRegions[zone]!);
-    } else {
-      regions.push(...DEFAULT_ZONE_REGIONS[zone]);
-    }
-  }
-  return regions;
+export function normalizeTreatmentType(value: string | undefined): TreatmentType {
+  if (value && isValidTreatmentType(value)) return value;
+  return "botox";
 }

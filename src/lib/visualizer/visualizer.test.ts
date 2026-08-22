@@ -8,21 +8,38 @@ import {
 import { buildLeadSource, scoreVisualizerLead } from "@/lib/visualizer/lead-scoring";
 import { buildEditMaskPng } from "@/lib/visualizer/mask";
 import { buildEditPrompt, buildAnalysisPrompt } from "@/lib/visualizer/prompts";
-import { INTENSITY_BLEND, isValidBotoxZone } from "@/lib/visualizer/treatments";
+import {
+  INTENSITY_BLEND,
+  isValidBotoxZone,
+  isValidLaserPigmentationZone,
+} from "@/lib/visualizer/treatments";
 import type { VisualizerLeadPayload } from "@/lib/visualizer/types";
 
 describe("visualizer prompts", () => {
-  it("builds conservative edit prompt with identity lock language", () => {
-    const prompt = buildEditPrompt(["forehead", "glabella"], "subtle");
+  it("builds conservative botox edit prompt with identity lock language", () => {
+    const prompt = buildEditPrompt("botox", ["forehead", "glabella"], "subtle");
     expect(prompt).toContain("Preserve exact facial identity");
     expect(prompt).toContain("forehead");
     expect(prompt).toContain("very subtle");
   });
 
-  it("requests JSON-only face analysis schema", () => {
-    const prompt = buildAnalysisPrompt();
-    expect(prompt).toContain("Return ONLY valid JSON");
-    expect(prompt).toContain("faceDetected");
+  it("builds conservative laser pigmentation edit prompt", () => {
+    const prompt = buildEditPrompt("laser-pigmentation", ["cheeks", "forehead-spots"], "subtle");
+    expect(prompt).toContain("laser/IPL pigmentation");
+    expect(prompt).toContain("do NOT lighten overall ethnicity");
+    expect(prompt).toContain("sun spots");
+  });
+
+  it("requests JSON-only face analysis schema for each treatment", () => {
+    const botoxPrompt = buildAnalysisPrompt("botox");
+    expect(botoxPrompt).toContain("Return ONLY valid JSON");
+    expect(botoxPrompt).toContain("faceDetected");
+    expect(botoxPrompt).toContain("forehead");
+
+    const laserPrompt = buildAnalysisPrompt("laser-pigmentation");
+    expect(laserPrompt).toContain("laser/IPL pigmentation");
+    expect(laserPrompt).toContain("cheeks");
+    expect(laserPrompt).toContain("overall-tone");
   });
 });
 
@@ -30,6 +47,12 @@ describe("visualizer treatments", () => {
   it("validates botox zones", () => {
     expect(isValidBotoxZone("forehead")).toBe(true);
     expect(isValidBotoxZone("invalid")).toBe(false);
+  });
+
+  it("validates laser pigmentation zones", () => {
+    expect(isValidLaserPigmentationZone("cheeks")).toBe(true);
+    expect(isValidLaserPigmentationZone("overall-tone")).toBe(true);
+    expect(isValidLaserPigmentationZone("forehead")).toBe(false);
   });
 
   it("uses lower blend weight for subtle preset", () => {
@@ -59,7 +82,7 @@ describe("conservative blend", () => {
   it("blends edited image toward original in masked regions", async () => {
     const original = await solidImage(200, 100, 100);
     const edited = await solidImage(50, 50, 200);
-    const result = await blendConservative(original, edited, ["forehead"], "subtle");
+    const result = await blendConservative(original, edited, "botox", ["forehead"], "subtle");
     const meta = await sharp(result).metadata();
     expect(meta.format).toBe("png");
     expect(result.length).toBeGreaterThan(1000);
@@ -67,7 +90,7 @@ describe("conservative blend", () => {
 
   it("applies demo zone blur without throwing", async () => {
     const original = await solidImage(180, 140, 120);
-    const result = await applyDemoTreatmentEffect(original, ["glabella"], "subtle");
+    const result = await applyDemoTreatmentEffect(original, "botox", ["glabella"], "subtle");
     expect(result.length).toBeGreaterThan(1000);
   });
 
@@ -83,6 +106,7 @@ describe("visualizer lead scoring", () => {
     sessionId: "test-session",
     name: "Jane Doe",
     email: "jane@example.com",
+    treatmentType: "botox",
     zones: ["forehead"],
     intensity: "subtle",
     consent: true,
@@ -103,6 +127,16 @@ describe("visualizer lead scoring", () => {
     expect(warm.score).toBeGreaterThan(cool.score);
     expect(warm.tags).toContain("ai-visualizer");
     expect(warm.tags).toContain("interest-botox");
+  });
+
+  it("tags laser pigmentation leads separately", () => {
+    const laser = scoreVisualizerLead({
+      ...basePayload,
+      treatmentType: "laser-pigmentation",
+      zones: ["cheeks", "forehead-spots"],
+    });
+    expect(laser.tags).toContain("interest-laser-pigmentation");
+    expect(laser.tags).not.toContain("interest-botox");
   });
 
   it("builds a descriptive GHL source string", () => {

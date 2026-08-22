@@ -1,6 +1,6 @@
 import { getSharp } from "./sharp-loader";
-import { DEFAULT_ZONE_REGIONS } from "./treatments";
-import type { BotoxZone, MaskRegion } from "./types";
+import type { MaskRegion, TreatmentType, TreatmentZoneId } from "./types";
+import { resolveZoneRegions } from "./treatments";
 
 function ellipseSvg(
   width: number,
@@ -21,20 +21,7 @@ function ellipseSvg(
   return `<svg width="${width}" height="${height}" xmlns="http://www.w3.org/2000/svg">${ellipses}</svg>`;
 }
 
-export function resolveZoneRegions(
-  zones: BotoxZone[],
-  overrides?: Partial<Record<BotoxZone, MaskRegion>>
-): MaskRegion[] {
-  const regions: MaskRegion[] = [];
-  for (const zone of zones) {
-    if (overrides?.[zone]) {
-      regions.push(overrides[zone]!);
-      continue;
-    }
-    regions.push(...DEFAULT_ZONE_REGIONS[zone]);
-  }
-  return regions;
-}
+export { resolveZoneRegions } from "./treatments";
 
 /** OpenAI edit mask: transparent = preserve, opaque white = edit. */
 export async function buildEditMaskPng(
@@ -56,4 +43,12 @@ export async function buildBlendMaskPng(
   const sharp = await getSharp();
   const svg = ellipseSvg(width, height, regions, "white");
   return sharp(Buffer.from(svg)).png().toBuffer();
+}
+
+export function regionsFromAnalysis(
+  treatmentType: TreatmentType,
+  zones: TreatmentZoneId[],
+  overrides?: Partial<Record<TreatmentZoneId, MaskRegion>>
+): MaskRegion[] {
+  return resolveZoneRegions(treatmentType, zones, overrides);
 }

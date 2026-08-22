@@ -1,14 +1,24 @@
 "use client";
 
 import { useCallback, useMemo, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/Button";
 import { resolveBookingHref } from "@/lib/booking-routes";
 import { RELLA_BRAND, VISUALIZER_INTRO_COPY } from "@/lib/visualizer/brand";
 import { readVisualizerResponse } from "@/lib/visualizer/fetch-json";
-import type { BotoxZone, FaceAnalysis, IntensityPreset } from "@/lib/visualizer/types";
+import {
+  getDefaultZonesForTreatment,
+  getTreatmentOption,
+  isValidTreatmentType,
+} from "@/lib/visualizer/treatments";
+import type { FaceAnalysis, IntensityPreset, TreatmentType, TreatmentZoneId } from "@/lib/visualizer/types";
 import { BeforeAfterSlider } from "./BeforeAfterSlider";
 import { SelfieCapture } from "./SelfieCapture";
-import { IntakeForm, TreatmentPicker } from "./TreatmentPicker";
+import {
+  IntakeForm,
+  TreatmentPicker,
+  TreatmentTypePicker,
+} from "./TreatmentPicker";
 import { PhotoConsent, VisualizerDisclaimer } from "./VisualizerDisclaimer";
 
 type Step =
@@ -39,12 +49,25 @@ function createSessionId(): string {
   return `viz-${Date.now()}`;
 }
 
+function initialTreatmentType(searchParams: ReturnType<typeof useSearchParams>): TreatmentType {
+  const param = searchParams.get("treatment");
+  if (param === "laser" || param === "laser-pigmentation") return "laser-pigmentation";
+  if (param && isValidTreatmentType(param)) return param;
+  return "botox";
+}
+
 export function VisualizerWizard() {
+  const searchParams = useSearchParams();
   const [step, setStep] = useState<Step>("intro");
   const [consent, setConsent] = useState(false);
+  const [treatmentType, setTreatmentType] = useState<TreatmentType>(() =>
+    initialTreatmentType(searchParams)
+  );
   const [imageDataUrl, setImageDataUrl] = useState<string | null>(null);
   const [analysis, setAnalysis] = useState<FaceAnalysis | null>(null);
-  const [zones, setZones] = useState<BotoxZone[]>(["forehead", "glabella"]);
+  const [zones, setZones] = useState<TreatmentZoneId[]>(() =>
+    getDefaultZonesForTreatment(initialTreatmentType(searchParams))
+  );
   const [intensity, setIntensity] = useState<IntensityPreset>("subtle");
   const [sessionId, setSessionId] = useState(createSessionId);
   const [beforeDataUrl, setBeforeDataUrl] = useState<string | null>(null);
@@ -60,35 +83,48 @@ export function VisualizerWizard() {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
-  const bookingHref = useMemo(() => resolveBookingHref({ service: "botox" }), []);
+  const treatmentOption = useMemo(() => getTreatmentOption(treatmentType), [treatmentType]);
+  const bookingHref = useMemo(
+    () => resolveBookingHref({ service: treatmentOption.bookingService }),
+    [treatmentOption.bookingService]
+  );
 
-  const runAnalysis = useCallback(async (dataUrl: string) => {
-    setLoading(true);
-    setError(null);
-    try {
-      const res = await fetch("/api/visualizer/analyze", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ image: dataUrl }),
-      });
-      const data = await readVisualizerResponse<{
-        analysis?: FaceAnalysis;
-        error?: string;
-      }>(res);
-      if (!res.ok || !data.analysis) {
-        throw new Error(data.analysis?.notes ?? data.error ?? "Photo analysis failed");
-      }
-      setAnalysis(data.analysis);
-      if (data.analysis.zones?.length) {
-        setZones(data.analysis.zones.slice(0, 3));
-      }
-      setStep("treatment");
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Analysis failed");
-    } finally {
-      setLoading(false);
-    }
+  const handleTreatmentTypeChange = useCallback((next: TreatmentType) => {
+    setTreatmentType(next);
+    setZones(getDefaultZonesForTreatment(next));
+    setAnalysis(null);
   }, []);
+
+  const runAnalysis = useCallback(
+    async (dataUrl: string) => {
+      setLoading(true);
+      setError(null);
+      try {
+        const res = await fetch("/api/visualizer/analyze", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ image: dataUrl, treatmentType }),
+        });
+        const data = await readVisualizerResponse<{
+          analysis?: FaceAnalysis;
+          error?: string;
+        }>(res);
+        if (!res.ok || !data.analysis) {
+          throw new Error(data.analysis?.notes ?? data.error ?? "Photo analysis failed");
+        }
+        setAnalysis(data.analysis);
+        if (data.analysis.zones?.length) {
+          setZones(data.analysis.zones.slice(0, 4));
+        }
+        setStep("treatment");
+      } catch (err) {
+        setError(err instanceof Error ? err.message : "Analysis failed");
+      } finally {
+        setLoading(false);
+      }
+    },
+    [treatmentType]
+  );
 
   const runGenerate = useCallback(async () => {
     if (!imageDataUrl) return;
@@ -101,6 +137,7 @@ export function VisualizerWizard() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           image: imageDataUrl,
+          treatmentType,
           zones,
           intensity,
           sessionId,
@@ -128,7 +165,7 @@ export function VisualizerWizard() {
     } finally {
       setLoading(false);
     }
-  }, [analysis?.regions, imageDataUrl, intensity, sessionId, zones]);
+  }, [analysis?.regions, imageDataUrl, intensity, sessionId, treatmentType, zones]);
 
   const submitLead = useCallback(async () => {
     setLoading(true);
@@ -142,6 +179,7 @@ export function VisualizerWizard() {
           name,
           email: email || undefined,
           phone: phone || undefined,
+          treatmentType,
           zones,
           intensity,
           goal: goal || undefined,
@@ -159,23 +197,19 @@ export function VisualizerWizard() {
     } finally {
       setLoading(false);
     }
-  }, [budget, email, goal, intensity, name, phone, sessionId, timeline, zones]);
+  }, [budget, email, goal, intensity, name, phone, sessionId, timeline, treatmentType, zones]);
 
   const progressSteps: Step[] = ["intro", "upload", "treatment", "preview", "done"];
   const progressIndex = progressSteps.indexOf(step === "generating" ? "treatment" : step);
 
   return (
     <div className="max-w-3xl mx-auto">
-      {/* Progress */}
       {step !== "generating" && (
         <div className="flex justify-between mb-10 text-[0.625rem] font-bold tracking-[0.15em] uppercase text-silver-light">
           {progressSteps
             .filter((s) => s !== "generating")
             .map((s, i) => (
-              <span
-                key={s}
-                className={i <= progressIndex ? "text-rose" : undefined}
-              >
+              <span key={s} className={i <= progressIndex ? "text-rose" : undefined}>
                 {STEP_LABELS[s]}
               </span>
             ))}
@@ -208,6 +242,10 @@ export function VisualizerWizard() {
 
       {step === "upload" && (
         <div className="space-y-6">
+          <TreatmentTypePicker
+            treatmentType={treatmentType}
+            onTreatmentTypeChange={handleTreatmentTypeChange}
+          />
           <SelfieCapture
             disabled={loading}
             onCapture={(dataUrl) => {
@@ -231,10 +269,15 @@ export function VisualizerWizard() {
 
       {step === "treatment" && (
         <div className="space-y-6">
+          <TreatmentTypePicker
+            treatmentType={treatmentType}
+            onTreatmentTypeChange={handleTreatmentTypeChange}
+          />
           {analysis?.notes && (
             <p className="text-sm text-silver text-center">{analysis.notes}</p>
           )}
           <TreatmentPicker
+            treatmentType={treatmentType}
             selectedZones={zones}
             intensity={intensity}
             onZonesChange={setZones}
@@ -254,7 +297,9 @@ export function VisualizerWizard() {
       {step === "generating" && (
         <div className="py-16 text-center space-y-4">
           <div className="w-12 h-12 border-2 border-rose border-t-transparent rounded-full animate-spin mx-auto" />
-          <p className="text-silver">Creating your conservative preview…</p>
+          <p className="text-silver">
+            Creating your conservative {treatmentOption.label} preview…
+          </p>
           <p className="text-xs text-silver-light">This usually takes 10–20 seconds</p>
         </div>
       )}
@@ -288,13 +333,14 @@ export function VisualizerWizard() {
       {step === "intake" && (
         <div className="space-y-6">
           <p className="text-sm text-silver text-center max-w-md mx-auto">
-            Optional — share your goals if you&apos;d like the {RELLA_BRAND.name} team to follow up.
-            You can use the preview without submitting anything.
+            Optional — share your goals if you&apos;d like the {RELLA_BRAND.name} team to follow up
+            about your {treatmentOption.label} preview.
           </p>
           <IntakeForm
             goal={goal}
             timeline={timeline}
             budget={budget}
+            treatmentType={treatmentType}
             onGoalChange={setGoal}
             onTimelineChange={setTimeline}
             onBudgetChange={setBudget}
@@ -316,8 +362,8 @@ export function VisualizerWizard() {
       {step === "contact" && (
         <div className="space-y-6">
           <p className="text-sm text-silver text-center">
-            Optional — share contact info only if you want {RELLA_BRAND.name} to follow up about your
-            preview.
+            Optional — share contact info only if you want {RELLA_BRAND.name} to follow up about
+            your {treatmentOption.label} preview.
           </p>
           <div className="space-y-4 max-w-md mx-auto">
             <div>
@@ -359,7 +405,7 @@ export function VisualizerWizard() {
             </div>
             <p className="text-xs text-silver">Email or phone is required.</p>
           </div>
-          <div className="flex justify-center gap-3">
+          <div className="flex justify-center gap-3 flex-wrap">
             <Button type="button" variant="ghost" onClick={() => setStep("intake")}>
               Back
             </Button>
@@ -380,14 +426,18 @@ export function VisualizerWizard() {
       {step === "done" && beforeDataUrl && afterDataUrl && (
         <div className="space-y-6 text-center">
           <h2 className="font-bold text-xl tracking-[0.06em] uppercase text-rose-text">
-            {followUpSubmitted ? "We&apos;ll Be In Touch" : "Your Preview"}
+            {followUpSubmitted ? "We'll Be In Touch" : "Your Preview"}
           </h2>
-          <BeforeAfterSlider beforeSrc={beforeDataUrl} afterSrc={afterDataUrl} demoEffect={mode === "demo"} />
+          <BeforeAfterSlider
+            beforeSrc={beforeDataUrl}
+            afterSrc={afterDataUrl}
+            demoEffect={mode === "demo"}
+          />
           <VisualizerDisclaimer compact />
           <p className="text-sm text-silver">
             {followUpSubmitted
-              ? `The ${RELLA_BRAND.name} team will follow up shortly about your preview.`
-              : `Share this link with anyone — no account required. Book when you&apos;re ready.`}
+              ? `The ${RELLA_BRAND.name} team will follow up shortly about your ${treatmentOption.label} preview.`
+              : `Share this link with anyone — no account required. Book when you're ready.`}
           </p>
           <div className="flex flex-col sm:flex-row justify-center gap-3">
             <Button href={bookingHref}>Book at Rella</Button>

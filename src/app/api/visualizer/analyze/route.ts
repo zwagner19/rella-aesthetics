@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { analyzeSelfie } from "@/lib/visualizer/openai";
+import { analyzeSelfie, normalizeTreatmentType } from "@/lib/visualizer/openai";
 import { parseDataUrl } from "@/lib/visualizer/image-utils";
 
 export const maxDuration = 60;
@@ -7,13 +7,14 @@ export const runtime = "nodejs";
 
 export async function POST(req: NextRequest) {
   try {
-    const body = (await req.json()) as { image?: string };
+    const body = (await req.json()) as { image?: string; treatmentType?: string };
     if (!body.image) {
       return NextResponse.json({ error: "Image is required" }, { status: 400 });
     }
 
+    const treatmentType = normalizeTreatmentType(body.treatmentType);
     const { buffer, mimeType } = parseDataUrl(body.image);
-    const analysis = await analyzeSelfie(buffer, mimeType);
+    const analysis = await analyzeSelfie(buffer, mimeType, treatmentType);
 
     if (!analysis.faceDetected || analysis.quality === "poor") {
       return NextResponse.json(

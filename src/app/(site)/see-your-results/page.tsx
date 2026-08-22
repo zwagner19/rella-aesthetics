@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import { VisualizerWizard } from "@/components/visualizer/VisualizerWizard";
 import { VisualizerDisclaimer } from "@/components/visualizer/VisualizerDisclaimer";
 import {
@@ -10,7 +11,7 @@ import {
 
 export const metadata: Metadata = {
   title: "See Your Results",
-  description: `Upload a selfie and see a conservative, personalized Botox preview on your own face. Free simulation from ${RELLA_BRAND.name} in ${RELLA_BRAND.locations}. Book at ${RELLA_BRAND.site}.`,
+  description: `Free AI preview for Botox and laser pigmentation treatments at ${RELLA_BRAND.name}. Upload a selfie and see conservative results on your own face. ${RELLA_BRAND.locations}.`,
   alternates: {
     canonical: `${RELLA_BRAND.siteUrl}/see-your-results`,
   },
@@ -32,8 +33,11 @@ export default function SeeYourResultsPage() {
           <h1 className="font-bold text-3xl md:text-4xl lg:text-5xl tracking-[0.08em] uppercase text-rose-text mb-4 leading-[1.1]">
             {VISUALIZER_HERO_TITLE}
           </h1>
-          <p className="text-lg font-light text-silver max-w-[560px] mx-auto leading-relaxed mb-6">
+          <p className="text-lg font-light text-silver max-w-[640px] mx-auto leading-relaxed mb-6">
             {VISUALIZER_HERO_DESCRIPTION}
+          </p>
+          <p className="text-sm text-silver max-w-xl mx-auto mb-4">
+            Botox & Dysport · Laser pigmentation & sun spots (IPL)
           </p>
           <div className="max-w-xl mx-auto">
             <VisualizerDisclaimer compact />
@@ -43,7 +47,9 @@ export default function SeeYourResultsPage() {
 
       <section className="py-16 md:py-20">
         <div className="mx-auto max-w-[1200px] px-6 md:px-8 lg:px-12">
-          <VisualizerWizard />
+          <Suspense fallback={<p className="text-center text-silver">Loading preview tool…</p>}>
+            <VisualizerWizard />
+          </Suspense>
         </div>
       </section>
     </>

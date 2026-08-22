@@ -11,25 +11,27 @@ import {
   parseDataUrl,
 } from "@/lib/visualizer/image-utils";
 import { buildEditMaskPng, resolveZoneRegions } from "@/lib/visualizer/mask";
-import { generateEditedImage } from "@/lib/visualizer/openai";
+import { generateEditedImage, normalizeTreatmentType } from "@/lib/visualizer/openai";
 import { buildEditPrompt } from "@/lib/visualizer/prompts";
 import { getSharp } from "@/lib/visualizer/sharp-loader";
 import {
-  isValidBotoxZone,
   isValidIntensity,
+  isValidTreatmentType,
+  isValidTreatmentZone,
   VISUALIZER_DISCLAIMER,
 } from "@/lib/visualizer/treatments";
-import type { BotoxZone, IntensityPreset, MaskRegion } from "@/lib/visualizer/types";
+import type { IntensityPreset, MaskRegion, TreatmentType, TreatmentZoneId } from "@/lib/visualizer/types";
 
 export const maxDuration = 60;
 export const runtime = "nodejs";
 
 interface GenerateBody {
   image?: string;
+  treatmentType?: string;
   zones?: string[];
   intensity?: string;
   sessionId?: string;
-  regions?: Partial<Record<BotoxZone, MaskRegion>>;
+  regions?: Partial<Record<TreatmentZoneId, MaskRegion>>;
 }
 
 interface GenerateOutcome {
@@ -38,47 +40,56 @@ interface GenerateOutcome {
   mode: "live" | "demo";
 }
 
-/** Sharp-enhanced path for local/dev environments where native bindings load. */
 async function generateWithSharp(
   buffer: Buffer,
   mimeType: string,
-  zones: BotoxZone[],
+  treatmentType: TreatmentType,
+  zones: TreatmentZoneId[],
   intensity: IntensityPreset,
-  regionOverrides: Partial<Record<BotoxZone, MaskRegion>> | undefined,
+  regionOverrides: Partial<Record<TreatmentZoneId, MaskRegion>> | undefined,
   prompt: string
 ): Promise<GenerateOutcome | null> {
   const sharp = await getSharp();
   const meta = await sharp(buffer).metadata();
   const width = meta.width ?? 1024;
   const height = meta.height ?? 1024;
-  const regions = resolveZoneRegions(zones, regionOverrides);
+  const regions = resolveZoneRegions(treatmentType, zones, regionOverrides);
   const maskBuffer = await buildEditMaskPng(width, height, regions);
   const editedRaw = await generateEditedImage(buffer, mimeType, maskBuffer, prompt);
 
   if (editedRaw) {
-    const blended = await blendConservative(buffer, editedRaw, zones, intensity, regionOverrides);
+    const blended = await blendConservative(
+      buffer,
+      editedRaw,
+      treatmentType,
+      zones,
+      intensity,
+      regionOverrides
+    );
     const watermarked = await addSimulationWatermark(blended);
     return { resultBuffer: watermarked, resultMime: "image/png", mode: "live" };
   }
 
-  const demo = await applyDemoTreatmentEffect(buffer, zones, intensity, regionOverrides);
+  const demo = await applyDemoTreatmentEffect(
+    buffer,
+    treatmentType,
+    zones,
+    intensity,
+    regionOverrides
+  );
   const watermarked = await addSimulationWatermark(demo);
   return { resultBuffer: watermarked, resultMime: "image/png", mode: "demo" };
 }
 
-/** Vercel-safe path: OpenAI edit only, no sharp native modules. */
 async function generateWithoutSharp(
   buffer: Buffer,
   mimeType: string,
-  zones: BotoxZone[],
-  intensity: IntensityPreset,
   prompt: string
 ): Promise<GenerateOutcome> {
   const editedRaw = await generateEditedImage(buffer, mimeType, null, prompt);
   if (editedRaw) {
     return { resultBuffer: editedRaw, resultMime: "image/png", mode: "live" };
   }
-  // Demo fallback: return original; UI applies subtle CSS treatment + watermark
   return { resultBuffer: buffer, resultMime: mimeType, mode: "demo" };
 }
 
@@ -93,7 +104,10 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const zones = body.zones.filter((z): z is BotoxZone => isValidBotoxZone(z));
+    const treatmentType = normalizeTreatmentType(body.treatmentType);
+    const zones = body.zones.filter((z): z is TreatmentZoneId =>
+      isValidTreatmentZone(treatmentType, z)
+    );
     if (!zones.length) {
       return NextResponse.json({ error: "Invalid treatment zones" }, { status: 400 });
     }
@@ -103,17 +117,25 @@ export async function POST(req: NextRequest) {
 
     const sessionId = body.sessionId ?? crypto.randomUUID();
     const { buffer, mimeType } = parseDataUrl(body.image);
-    const prompt = buildEditPrompt(zones, intensity);
+    const prompt = buildEditPrompt(treatmentType, zones, intensity);
 
     let outcome: GenerateOutcome | null = null;
     try {
-      outcome = await generateWithSharp(buffer, mimeType, zones, intensity, body.regions, prompt);
+      outcome = await generateWithSharp(
+        buffer,
+        mimeType,
+        treatmentType,
+        zones,
+        intensity,
+        body.regions,
+        prompt
+      );
     } catch (sharpError) {
       console.warn("[visualizer/generate] sharp unavailable, using OpenAI-only path:", sharpError);
     }
 
     if (!outcome) {
-      outcome = await generateWithoutSharp(buffer, mimeType, zones, intensity, prompt);
+      outcome = await generateWithoutSharp(buffer, mimeType, prompt);
     }
 
     const ext = extensionForMime(mimeType);
@@ -129,6 +151,7 @@ export async function POST(req: NextRequest) {
       afterDataUrl: bufferToDataUrl(outcome.resultBuffer, outcome.resultMime),
       sessionId,
       mode: outcome.mode,
+      treatmentType,
       disclaimer: VISUALIZER_DISCLAIMER,
     });
   } catch (error) {
