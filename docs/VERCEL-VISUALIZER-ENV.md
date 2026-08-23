@@ -55,8 +55,8 @@ Env vars are baked in at **build/runtime** for serverless functions — a redepl
 1. Open `/see-your-results` on the Vercel preview URL
 2. Try **Botox** and **Laser — Pigmentation** (or `/see-your-results?treatment=laser`)
 3. Upload a selfie and click **Continue**
-3. **Without** `OPENAI_API_KEY`: you should see "Demo preview mode" and a subtle blur preview
-4. **With** `OPENAI_API_KEY`: demo banner should be gone; preview takes ~10–20s
+3. **Without** `OPENAI_API_KEY`: you should see "Demo preview — add OPENAI_API_KEY on Vercel for live AI results" and a subtle demo effect
+4. **With** `OPENAI_API_KEY`: demo banner should be gone; preview takes ~10–20s and shows "Calibrated to Rella patient outcomes" when BA style notes apply
 
 ## Troubleshooting
 
