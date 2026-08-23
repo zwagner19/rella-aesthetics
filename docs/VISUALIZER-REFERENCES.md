@@ -2,17 +2,23 @@
 
 Use real Rella patient outcomes to calibrate preview style — **not** to fine-tune a model. We distill each consented before/after pair into short style notes that get injected into the generate prompt.
 
-## Google Drive access
+## Google Drive import (Rella B&A catalog)
 
-**This agent does not currently have access to your Google Drive.** The Google Drive MCP integration must be authenticated in Cursor first.
+13 consented before/after pairs are cataloged in `data/visualizer-references/drive-pairs.json` (4 Botox, 9 laser/IPL/CO2). Photos stay gitignored; only `manifest.json` (metadata + distilled style notes) is committed.
 
-### Connect Google Drive in Cursor
+### Re-import from Drive (Cloud Agent)
 
-1. Open **Cursor Settings → MCP → Google Drive**
-2. Click **Authenticate** and sign in with the account that owns the B&A folder
-3. Start a new agent message: *“Sync my Rella B&A folder from Google Drive”* and share the folder name or link
+1. Authenticate **Cursor Settings → MCP → Google Drive**
+2. Download pairs using `download_file_content` for each file ID in `drive-pairs.json`
+3. Extract and rebuild:
 
-Until Drive is connected, you can export or download the folder locally and use the sync script below.
+```bash
+node scripts/import-drive-pairs.mjs extract <agent-tools-download.txt> data/visualizer-references/botox/<id>-before.jpg
+node scripts/import-drive-pairs.mjs manifest
+OPENAI_API_KEY=sk-... npm run visualizer:distill-references
+```
+
+Until Drive is connected, export the folder locally and use the sync script below.
 
 ## Quick start (local folder)
 

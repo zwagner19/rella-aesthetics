@@ -1,5 +1,186 @@
 {
   "version": 1,
-  "updatedAt": null,
-  "references": []
+  "updatedAt": "2026-08-23T15:50:00.000Z",
+  "references": [
+    {
+      "id": "botox-ea8f4dbc",
+      "treatmentType": "botox",
+      "zones": [
+        "forehead",
+        "glabella",
+        "crows-feet"
+      ],
+      "treatmentLabel": "Botox & Dysport Neurotoxin",
+      "beforePath": "botox/ea8f4dbc-before.jpg",
+      "afterPath": "botox/ea8f4dbc-after.jpg",
+      "consentOnFile": true,
+      "styleNotes": "- Horizontal forehead lines softened ~15–20%; glabellar \"11\" lines reduced at rest\n- Crow's feet at outer eyes lightly smoothed without changing eye shape\n- Natural skin tone, freckling, and facial identity fully preserved\n- Result looks refreshed, not frozen or filtered"
+    },
+    {
+      "id": "botox-8cf8ac76",
+      "treatmentType": "botox",
+      "zones": [
+        "forehead",
+        "glabella",
+        "crows-feet"
+      ],
+      "treatmentLabel": "Botox & Dysport Neurotoxin",
+      "beforePath": "botox/8cf8ac76-before.jpg",
+      "afterPath": "botox/8cf8ac76-after.jpg",
+      "consentOnFile": true,
+      "styleNotes": "- Forehead horizontal lines visibly softened (~15–20%)\n- Glabellar and periorbital lines reduced while keeping natural expression\n- Skin texture and warm undertone unchanged\n- No plastic smoothing or symmetry alteration"
+    },
+    {
+      "id": "botox-c77dcfca",
+      "treatmentType": "botox",
+      "zones": [
+        "forehead",
+        "glabella",
+        "crows-feet"
+      ],
+      "treatmentLabel": "Botox & Dysport Neurotoxin",
+      "beforePath": "botox/c77dcfca-before.jpg",
+      "afterPath": "botox/c77dcfca-after.jpg",
+      "consentOnFile": true,
+      "styleNotes": "- Deep forehead rhytids softened to moderate resting lines (~15–20% reduction)\n- Periorbital area unchanged; upper-face neuromodulator focus only\n- Cheek freckling and pigmentation left intact (not a laser result)\n- Conservative, clinic-realistic upper-face refresh"
+    },
+    {
+      "id": "botox-d9ef9fff",
+      "treatmentType": "botox",
+      "zones": [
+        "forehead",
+        "glabella",
+        "crows-feet"
+      ],
+      "treatmentLabel": "Botox & Dysport Neurotoxin",
+      "beforePath": "botox/d9ef9fff-before.jpg",
+      "afterPath": "botox/d9ef9fff-after.jpg",
+      "consentOnFile": true,
+      "styleNotes": "- Dynamic glabellar and forehead lines reduced even during brow contraction\n- Crow's feet softened without flattening natural smile lines\n- Warm skin tone and sun spots preserved (neurotoxin-only change)\n- Avoid frozen brow; maintain natural animated expression"
+    },
+    {
+      "id": "laser-pigmentation-2f8b606a",
+      "treatmentType": "laser-pigmentation",
+      "zones": [
+        "cheeks",
+        "forehead-spots",
+        "overall-tone"
+      ],
+      "treatmentLabel": "IPL Photofacial",
+      "beforePath": "laser-pigmentation/2f8b606a-before.jpg",
+      "afterPath": "laser-pigmentation/2f8b606a-after.jpg",
+      "consentOnFile": true,
+      "styleNotes": "- Temple and upper-cheek sun spots and freckling faded ~20–30%\n- Overall facial redness slightly reduced; skin tone more even\n- Natural skin texture and undertone preserved; not bleached\n- Dynamic smile lines unchanged (pigmentation-focused IPL result)"
+    },
+    {
+      "id": "laser-pigmentation-f957314d",
+      "treatmentType": "laser-pigmentation",
+      "zones": [
+        "overall-tone",
+        "cheeks",
+        "forehead-spots"
+      ],
+      "treatmentLabel": "Full CO2 Skin Resurfacing",
+      "beforePath": "laser-pigmentation/f957314d-before.jpg",
+      "afterPath": "laser-pigmentation/f957314d-after.jpg",
+      "consentOnFile": true,
+      "styleNotes": "- Cheek and temple lentigines significantly lightened (~25–35%)\n- Profile skin tone more uniform without altering natural melanin base\n- Fine periorbital lines may appear slightly softer from texture refinement\n- Not airbrushed; pores and natural skin variation remain"
+    },
+    {
+      "id": "laser-pigmentation-d8da576f",
+      "treatmentType": "laser-pigmentation",
+      "zones": [
+        "overall-tone",
+        "cheeks",
+        "forehead-spots"
+      ],
+      "treatmentLabel": "Full CO2 Skin Resurfacing",
+      "beforePath": "laser-pigmentation/d8da576f-before.jpg",
+      "afterPath": "laser-pigmentation/d8da576f-after.jpg",
+      "consentOnFile": true,
+      "styleNotes": "- Forehead, nose, and cheek brown spots visibly faded (~20–30%)\n- Diffuse erythema on cheeks reduced for more even tone\n- Static forehead/glabellar lines slightly softened from texture improvement\n- Identity and natural coloring preserved"
+    },
+    {
+      "id": "laser-pigmentation-0b57a4b3",
+      "treatmentType": "laser-pigmentation",
+      "zones": [
+        "overall-tone",
+        "cheeks",
+        "forehead-spots"
+      ],
+      "treatmentLabel": "Full CO2 Skin Resurfacing",
+      "beforePath": "laser-pigmentation/0b57a4b3-before.jpg",
+      "afterPath": "laser-pigmentation/0b57a4b3-after.jpg",
+      "consentOnFile": true,
+      "styleNotes": "- Nose and cheek hyperpigmentation and redness reduced (~20–25%)\n- Forehead sun damage lightened; overall tone more even\n- Upper-face lines slightly softened as secondary texture benefit\n- Décolletage pigmentation may remain (face-focused result)"
+    },
+    {
+      "id": "laser-pigmentation-63ba22ff",
+      "treatmentType": "laser-pigmentation",
+      "zones": [
+        "overall-tone",
+        "cheeks",
+        "forehead-spots"
+      ],
+      "treatmentLabel": "Full CO2 Skin Resurfacing",
+      "beforePath": "laser-pigmentation/63ba22ff-before.jpg",
+      "afterPath": "laser-pigmentation/63ba22ff-after.jpg",
+      "consentOnFile": true,
+      "styleNotes": "- Dense shoulder/upper-arm sun spots significantly faded (~30–40%)\n- Speckled pigmentation replaced with more uniform tone on treated area\n- Natural skin texture on shoulder preserved\n- Face/neck unchanged in this body-area reference"
+    },
+    {
+      "id": "laser-pigmentation-ac449507",
+      "treatmentType": "laser-pigmentation",
+      "zones": [
+        "overall-tone",
+        "cheeks",
+        "forehead-spots"
+      ],
+      "treatmentLabel": "Full CO2 Skin Resurfacing",
+      "beforePath": "laser-pigmentation/ac449507-before.jpg",
+      "afterPath": "laser-pigmentation/ac449507-after.jpg",
+      "consentOnFile": true,
+      "styleNotes": "- Forehead and décolletage solar lentigines markedly reduced (~25–35%)\n- Cheek and nose mottled pigmentation lightened for clearer complexion\n- Fine lines may appear marginally softer from resurfacing texture\n- Fair skin undertone maintained; no unnatural whitening"
+    },
+    {
+      "id": "laser-pigmentation-0e749aee",
+      "treatmentType": "laser-pigmentation",
+      "zones": [
+        "overall-tone",
+        "cheeks",
+        "forehead-spots"
+      ],
+      "treatmentLabel": "Full CO2 Skin Resurfacing",
+      "beforePath": "laser-pigmentation/0e749aee-before.jpg",
+      "afterPath": "laser-pigmentation/0e749aee-after.jpg",
+      "consentOnFile": true,
+      "styleNotes": "- Cheek and jawline lentigines faded ~20–30%\n- Profile skin tone more even without removing all natural freckling\n- Subtle jawline and perioral lines unchanged\n- Conservative spot-focused laser result"
+    },
+    {
+      "id": "laser-pigmentation-0fc4227c",
+      "treatmentType": "laser-pigmentation",
+      "zones": [
+        "overall-tone",
+        "cheeks"
+      ],
+      "treatmentLabel": "CoolPeel CO2",
+      "beforePath": "laser-pigmentation/0fc4227c-before.jpg",
+      "afterPath": "laser-pigmentation/0fc4227c-after.jpg",
+      "consentOnFile": true,
+      "styleNotes": "- Nose-bridge and upper-cheek freckling softly faded (~15–20%)\n- Skin texture slightly refined with natural sheen preserved\n- Forehead and periorbital areas largely unchanged (minimal-depth peel)\n- Very subtle; no filter or matte airbrush look"
+    },
+    {
+      "id": "laser-pigmentation-2603fdce",
+      "treatmentType": "laser-pigmentation",
+      "zones": [
+        "overall-tone",
+        "cheeks"
+      ],
+      "treatmentLabel": "DEKA Advanced CO2",
+      "beforePath": "laser-pigmentation/2603fdce-before.jpg",
+      "afterPath": "laser-pigmentation/2603fdce-after.jpg",
+      "consentOnFile": true,
+      "styleNotes": "- Forehead mottled hyperpigmentation significantly evened (~25–35%)\n- Cheek and nose sun spots lightened; perioral pigment patches softened\n- Natural medium skin undertone preserved throughout\n- Texture refined but not waxy or over-smoothed"
+    }
+  ]
 }
