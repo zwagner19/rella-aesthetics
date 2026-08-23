@@ -17,7 +17,7 @@ export function PatientResultImageGallery({
             Real examples. Shared with permission.
           </h2>
           <p className="text-base font-light leading-relaxed text-ink/70 md:text-lg">
-            These patient-submitted images are shown as shared. Treatment details and timing will be added after the clinical record is confirmed.
+            These patient-submitted images are shown as shared. Visible areas are labeled when they can be described without inferring a service; treatment details and timing were not provided with these files.
           </p>
         </div>
         <div className="grid gap-7 sm:grid-cols-2 lg:grid-cols-3">
@@ -26,7 +26,12 @@ export function PatientResultImageGallery({
               <div className="relative aspect-square overflow-hidden bg-silver-pale">
                 <Image src={result.src} alt={result.alt} fill sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw" className="object-cover" />
               </div>
-              <figcaption className="p-5 text-sm leading-relaxed text-ink/70">{result.caption}</figcaption>
+              <figcaption className="p-5">
+                <p className="mb-2 text-[0.625rem] font-bold uppercase tracking-[0.14em] text-rose">
+                  Visible area: <span className="text-ink">{result.treatmentArea}</span>
+                </p>
+                <p className="text-sm leading-relaxed text-ink/70">{result.caption}</p>
+              </figcaption>
             </figure>
           ))}
         </div>

@@ -30,18 +30,93 @@ export interface PatientResultImage {
   placement: readonly ResultPlacement[];
   src: `/${string}`;
   alt: string;
+  /** A visible, non-clinical area label when the source does not identify a service. */
+  treatmentArea: string;
   caption: string;
 }
 
 export const patientResultImages: readonly PatientResultImage[] = [
-  ...Array.from({ length: 9 }, (_, index) => ({
-    id: `patient-result-${String(index + 1).padStart(2, "0")}`,
-    status: "approved" as const,
-    placement: ["main-gallery"] as const,
-    src: `/images/results/patient-submissions/result-${String(index + 1).padStart(2, "0")}.jpg` as `/${string}`,
-    alt: "Patient before-and-after result photo shared with Rella Aesthetics",
-    caption: "Patient result shared with permission. Treatment details and timing are being confirmed.",
-  })),
+  {
+    id: "patient-result-01",
+    status: "approved",
+    placement: ["main-gallery"],
+    src: "/images/results/patient-submissions/result-01.jpg",
+    alt: "Patient before-and-after result photo showing a facial profile shared with Rella Aesthetics",
+    treatmentArea: "Facial profile",
+    caption: "Patient result shared with permission. Service details and timing were not provided.",
+  },
+  {
+    id: "patient-result-02",
+    status: "approved",
+    placement: ["main-gallery"],
+    src: "/images/results/patient-submissions/result-02.jpg",
+    alt: "Patient before-and-after result photo showing a side facial profile shared with Rella Aesthetics",
+    treatmentArea: "Facial profile",
+    caption: "Patient result shared with permission. Service details and timing were not provided.",
+  },
+  {
+    id: "patient-result-03",
+    status: "approved",
+    placement: ["main-gallery"],
+    src: "/images/results/patient-submissions/result-03.jpg",
+    alt: "Patient before-and-after result photo showing the cheeks and lower face shared with Rella Aesthetics",
+    treatmentArea: "Cheeks & lower face",
+    caption: "Patient result shared with permission. Service details and timing were not provided.",
+  },
+  {
+    id: "patient-result-04",
+    status: "approved",
+    placement: ["main-gallery"],
+    src: "/images/results/patient-submissions/result-04.jpg",
+    alt: "Patient before-and-after result photo showing the forehead and eye area shared with Rella Aesthetics",
+    treatmentArea: "Forehead & eye area",
+    caption: "Patient result shared with permission. Service details and timing were not provided.",
+  },
+  {
+    id: "patient-result-05",
+    status: "approved",
+    placement: ["main-gallery"],
+    src: "/images/results/patient-submissions/result-05.jpg",
+    alt: "Patient before-and-after result photo showing the overall face shared with Rella Aesthetics",
+    treatmentArea: "Overall face",
+    caption: "Patient result shared with permission. Service details and timing were not provided.",
+  },
+  {
+    id: "patient-result-06",
+    status: "approved",
+    placement: ["main-gallery"],
+    src: "/images/results/patient-submissions/result-06.jpg",
+    alt: "Patient before-and-after result photo showing the lips and lower face shared with Rella Aesthetics",
+    treatmentArea: "Lips & lower face",
+    caption: "Patient result shared with permission. Service details and timing were not provided.",
+  },
+  {
+    id: "patient-result-07",
+    status: "approved",
+    placement: ["main-gallery"],
+    src: "/images/results/patient-submissions/result-07.jpg",
+    alt: "Patient before-and-after result photo showing the lips shared with Rella Aesthetics",
+    treatmentArea: "Lips",
+    caption: "Patient result shared with permission. Service details and timing were not provided.",
+  },
+  {
+    id: "patient-result-08",
+    status: "approved",
+    placement: ["main-gallery"],
+    src: "/images/results/patient-submissions/result-08.jpg",
+    alt: "Patient before-and-after result photo showing the forehead and lower face shared with Rella Aesthetics",
+    treatmentArea: "Forehead & lower face",
+    caption: "Patient result shared with permission. Service details and timing were not provided.",
+  },
+  {
+    id: "patient-result-09",
+    status: "approved",
+    placement: ["main-gallery"],
+    src: "/images/results/patient-submissions/result-09.jpg",
+    alt: "Patient before-and-after result photo showing the under-eye area shared with Rella Aesthetics",
+    treatmentArea: "Under-eye area",
+    caption: "Patient result shared with permission. Service details and timing were not provided.",
+  },
 ];
 /**
  * Add new results here as `draft`. Do not change one to `approved` until Rella
@@ -137,17 +212,6 @@ export const beforeAfterResults: readonly BeforeAfterResult[] = [
     afterSrc: "/images/results/before-after/prp-hair-restoration-after.webp",
     beforeAlt: "Before PRP hair restoration treatment",
     afterAlt: "After PRP hair restoration treatment",
-    caption: "Patient result shared with permission. Individual results vary.",
-  },
-  {
-    id: "lip-filler-01",
-    status: "approved",
-    placement: ["main-gallery"],
-    treatment: "Lip Filler",
-    beforeSrc: "/images/results/before-after/lip-filler-before.webp",
-    afterSrc: "/images/results/before-after/lip-filler-after.webp",
-    beforeAlt: "Before lip filler treatment",
-    afterAlt: "After lip filler treatment",
     caption: "Patient result shared with permission. Individual results vary.",
   },
   {
@@ -261,6 +325,36 @@ export function resultPublishingIssues(result: BeforeAfterResult): readonly stri
   if (!result.beforeSrc.includes("-before.")) issues.push("beforeSrc naming");
   if (!result.afterSrc.includes("-after.")) issues.push("afterSrc naming");
   return issues;
+}
+
+function duplicates(values: readonly string[]): readonly string[] {
+  const seen = new Set<string>();
+  const duplicateValues = new Set<string>();
+  for (const value of values) {
+    if (seen.has(value)) duplicateValues.add(value);
+    seen.add(value);
+  }
+  return [...duplicateValues];
+}
+
+const publishedResultIds = [
+  ...patientResultImages.map((result) => result.id),
+  ...beforeAfterResults.map((result) => result.id),
+];
+const publishedResultAssets = [
+  ...patientResultImages.map((result) => result.src),
+  ...beforeAfterResults.flatMap((result) => [result.beforeSrc, result.afterSrc]),
+];
+const duplicatePublishedResultIds = duplicates(publishedResultIds);
+const duplicatePublishedResultAssets = duplicates(publishedResultAssets);
+
+if (duplicatePublishedResultIds.length > 0 || duplicatePublishedResultAssets.length > 0) {
+  throw new Error(
+    `Published result content contains duplicates: ${[
+      ...duplicatePublishedResultIds.map((id) => `id:${id}`),
+      ...duplicatePublishedResultAssets.map((asset) => `asset:${asset}`),
+    ].join(", ")}`,
+  );
 }
 
 const invalidApprovedResults = beforeAfterResults.flatMap((result) =>

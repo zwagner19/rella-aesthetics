@@ -4,6 +4,7 @@ import { renderToStaticMarkup } from "react-dom/server";
 import { BeforeAfterGallery } from "@/components/blocks/BeforeAfterGallery";
 import {
   beforeAfterResults,
+  patientResultImages,
   resultPublishingIssues,
   visibleResultsFor,
   type BeforeAfterResult,
@@ -41,6 +42,15 @@ describe("before-and-after publishing safeguards", () => {
     for (const result of beforeAfterResults.filter((item) => item.status === "approved")) {
       expect(existsSync(`public${result.beforeSrc}`), `${result.id} before image`).toBe(true);
       expect(existsSync(`public${result.afterSrc}`), `${result.id} after image`).toBe(true);
+    }
+  });
+
+  it("labels every top result card without inventing a treatment or timeframe", () => {
+    expect(patientResultImages).toHaveLength(9);
+    for (const result of patientResultImages) {
+      expect(result.treatmentArea.trim()).not.toBe("");
+      expect(result.caption).toContain("Service details and timing were not provided");
+      expect(result.alt).toContain("shared with Rella Aesthetics");
     }
   });
 

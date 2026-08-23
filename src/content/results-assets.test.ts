@@ -1,7 +1,8 @@
+import { createHash } from "node:crypto";
 import { existsSync, readFileSync, statSync } from "node:fs";
 import sharp from "sharp";
 import { describe, expect, it } from "vitest";
-import { beforeAfterResults } from "./results";
+import { beforeAfterResults, patientResultImages } from "./results";
 
 function chunkTypes(image: Buffer) {
   const chunks: string[] = [];
@@ -19,8 +20,18 @@ describe("labeled before-and-after result assets", () => {
   const assets = beforeAfterResults.flatMap((result) => [result.beforeSrc, result.afterSrc]);
 
   it("ships one before and one after image for every labeled treatment", () => {
-    expect(beforeAfterResults).toHaveLength(16);
-    expect(new Set(assets).size).toBe(32);
+    expect(beforeAfterResults).toHaveLength(15);
+    expect(new Set(assets).size).toBe(30);
+  });
+
+  it("keeps every published result image unique, including the top cards", () => {
+    const allAssets = [...patientResultImages.map((result) => result.src), ...assets];
+    expect(new Set(allAssets).size).toBe(allAssets.length);
+
+    const hashes = allAssets.map((asset) =>
+      createHash("sha256").update(readFileSync(`public${asset}`)).digest("hex"),
+    );
+    expect(new Set(hashes).size).toBe(hashes.length);
   });
 
   it.each(assets)("keeps %s web-ready and metadata-free", async (asset) => {
