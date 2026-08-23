@@ -62,6 +62,7 @@ export function VisualizerWizard() {
   const [beforeDataUrl, setBeforeDataUrl] = useState<string | null>(null);
   const [afterDataUrl, setAfterDataUrl] = useState<string | null>(null);
   const [mode, setMode] = useState<"live" | "demo" | null>(null);
+  const [calibrated, setCalibrated] = useState(false);
   const [followUpSubmitted, setFollowUpSubmitted] = useState(false);
   const [goal, setGoal] = useState("");
   const [timeline, setTimeline] = useState("");
@@ -138,6 +139,7 @@ export function VisualizerWizard() {
         afterDataUrl?: string;
         sessionId?: string;
         mode?: "live" | "demo";
+        calibrated?: boolean;
         error?: string;
       }>(res);
       if (!res.ok || !data.beforeDataUrl || !data.afterDataUrl) {
@@ -147,6 +149,7 @@ export function VisualizerWizard() {
       setAfterDataUrl(data.afterDataUrl);
       setSessionId(data.sessionId ?? sessionId);
       setMode(data.mode ?? "demo");
+      setCalibrated(Boolean(data.calibrated));
       setStep("preview");
     } catch (err) {
       setError(err instanceof Error ? err.message : "Generation failed");
@@ -273,6 +276,11 @@ export function VisualizerWizard() {
             afterSrc={afterDataUrl}
             demoEffect={mode === "demo"}
           />
+          {calibrated && (
+            <p className="text-center text-xs text-silver tracking-wide">
+              Calibrated to Rella patient outcomes
+            </p>
+          )}
           <div className="flex flex-col sm:flex-row justify-center gap-2">
             <Button type="button" variant="ghost" onClick={() => setStep("treatment")}>
               Adjust

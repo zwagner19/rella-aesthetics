@@ -8,9 +8,15 @@ export interface VisualizerReference {
   zones: TreatmentZoneId[];
   beforePath: string;
   afterPath: string;
+  treatmentLabel?: string;
   styleNotes?: string;
   intensity?: "subtle" | "moderate";
   consentOnFile: boolean;
+}
+
+export interface ReferenceStyleMatch {
+  id: string;
+  styleNotes: string;
 }
 
 export interface ReferenceManifest {
@@ -51,10 +57,10 @@ function zoneOverlapScore(
   return overlap;
 }
 
-export function pickReferenceStyle(
+export function pickReferenceMatch(
   treatmentType: TreatmentType,
   zones: TreatmentZoneId[]
-): string | undefined {
+): ReferenceStyleMatch | undefined {
   const manifest = loadReferenceManifest();
   const candidates = manifest.references.filter(
     (ref) => ref.treatmentType === treatmentType && ref.consentOnFile && ref.styleNotes?.trim()
@@ -66,12 +72,22 @@ export function pickReferenceStyle(
       ref,
       score: zoneOverlapScore(zones, ref.zones),
     }))
-    .filter((item) => item.score > 0)
     .sort((a, b) => b.score - a.score);
 
-  if (!scored.length) return undefined;
+  // Prefer zone overlap; fall back to any treatment-matched reference so
+  // zone-only selections (e.g. perioral) still get Rella-calibrated style.
+  const best = scored[0];
+  const notes = best.ref.styleNotes?.trim();
+  if (!notes) return undefined;
 
-  return scored[0].ref.styleNotes?.trim();
+  return { id: best.ref.id, styleNotes: notes };
+}
+
+export function pickReferenceStyle(
+  treatmentType: TreatmentType,
+  zones: TreatmentZoneId[]
+): string | undefined {
+  return pickReferenceMatch(treatmentType, zones)?.styleNotes;
 }
 
 export function referenceCatalogSummary(): {

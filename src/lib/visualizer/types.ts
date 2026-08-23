@@ -46,6 +46,8 @@ export interface GenerateResult {
   afterDataUrl: string;
   sessionId: string;
   mode: "live" | "demo";
+  calibrated?: boolean;
+  referenceId?: string | null;
   disclaimer: string;
 }
 

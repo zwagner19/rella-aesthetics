@@ -13,7 +13,7 @@ import {
 import { buildEditMaskPng, resolveZoneRegions } from "@/lib/visualizer/mask";
 import { generateEditedImage, normalizeTreatmentType } from "@/lib/visualizer/openai";
 import { buildEditPrompt } from "@/lib/visualizer/prompts";
-import { pickReferenceStyle } from "@/lib/visualizer/references";
+import { pickReferenceMatch } from "@/lib/visualizer/references";
 import { getSharp } from "@/lib/visualizer/sharp-loader";
 import {
   isValidIntensity,
@@ -118,8 +118,13 @@ export async function POST(req: NextRequest) {
 
     const sessionId = body.sessionId ?? crypto.randomUUID();
     const { buffer, mimeType } = parseDataUrl(body.image);
-    const referenceStyle = pickReferenceStyle(treatmentType, zones);
-    const prompt = buildEditPrompt(treatmentType, zones, intensity, referenceStyle);
+    const referenceMatch = pickReferenceMatch(treatmentType, zones);
+    const prompt = buildEditPrompt(
+      treatmentType,
+      zones,
+      intensity,
+      referenceMatch?.styleNotes
+    );
 
     let outcome: GenerateOutcome | null = null;
     try {
@@ -154,6 +159,8 @@ export async function POST(req: NextRequest) {
       sessionId,
       mode: outcome.mode,
       treatmentType,
+      calibrated: Boolean(referenceMatch),
+      referenceId: referenceMatch?.id ?? null,
       disclaimer: VISUALIZER_DISCLAIMER,
     });
   } catch (error) {

@@ -1,5 +1,9 @@
 import { describe, expect, it, vi, beforeEach, afterEach } from "vitest";
-import { pickReferenceStyle, resetReferenceManifestCache } from "@/lib/visualizer/references";
+import {
+  pickReferenceMatch,
+  pickReferenceStyle,
+  resetReferenceManifestCache,
+} from "@/lib/visualizer/references";
 
 vi.mock("fs", async (importOriginal) => {
   const actual = await importOriginal<typeof import("fs")>();
@@ -26,6 +30,7 @@ describe("visualizer references", () => {
       JSON.stringify({ version: 1, updatedAt: null, references: [] })
     );
     expect(pickReferenceStyle("botox", ["forehead"])).toBeUndefined();
+    expect(pickReferenceMatch("botox", ["forehead"])).toBeUndefined();
   });
 
   it("picks best zone overlap and returns style notes", () => {
@@ -59,7 +64,33 @@ describe("visualizer references", () => {
     expect(pickReferenceStyle("botox", ["forehead", "glabella"])).toBe(
       "Forehead lines softened subtly."
     );
+    expect(pickReferenceMatch("botox", ["forehead", "glabella"])).toEqual({
+      id: "botox-forehead",
+      styleNotes: "Forehead lines softened subtly.",
+    });
     expect(pickReferenceStyle("laser-pigmentation", ["cheeks"])).toBe("Cheek spots faded.");
-    expect(pickReferenceStyle("botox", ["crows-feet"])).toBeUndefined();
+  });
+
+  it("falls back to treatment match when requested zones do not overlap", () => {
+    vi.mocked(readFileSync).mockReturnValue(
+      JSON.stringify({
+        version: 1,
+        updatedAt: "2026-01-01",
+        references: [
+          {
+            id: "laser-cheeks",
+            treatmentType: "laser-pigmentation",
+            zones: ["cheeks", "overall-tone"],
+            beforePath: "laser/a-before.jpg",
+            afterPath: "laser/a-after.jpg",
+            styleNotes: "Cheek spots faded.",
+            consentOnFile: true,
+          },
+        ],
+      })
+    );
+
+    expect(pickReferenceStyle("laser-pigmentation", ["perioral"])).toBe("Cheek spots faded.");
+    expect(pickReferenceMatch("laser-pigmentation", ["perioral"])?.id).toBe("laser-cheeks");
   });
 });
