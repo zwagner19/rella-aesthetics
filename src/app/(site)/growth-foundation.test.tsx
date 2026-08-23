@@ -91,7 +91,7 @@ describe("trust and indexation foundation", () => {
   it("replaces the placeholder gallery with an honest results experience", () => {
     const html = renderToStaticMarkup(<GalleryPage />);
     expect(html).toContain("Results that still look like you");
-    expect(html).toContain("Proper permission");
+    expect(html).toContain("Shared with permission");
     expect(html).toContain("Individual results vary");
     expect(html).not.toContain("gallery-1.jpg");
     expect(html).not.toContain("Real patients, real results");

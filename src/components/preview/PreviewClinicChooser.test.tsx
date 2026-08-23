@@ -49,8 +49,8 @@ describe("preview clinic chooser", () => {
 
   it("keeps interactive labels readable on Rose and white surfaces", () => {
     expect(source).toContain("border-rose bg-white");
-    expect(source).toContain("hover:bg-rose hover:text-white");
-    expect(source).toContain("focus-visible:bg-rose focus-visible:text-white");
+    expect(source).toContain("hover:bg-white hover:text-rose");
+    expect(source).toContain("focus-visible:bg-white focus-visible:text-rose");
   });
 
   it("uses a safe mobile viewport and disables preview motion when reduced motion is requested", () => {

@@ -223,7 +223,7 @@ export function TreatmentServicePage({ service }: TreatmentServicePageProps) {
       <section className="py-[clamp(4rem,8vw,7rem)]">
         <div className="mx-auto grid max-w-[1000px] gap-10 px-5 md:grid-cols-[0.8fr_1.2fr] md:items-start md:px-8">
           <div>
-            <p className="mb-4 text-sm font-normal italic text-rose">
+            <p className="mb-4 text-sm font-normal italic text-ink">
               Clear pricing
             </p>
             <h2 className="text-[clamp(2rem,4vw,3rem)] font-bold uppercase leading-[1.15] tracking-[0.06em] text-rose">

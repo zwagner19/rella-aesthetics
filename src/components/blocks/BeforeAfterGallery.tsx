@@ -57,8 +57,13 @@ export function BeforeAfterGallery({
               </div>
               <figcaption className="p-5 md:p-6">
                 <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
-                  <p className="font-bold uppercase tracking-[0.08em] text-ink">{result.treatment}</p>
-                  <p className="text-xs font-semibold uppercase tracking-[0.12em] text-ink/70">{result.timeframe}</p>
+                  <p className="font-bold uppercase tracking-[0.08em] text-ink">
+                    <span className="mr-2 text-[0.625rem] font-medium tracking-[0.14em] text-rose">Treatment area</span>
+                    {result.treatment}
+                  </p>
+                  {result.timeframe ? (
+                    <p className="text-xs font-semibold uppercase tracking-[0.12em] text-ink/70">{result.timeframe}</p>
+                  ) : null}
                 </div>
                 <p className="text-sm font-light leading-relaxed text-ink/70">{result.caption}</p>
               </figcaption>

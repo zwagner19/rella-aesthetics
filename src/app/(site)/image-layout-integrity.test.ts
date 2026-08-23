@@ -36,7 +36,7 @@ describe("responsive image-layout integrity", () => {
       /aspect-\[4\/5\][\s\S]*?rella-sidewalk-sign\.webp[\s\S]*?object-cover object-center/,
     );
     expect(homeSource).toMatch(
-      /aspect-\[4\/3\][\s\S]*?medical-weight-loss\.webp[\s\S]*?object-cover object-center/,
+      /aspect-\[4\/5\][\s\S]*?medical-weight-loss\.webp[\s\S]*?object-cover object-center/,
     );
   });
 
@@ -49,9 +49,8 @@ describe("responsive image-layout integrity", () => {
     expect(treatmentSource).toContain("aspect-[4/5]");
     expect(treatmentSource).toContain("md:aspect-[4/3]");
     expect(weightLossSource).toContain("aspect-[4/3]");
-    expect(aboutSource).toMatch(
-      /aspect-\[3\/4\][\s\S]*?rella-consultation\.webp[\s\S]*?object-cover object-center/,
-    );
+    expect(aboutSource).toContain("The Rella standard");
+    expect(aboutSource).not.toContain("rella-consultation.webp");
   });
 
   it("keeps every pre-cropped local-service hero at a consistent mobile ratio", () => {
