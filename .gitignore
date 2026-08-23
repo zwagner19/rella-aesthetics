@@ -40,8 +40,9 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# visualizer reference photos (manifest.json is tracked)
+# visualizer reference photos (manifest + catalog are tracked)
 /data/visualizer-references/**/*
 !/data/visualizer-references/manifest.json
+!/data/visualizer-references/drive-pairs.json
 !/data/visualizer-references/README.md
 !/data/visualizer-references/.gitkeep

@@ -1,0 +1,109 @@
+{
+  "folders": {
+    "1THpgUaoWCDXgJQAqJ0wm1TTsFZTGowzA": {
+      "treatmentType": "botox",
+      "label": "Botox & Dysport Neurotoxin",
+      "zones": ["forehead", "glabella", "crows-feet"]
+    },
+    "1IdikRQH3zq2PQ3l1UFSAcQ-u0c8Ts001": {
+      "treatmentType": "laser-pigmentation",
+      "label": "IPL Photofacial",
+      "zones": ["cheeks", "forehead-spots", "overall-tone"]
+    },
+    "1NIjK3W_uw1PDID93q7FRCTOct0MRdoQ-": {
+      "treatmentType": "laser-pigmentation",
+      "label": "Full CO2 Skin Resurfacing",
+      "zones": ["overall-tone", "cheeks", "forehead-spots"]
+    },
+    "1rIA7LOiwk2dS9dV4CU4KlXVDdPf7CIwz": {
+      "treatmentType": "laser-pigmentation",
+      "label": "CoolPeel CO2",
+      "zones": ["overall-tone", "cheeks"]
+    },
+    "18CpDtQwr9hibFMxuuaMAEJ7iDdWhH1Sl": {
+      "treatmentType": "laser-pigmentation",
+      "label": "DEKA Advanced CO2",
+      "zones": ["overall-tone", "cheeks"]
+    }
+  },
+  "pairs": [
+    {
+      "uuid": "ea8f4dbc-0893-4cea-9b94-891811e9aaa4",
+      "parentId": "1THpgUaoWCDXgJQAqJ0wm1TTsFZTGowzA",
+      "beforeId": "12gEMtqrRbTg6baSDFzgl-p6yi0ciIzsj",
+      "afterId": "1qid8UjVe3csPoml1gly4NJntCs8F8AMZ"
+    },
+    {
+      "uuid": "8cf8ac76-ed0e-4c50-bd1a-6b87d3d2bfa7",
+      "parentId": "1THpgUaoWCDXgJQAqJ0wm1TTsFZTGowzA",
+      "beforeId": "1SOE_ksUwwYGAP0rD958f9vZLG_oOKslz",
+      "afterId": "1c6QdWXeHxLSUw724rdTts-12Adt6JwMn"
+    },
+    {
+      "uuid": "c77dcfca-e8b3-4d2f-abcc-8e49ca6ed04d",
+      "parentId": "1THpgUaoWCDXgJQAqJ0wm1TTsFZTGowzA",
+      "beforeId": "1paCXpYu9FyQRtC51CLf2cf7E5UYAE1Bt",
+      "afterId": "109gwmzPd4uZ4tF29U3-RvauIjz2fM3Qq"
+    },
+    {
+      "uuid": "d9ef9fff-9eb6-4d53-9418-f51c5fe112ec",
+      "parentId": "1THpgUaoWCDXgJQAqJ0wm1TTsFZTGowzA",
+      "beforeId": "12rNiW_r0TtNQ_-tmybux5bP9J10y3gpj",
+      "afterId": "18soXU3MdvJ9Px3ydfzi-BvFCPM6tV6Zp"
+    },
+    {
+      "uuid": "2f8b606a-57fb-4735-be13-6507d3ce7ec7",
+      "parentId": "1IdikRQH3zq2PQ3l1UFSAcQ-u0c8Ts001",
+      "beforeId": "1-3lyQE9HGRJTv_lJ5n96tyTtZS3NMQOA",
+      "afterId": "1qb43cK-phh92x-I1K5VoPGYuPntJBor-"
+    },
+    {
+      "uuid": "f957314d-f50e-4864-830e-0672ffd35b1a",
+      "parentId": "1NIjK3W_uw1PDID93q7FRCTOct0MRdoQ-",
+      "beforeId": "1l3l1zcd4CooJVVJ37qi8PrsxymY-4zgz",
+      "afterId": "12r9kjaP0zSCLQwjrTtM3kN7LowIs0rrI"
+    },
+    {
+      "uuid": "d8da576f-66fe-43c6-ab25-3ca4cc1f9fc5",
+      "parentId": "1NIjK3W_uw1PDID93q7FRCTOct0MRdoQ-",
+      "beforeId": "1WN6MJpRGrg7j3vDzhMS684uMmhvs-8lQ",
+      "afterId": "1Kj3sf4tD7pqLzMaHYzbWoNBBBkPZtUfU"
+    },
+    {
+      "uuid": "0b57a4b3-bbe5-4986-93b8-61a3f61049ec",
+      "parentId": "1NIjK3W_uw1PDID93q7FRCTOct0MRdoQ-",
+      "beforeId": "1uzVfs4g6GjsKhN7EZiWwzn3JdqApXm9Y",
+      "afterId": "1kAh1BaELmtVYdO1XI6nWt3wW54IYdO9C"
+    },
+    {
+      "uuid": "63ba22ff-a2a3-4f56-994e-a4a04a1e29b6",
+      "parentId": "1NIjK3W_uw1PDID93q7FRCTOct0MRdoQ-",
+      "beforeId": "15pmOxgPc31ksb8PTpbCfhxsRS5dSSsJH",
+      "afterId": "1QSJ38YSaHDJfI5A85y1_dK2WaM7WtZSM"
+    },
+    {
+      "uuid": "ac449507-e52e-4985-a18a-36caf257af0c",
+      "parentId": "1NIjK3W_uw1PDID93q7FRCTOct0MRdoQ-",
+      "beforeId": "1_ITFiyH1ZpqXml9abdyGUlMTPHAn53EU",
+      "afterId": "1kUJ6oSa7Ad3MQ8XqcdXF_MlTEoSZp9sF"
+    },
+    {
+      "uuid": "0e749aee-0eae-4ad9-acd7-bc942058972b",
+      "parentId": "1NIjK3W_uw1PDID93q7FRCTOct0MRdoQ-",
+      "beforeId": "1KFXZHrQjOztHdcW_PPV8GFwgXOudXclj",
+      "afterId": "1nxVhZ8ONyIAfObcmZv2DpURgIEDALtLw"
+    },
+    {
+      "uuid": "0fc4227c-3054-4680-8873-709b57ec5dc6",
+      "parentId": "1rIA7LOiwk2dS9dV4CU4KlXVDdPf7CIwz",
+      "beforeId": "1CxXTBT8E-z8ng2tmS2quRxwLe1jFIMJM",
+      "afterId": "1Xq22UbGtNiNSo5h640kJCBV7S83RZJhN"
+    },
+    {
+      "uuid": "2603fdce-3bea-4ab1-a351-542c03c0d6f4",
+      "parentId": "18CpDtQwr9hibFMxuuaMAEJ7iDdWhH1Sl",
+      "beforeId": "1zcaVA6Zpz_gNihNdhuSd3Lw3oL_IjLBK",
+      "afterId": "12zvu1cSg5wS1zxzMgnxG7piJFpxdMYNM"
+    }
+  ]
+}
