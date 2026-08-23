@@ -11,6 +11,8 @@ Deep link for laser: `/see-your-results?treatment=laser-pigmentation` (also acce
 
 ## Environment variables
 
+See **[docs/VISUALIZER-REFERENCES.md](./VISUALIZER-REFERENCES.md)** to calibrate previews from real Rella before/after photos.
+
 See **[docs/VERCEL-VISUALIZER-ENV.md](./VERCEL-VISUALIZER-ENV.md)** for step-by-step Vercel setup.
 
 Add to `.env.local` (or Vercel project settings):

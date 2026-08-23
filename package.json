@@ -11,7 +11,9 @@
     "postbuild": "next-sitemap",
     "start": "next start",
     "lint": "eslint",
-    "test": "vitest run"
+    "test": "vitest run",
+    "visualizer:sync-references": "npx tsx scripts/sync-visualizer-references.ts",
+    "visualizer:distill-references": "npx tsx scripts/distill-visualizer-references.ts"
   },
   "dependencies": {
     "@boulevard/blvd-book-sdk": "^2.0.10",

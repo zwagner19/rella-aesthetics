@@ -91,9 +91,13 @@ function zoneInstructions(
 export function buildEditPrompt(
   treatmentType: TreatmentType,
   zones: TreatmentZoneId[],
-  intensity: IntensityPreset
+  intensity: IntensityPreset,
+  referenceStyle?: string
 ): string {
   const zoneLines = zoneInstructions(treatmentType, zones);
+  const referenceBlock = referenceStyle
+    ? `\nMatch the conservative outcome style of real ${RELLA_BRAND.name} patient results:\n${referenceStyle}\n`
+    : "";
 
   if (treatmentType === "botox") {
     return `Edit this patient's photo conservatively for a Rella Aesthetics neuromodulator (Botox/Dysport) simulation.
@@ -102,7 +106,7 @@ Apply ONLY to the masked treatment areas:
 ${zoneLines}
 
 ${INTENSITY_MODIFIER[intensity]}
-
+${referenceBlock}
 Critical rules:
 - Preserve exact facial identity, bone structure, hair, lighting, and skin tone
 - Do not change lip volume, cheek fullness, jawline, or eye size
@@ -117,7 +121,7 @@ Apply ONLY to the masked treatment areas:
 ${zoneLines}
 
 ${INTENSITY_MODIFIER[intensity]}
-
+${referenceBlock}
 Critical rules:
 - Preserve exact facial identity, bone structure, hair, lighting, and natural skin tone
 - Reduce the appearance of hyperpigmentation, sun spots, and melasma — do NOT lighten overall ethnicity or base skin color

@@ -41,6 +41,12 @@ describe("visualizer prompts", () => {
     expect(laserPrompt).toContain("cheeks");
     expect(laserPrompt).toContain("overall-tone");
   });
+
+  it("injects Rella reference style notes when provided", () => {
+    const prompt = buildEditPrompt("botox", ["forehead"], "subtle", "- Lines softened ~15%\n- Identity preserved");
+    expect(prompt).toContain("real Rella Aesthetics patient results");
+    expect(prompt).toContain("Lines softened ~15%");
+  });
 });
 
 describe("visualizer treatments", () => {
