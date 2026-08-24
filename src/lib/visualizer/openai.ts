@@ -1,3 +1,4 @@
+import type { OpenAIImageSize } from "@/lib/visualizer/working-image";
 import OpenAI from "openai";
 import {
   buildAnalysisPrompt,
@@ -172,7 +173,8 @@ export async function generateEditedImage(
   imageBuffer: Buffer,
   mimeType: string,
   maskBuffer: Buffer | null,
-  prompt: string
+  prompt: string,
+  size: OpenAIImageSize = "1024x1024"
 ): Promise<GenerateEditedImageResult> {
   const client = getOpenAIClient();
   if (!client) {
@@ -192,7 +194,7 @@ export async function generateEditedImage(
         ? { mask: new File([new Uint8Array(maskBuffer)], "mask.png", { type: "image/png" }) }
         : {}),
       prompt,
-      size: "1024x1024",
+      size,
     });
 
     const b64 = result.data?.[0]?.b64_json;

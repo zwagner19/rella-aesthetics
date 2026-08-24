@@ -99,20 +99,28 @@ export function TreatmentPicker({
       </div>
 
       <div>
-        <p className={sectionLabel}>Intensity</p>
+        <p className={sectionLabel}>Result strength</p>
         <div className="flex gap-2">
-          {(["subtle", "moderate"] as const).map((preset) => (
+          {(
+            [
+              { id: "subtle" as const, label: "Subtle", hint: "Natural" },
+              { id: "moderate" as const, label: "More visible", hint: "Stronger" },
+            ] as const
+          ).map((preset) => (
             <button
-              key={preset}
+              key={preset.id}
               type="button"
-              onClick={() => onIntensityChange(preset)}
-              className={`flex-1 py-2.5 px-4 rounded-lg border text-sm font-medium capitalize transition-all ${
-                intensity === preset
+              onClick={() => onIntensityChange(preset.id)}
+              className={`flex-1 py-2.5 px-4 rounded-lg border text-sm font-medium transition-all ${
+                intensity === preset.id
                   ? "border-rose bg-rose-blush text-silver-dark"
                   : "border-silver-pale text-silver hover:border-rose-light"
               }`}
             >
-              {preset}
+              <span className="block">{preset.label}</span>
+              <span className="block text-[0.625rem] font-normal opacity-70 mt-0.5">
+                {preset.hint}
+              </span>
             </button>
           ))}
         </div>

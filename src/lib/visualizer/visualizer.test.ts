@@ -20,13 +20,14 @@ describe("visualizer prompts", () => {
     const prompt = buildEditPrompt("botox", ["forehead", "glabella"], "subtle");
     expect(prompt).toContain("Preserve exact facial identity");
     expect(prompt).toContain("forehead");
-    expect(prompt).toContain("very subtle");
+    expect(prompt).toContain("GEOMETRY & LIGHTING LOCK");
+    expect(prompt).toContain("SUBTLE");
   });
 
   it("builds conservative laser pigmentation edit prompt", () => {
     const prompt = buildEditPrompt("laser-pigmentation", ["cheeks", "forehead-spots"], "subtle");
     expect(prompt).toContain("laser/IPL pigmentation");
-    expect(prompt).toContain("do NOT lighten overall ethnicity");
+    expect(prompt).toContain("do not airbrush");
     expect(prompt).toContain("sun spots");
   });
 
@@ -46,6 +47,12 @@ describe("visualizer prompts", () => {
     const prompt = buildEditPrompt("botox", ["forehead"], "subtle", "- Lines softened ~15%\n- Identity preserved");
     expect(prompt).toContain("real Rella Aesthetics patient results");
     expect(prompt).toContain("Lines softened ~15%");
+  });
+
+  it("uses stronger line-softening language for moderate botox", () => {
+    const prompt = buildEditPrompt("botox", ["forehead"], "moderate");
+    expect(prompt).toContain("50–65%");
+    expect(prompt).toContain("MORE VISIBLE");
   });
 });
 
@@ -67,12 +74,24 @@ describe("visualizer treatments", () => {
 });
 
 describe("visualizer mask", () => {
-  it("builds a PNG mask buffer", async () => {
+  it("builds a PNG mask with transparent edit zones", async () => {
     const mask = await buildEditMaskPng(512, 512, [{ cx: 0.5, cy: 0.3, rx: 0.2, ry: 0.1 }]);
-    const meta = await sharp(mask).metadata();
+    const meta = await sharp(mask).ensureAlpha().metadata();
     expect(meta.format).toBe("png");
     expect(meta.width).toBe(512);
     expect(meta.height).toBe(512);
+    expect(meta.hasAlpha).toBe(true);
+
+    // Sample center of forehead ellipse (edit = alpha ~0) vs corner (preserve = alpha ~255)
+    const { data, info } = await sharp(mask)
+      .ensureAlpha()
+      .raw()
+      .toBuffer({ resolveWithObject: true });
+    const idx = (x: number, y: number) => (y * info.width + x) * info.channels;
+    const centerAlpha = data[idx(256, 154) + 3] ?? 255;
+    const cornerAlpha = data[idx(10, 10) + 3] ?? 0;
+    expect(centerAlpha).toBeLessThan(40);
+    expect(cornerAlpha).toBeGreaterThan(200);
   });
 });
 

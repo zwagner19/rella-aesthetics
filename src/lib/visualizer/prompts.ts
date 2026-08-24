@@ -19,29 +19,56 @@ Tone:
 - Avoid guaranteeing results
 - Emphasize natural-looking outcomes, patient safety, and realistic expectations`;
 
-const BOTOX_ZONE_INSTRUCTIONS: Record<string, string> = {
-  forehead:
-    "soften horizontal forehead lines by approximately 10–20%, keeping natural forehead movement",
-  glabella:
-    "soften vertical frown lines between the eyebrows by approximately 10–20%",
-  "crows-feet":
-    "soften fine lines at the outer eye corners by approximately 10–20%, without changing eye shape",
+const BOTOX_ZONE_INSTRUCTIONS: Record<IntensityPreset, Record<string, string>> = {
+  subtle: {
+    forehead:
+      "visibly soften horizontal forehead creases by about 30–40% — lines should look quieter at rest, not erased",
+    glabella:
+      "visibly soften the vertical frown lines (11s) by about 30–40%",
+    "crows-feet":
+      "visibly soften crow's feet at the outer eye corners by about 30–40%, without changing eye shape",
+  },
+  moderate: {
+    forehead:
+      "clearly soften horizontal forehead creases by about 50–65% — resting lines look much quieter while keeping natural brow movement",
+    glabella:
+      "clearly soften vertical frown lines (11s) by about 50–65%",
+    "crows-feet":
+      "clearly soften crow's feet by about 50–65%, without changing eye shape or making skin plastic",
+  },
 };
 
-const LASER_PIGMENTATION_ZONE_INSTRUCTIONS: Record<string, string> = {
-  cheeks:
-    "subtly reduce visible sun spots, melasma patches, and uneven discoloration on the cheeks by approximately 15–25%",
-  "forehead-spots":
-    "subtly fade brown sun spots and uneven pigmentation on the forehead by approximately 15–25%",
-  perioral:
-    "subtly reduce melasma or pigmentation around the mouth and upper lip area by approximately 15–25%",
-  "overall-tone":
-    "subtly even overall facial skin tone and reduce visible sun damage by approximately 10–20%, without changing natural skin tone",
+const LASER_PIGMENTATION_ZONE_INSTRUCTIONS: Record<
+  IntensityPreset,
+  Record<string, string>
+> = {
+  subtle: {
+    cheeks:
+      "fade visible sun spots and uneven cheek discoloration by about 25–35%",
+    "forehead-spots":
+      "fade brown sun spots on the forehead by about 25–35%",
+    perioral:
+      "fade melasma or pigmentation around the mouth by about 25–35%",
+    "overall-tone":
+      "even mottled tone and sun damage across the face by about 20–30%, without changing natural base skin color",
+  },
+  moderate: {
+    cheeks:
+      "clearly fade sun spots and cheek discoloration by about 40–55%",
+    "forehead-spots":
+      "clearly fade forehead sun spots by about 40–55%",
+    perioral:
+      "clearly fade perioral pigmentation by about 40–55%",
+    "overall-tone":
+      "clearly even overall facial tone by about 35–50%, without bleaching or changing ethnicity",
+  },
 };
 
 const INTENSITY_MODIFIER: Record<IntensityPreset, string> = {
-  subtle: "Make the change very subtle — barely noticeable, clinic-realistic preview only.",
-  moderate: "Make a moderate but still natural change — never dramatic or filtered-looking.",
+  subtle:
+    "Intensity: SUBTLE clinic preview — change must be noticeable when sliding before/after, but still natural.",
+  moderate:
+    "Intensity: MORE VISIBLE clinic preview — stronger treatment effect, still realistic, never filtered or frozen.",
 };
 
 function zoneIdsForPrompt(treatmentType: TreatmentType): string {
@@ -78,12 +105,13 @@ If no face is detected, set faceDetected to false and quality to "poor".`;
 
 function zoneInstructions(
   treatmentType: TreatmentType,
-  zones: TreatmentZoneId[]
+  zones: TreatmentZoneId[],
+  intensity: IntensityPreset
 ): string {
   const map =
     treatmentType === "botox"
-      ? BOTOX_ZONE_INSTRUCTIONS
-      : LASER_PIGMENTATION_ZONE_INSTRUCTIONS;
+      ? BOTOX_ZONE_INSTRUCTIONS[intensity]
+      : LASER_PIGMENTATION_ZONE_INSTRUCTIONS[intensity];
 
   return zones.map((zone) => `- ${map[zone] ?? `address ${zone} conservatively`}`).join("\n");
 }
@@ -94,41 +122,48 @@ export function buildEditPrompt(
   intensity: IntensityPreset,
   referenceStyle?: string
 ): string {
-  const zoneLines = zoneInstructions(treatmentType, zones);
+  const zoneLines = zoneInstructions(treatmentType, zones, intensity);
   const referenceBlock = referenceStyle
     ? `\nMatch the conservative outcome style of real ${RELLA_BRAND.name} patient results:\n${referenceStyle}\n`
     : "";
 
-  if (treatmentType === "botox") {
-    return `Edit this patient's photo conservatively for a Rella Aesthetics neuromodulator (Botox/Dysport) simulation.
+  const geometryLock = `GEOMETRY & LIGHTING LOCK (critical):
+- Keep the EXACT same camera framing, face position, scale, and head pose — pixel-aligned with the original
+- Keep the EXACT same lighting direction, shadows, highlights, white balance, and exposure
+- Do NOT relight, beautify, add makeup, change background, or apply a global filter
+- Do NOT smooth skin outside the treatment zones; keep pores and natural texture`;
 
-Apply ONLY to the masked treatment areas:
+  if (treatmentType === "botox") {
+    return `Edit this photo for a Rella Aesthetics Botox/Dysport simulation.
+
+In the masked treatment areas ONLY, reduce expression lines:
 ${zoneLines}
 
 ${INTENSITY_MODIFIER[intensity]}
 ${referenceBlock}
-Critical rules:
-- Preserve exact facial identity, bone structure, hair, lighting, and skin tone
+${geometryLock}
+
+Additional rules:
+- Preserve exact facial identity, bone structure, hair, and skin tone
 - Do not change lip volume, cheek fullness, jawline, or eye size
-- Result must look natural and clinic-appropriate — not filtered, not plastic
-- Do not make the person look more than 3 years younger
-- No makeup changes, no skin smoothing outside treatment zones`;
+- Soften creases/folds — do not replace the face with a beauty filter
+- Result must look like a real clinic neuromodulator preview`;
   }
 
-  return `Edit this patient's photo conservatively for a Rella Aesthetics laser/IPL pigmentation treatment simulation.
+  return `Edit this photo for a Rella Aesthetics laser/IPL pigmentation simulation.
 
-Apply ONLY to the masked treatment areas:
+In the masked treatment areas ONLY, reduce pigmentation:
 ${zoneLines}
 
 ${INTENSITY_MODIFIER[intensity]}
 ${referenceBlock}
-Critical rules:
-- Preserve exact facial identity, bone structure, hair, lighting, and natural skin tone
-- Reduce the appearance of hyperpigmentation, sun spots, and melasma — do NOT lighten overall ethnicity or base skin color
-- Keep realistic skin texture and pores — avoid plastic smoothing or beauty-filter look
-- Do not remove freckles entirely unless they fall inside obvious sun-spot clusters
-- Do not change lip color, eye color, or facial features
-- Result must look like a conservative clinic preview after a series of treatments, not a filter`;
+${geometryLock}
+
+Additional rules:
+- Preserve exact facial identity and natural base skin color / ethnicity
+- Fade spots and mottling — do not airbrush or plastic-smooth the whole face
+- Keep realistic pores and texture outside treated pigment
+- Result must look like a real clinic laser series preview, not a filter`;
 }
 
 export function parseAnalysisZones(

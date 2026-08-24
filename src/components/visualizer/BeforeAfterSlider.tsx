@@ -48,7 +48,7 @@ export function BeforeAfterSlider({
         <img
           src={afterSrc}
           alt="After simulation"
-          className={`absolute inset-0 w-full h-full object-cover ${blurred ? "blur-md scale-105" : ""} ${demoEffect ? "brightness-105 contrast-[0.98] saturate-[0.92]" : ""}`}
+          className={`absolute inset-0 w-full h-full object-contain bg-silver-pale ${blurred ? "blur-md scale-105" : ""} ${demoEffect ? "brightness-105 contrast-[0.98] saturate-[0.92]" : ""}`}
         />
         <div
           className="absolute inset-0 overflow-hidden"
@@ -58,7 +58,7 @@ export function BeforeAfterSlider({
           <img
             src={beforeSrc}
             alt="Before"
-            className="absolute inset-0 w-full h-full object-cover"
+            className="absolute inset-0 w-full h-full object-contain bg-silver-pale"
           />
         </div>
         {showWatermark && (

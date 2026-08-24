@@ -103,8 +103,8 @@ const LASER_PIGMENTATION_REGIONS: Record<LaserPigmentationZone, MaskRegion[]> = 
 
 /** Edit blend weight: higher = more of the AI edit visible. */
 export const INTENSITY_BLEND: Record<IntensityPreset, number> = {
-  subtle: 0.65,
-  moderate: 0.75,
+  subtle: 0.88,
+  moderate: 0.96,
 };
 
 export {

@@ -22,8 +22,8 @@ export async function blendConservative(
   const editWeight = INTENSITY_BLEND[intensity];
 
   const [original, edited, maskPng] = await Promise.all([
-    sharp(originalBuffer).resize(width, height, { fit: "cover" }).ensureAlpha().raw().toBuffer(),
-    sharp(editedBuffer).resize(width, height, { fit: "cover" }).ensureAlpha().raw().toBuffer(),
+    sharp(originalBuffer).resize(width, height, { fit: "fill" }).ensureAlpha().raw().toBuffer(),
+    sharp(editedBuffer).resize(width, height, { fit: "fill" }).ensureAlpha().raw().toBuffer(),
     buildBlendMaskPng(width, height, regions),
   ]);
 
@@ -62,9 +62,9 @@ export async function applyDemoTreatmentEffect(
   const regions = resolveZoneRegions(treatmentType, zones, regionOverrides);
 
   const [base, blurred, maskPng] = await Promise.all([
-    sharp(originalBuffer).resize(width, height, { fit: "cover" }).ensureAlpha().raw().toBuffer(),
+    sharp(originalBuffer).resize(width, height, { fit: "fill" }).ensureAlpha().raw().toBuffer(),
     sharp(originalBuffer)
-      .resize(width, height, { fit: "cover" })
+      .resize(width, height, { fit: "fill" })
       .blur(blurSigma)
       .ensureAlpha()
       .raw()

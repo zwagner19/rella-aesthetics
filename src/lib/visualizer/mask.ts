@@ -23,15 +23,40 @@ function ellipseSvg(
 
 export { resolveZoneRegions } from "./treatments";
 
-/** OpenAI edit mask: transparent = preserve, opaque white = edit. */
+/**
+ * OpenAI images.edit mask:
+ * - Fully transparent (alpha 0) = areas to EDIT
+ * - Opaque = areas to PRESERVE
+ *
+ * Treatment zones are punched out as transparent holes.
+ */
 export async function buildEditMaskPng(
   width: number,
   height: number,
   regions: MaskRegion[]
 ): Promise<Buffer> {
   const sharp = await getSharp();
-  const svg = ellipseSvg(width, height, regions, "white");
-  return sharp(Buffer.from(svg)).png().toBuffer();
+
+  // Opaque black canvas = preserve everywhere by default.
+  const preserveAll = await sharp({
+    create: {
+      width,
+      height,
+      channels: 4,
+      background: { r: 0, g: 0, b: 0, alpha: 1 },
+    },
+  })
+    .png()
+    .toBuffer();
+
+  // White ellipses mark treatment zones; dest-out clears alpha there → edit.
+  const holesSvg = ellipseSvg(width, height, regions, "white");
+  const holes = await sharp(Buffer.from(holesSvg)).ensureAlpha().png().toBuffer();
+
+  return sharp(preserveAll)
+    .composite([{ input: holes, blend: "dest-out" }])
+    .png()
+    .toBuffer();
 }
 
 /** Blend mask: white = apply edit weight, black = keep original. */
@@ -41,8 +66,12 @@ export async function buildBlendMaskPng(
   regions: MaskRegion[]
 ): Promise<Buffer> {
   const sharp = await getSharp();
+  // Soften edges slightly so blends aren't hard ovals.
   const svg = ellipseSvg(width, height, regions, "white");
-  return sharp(Buffer.from(svg)).png().toBuffer();
+  return sharp(Buffer.from(svg))
+    .blur(8)
+    .png()
+    .toBuffer();
 }
 
 export function regionsFromAnalysis(

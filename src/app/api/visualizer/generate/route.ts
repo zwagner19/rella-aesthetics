@@ -11,17 +11,29 @@ import {
   parseDataUrl,
 } from "@/lib/visualizer/image-utils";
 import { buildEditMaskPng, resolveZoneRegions } from "@/lib/visualizer/mask";
-import { generateEditedImage, getOpenAIRuntimeStatus, normalizeTreatmentType } from "@/lib/visualizer/openai";
+import {
+  generateEditedImage,
+  getOpenAIRuntimeStatus,
+  normalizeTreatmentType,
+} from "@/lib/visualizer/openai";
 import { buildEditPrompt } from "@/lib/visualizer/prompts";
 import { pickReferenceMatch } from "@/lib/visualizer/references";
-import { getSharp } from "@/lib/visualizer/sharp-loader";
 import {
   isValidIntensity,
-  isValidTreatmentType,
   isValidTreatmentZone,
   VISUALIZER_DISCLAIMER,
 } from "@/lib/visualizer/treatments";
-import type { IntensityPreset, MaskRegion, TreatmentType, TreatmentZoneId } from "@/lib/visualizer/types";
+import type {
+  IntensityPreset,
+  MaskRegion,
+  TreatmentType,
+  TreatmentZoneId,
+} from "@/lib/visualizer/types";
+import {
+  prepareWorkingImage,
+  type OpenAIImageSize,
+  type WorkingImage,
+} from "@/lib/visualizer/working-image";
 
 export const maxDuration = 60;
 export const runtime = "nodejs";
@@ -36,32 +48,35 @@ interface GenerateBody {
 }
 
 interface GenerateOutcome {
+  beforeBuffer: Buffer;
+  beforeMime: string;
   resultBuffer: Buffer;
   resultMime: string;
   mode: "live" | "demo";
   providerError?: string;
 }
 
-async function generateWithSharp(
-  buffer: Buffer,
-  mimeType: string,
+async function generateAligned(
+  working: WorkingImage,
   treatmentType: TreatmentType,
   zones: TreatmentZoneId[],
   intensity: IntensityPreset,
   regionOverrides: Partial<Record<TreatmentZoneId, MaskRegion>> | undefined,
   prompt: string
-): Promise<GenerateOutcome | null> {
-  const sharp = await getSharp();
-  const meta = await sharp(buffer).metadata();
-  const width = meta.width ?? 1024;
-  const height = meta.height ?? 1024;
+): Promise<GenerateOutcome> {
   const regions = resolveZoneRegions(treatmentType, zones, regionOverrides);
-  const maskBuffer = await buildEditMaskPng(width, height, regions);
-  const edited = await generateEditedImage(buffer, mimeType, maskBuffer, prompt);
+  const maskBuffer = await buildEditMaskPng(working.width, working.height, regions);
+  const edited = await generateEditedImage(
+    working.buffer,
+    working.mimeType,
+    maskBuffer,
+    prompt,
+    working.size
+  );
 
   if (edited.buffer) {
     const blended = await blendConservative(
-      buffer,
+      working.buffer,
       edited.buffer,
       treatmentType,
       zones,
@@ -69,11 +84,17 @@ async function generateWithSharp(
       regionOverrides
     );
     const watermarked = await addSimulationWatermark(blended);
-    return { resultBuffer: watermarked, resultMime: "image/png", mode: "live" };
+    return {
+      beforeBuffer: working.buffer,
+      beforeMime: working.mimeType,
+      resultBuffer: watermarked,
+      resultMime: "image/png",
+      mode: "live",
+    };
   }
 
   const demo = await applyDemoTreatmentEffect(
-    buffer,
+    working.buffer,
     treatmentType,
     zones,
     intensity,
@@ -81,6 +102,8 @@ async function generateWithSharp(
   );
   const watermarked = await addSimulationWatermark(demo);
   return {
+    beforeBuffer: working.buffer,
+    beforeMime: working.mimeType,
     resultBuffer: watermarked,
     resultMime: "image/png",
     mode: "demo",
@@ -88,18 +111,32 @@ async function generateWithSharp(
   };
 }
 
-async function generateWithoutSharp(
-  buffer: Buffer,
-  mimeType: string,
-  prompt: string
+async function generateWithoutMask(
+  working: WorkingImage,
+  prompt: string,
+  size: OpenAIImageSize
 ): Promise<GenerateOutcome> {
-  const edited = await generateEditedImage(buffer, mimeType, null, prompt);
+  const edited = await generateEditedImage(
+    working.buffer,
+    working.mimeType,
+    null,
+    prompt,
+    size
+  );
   if (edited.buffer) {
-    return { resultBuffer: edited.buffer, resultMime: "image/png", mode: "live" };
+    return {
+      beforeBuffer: working.buffer,
+      beforeMime: working.mimeType,
+      resultBuffer: edited.buffer,
+      resultMime: "image/png",
+      mode: "live",
+    };
   }
   return {
-    resultBuffer: buffer,
-    resultMime: mimeType,
+    beforeBuffer: working.buffer,
+    beforeMime: working.mimeType,
+    resultBuffer: working.buffer,
+    resultMime: working.mimeType,
     mode: "demo",
     providerError: edited.providerError,
   };
@@ -128,7 +165,8 @@ export async function POST(req: NextRequest) {
       body.intensity && isValidIntensity(body.intensity) ? body.intensity : "subtle";
 
     const sessionId = body.sessionId ?? crypto.randomUUID();
-    const { buffer, mimeType } = parseDataUrl(body.image);
+    const { buffer } = parseDataUrl(body.image);
+    const working = await prepareWorkingImage(buffer);
     const referenceMatch = pickReferenceMatch(treatmentType, zones);
     const prompt = buildEditPrompt(
       treatmentType,
@@ -137,11 +175,10 @@ export async function POST(req: NextRequest) {
       referenceMatch?.styleNotes
     );
 
-    let outcome: GenerateOutcome | null = null;
+    let outcome: GenerateOutcome;
     try {
-      outcome = await generateWithSharp(
-        buffer,
-        mimeType,
+      outcome = await generateAligned(
+        working,
         treatmentType,
         zones,
         intensity,
@@ -149,15 +186,15 @@ export async function POST(req: NextRequest) {
         prompt
       );
     } catch (sharpError) {
-      console.warn("[visualizer/generate] sharp unavailable, using OpenAI-only path:", sharpError);
+      console.warn("[visualizer/generate] sharp path failed, OpenAI-only:", sharpError);
+      outcome = await generateWithoutMask(working, prompt, working.size);
     }
 
-    if (!outcome) {
-      outcome = await generateWithoutSharp(buffer, mimeType, prompt);
-    }
-
-    const ext = extensionForMime(mimeType);
-    await optionalBlobUpload(buffer, `visualizer/${sessionId}/before.${ext}`, mimeType);
+    await optionalBlobUpload(
+      outcome.beforeBuffer,
+      `visualizer/${sessionId}/before.${extensionForMime(outcome.beforeMime)}`,
+      outcome.beforeMime
+    );
     await optionalBlobUpload(
       outcome.resultBuffer,
       `visualizer/${sessionId}/after.${extensionForMime(outcome.resultMime)}`,
@@ -165,7 +202,7 @@ export async function POST(req: NextRequest) {
     );
 
     return NextResponse.json({
-      beforeDataUrl: bufferToDataUrl(buffer, mimeType),
+      beforeDataUrl: bufferToDataUrl(outcome.beforeBuffer, outcome.beforeMime),
       afterDataUrl: bufferToDataUrl(outcome.resultBuffer, outcome.resultMime),
       sessionId,
       mode: outcome.mode,
