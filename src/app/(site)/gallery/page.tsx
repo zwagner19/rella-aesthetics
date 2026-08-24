@@ -42,8 +42,11 @@ export default function GalleryPage() {
           <SectionHeader
             eyebrow="Before & After"
             title="Treatment Results"
-            description="Each result reflects our commitment to natural, physician-led outcomes. Images will be updated with real patient photos."
+            description="Each result reflects our commitment to natural, physician-led outcomes. Try our AI preview tool to see a conservative simulation on your own face."
           />
+          <div className="mb-10 text-center">
+            <Button href="/see-your-results">See Your Results</Button>
+          </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {galleryItems.map((item, i) => (
               <div key={i} className="relative group">

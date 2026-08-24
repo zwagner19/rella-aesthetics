@@ -45,9 +45,21 @@ export default async function ServicePage({ params }: ServicePageProps) {
           <p className="text-lg font-light text-silver max-w-[560px] leading-relaxed mb-8">
             {service.heroDescription}
           </p>
-          <Button href={resolveBookingHref({ service: service.slug })}>
-            Book {service.title}
-          </Button>
+          <div className="flex flex-wrap gap-3">
+            <Button href={resolveBookingHref({ service: service.slug })}>
+              Book {service.title}
+            </Button>
+            {service.slug === "botox" && (
+              <Button href="/see-your-results?treatment=botox" variant="ghost">
+                See Your Results
+              </Button>
+            )}
+            {service.slug === "laser-treatments" && (
+              <Button href="/see-your-results?treatment=laser-pigmentation" variant="ghost">
+                Preview Pigmentation Results
+              </Button>
+            )}
+          </div>
         </div>
       </section>
 
