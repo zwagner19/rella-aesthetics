@@ -87,8 +87,8 @@ const BOTOX_REGIONS: Record<BotoxZone, MaskRegion[]> = {
   forehead: [{ cx: 0.5, cy: 0.28, rx: 0.38, ry: 0.14 }],
   glabella: [{ cx: 0.5, cy: 0.42, rx: 0.12, ry: 0.09 }],
   "crows-feet": [
-    { cx: 0.22, cy: 0.46, rx: 0.11, ry: 0.08 },
-    { cx: 0.78, cy: 0.46, rx: 0.11, ry: 0.08 },
+    { cx: 0.28, cy: 0.45, rx: 0.08, ry: 0.06 },
+    { cx: 0.72, cy: 0.45, rx: 0.08, ry: 0.06 },
   ],
 };
 

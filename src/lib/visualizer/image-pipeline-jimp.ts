@@ -75,9 +75,9 @@ async function ellipseWeightMap(
         const dy = (y - cy) / ry;
         const d = dx * dx + dy * dy;
         if (d <= 1) {
-          // Soft edge: 1 at center → 0 at rim
+          // Soft edge: 1 at center → 0 at rim (extra-smooth falloff)
           const edge = Math.max(0, 1 - Math.sqrt(d));
-          const soft = edge * edge * (3 - 2 * edge);
+          const soft = Math.pow(edge, 1.6);
           const i = y * width + x;
           weights[i] = Math.max(weights[i] ?? 0, soft);
         }

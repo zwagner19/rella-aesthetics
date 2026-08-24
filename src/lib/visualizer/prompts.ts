@@ -131,7 +131,8 @@ export function buildEditPrompt(
 - Keep the EXACT same camera framing, face position, scale, and head pose — pixel-aligned with the original
 - Keep the EXACT same lighting direction, shadows, highlights, white balance, and exposure
 - Do NOT relight, beautify, add makeup, change background, or apply a global filter
-- Do NOT smooth skin outside the treatment zones; keep pores and natural texture`;
+- Do NOT smooth skin outside the treatment zones; keep pores and natural texture
+- Do NOT create ghosting, double edges, duplicated ears/hair, or warped landmarks`;
 
   if (treatmentType === "botox") {
     return `Edit this photo for a Rella Aesthetics Botox/Dysport simulation.
