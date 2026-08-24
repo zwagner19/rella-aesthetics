@@ -63,6 +63,7 @@ export function VisualizerWizard() {
   const [afterDataUrl, setAfterDataUrl] = useState<string | null>(null);
   const [mode, setMode] = useState<"live" | "demo" | null>(null);
   const [calibrated, setCalibrated] = useState(false);
+  const [providerError, setProviderError] = useState<string | null>(null);
   const [followUpSubmitted, setFollowUpSubmitted] = useState(false);
   const [goal, setGoal] = useState("");
   const [timeline, setTimeline] = useState("");
@@ -140,6 +141,7 @@ export function VisualizerWizard() {
         sessionId?: string;
         mode?: "live" | "demo";
         calibrated?: boolean;
+        providerError?: string;
         error?: string;
       }>(res);
       if (!res.ok || !data.beforeDataUrl || !data.afterDataUrl) {
@@ -150,6 +152,7 @@ export function VisualizerWizard() {
       setSessionId(data.sessionId ?? sessionId);
       setMode(data.mode ?? "demo");
       setCalibrated(Boolean(data.calibrated));
+      setProviderError(data.providerError ?? null);
       setStep("preview");
     } catch (err) {
       setError(err instanceof Error ? err.message : "Generation failed");
@@ -282,8 +285,9 @@ export function VisualizerWizard() {
             </p>
           )}
           {mode === "demo" && (
-            <p className="text-center text-xs text-silver-light tracking-wide">
-              Demo preview — add OPENAI_API_KEY on Vercel for live AI results
+            <p className="text-center text-xs text-silver-light tracking-wide max-w-md mx-auto">
+              Demo preview
+              {providerError ? ` — ${providerError}` : " — add OPENAI_API_KEY on Vercel for live AI results"}
             </p>
           )}
           <div className="flex flex-col sm:flex-row justify-center gap-2">

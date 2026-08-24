@@ -14,10 +14,48 @@ import type {
   TreatmentZoneId,
 } from "@/lib/visualizer/types";
 
+export interface OpenAIRuntimeStatus {
+  configured: boolean;
+  keyLength: number;
+  /** Safe prefix only, e.g. "sk-proj" — never the secret. */
+  keyPrefix: string | null;
+}
+
+export function getOpenAIRuntimeStatus(): OpenAIRuntimeStatus {
+  const apiKey = process.env.OPENAI_API_KEY?.trim() ?? "";
+  const configured = apiKey.length > 0;
+  let keyPrefix: string | null = null;
+  if (configured) {
+    const parts = apiKey.split("-");
+    keyPrefix = parts.length >= 2 ? `${parts[0]}-${parts[1]}` : apiKey.slice(0, 6);
+  }
+  return { configured, keyLength: apiKey.length, keyPrefix };
+}
+
 function getOpenAIClient(): OpenAI | null {
-  const apiKey = process.env.OPENAI_API_KEY;
+  const apiKey = process.env.OPENAI_API_KEY?.trim();
   if (!apiKey) return null;
   return new OpenAI({ apiKey });
+}
+
+function summarizeOpenAIError(error: unknown): string {
+  if (!error || typeof error !== "object") {
+    return error instanceof Error ? error.message : "Unknown OpenAI error";
+  }
+  const err = error as {
+    message?: string;
+    status?: number;
+    code?: string;
+    type?: string;
+    error?: { message?: string; code?: string; type?: string };
+  };
+  const message = err.error?.message ?? err.message ?? "OpenAI request failed";
+  const code = err.error?.code ?? err.code;
+  const status = err.status;
+  const parts = [message];
+  if (status) parts.push(`status=${status}`);
+  if (code) parts.push(`code=${code}`);
+  return parts.join(" | ");
 }
 
 function defaultAnalysis(treatmentType: TreatmentType): FaceAnalysis {
@@ -78,13 +116,23 @@ function mimeToExtension(mimeType: string): string {
   return "jpg";
 }
 
+export interface AnalyzeSelfieResult {
+  analysis: FaceAnalysis;
+  providerError?: string;
+}
+
 export async function analyzeSelfie(
   imageBuffer: Buffer,
   mimeType: string,
   treatmentType: TreatmentType
-): Promise<FaceAnalysis> {
+): Promise<AnalyzeSelfieResult> {
   const client = getOpenAIClient();
-  if (!client) return defaultAnalysis(treatmentType);
+  if (!client) {
+    return {
+      analysis: defaultAnalysis(treatmentType),
+      providerError: "OPENAI_API_KEY is not set in this runtime",
+    };
+  }
 
   try {
     const dataUrl = bufferToDataUrl(imageBuffer, mimeType);
@@ -105,11 +153,19 @@ export async function analyzeSelfie(
     });
 
     const content = response.choices[0]?.message?.content ?? "{}";
-    return parseAnalysisJson(treatmentType, content);
+    return { analysis: parseAnalysisJson(treatmentType, content) };
   } catch (error) {
     console.error("[visualizer] OpenAI analysis failed:", error);
-    return defaultAnalysis(treatmentType);
+    return {
+      analysis: defaultAnalysis(treatmentType),
+      providerError: summarizeOpenAIError(error),
+    };
   }
+}
+
+export interface GenerateEditedImageResult {
+  buffer: Buffer | null;
+  providerError?: string;
 }
 
 export async function generateEditedImage(
@@ -117,9 +173,11 @@ export async function generateEditedImage(
   mimeType: string,
   maskBuffer: Buffer | null,
   prompt: string
-): Promise<Buffer | null> {
+): Promise<GenerateEditedImageResult> {
   const client = getOpenAIClient();
-  if (!client) return null;
+  if (!client) {
+    return { buffer: null, providerError: "OPENAI_API_KEY is not set in this runtime" };
+  }
 
   try {
     const ext = mimeToExtension(mimeType);
@@ -138,11 +196,13 @@ export async function generateEditedImage(
     });
 
     const b64 = result.data?.[0]?.b64_json;
-    if (!b64) return null;
-    return Buffer.from(b64, "base64");
+    if (!b64) {
+      return { buffer: null, providerError: "OpenAI edit returned no image data" };
+    }
+    return { buffer: Buffer.from(b64, "base64") };
   } catch (error) {
     console.error("[visualizer] OpenAI edit failed:", error);
-    return null;
+    return { buffer: null, providerError: summarizeOpenAIError(error) };
   }
 }
 

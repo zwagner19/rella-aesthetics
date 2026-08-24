@@ -11,7 +11,7 @@ import {
   parseDataUrl,
 } from "@/lib/visualizer/image-utils";
 import { buildEditMaskPng, resolveZoneRegions } from "@/lib/visualizer/mask";
-import { generateEditedImage, normalizeTreatmentType } from "@/lib/visualizer/openai";
+import { generateEditedImage, getOpenAIRuntimeStatus, normalizeTreatmentType } from "@/lib/visualizer/openai";
 import { buildEditPrompt } from "@/lib/visualizer/prompts";
 import { pickReferenceMatch } from "@/lib/visualizer/references";
 import { getSharp } from "@/lib/visualizer/sharp-loader";
@@ -39,6 +39,7 @@ interface GenerateOutcome {
   resultBuffer: Buffer;
   resultMime: string;
   mode: "live" | "demo";
+  providerError?: string;
 }
 
 async function generateWithSharp(
@@ -56,12 +57,12 @@ async function generateWithSharp(
   const height = meta.height ?? 1024;
   const regions = resolveZoneRegions(treatmentType, zones, regionOverrides);
   const maskBuffer = await buildEditMaskPng(width, height, regions);
-  const editedRaw = await generateEditedImage(buffer, mimeType, maskBuffer, prompt);
+  const edited = await generateEditedImage(buffer, mimeType, maskBuffer, prompt);
 
-  if (editedRaw) {
+  if (edited.buffer) {
     const blended = await blendConservative(
       buffer,
-      editedRaw,
+      edited.buffer,
       treatmentType,
       zones,
       intensity,
@@ -79,7 +80,12 @@ async function generateWithSharp(
     regionOverrides
   );
   const watermarked = await addSimulationWatermark(demo);
-  return { resultBuffer: watermarked, resultMime: "image/png", mode: "demo" };
+  return {
+    resultBuffer: watermarked,
+    resultMime: "image/png",
+    mode: "demo",
+    providerError: edited.providerError,
+  };
 }
 
 async function generateWithoutSharp(
@@ -87,11 +93,16 @@ async function generateWithoutSharp(
   mimeType: string,
   prompt: string
 ): Promise<GenerateOutcome> {
-  const editedRaw = await generateEditedImage(buffer, mimeType, null, prompt);
-  if (editedRaw) {
-    return { resultBuffer: editedRaw, resultMime: "image/png", mode: "live" };
+  const edited = await generateEditedImage(buffer, mimeType, null, prompt);
+  if (edited.buffer) {
+    return { resultBuffer: edited.buffer, resultMime: "image/png", mode: "live" };
   }
-  return { resultBuffer: buffer, resultMime: mimeType, mode: "demo" };
+  return {
+    resultBuffer: buffer,
+    resultMime: mimeType,
+    mode: "demo",
+    providerError: edited.providerError,
+  };
 }
 
 export async function POST(req: NextRequest) {
@@ -161,6 +172,8 @@ export async function POST(req: NextRequest) {
       treatmentType,
       calibrated: Boolean(referenceMatch),
       referenceId: referenceMatch?.id ?? null,
+      openai: getOpenAIRuntimeStatus(),
+      ...(outcome.providerError ? { providerError: outcome.providerError } : {}),
       disclaimer: VISUALIZER_DISCLAIMER,
     });
   } catch (error) {

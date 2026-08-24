@@ -14,19 +14,23 @@ export async function POST(req: NextRequest) {
 
     const treatmentType = normalizeTreatmentType(body.treatmentType);
     const { buffer, mimeType } = parseDataUrl(body.image);
-    const analysis = await analyzeSelfie(buffer, mimeType, treatmentType);
+    const { analysis, providerError } = await analyzeSelfie(buffer, mimeType, treatmentType);
 
     if (!analysis.faceDetected || analysis.quality === "poor") {
       return NextResponse.json(
         {
           error: "Photo quality insufficient",
           analysis,
+          ...(providerError ? { providerError } : {}),
         },
         { status: 422 }
       );
     }
 
-    return NextResponse.json({ analysis });
+    return NextResponse.json({
+      analysis,
+      ...(providerError ? { providerError } : {}),
+    });
   } catch (error) {
     console.error("[visualizer/analyze]", error);
     const message = error instanceof Error ? error.message : "Analysis failed";
