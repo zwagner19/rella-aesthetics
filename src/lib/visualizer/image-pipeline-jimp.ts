@@ -42,14 +42,17 @@ export async function buildEditMaskJimp(
     const cy = region.cy * height;
     const rx = region.rx * width;
     const ry = region.ry * height;
-    mask.scan(0, 0, width, height, function (x, y, idx) {
-      const dx = (x - cx) / rx;
-      const dy = (y - cy) / ry;
-      if (dx * dx + dy * dy <= 1) {
-        // Transparent = editable for OpenAI
-        this.bitmap.data[idx + 3] = 0;
+    const data = mask.bitmap.data;
+    for (let y = 0; y < height; y++) {
+      for (let x = 0; x < width; x++) {
+        const dx = (x - cx) / rx;
+        const dy = (y - cy) / ry;
+        if (dx * dx + dy * dy <= 1) {
+          const idx = (y * width + x) * 4;
+          data[idx + 3] = 0; // Transparent = editable for OpenAI
+        }
       }
-    });
+    }
   }
 
   return mask.getBuffer("image/png");
@@ -102,13 +105,13 @@ export async function blendConservativeJimp(
   const weights = await ellipseWeightMap(width, height, regions);
   const editWeight = INTENSITY_BLEND[intensity];
 
-  original.scan(0, 0, width, height, function (x, y, idx) {
+  original.scan(0, 0, width, height, (x, y, idx) => {
     const w = (weights[y * width + x] ?? 0) * editWeight;
     if (w <= 0) return;
     for (let c = 0; c < 3; c++) {
-      const o = this.bitmap.data[idx + c] ?? 0;
+      const o = original.bitmap.data[idx + c] ?? 0;
       const e = edited.bitmap.data[idx + c] ?? o;
-      this.bitmap.data[idx + c] = Math.round(o * (1 - w) + e * w);
+      original.bitmap.data[idx + c] = Math.round(o * (1 - w) + e * w);
     }
   });
 
