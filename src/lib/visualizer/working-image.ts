@@ -10,11 +10,15 @@ export interface WorkingImage {
   size: OpenAIImageSize;
 }
 
-/** Pick the OpenAI edit size that best matches the selfie aspect ratio. */
+/**
+ * Prefer a square OpenAI canvas for edit reliability + BA alignment.
+ * Portrait/landscape sizes are used only when the source is strongly non-square
+ * AND sharp can prepare a matching mask.
+ */
 export function pickEditSize(width: number, height: number): OpenAIImageSize {
   const ratio = width / height;
-  if (ratio < 0.85) return "1024x1536"; // portrait
-  if (ratio > 1.15) return "1536x1024"; // landscape
+  if (ratio < 0.75) return "1024x1536";
+  if (ratio > 1.35) return "1536x1024";
   return "1024x1024";
 }
 

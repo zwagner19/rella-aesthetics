@@ -31,7 +31,6 @@ import type {
 } from "@/lib/visualizer/types";
 import {
   prepareWorkingImage,
-  type OpenAIImageSize,
   type WorkingImage,
 } from "@/lib/visualizer/working-image";
 
@@ -56,7 +55,7 @@ interface GenerateOutcome {
   providerError?: string;
 }
 
-async function generateAligned(
+async function generateWithSharpPipeline(
   working: WorkingImage,
   treatmentType: TreatmentType,
   zones: TreatmentZoneId[],
@@ -111,32 +110,33 @@ async function generateAligned(
   };
 }
 
-async function generateWithoutMask(
-  working: WorkingImage,
-  prompt: string,
-  size: OpenAIImageSize
+async function generateOpenAIOnly(
+  beforeBuffer: Buffer,
+  beforeMime: string,
+  prompt: string
 ): Promise<GenerateOutcome> {
+  // Client compresses to 1024×1024; keep output size matched for slider alignment.
   const edited = await generateEditedImage(
-    working.buffer,
-    working.mimeType,
+    beforeBuffer,
+    beforeMime,
     null,
     prompt,
-    size
+    "1024x1024"
   );
   if (edited.buffer) {
     return {
-      beforeBuffer: working.buffer,
-      beforeMime: working.mimeType,
+      beforeBuffer,
+      beforeMime,
       resultBuffer: edited.buffer,
       resultMime: "image/png",
       mode: "live",
     };
   }
   return {
-    beforeBuffer: working.buffer,
-    beforeMime: working.mimeType,
-    resultBuffer: working.buffer,
-    resultMime: working.mimeType,
+    beforeBuffer,
+    beforeMime,
+    resultBuffer: beforeBuffer,
+    resultMime: beforeMime,
     mode: "demo",
     providerError: edited.providerError,
   };
@@ -165,8 +165,7 @@ export async function POST(req: NextRequest) {
       body.intensity && isValidIntensity(body.intensity) ? body.intensity : "subtle";
 
     const sessionId = body.sessionId ?? crypto.randomUUID();
-    const { buffer } = parseDataUrl(body.image);
-    const working = await prepareWorkingImage(buffer);
+    const { buffer, mimeType } = parseDataUrl(body.image);
     const referenceMatch = pickReferenceMatch(treatmentType, zones);
     const prompt = buildEditPrompt(
       treatmentType,
@@ -176,8 +175,10 @@ export async function POST(req: NextRequest) {
     );
 
     let outcome: GenerateOutcome;
+
     try {
-      outcome = await generateAligned(
+      const working = await prepareWorkingImage(buffer);
+      outcome = await generateWithSharpPipeline(
         working,
         treatmentType,
         zones,
@@ -186,8 +187,11 @@ export async function POST(req: NextRequest) {
         prompt
       );
     } catch (sharpError) {
-      console.warn("[visualizer/generate] sharp path failed, OpenAI-only:", sharpError);
-      outcome = await generateWithoutMask(working, prompt, working.size);
+      console.warn(
+        "[visualizer/generate] sharp unavailable, OpenAI-only aligned path:",
+        sharpError
+      );
+      outcome = await generateOpenAIOnly(buffer, mimeType, prompt);
     }
 
     await optionalBlobUpload(

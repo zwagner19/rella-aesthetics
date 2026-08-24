@@ -1,6 +1,9 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  // Keep sharp as a native external so Vercel can load libvips correctly.
+  serverExternalPackages: ["sharp"],
+
   images: {
     formats: ["image/avif", "image/webp"],
   },
