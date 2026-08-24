@@ -82,29 +82,30 @@ export const LASER_PIGMENTATION_ZONES: TreatmentZone[] = [
   },
 ];
 
+/** Default regions assume a square, face-centered 1024 canvas (cover-cropped selfie). */
 const BOTOX_REGIONS: Record<BotoxZone, MaskRegion[]> = {
-  forehead: [{ cx: 0.5, cy: 0.22, rx: 0.34, ry: 0.11 }],
-  glabella: [{ cx: 0.5, cy: 0.38, rx: 0.1, ry: 0.07 }],
+  forehead: [{ cx: 0.5, cy: 0.28, rx: 0.38, ry: 0.14 }],
+  glabella: [{ cx: 0.5, cy: 0.42, rx: 0.12, ry: 0.09 }],
   "crows-feet": [
-    { cx: 0.28, cy: 0.4, rx: 0.09, ry: 0.06 },
-    { cx: 0.72, cy: 0.4, rx: 0.09, ry: 0.06 },
+    { cx: 0.22, cy: 0.46, rx: 0.11, ry: 0.08 },
+    { cx: 0.78, cy: 0.46, rx: 0.11, ry: 0.08 },
   ],
 };
 
 const LASER_PIGMENTATION_REGIONS: Record<LaserPigmentationZone, MaskRegion[]> = {
   cheeks: [
-    { cx: 0.32, cy: 0.52, rx: 0.14, ry: 0.12 },
-    { cx: 0.68, cy: 0.52, rx: 0.14, ry: 0.12 },
+    { cx: 0.3, cy: 0.55, rx: 0.16, ry: 0.14 },
+    { cx: 0.7, cy: 0.55, rx: 0.16, ry: 0.14 },
   ],
-  "forehead-spots": [{ cx: 0.5, cy: 0.24, rx: 0.32, ry: 0.1 }],
-  perioral: [{ cx: 0.5, cy: 0.64, rx: 0.16, ry: 0.09 }],
-  "overall-tone": [{ cx: 0.5, cy: 0.45, rx: 0.36, ry: 0.32 }],
+  "forehead-spots": [{ cx: 0.5, cy: 0.28, rx: 0.36, ry: 0.12 }],
+  perioral: [{ cx: 0.5, cy: 0.68, rx: 0.18, ry: 0.1 }],
+  "overall-tone": [{ cx: 0.5, cy: 0.48, rx: 0.4, ry: 0.36 }],
 };
 
 /** Edit blend weight: higher = more of the AI edit visible. */
 export const INTENSITY_BLEND: Record<IntensityPreset, number> = {
-  subtle: 0.88,
-  moderate: 0.96,
+  subtle: 0.92,
+  moderate: 0.98,
 };
 
 export {

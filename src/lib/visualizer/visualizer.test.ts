@@ -51,7 +51,7 @@ describe("visualizer prompts", () => {
 
   it("uses stronger line-softening language for moderate botox", () => {
     const prompt = buildEditPrompt("botox", ["forehead"], "moderate");
-    expect(prompt).toContain("50–65%");
+    expect(prompt).toContain("60–70%");
     expect(prompt).toContain("MORE VISIBLE");
   });
 });

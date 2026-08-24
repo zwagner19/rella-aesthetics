@@ -22,19 +22,19 @@ Tone:
 const BOTOX_ZONE_INSTRUCTIONS: Record<IntensityPreset, Record<string, string>> = {
   subtle: {
     forehead:
-      "visibly soften horizontal forehead creases by about 30–40% — lines should look quieter at rest, not erased",
+      "reduce the depth of horizontal forehead creases so they look ~40% softer at rest — still present, clearly quieter",
     glabella:
-      "visibly soften the vertical frown lines (11s) by about 30–40%",
+      "reduce vertical frown lines (11s) by ~40% so the brow looks less tense",
     "crows-feet":
-      "visibly soften crow's feet at the outer eye corners by about 30–40%, without changing eye shape",
+      "reduce crow's feet depth by ~40% without changing eye shape",
   },
   moderate: {
     forehead:
-      "clearly soften horizontal forehead creases by about 50–65% — resting lines look much quieter while keeping natural brow movement",
+      "meaningfully flatten horizontal forehead creases (~60–70% softer at rest) while keeping natural brow movement",
     glabella:
-      "clearly soften vertical frown lines (11s) by about 50–65%",
+      "meaningfully flatten vertical frown lines / 11s (~60–70% softer)",
     "crows-feet":
-      "clearly soften crow's feet by about 50–65%, without changing eye shape or making skin plastic",
+      "meaningfully soften crow's feet (~60–70%) without plastic skin or changed eye shape",
   },
 };
 
