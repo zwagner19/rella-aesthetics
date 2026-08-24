@@ -43,21 +43,26 @@ export function BeforeAfterSlider({
           handleMove(e.clientX);
         }}
       >
+        {/* Base = after; left-clipped overlay = before (classic BA slider). */}
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src={beforeSrc} alt="Before" className="absolute inset-0 w-full h-full object-cover" />
+        <img
+          src={afterSrc}
+          alt="After simulation"
+          className={`absolute inset-0 w-full h-full object-cover ${blurred ? "blur-md scale-105" : ""} ${demoEffect ? "brightness-105 contrast-[0.98] saturate-[0.92]" : ""}`}
+        />
         <div
           className="absolute inset-0 overflow-hidden"
           style={{ clipPath: `inset(0 ${100 - position}% 0 0)` }}
         >
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src={afterSrc}
-            alt="After simulation"
-            className={`absolute inset-0 w-full h-full object-cover ${blurred ? "blur-md scale-105" : ""} ${demoEffect ? "brightness-105 contrast-[0.98] saturate-[0.92]" : ""}`}
+            src={beforeSrc}
+            alt="Before"
+            className="absolute inset-0 w-full h-full object-cover"
           />
         </div>
         {showWatermark && (
-          <span className="absolute bottom-3 left-3 bg-black/50 text-white text-[0.625rem] font-bold tracking-widest uppercase px-2 py-1 rounded pointer-events-none">
+          <span className="absolute bottom-3 right-3 bg-black/50 text-white text-[0.625rem] font-bold tracking-widest uppercase px-2 py-1 rounded pointer-events-none">
             {WATERMARK_LABEL}
           </span>
         )}
