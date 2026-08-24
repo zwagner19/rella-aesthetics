@@ -1,16 +1,17 @@
+import { Jimp } from "jimp";
 import { NextRequest, NextResponse } from "next/server";
-import {
-  applyDemoTreatmentEffect,
-  addSimulationWatermark,
-  blendConservative,
-} from "@/lib/visualizer/conservative-blend";
 import {
   bufferToDataUrl,
   extensionForMime,
   optionalBlobUpload,
   parseDataUrl,
 } from "@/lib/visualizer/image-utils";
-import { buildEditMaskPng, resolveZoneRegions } from "@/lib/visualizer/mask";
+import {
+  addSimulationWatermarkJimp,
+  applyDemoTreatmentEffectJimp,
+  blendConservativeJimp,
+  buildEditMaskJimp,
+} from "@/lib/visualizer/image-pipeline-jimp";
 import {
   generateEditedImage,
   getOpenAIRuntimeStatus,
@@ -21,6 +22,7 @@ import { pickReferenceMatch } from "@/lib/visualizer/references";
 import {
   isValidIntensity,
   isValidTreatmentZone,
+  resolveZoneRegions,
   VISUALIZER_DISCLAIMER,
 } from "@/lib/visualizer/treatments";
 import type {
@@ -29,13 +31,12 @@ import type {
   TreatmentType,
   TreatmentZoneId,
 } from "@/lib/visualizer/types";
-import {
-  prepareWorkingImage,
-  type WorkingImage,
-} from "@/lib/visualizer/working-image";
+import type { WorkingImage } from "@/lib/visualizer/working-image";
 
 export const maxDuration = 60;
 export const runtime = "nodejs";
+
+const EDIT_SIZE = 1024;
 
 interface GenerateBody {
   image?: string;
@@ -55,7 +56,20 @@ interface GenerateOutcome {
   providerError?: string;
 }
 
-async function generateWithSharpPipeline(
+async function prepareSquareWorkingImage(input: Buffer): Promise<WorkingImage> {
+  const image = await Jimp.read(input);
+  image.cover({ w: EDIT_SIZE, h: EDIT_SIZE });
+  const buffer = await image.getBuffer("image/png");
+  return {
+    buffer,
+    mimeType: "image/png",
+    width: EDIT_SIZE,
+    height: EDIT_SIZE,
+    size: "1024x1024",
+  };
+}
+
+async function generateMasked(
   working: WorkingImage,
   treatmentType: TreatmentType,
   zones: TreatmentZoneId[],
@@ -64,7 +78,7 @@ async function generateWithSharpPipeline(
   prompt: string
 ): Promise<GenerateOutcome> {
   const regions = resolveZoneRegions(treatmentType, zones, regionOverrides);
-  const maskBuffer = await buildEditMaskPng(working.width, working.height, regions);
+  const maskBuffer = await buildEditMaskJimp(working.width, working.height, regions);
   const edited = await generateEditedImage(
     working.buffer,
     working.mimeType,
@@ -74,7 +88,7 @@ async function generateWithSharpPipeline(
   );
 
   if (edited.buffer) {
-    const blended = await blendConservative(
+    const blended = await blendConservativeJimp(
       working.buffer,
       edited.buffer,
       treatmentType,
@@ -82,7 +96,7 @@ async function generateWithSharpPipeline(
       intensity,
       regionOverrides
     );
-    const watermarked = await addSimulationWatermark(blended);
+    const watermarked = await addSimulationWatermarkJimp(blended);
     return {
       beforeBuffer: working.buffer,
       beforeMime: working.mimeType,
@@ -92,51 +106,19 @@ async function generateWithSharpPipeline(
     };
   }
 
-  const demo = await applyDemoTreatmentEffect(
+  const demo = await applyDemoTreatmentEffectJimp(
     working.buffer,
     treatmentType,
     zones,
     intensity,
     regionOverrides
   );
-  const watermarked = await addSimulationWatermark(demo);
+  const watermarked = await addSimulationWatermarkJimp(demo);
   return {
     beforeBuffer: working.buffer,
     beforeMime: working.mimeType,
     resultBuffer: watermarked,
     resultMime: "image/png",
-    mode: "demo",
-    providerError: edited.providerError,
-  };
-}
-
-async function generateOpenAIOnly(
-  beforeBuffer: Buffer,
-  beforeMime: string,
-  prompt: string
-): Promise<GenerateOutcome> {
-  // Client compresses to 1024×1024; keep output size matched for slider alignment.
-  const edited = await generateEditedImage(
-    beforeBuffer,
-    beforeMime,
-    null,
-    prompt,
-    "1024x1024"
-  );
-  if (edited.buffer) {
-    return {
-      beforeBuffer,
-      beforeMime,
-      resultBuffer: edited.buffer,
-      resultMime: "image/png",
-      mode: "live",
-    };
-  }
-  return {
-    beforeBuffer,
-    beforeMime,
-    resultBuffer: beforeBuffer,
-    resultMime: beforeMime,
     mode: "demo",
     providerError: edited.providerError,
   };
@@ -165,7 +147,8 @@ export async function POST(req: NextRequest) {
       body.intensity && isValidIntensity(body.intensity) ? body.intensity : "subtle";
 
     const sessionId = body.sessionId ?? crypto.randomUUID();
-    const { buffer, mimeType } = parseDataUrl(body.image);
+    const { buffer } = parseDataUrl(body.image);
+    const working = await prepareSquareWorkingImage(buffer);
     const referenceMatch = pickReferenceMatch(treatmentType, zones);
     const prompt = buildEditPrompt(
       treatmentType,
@@ -174,25 +157,14 @@ export async function POST(req: NextRequest) {
       referenceMatch?.styleNotes
     );
 
-    let outcome: GenerateOutcome;
-
-    try {
-      const working = await prepareWorkingImage(buffer);
-      outcome = await generateWithSharpPipeline(
-        working,
-        treatmentType,
-        zones,
-        intensity,
-        body.regions,
-        prompt
-      );
-    } catch (sharpError) {
-      console.warn(
-        "[visualizer/generate] sharp unavailable, OpenAI-only aligned path:",
-        sharpError
-      );
-      outcome = await generateOpenAIOnly(buffer, mimeType, prompt);
-    }
+    const outcome = await generateMasked(
+      working,
+      treatmentType,
+      zones,
+      intensity,
+      body.regions,
+      prompt
+    );
 
     await optionalBlobUpload(
       outcome.beforeBuffer,
