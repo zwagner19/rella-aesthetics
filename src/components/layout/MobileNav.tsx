@@ -127,7 +127,7 @@ export function MobileNav({
         href={booking.href}
         data-cta={booking.cta}
         onClick={onClose}
-        className="mt-7 inline-flex min-h-14 shrink-0 items-center justify-center rounded-full border-[1.5px] border-rose bg-rose px-10 py-4 text-[0.6875rem] font-bold uppercase tracking-[0.2em] text-white transition-colors hover:bg-rose/85"
+        className="mt-7 inline-flex min-h-14 shrink-0 items-center justify-center rounded-full border-[1.5px] border-rose bg-rose px-10 py-4 text-[0.6875rem] font-bold uppercase tracking-[0.2em] text-white"
       >
         {booking.label}
       </Link>

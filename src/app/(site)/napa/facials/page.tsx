@@ -160,20 +160,20 @@ export default function NapaFacialsPage() {
       <section className="overflow-hidden bg-paper py-16 md:py-24">
         <div className="mx-auto grid max-w-[1200px] items-center gap-12 px-6 md:px-8 lg:grid-cols-[1.04fr_0.96fr] lg:px-12">
           <div>
-            <p className="mb-5 text-[0.6875rem] font-bold uppercase tracking-[0.22em] text-rose-dark">
+            <p className="mb-5 text-[0.6875rem] font-bold uppercase tracking-[0.22em] text-rose">
               Professional skin care · Downtown Napa
             </p>
-            <h1 className="mb-6 text-[clamp(2.75rem,6vw,4.9rem)] font-medium leading-[0.98] tracking-[-0.06em] text-ink">
+            <h1 className="mb-6 text-[clamp(2.75rem,6vw,4.9rem)] font-medium leading-[0.98] tracking-[-0.06em] text-rose">
               Professional facials in Napa, with a plan first.
             </h1>
             <p className="mb-8 max-w-[650px] text-lg font-light leading-relaxed text-silver-dark md:text-xl">
               Compare current facial options around your skin, products, recent treatments, goals, and schedule—then start with the verified Initial Skin Health Consult.
             </p>
             <div className="flex flex-col gap-3 sm:flex-row">
-              <Button href={BOOKING_HREF} data-cta="service-booking" className="rounded-full">
+              <Button disableHover href={BOOKING_HREF} data-cta="service-booking" className="rounded-full">
                 Book Skin Health Consult
               </Button>
-              <Button href="tel:+17073582928" data-cta="phone" variant="ghost" className="rounded-full bg-white/75">
+              <Button disableHover href="tel:+17073582928" data-cta="phone" variant="ghost" className="rounded-full bg-white/75">
                 Call 707.358.2928
               </Button>
             </div>
@@ -192,7 +192,7 @@ export default function NapaFacialsPage() {
               sizes="(min-width: 1024px) 46vw, 92vw"
             />
             <div className="absolute inset-x-0 bottom-0 border-t border-white/30 bg-white/94 p-5 md:p-6">
-              <p className="mb-2 text-[0.625rem] font-bold uppercase tracking-[0.2em] text-rose-dark">
+              <p className="mb-2 text-[0.625rem] font-bold uppercase tracking-[0.2em] text-rose">
                 Rella Aesthetics — Napa
               </p>
               <p className="text-lg font-medium leading-snug text-ink">
@@ -211,10 +211,10 @@ export default function NapaFacialsPage() {
       <section className="py-20 md:py-28" aria-labelledby="napa-facial-options">
         <div className="mx-auto max-w-[1120px] px-6 md:px-8">
           <div className="mb-12 max-w-[810px]">
-            <p className="mb-4 text-[0.6875rem] font-bold uppercase tracking-[0.2em] text-rose-dark">
+            <p className="mb-4 text-[0.6875rem] font-bold uppercase tracking-[0.2em] text-rose">
               Current Napa menu
             </p>
-            <h2 id="napa-facial-options" className="mb-5 text-3xl font-medium tracking-[-0.04em] text-ink md:text-5xl">
+            <h2 id="napa-facial-options" className="mb-5 text-3xl font-medium tracking-[-0.04em] text-rose md:text-5xl">
               Start with your skin. Then choose the service.
             </h2>
             <p className="text-lg font-light leading-relaxed text-ink/70">
@@ -227,12 +227,12 @@ export default function NapaFacialsPage() {
                 key={option.name}
                 className={`border border-ink/12 p-7 md:p-8 ${
                   index === 0
-                    ? "bg-ink text-white md:col-span-2 lg:col-span-2"
+                    ? "bg-rose text-white md:col-span-2 lg:col-span-2"
                     : `bg-white md:col-span-1 ${index >= 3 ? "lg:col-span-3" : "lg:col-span-2"}`
                 }`}
               >
                 <div className="mb-7 flex items-center justify-between gap-4">
-                  <span className={`text-xs font-bold tracking-[0.18em] ${index === 0 ? "text-rose" : "text-rose-dark"}`}>
+                  <span className={`text-xs font-bold tracking-[0.18em] ${index === 0 ? "text-white" : "text-rose"}`}>
                     0{index + 1}
                   </span>
                   <span className={`h-px flex-1 ${index === 0 ? "bg-white/20" : "bg-rose-light/70"}`} aria-hidden="true" />
@@ -245,10 +245,10 @@ export default function NapaFacialsPage() {
         </div>
       </section>
 
-      <section className="bg-ink py-20 text-white md:py-28" aria-labelledby="napa-facial-visit">
+      <section className="bg-rose py-20 text-white md:py-28" aria-labelledby="napa-facial-visit">
         <div className="mx-auto max-w-[1120px] px-6 md:px-8">
           <div className="mb-12 max-w-[780px]">
-            <p className="mb-4 text-[0.6875rem] font-bold uppercase tracking-[0.2em] text-rose">Your visit</p>
+            <p className="mb-4 text-[0.6875rem] font-bold uppercase tracking-[0.2em] text-white">Your visit</p>
             <h2 id="napa-facial-visit" className="mb-5 text-3xl font-medium tracking-[-0.04em] md:text-5xl">
               A polished experience built on specifics.
             </h2>
@@ -259,7 +259,7 @@ export default function NapaFacialsPage() {
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {visitSteps.map((step, index) => (
               <article key={step.title} className="border border-white/15 bg-white/[0.04] p-6">
-                <span className="mb-8 inline-flex h-9 w-9 items-center justify-center rounded-full bg-rose text-xs font-bold text-ink">{index + 1}</span>
+                <span className="mb-8 inline-flex h-9 w-9 items-center justify-center rounded-full bg-white text-xs font-bold text-rose">{index + 1}</span>
                 <h3 className="mb-3 text-xl font-medium">{step.title}</h3>
                 <p className="text-sm leading-7 text-white/70">{step.body}</p>
               </article>
@@ -271,8 +271,8 @@ export default function NapaFacialsPage() {
       <section className="py-20 md:py-28" aria-labelledby="napa-facial-booking">
         <div className="mx-auto grid max-w-[1040px] gap-8 px-6 md:px-8 lg:grid-cols-[1.05fr_0.95fr] lg:items-center">
           <div>
-            <p className="mb-4 text-[0.6875rem] font-bold uppercase tracking-[0.2em] text-rose-dark">A direct booking handoff</p>
-            <h2 id="napa-facial-booking" className="mb-5 text-3xl font-medium tracking-[-0.04em] text-ink md:text-5xl">
+            <p className="mb-4 text-[0.6875rem] font-bold uppercase tracking-[0.2em] text-rose">A direct booking handoff</p>
+            <h2 id="napa-facial-booking" className="mb-5 text-3xl font-medium tracking-[-0.04em] text-rose md:text-5xl">
               Begin at the Initial Skin Health Consult.
             </h2>
             <p className="text-lg font-light leading-relaxed text-ink/70">
@@ -280,14 +280,14 @@ export default function NapaFacialsPage() {
             </p>
           </div>
           <div className="border-l-4 border-rose bg-rose-blush p-7 md:p-10">
-            <p className="mb-3 text-[0.6875rem] font-bold uppercase tracking-[0.18em] text-rose-dark">Clear before treatment</p>
+            <p className="mb-3 text-[0.6875rem] font-bold uppercase tracking-[0.18em] text-rose">Clear before treatment</p>
             <p className="mb-6 text-lg leading-8 text-silver-dark">
               Review the recommended service, included steps, relevant preparation and aftercare, and current total before proceeding.
             </p>
-            <Button href={BOOKING_HREF} data-cta="service-booking" className="rounded-full">
+            <Button disableHover href={BOOKING_HREF} data-cta="service-booking" className="rounded-full">
               Book Initial Consult
             </Button>
-            <Link href="/services/facials" className="mt-6 block text-sm font-semibold text-rose-text underline decoration-rose-light underline-offset-4 hover:text-rose-dark">
+            <Link href="/services/facials" className="mt-6 block text-sm font-semibold text-rose-text underline decoration-rose-light underline-offset-4 hover:text-rose">
               Read the full facial guide →
             </Link>
           </div>
@@ -297,8 +297,8 @@ export default function NapaFacialsPage() {
       <section className="bg-rose-blush py-20 md:py-24" aria-labelledby="napa-facial-compare">
         <div className="mx-auto grid max-w-[1040px] gap-8 px-6 md:grid-cols-[1fr_auto] md:items-center md:px-8">
           <div>
-            <p className="mb-3 text-[0.6875rem] font-bold uppercase tracking-[0.2em] text-rose-dark">Comparing skin-care paths?</p>
-            <h2 id="napa-facial-compare" className="mb-3 text-3xl font-medium tracking-[-0.035em] text-ink">
+            <p className="mb-3 text-[0.6875rem] font-bold uppercase tracking-[0.2em] text-rose">Comparing skin-care paths?</p>
+            <h2 id="napa-facial-compare" className="mb-3 text-3xl font-medium tracking-[-0.035em] text-rose">
               A facial, HydraFacial, and laser procedure are not interchangeable.
             </h2>
             <p className="max-w-[760px] text-ink/70">
@@ -306,7 +306,7 @@ export default function NapaFacialsPage() {
             </p>
           </div>
           <div className="flex flex-col gap-3">
-            <Button href="/napa/hydrafacial" variant="ghost" className="rounded-full bg-white">Explore HydraFacial</Button>
+            <Button href="/napa/hydrafacial" variant="ghost" disableHover className="rounded-full bg-white">Explore HydraFacial</Button>
             <Link href="/napa/laser" className="text-center text-sm font-semibold text-rose-text underline underline-offset-4">Compare laser options</Link>
           </div>
         </div>
@@ -314,34 +314,34 @@ export default function NapaFacialsPage() {
 
       <section className="py-20 md:py-28" aria-labelledby="napa-facial-faq">
         <div className="mx-auto max-w-[900px] px-6 md:px-8">
-          <p className="mb-4 text-[0.6875rem] font-bold uppercase tracking-[0.2em] text-rose-dark">Questions, answered</p>
-          <h2 id="napa-facial-faq" className="mb-8 text-3xl font-medium tracking-[-0.035em] text-ink md:text-5xl">
+          <p className="mb-4 text-[0.6875rem] font-bold uppercase tracking-[0.2em] text-rose">Questions, answered</p>
+          <h2 id="napa-facial-faq" className="mb-8 text-3xl font-medium tracking-[-0.035em] text-rose md:text-5xl">
             Napa facial FAQ
           </h2>
           <FaqAccordion items={faqs} />
         </div>
       </section>
 
-      <section className="bg-rose-cta py-20 text-center text-ink" aria-labelledby="napa-facial-next-step">
+      <section className="bg-rose py-20 text-center text-white" aria-labelledby="napa-facial-next-step">
         <div className="mx-auto max-w-[740px] px-6">
           <h2 id="napa-facial-next-step" className="mb-4 text-3xl font-medium tracking-[-0.035em] md:text-5xl">
             Put your skin—not a trend—at the center.
           </h2>
-          <p className="mb-8 text-lg font-light leading-relaxed text-ink/75">
+          <p className="mb-8 text-lg font-light leading-relaxed text-white/90">
             Start with the verified Napa consult or call Rella with a question before choosing a service.
           </p>
           <div className="flex flex-col justify-center gap-3 sm:flex-row">
-            <Button href={BOOKING_HREF} data-cta="service-booking" className="rounded-full bg-white !text-ink hover:bg-white/90 hover:!text-ink">
+            <Button disableHover href={BOOKING_HREF} data-cta="service-booking" className="rounded-full bg-white !text-rose">
               Book Skin Health Consult
             </Button>
-            <Button href="tel:+17073582928" data-cta="phone" variant="ghost">
+            <Button disableHover href="tel:+17073582928" data-cta="phone" variant="ghost" className="!border-white !bg-white !text-rose">
               Call Rella
             </Button>
           </div>
-          <p className="mt-6 text-xs leading-6 text-ink/75">
+          <p className="mt-6 text-xs leading-6 text-white/80">
             Individual response varies. Suitability, products, treatment steps, possible temporary effects, preparation, and aftercare depend on the exact service and your skin.
           </p>
-          <div className="mt-5 flex flex-wrap justify-center gap-x-5 gap-y-2 text-xs text-ink/75">
+          <div className="mt-5 flex flex-wrap justify-center gap-x-5 gap-y-2 text-xs text-white/80">
             <Link href="/cancellation-policy" className="underline underline-offset-4 hover:text-ink">Cancellation policy</Link>
             <Link href="/locations/napa" className="underline underline-offset-4 hover:text-ink">Napa clinic details</Link>
           </div>

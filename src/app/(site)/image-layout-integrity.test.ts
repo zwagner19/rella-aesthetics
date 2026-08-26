@@ -44,8 +44,9 @@ describe("responsive image-layout integrity", () => {
     expect(serviceCardSource).toContain("aspect-[4/5]");
     expect(serviceCardSource).toContain("object-cover object-center");
     expect(servicesSource).toContain("aspect-[4/5]");
-    expect(servicesSource).toContain("aspect-[3/2]");
-    expect(servicesSource).toContain("md:aspect-[16/7]");
+    expect(servicesSource).not.toContain("aspect-[3/2]");
+    expect(servicesSource).not.toContain("md:aspect-[16/7]");
+    expect(servicesSource).not.toContain("vacaville-treatment-room.jpg");
     expect(treatmentSource).toContain("aspect-[4/5]");
     expect(treatmentSource).toContain("md:aspect-[4/3]");
     expect(weightLossSource).toContain("aspect-[4/3]");

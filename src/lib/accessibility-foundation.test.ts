@@ -35,7 +35,7 @@ describe("designer-approved color hierarchy", () => {
 
     expect(button).toContain("border-rose bg-rose text-white");
     expect(button).toContain("border-rose bg-white text-rose");
-    expect(sectionHeader).toContain("italic tracking-[0.04em] text-ink");
+    expect(sectionHeader).toContain('tone === "light" ? "text-white" : "text-ink"');
     expect(trustStrip).toContain("bg-rose px-5 text-center");
     expect(trustStrip).toContain("text-white");
     expect(membership).toContain("bg-rose");

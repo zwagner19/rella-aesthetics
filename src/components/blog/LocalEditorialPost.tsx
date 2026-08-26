@@ -154,11 +154,12 @@ export function LocalEditorialPost({
               <Button
                 href={NAPA_BOOKING_HREF}
                 data-cta="service-booking"
+                disableHover
                 className="rounded-full"
               >
                 Book Napa Botox
               </Button>
-              <Button href="/napa/botox" variant="ghost" className="rounded-full bg-white/70">
+              <Button href="/napa/botox" variant="ghost" disableHover className="rounded-full bg-white/70">
                 View Napa Treatment Page
               </Button>
             </div>
@@ -237,6 +238,7 @@ export function LocalEditorialPost({
                       <Button
                         href={NAPA_BOOKING_HREF}
                         data-cta="service-booking"
+                        disableHover
                         className="rounded-full"
                       >
                         See Napa Tox Times
@@ -321,7 +323,8 @@ export function LocalEditorialPost({
             <Button
               href={NAPA_BOOKING_HREF}
               data-cta="service-booking"
-              className="rounded-full !border-white !bg-white !text-rose hover:!border-white hover:!bg-white hover:!text-rose"
+              disableHover
+              className="rounded-full !border-white !bg-white !text-rose"
             >
               Book Napa Botox
             </Button>

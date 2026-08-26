@@ -32,11 +32,12 @@ describe("designer color follow-up", () => {
 
     expect(violations).toEqual([]);
     expect(Object.fromEntries(darkSurfaceCounts)).toEqual({
+      "src/app/(site)/book/page.tsx": 1,
       "src/app/(site)/gallery/page.tsx": 1,
       "src/app/(site)/payment-plans/page.tsx": 1,
       "src/components/pages/LocationServicePage.tsx": 2,
       "src/components/pages/TreatmentServicePage.tsx": 4,
-      "src/components/pages/WeightLossServicePage.tsx": 3,
+      "src/components/pages/WeightLossServicePage.tsx": 4,
     });
   });
 

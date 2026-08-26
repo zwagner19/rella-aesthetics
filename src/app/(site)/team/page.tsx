@@ -271,7 +271,7 @@ export default function TeamPage() {
             </p>
             <Link
               href="/services/weight-loss"
-              className="mt-7 inline-flex border-b border-ink pb-1 text-xs font-bold uppercase tracking-[0.14em] text-ink transition-colors hover:border-rose"
+              className="mt-7 inline-flex border-b border-ink pb-1 text-xs font-bold uppercase tracking-[0.14em] text-ink"
             >
               Explore Medical Weight Loss <span aria-hidden="true">→</span>
             </Link>
@@ -525,13 +525,15 @@ export default function TeamPage() {
             <Button
               href={resolveBookingHref({})}
               variant="light"
-              className="!border-white !bg-white !text-rose hover:!border-white hover:!bg-white hover:!text-rose"
+              disableHover
+              className="!border-white !bg-white !text-rose"
             >
               Book a Consultation
             </Button>
             <Button
               href="/contact"
-              className="!border-white !bg-transparent !text-white hover:!bg-white/10 hover:!text-white"
+              disableHover
+              className="!border-white !bg-transparent !text-white"
             >
               Ask a Question
             </Button>

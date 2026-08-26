@@ -137,20 +137,20 @@ export default function VacavilleFillerPage() {
       <section className="overflow-hidden bg-paper py-16 md:py-24">
         <div className="mx-auto grid max-w-[1200px] items-center gap-12 px-6 md:px-8 lg:grid-cols-[1.04fr_0.96fr] lg:px-12">
           <div>
-            <p className="mb-5 text-[0.6875rem] font-bold uppercase tracking-[0.22em] text-rose-dark">
+            <p className="mb-5 text-[0.6875rem] font-bold uppercase tracking-[0.22em] text-rose">
               Injectables · Downtown Vacaville
             </p>
-            <h1 className="mb-6 text-[clamp(2.75rem,6vw,4.9rem)] font-medium leading-[0.98] tracking-[-0.06em] text-ink">
+            <h1 className="mb-6 text-[clamp(2.75rem,6vw,4.9rem)] font-medium leading-[0.98] tracking-[-0.06em] text-rose">
               Lip &amp; dermal filler in Vacaville.
             </h1>
             <p className="mb-8 max-w-[650px] text-lg font-light leading-relaxed text-silver-dark md:text-xl">
               Consultation-led planning for proportion, product, amount, and timing—with the expected total reviewed before treatment.
             </p>
             <div className="flex flex-col gap-3 sm:flex-row">
-              <Button href={BOOKING_HREF} data-cta="service-booking" className="rounded-full">
+              <Button disableHover href={BOOKING_HREF} data-cta="service-booking" className="rounded-full">
                 Book Dermal Fillers
               </Button>
-              <Button href="tel:+17073582928" data-cta="phone" variant="ghost" className="rounded-full bg-white/75">
+              <Button disableHover href="tel:+17073582928" data-cta="phone" variant="ghost" className="rounded-full bg-white/75">
                 Call 707.358.2928
               </Button>
             </div>
@@ -169,7 +169,7 @@ export default function VacavilleFillerPage() {
               sizes="(min-width: 1024px) 46vw, 92vw"
             />
             <div className="absolute inset-x-0 bottom-0 border-t border-white/30 bg-white/94 p-5 md:p-6">
-              <p className="mb-2 text-[0.625rem] font-bold uppercase tracking-[0.2em] text-rose-dark">Rella Aesthetics — Vacaville</p>
+              <p className="mb-2 text-[0.625rem] font-bold uppercase tracking-[0.2em] text-rose">Rella Aesthetics — Vacaville</p>
               <p className="text-lg font-medium leading-snug text-ink">542 Main St · Tuesday–Friday, 9am–5pm · Saturday, 9am–1pm · Sunday–Monday: Closed</p>
             </div>
           </div>
@@ -185,8 +185,8 @@ export default function VacavilleFillerPage() {
         <div className="mx-auto max-w-[1120px] px-6 md:px-8">
           <div className="grid gap-8 lg:grid-cols-[0.8fr_1.2fr] lg:items-start">
             <div>
-              <p className="mb-4 text-[0.6875rem] font-bold uppercase tracking-[0.2em] text-rose-dark">Current pricing</p>
-              <h2 id="vacaville-filler-pricing" className="mb-5 text-3xl font-medium tracking-[-0.04em] text-ink md:text-5xl">
+              <p className="mb-4 text-[0.6875rem] font-bold uppercase tracking-[0.2em] text-rose">Current pricing</p>
+              <h2 id="vacaville-filler-pricing" className="mb-5 text-3xl font-medium tracking-[-0.04em] text-rose md:text-5xl">
                 A range, then a specific plan.
               </h2>
               <p className="text-lg font-light leading-relaxed text-ink/70">
@@ -196,12 +196,12 @@ export default function VacavilleFillerPage() {
             <div className="grid gap-5 sm:grid-cols-2">
               <article className="border border-ink/12 bg-white p-7">
                 <p className="mb-3 text-4xl font-medium tracking-[-0.045em] text-ink">$840</p>
-                <h3 className="mb-4 text-xs font-bold uppercase tracking-[0.16em] text-rose-dark">Base service amount</h3>
+                <h3 className="mb-4 text-xs font-bold uppercase tracking-[0.16em] text-rose">Base service amount</h3>
                 <p className="text-sm leading-7 text-ink/70">The current dermal-filler base amount in Rella&apos;s approved public pricing canon.</p>
               </article>
               <article className="border border-rose bg-rose-blush p-7">
                 <p className="mb-3 text-4xl font-medium tracking-[-0.045em] text-ink">$540–$960</p>
-                <h3 className="mb-4 text-xs font-bold uppercase tracking-[0.16em] text-rose-dark">Active product range</h3>
+                <h3 className="mb-4 text-xs font-bold uppercase tracking-[0.16em] text-rose">Active product range</h3>
                 <p className="text-sm leading-7 text-ink/70">The selected active product and plan determine the expected treatment total.</p>
               </article>
             </div>
@@ -211,17 +211,17 @@ export default function VacavilleFillerPage() {
             <p className="max-w-[700px] text-sm leading-7 text-silver-dark">
               The 2026 Filler Membership is $40/month with a one-year commitment and product-specific member rates. Compare the full plan before enrolling.
             </p>
-            <Link href="/membership" className="shrink-0 text-sm font-semibold text-rose-text underline decoration-rose-light underline-offset-4 hover:text-rose-dark">
+            <Link href="/membership" className="shrink-0 text-sm font-semibold text-rose-text underline decoration-rose-light underline-offset-4 hover:text-rose">
               Compare memberships →
             </Link>
           </div>
         </div>
       </section>
 
-      <section className="bg-ink py-20 text-white md:py-28" aria-labelledby="vacaville-filler-plan">
+      <section className="bg-rose py-20 text-white md:py-28" aria-labelledby="vacaville-filler-plan">
         <div className="mx-auto max-w-[1120px] px-6 md:px-8">
           <div className="mb-12 max-w-[760px]">
-            <p className="mb-4 text-[0.6875rem] font-bold uppercase tracking-[0.2em] text-rose">Plan before product</p>
+            <p className="mb-4 text-[0.6875rem] font-bold uppercase tracking-[0.2em] text-white">Plan before product</p>
             <h2 id="vacaville-filler-plan" className="mb-5 text-3xl font-medium tracking-[-0.04em] md:text-5xl">
               Four variables shape the recommendation.
             </h2>
@@ -232,7 +232,7 @@ export default function VacavilleFillerPage() {
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {planFactors.map((factor, index) => (
               <article key={factor.title} className="border border-white/15 bg-white/[0.04] p-6">
-                <span className="mb-8 inline-flex h-9 w-9 items-center justify-center rounded-full bg-rose text-xs font-bold text-ink">{index + 1}</span>
+                <span className="mb-8 inline-flex h-9 w-9 items-center justify-center rounded-full bg-white text-xs font-bold text-rose">{index + 1}</span>
                 <h3 className="mb-3 text-xl font-medium">{factor.title}</h3>
                 <p className="text-sm leading-7 text-white/70">{factor.body}</p>
               </article>
@@ -244,8 +244,8 @@ export default function VacavilleFillerPage() {
       <section className="py-20 md:py-28" aria-labelledby="vacaville-filler-visit">
         <div className="mx-auto grid max-w-[1040px] gap-8 px-6 md:px-8 lg:grid-cols-2 lg:items-center">
           <div>
-            <p className="mb-4 text-[0.6875rem] font-bold uppercase tracking-[0.2em] text-rose-dark">Your visit</p>
-            <h2 id="vacaville-filler-visit" className="mb-5 text-3xl font-medium tracking-[-0.04em] text-ink md:text-5xl">
+            <p className="mb-4 text-[0.6875rem] font-bold uppercase tracking-[0.2em] text-rose">Your visit</p>
+            <h2 id="vacaville-filler-visit" className="mb-5 text-3xl font-medium tracking-[-0.04em] text-rose md:text-5xl">
               Assessment, options, total, then choice.
             </h2>
             <p className="text-lg font-light leading-relaxed text-ink/70">
@@ -253,11 +253,11 @@ export default function VacavilleFillerPage() {
             </p>
           </div>
           <div className="border-l-4 border-rose bg-rose-blush p-7 md:p-10">
-            <p className="mb-3 text-[0.6875rem] font-bold uppercase tracking-[0.18em] text-rose-dark">Plan around recovery</p>
+            <p className="mb-3 text-[0.6875rem] font-bold uppercase tracking-[0.18em] text-rose">Plan around recovery</p>
             <p className="mb-6 text-lg leading-8 text-silver-dark">
               Temporary swelling, tenderness, or bruising can occur. Share upcoming work, travel, dental care, and important events before choosing a date.
             </p>
-            <Link href="/services/dermal-fillers" className="text-sm font-semibold text-rose-text underline decoration-rose-light underline-offset-4 hover:text-rose-dark">
+            <Link href="/services/dermal-fillers" className="text-sm font-semibold text-rose-text underline decoration-rose-light underline-offset-4 hover:text-rose">
               Read the full dermal filler guide →
             </Link>
           </div>
@@ -267,49 +267,49 @@ export default function VacavilleFillerPage() {
       <section className="bg-rose-blush py-20 md:py-24" aria-labelledby="visit-rella-vacaville-filler">
         <div className="mx-auto grid max-w-[1000px] gap-8 px-6 md:grid-cols-[1fr_auto] md:items-center md:px-8">
           <div>
-            <p className="mb-3 text-[0.6875rem] font-bold uppercase tracking-[0.2em] text-rose-dark">Visit Rella Vacaville</p>
-            <h2 id="visit-rella-vacaville-filler" className="mb-3 text-3xl font-medium tracking-[-0.035em] text-ink">
+            <p className="mb-3 text-[0.6875rem] font-bold uppercase tracking-[0.2em] text-rose">Visit Rella Vacaville</p>
+            <h2 id="visit-rella-vacaville-filler" className="mb-3 text-3xl font-medium tracking-[-0.035em] text-rose">
               542 Main St · Vacaville, CA 95688
             </h2>
             <p className="text-ink/70">Tuesday–Friday: 9am–5pm · Saturday: 9am–1pm · Sunday–Monday: Closed</p>
           </div>
           <div className="flex flex-col gap-3">
-            <Button href={BOOKING_HREF} data-cta="service-booking" className="rounded-full">Book Dermal Fillers</Button>
-            <Button href={clinic.mapUrl} variant="ghost" className="rounded-full bg-white">Get Directions</Button>
+            <Button href={BOOKING_HREF} data-cta="service-booking" disableHover className="rounded-full">Book Dermal Fillers</Button>
+            <Button href={clinic.mapUrl} variant="ghost" disableHover className="rounded-full bg-white">Get Directions</Button>
           </div>
         </div>
       </section>
 
       <section className="py-20 md:py-28" aria-labelledby="vacaville-filler-faq">
         <div className="mx-auto max-w-[900px] px-6 md:px-8">
-          <p className="mb-4 text-[0.6875rem] font-bold uppercase tracking-[0.2em] text-rose-dark">Questions, answered</p>
-          <h2 id="vacaville-filler-faq" className="mb-8 text-3xl font-medium tracking-[-0.035em] text-ink md:text-5xl">
+          <p className="mb-4 text-[0.6875rem] font-bold uppercase tracking-[0.2em] text-rose">Questions, answered</p>
+          <h2 id="vacaville-filler-faq" className="mb-8 text-3xl font-medium tracking-[-0.035em] text-rose md:text-5xl">
             Vacaville filler FAQ
           </h2>
           <FaqAccordion items={faqs} />
         </div>
       </section>
 
-      <section className="bg-rose-cta py-20 text-center text-ink" aria-labelledby="vacaville-filler-next-step">
+      <section className="bg-rose py-20 text-center text-white" aria-labelledby="vacaville-filler-next-step">
         <div className="mx-auto max-w-[720px] px-6">
           <h2 id="vacaville-filler-next-step" className="mb-4 text-3xl font-medium tracking-[-0.035em] md:text-5xl">
             Start with the Vacaville plan.
           </h2>
-          <p className="mb-8 text-lg font-light leading-relaxed text-ink/75">
+          <p className="mb-8 text-lg font-light leading-relaxed text-white/90">
             Open the live Dermal Fillers service, review the current treatment areas and booking terms, or call Rella with a question.
           </p>
           <div className="flex flex-col justify-center gap-3 sm:flex-row">
-            <Button href={BOOKING_HREF} data-cta="service-booking" className="rounded-full bg-white !text-ink hover:bg-white/90 hover:!text-ink">
+            <Button disableHover href={BOOKING_HREF} data-cta="service-booking" className="rounded-full bg-white !text-rose">
               Book Dermal Fillers
             </Button>
-            <Button href="tel:+17073582928" data-cta="phone" variant="ghost">
+            <Button disableHover href="tel:+17073582928" data-cta="phone" variant="ghost">
               Call Rella
             </Button>
           </div>
-          <p className="mt-6 text-xs leading-6 text-ink/75">
+          <p className="mt-6 text-xs leading-6 text-white/80">
             Individual results vary. Treatment eligibility, area, product, amount, and timing require an individualized assessment.
           </p>
-          <div className="mt-5 flex flex-wrap justify-center gap-x-5 gap-y-2 text-xs text-ink/75">
+          <div className="mt-5 flex flex-wrap justify-center gap-x-5 gap-y-2 text-xs text-white/80">
             <Link href="/cancellation-policy" className="underline underline-offset-4 hover:text-ink">Cancellation policy</Link>
             <Link href="/locations/vacaville" className="underline underline-offset-4 hover:text-ink">Vacaville clinic details</Link>
           </div>

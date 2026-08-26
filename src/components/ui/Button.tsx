@@ -7,6 +7,8 @@ type ButtonSize = "default" | "sm";
 interface ButtonBaseProps {
   variant?: ButtonVariant;
   size?: ButtonSize;
+  /** Keep the visual treatment fixed while preserving focus affordances. */
+  disableHover?: boolean;
 }
 
 type ButtonAsButton = ButtonBaseProps &
@@ -19,13 +21,19 @@ type ButtonProps = ButtonAsButton | ButtonAsLink;
 
 const variantStyles: Record<ButtonVariant, string> = {
   primary:
-    "border-[1.5px] border-rose bg-rose text-white hover:bg-rose/85",
+    "border-[1.5px] border-rose bg-rose text-white",
   ghost:
-    "border-[1.5px] border-rose bg-white text-rose hover:bg-rose hover:text-white",
+    "border-[1.5px] border-rose bg-white text-rose",
   light:
-    "border-[1.5px] border-white bg-white text-rose hover:border-rose hover:bg-rose hover:text-white",
-  dark:
-    "border-[1.5px] border-ink bg-ink text-white hover:bg-ink/80",
+    "border-[1.5px] border-white bg-white text-rose",
+  dark: "border-[1.5px] border-ink bg-ink text-white",
+};
+
+const hoverStyles: Record<ButtonVariant, string> = {
+  primary: "hover:bg-rose/85",
+  ghost: "hover:bg-rose hover:text-white",
+  light: "hover:border-rose hover:bg-rose hover:text-white",
+  dark: "hover:bg-ink/80",
 };
 
 const sizeStyles: Record<ButtonSize, string> = {
@@ -39,10 +47,11 @@ const base =
 export function Button({
   variant = "primary",
   size = "default",
+  disableHover = false,
   className = "",
   ...props
 }: ButtonProps) {
-  const classes = `${base} ${variantStyles[variant]} ${sizeStyles[size]} ${className}`;
+  const classes = `${base} ${variantStyles[variant]} ${disableHover ? "" : hoverStyles[variant]} ${sizeStyles[size]} ${className}`;
 
   if ("href" in props && props.href) {
     const { href, ...rest } = props as ButtonAsLink;

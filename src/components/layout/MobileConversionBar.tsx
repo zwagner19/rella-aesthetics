@@ -32,14 +32,14 @@ export function MobileConversionBar({
       <a
         href="tel:+17073582928"
         data-cta="phone"
-        className="inline-flex min-h-12 items-center justify-center rounded-full border-[1.5px] border-rose bg-white px-3 text-[0.6875rem] font-bold uppercase tracking-[0.16em] text-rose transition-colors hover:bg-rose hover:text-white"
+        className="inline-flex min-h-12 items-center justify-center rounded-full border-[1.5px] border-rose bg-white px-3 text-[0.6875rem] font-bold uppercase tracking-[0.16em] text-rose"
       >
         Call Rella
       </a>
       <Link
         href={booking.href}
         data-cta={booking.cta}
-        className="inline-flex min-h-12 items-center justify-center rounded-full border-[1.5px] border-rose bg-rose px-3 text-center text-[0.6875rem] font-bold uppercase tracking-[0.14em] text-white transition-colors hover:bg-rose/85"
+        className="inline-flex min-h-12 items-center justify-center rounded-full border-[1.5px] border-rose bg-rose px-3 text-center text-[0.6875rem] font-bold uppercase tracking-[0.14em] text-white"
       >
         {booking.label}
       </Link>

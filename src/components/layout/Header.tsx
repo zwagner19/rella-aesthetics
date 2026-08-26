@@ -65,7 +65,7 @@ export function Header({ weightLossExperience = false }: { weightLossExperience?
           <Link
             href={booking.href}
             data-cta={booking.cta}
-            className="hidden items-center justify-center rounded-full border-[1.5px] border-rose bg-rose px-7 py-3 text-[0.6875rem] font-bold uppercase tracking-[0.18em] text-white transition-colors hover:bg-rose/85 xl:inline-flex"
+            className="hidden items-center justify-center rounded-full border-[1.5px] border-rose bg-rose px-7 py-3 text-[0.6875rem] font-bold uppercase tracking-[0.18em] text-white xl:inline-flex"
           >
             {booking.label}
           </Link>

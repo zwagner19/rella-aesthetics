@@ -158,20 +158,20 @@ export default function VacavilleHydraFacialPage() {
       <section className="overflow-hidden bg-paper py-16 md:py-24">
         <div className="mx-auto grid max-w-[1200px] items-center gap-12 px-6 md:px-8 lg:grid-cols-[1.04fr_0.96fr] lg:px-12">
           <div>
-            <p className="mb-5 text-[0.6875rem] font-bold uppercase tracking-[0.22em] text-rose-dark">
+            <p className="mb-5 text-[0.6875rem] font-bold uppercase tracking-[0.22em] text-rose">
               Skin health · Downtown Vacaville
             </p>
-            <h1 className="mb-6 text-[clamp(2.75rem,6vw,4.9rem)] font-medium leading-[0.98] tracking-[-0.06em] text-ink">
+            <h1 className="mb-6 text-[clamp(2.75rem,6vw,4.9rem)] font-medium leading-[0.98] tracking-[-0.06em] text-rose">
               HydraFacial in Vacaville.
             </h1>
             <p className="mb-8 max-w-[650px] text-lg font-light leading-relaxed text-silver-dark md:text-xl">
               Cleanse, exfoliate, extract, and hydrate—with three current tiers, clear pricing, and Signature preselected when you book.
             </p>
             <div className="flex flex-col gap-3 sm:flex-row">
-              <Button href={BOOKING_HREF} data-cta="service-booking" className="rounded-full">
+              <Button disableHover href={BOOKING_HREF} data-cta="service-booking" className="rounded-full">
                 Book Signature HydraFacial
               </Button>
-              <Button href="tel:+17073582928" data-cta="phone" variant="ghost" className="rounded-full bg-white/75">
+              <Button disableHover href="tel:+17073582928" data-cta="phone" variant="ghost" className="rounded-full bg-white/75">
                 Call 707.358.2928
               </Button>
             </div>
@@ -190,7 +190,7 @@ export default function VacavilleHydraFacialPage() {
               sizes="(min-width: 1024px) 46vw, 92vw"
             />
             <div className="absolute inset-x-0 bottom-0 border-t border-white/30 bg-white/94 p-5 md:p-6">
-              <p className="mb-2 text-[0.625rem] font-bold uppercase tracking-[0.2em] text-rose-dark">
+              <p className="mb-2 text-[0.625rem] font-bold uppercase tracking-[0.2em] text-rose">
                 Rella Aesthetics — Vacaville
               </p>
               <p className="text-lg font-medium leading-snug text-ink">
@@ -209,10 +209,10 @@ export default function VacavilleHydraFacialPage() {
       <section className="py-20 md:py-28" aria-labelledby="vacaville-hydrafacial-pricing">
         <div className="mx-auto max-w-[1120px] px-6 md:px-8">
           <div className="mb-12 max-w-[780px]">
-            <p className="mb-4 text-[0.6875rem] font-bold uppercase tracking-[0.2em] text-rose-dark">
+            <p className="mb-4 text-[0.6875rem] font-bold uppercase tracking-[0.2em] text-rose">
               Current public pricing
             </p>
-            <h2 id="vacaville-hydrafacial-pricing" className="mb-5 text-3xl font-medium tracking-[-0.04em] text-ink md:text-5xl">
+            <h2 id="vacaville-hydrafacial-pricing" className="mb-5 text-3xl font-medium tracking-[-0.04em] text-rose md:text-5xl">
               Three tiers. One clear starting point.
             </h2>
             <p className="text-lg font-light leading-relaxed text-ink/70">
@@ -226,8 +226,8 @@ export default function VacavilleHydraFacialPage() {
                 className={`border p-7 ${index === 0 ? "border-rose bg-rose-blush" : "border-ink/12 bg-white"}`}
               >
                 <p className="mb-3 text-4xl font-medium tracking-[-0.045em] text-ink">{tier.price}</p>
-                <h3 className="mb-2 text-xl font-medium text-ink">{tier.name}</h3>
-                <p className="mb-4 text-xs font-bold uppercase tracking-[0.14em] text-rose-dark">{tier.timing}</p>
+                <h3 className="mb-2 text-xl font-medium text-rose">{tier.name}</h3>
+                <p className="mb-4 text-xs font-bold uppercase tracking-[0.14em] text-rose">{tier.timing}</p>
                 <p className="text-sm leading-7 text-ink/70">{tier.body}</p>
               </article>
             ))}
@@ -235,10 +235,10 @@ export default function VacavilleHydraFacialPage() {
         </div>
       </section>
 
-      <section className="bg-ink py-20 text-white md:py-28" aria-labelledby="vacaville-hydrafacial-visit">
+      <section className="bg-rose py-20 text-white md:py-28" aria-labelledby="vacaville-hydrafacial-visit">
         <div className="mx-auto max-w-[1120px] px-6 md:px-8">
           <div className="mb-12 max-w-[760px]">
-            <p className="mb-4 text-[0.6875rem] font-bold uppercase tracking-[0.2em] text-rose">Your visit</p>
+            <p className="mb-4 text-[0.6875rem] font-bold uppercase tracking-[0.2em] text-white">Your visit</p>
             <h2 id="vacaville-hydrafacial-visit" className="mb-5 text-3xl font-medium tracking-[-0.04em] md:text-5xl">
               Review, choose, treat, then plan.
             </h2>
@@ -249,7 +249,7 @@ export default function VacavilleHydraFacialPage() {
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {visitSteps.map((step, index) => (
               <article key={step.title} className="border border-white/15 bg-white/[0.04] p-6">
-                <span className="mb-8 inline-flex h-9 w-9 items-center justify-center rounded-full bg-rose text-xs font-bold text-ink">{index + 1}</span>
+                <span className="mb-8 inline-flex h-9 w-9 items-center justify-center rounded-full bg-white text-xs font-bold text-rose">{index + 1}</span>
                 <h3 className="mb-3 text-xl font-medium">{step.title}</h3>
                 <p className="text-sm leading-7 text-white/70">{step.body}</p>
               </article>
@@ -261,8 +261,8 @@ export default function VacavilleHydraFacialPage() {
       <section className="py-20 md:py-28" aria-labelledby="vacaville-hydrafacial-booking">
         <div className="mx-auto grid max-w-[1040px] gap-8 px-6 md:px-8 lg:grid-cols-2 lg:items-center">
           <div>
-            <p className="mb-4 text-[0.6875rem] font-bold uppercase tracking-[0.2em] text-rose-dark">A direct first step</p>
-            <h2 id="vacaville-hydrafacial-booking" className="mb-5 text-3xl font-medium tracking-[-0.04em] text-ink md:text-5xl">
+            <p className="mb-4 text-[0.6875rem] font-bold uppercase tracking-[0.2em] text-rose">A direct first step</p>
+            <h2 id="vacaville-hydrafacial-booking" className="mb-5 text-3xl font-medium tracking-[-0.04em] text-rose md:text-5xl">
               Book Signature without searching the menu.
             </h2>
             <p className="text-lg font-light leading-relaxed text-ink/70">
@@ -270,14 +270,14 @@ export default function VacavilleHydraFacialPage() {
             </p>
           </div>
           <div className="border-l-4 border-rose bg-rose-blush p-7 md:p-10">
-            <p className="mb-3 text-[0.6875rem] font-bold uppercase tracking-[0.18em] text-rose-dark">Live Rella booking handoff</p>
+            <p className="mb-3 text-[0.6875rem] font-bold uppercase tracking-[0.18em] text-rose">Live Rella booking handoff</p>
             <p className="mb-6 text-lg leading-8 text-silver-dark">
               The Signature screen shows the current treatment description, available add-ons, professional selection, timing, and booking terms before confirmation.
             </p>
-            <Button href={BOOKING_HREF} data-cta="service-booking" className="rounded-full">
+            <Button disableHover href={BOOKING_HREF} data-cta="service-booking" className="rounded-full">
               Book Signature HydraFacial
             </Button>
-            <Link href="/services/hydrafacial" className="mt-6 block text-sm font-semibold text-rose-text underline decoration-rose-light underline-offset-4 hover:text-rose-dark">
+            <Link href="/services/hydrafacial" className="mt-6 block text-sm font-semibold text-rose-text underline decoration-rose-light underline-offset-4 hover:text-rose">
               Read the full HydraFacial guide →
             </Link>
           </div>
@@ -287,48 +287,48 @@ export default function VacavilleHydraFacialPage() {
       <section className="bg-rose-blush py-20 md:py-24" aria-labelledby="vacaville-hydrafacial-membership">
         <div className="mx-auto grid max-w-[1000px] gap-8 px-6 md:grid-cols-[1fr_auto] md:items-center md:px-8">
           <div>
-            <p className="mb-3 text-[0.6875rem] font-bold uppercase tracking-[0.2em] text-rose-dark">Membership context</p>
-            <h2 id="vacaville-hydrafacial-membership" className="mb-3 text-3xl font-medium tracking-[-0.035em] text-ink">
+            <p className="mb-3 text-[0.6875rem] font-bold uppercase tracking-[0.2em] text-rose">Membership context</p>
+            <h2 id="vacaville-hydrafacial-membership" className="mb-3 text-3xl font-medium tracking-[-0.035em] text-rose">
               Compare the included HydraFacial terms before enrolling.
             </h2>
             <p className="max-w-[700px] text-ink/70">
               Current injectable memberships include a specified HydraFacial tier after six months of on-time payments, or immediately when the full year is prepaid. Review the complete one-year terms first.
             </p>
           </div>
-          <Button href="/membership" variant="ghost" className="rounded-full bg-white">Compare Memberships</Button>
+          <Button href="/membership" variant="ghost" disableHover className="rounded-full bg-white">Compare Memberships</Button>
         </div>
       </section>
 
       <section className="py-20 md:py-28" aria-labelledby="vacaville-hydrafacial-faq">
         <div className="mx-auto max-w-[900px] px-6 md:px-8">
-          <p className="mb-4 text-[0.6875rem] font-bold uppercase tracking-[0.2em] text-rose-dark">Questions, answered</p>
-          <h2 id="vacaville-hydrafacial-faq" className="mb-8 text-3xl font-medium tracking-[-0.035em] text-ink md:text-5xl">
+          <p className="mb-4 text-[0.6875rem] font-bold uppercase tracking-[0.2em] text-rose">Questions, answered</p>
+          <h2 id="vacaville-hydrafacial-faq" className="mb-8 text-3xl font-medium tracking-[-0.035em] text-rose md:text-5xl">
             Vacaville HydraFacial FAQ
           </h2>
           <FaqAccordion items={faqs} />
         </div>
       </section>
 
-      <section className="bg-rose-cta py-20 text-center text-ink" aria-labelledby="vacaville-hydrafacial-next-step">
+      <section className="bg-rose py-20 text-center text-white" aria-labelledby="vacaville-hydrafacial-next-step">
         <div className="mx-auto max-w-[720px] px-6">
           <h2 id="vacaville-hydrafacial-next-step" className="mb-4 text-3xl font-medium tracking-[-0.035em] md:text-5xl">
             Start with Signature in Vacaville.
           </h2>
-          <p className="mb-8 text-lg font-light leading-relaxed text-ink/75">
+          <p className="mb-8 text-lg font-light leading-relaxed text-white/90">
             Open the live Signature service, review the professional and booking terms, or call Rella if you want help comparing tiers.
           </p>
           <div className="flex flex-col justify-center gap-3 sm:flex-row">
-            <Button href={BOOKING_HREF} data-cta="service-booking" className="rounded-full bg-white !text-ink hover:bg-white/90 hover:!text-ink">
+            <Button disableHover href={BOOKING_HREF} data-cta="service-booking" className="rounded-full bg-white !text-rose">
               Book Signature HydraFacial
             </Button>
-            <Button href="tel:+17073582928" data-cta="phone" variant="ghost">
+            <Button disableHover href="tel:+17073582928" data-cta="phone" variant="ghost">
               Call Rella
             </Button>
           </div>
-          <p className="mt-6 text-xs leading-6 text-ink/75">
+          <p className="mt-6 text-xs leading-6 text-white/80">
             Individual results and skin response vary. Service tier, customization, and suitability should be reviewed with the treating provider, particularly after recent procedures or with active skin concerns.
           </p>
-          <div className="mt-5 flex flex-wrap justify-center gap-x-5 gap-y-2 text-xs text-ink/75">
+          <div className="mt-5 flex flex-wrap justify-center gap-x-5 gap-y-2 text-xs text-white/80">
             <Link href="/cancellation-policy" className="underline underline-offset-4 hover:text-ink">Cancellation policy</Link>
             <Link href="/locations/vacaville" className="underline underline-offset-4 hover:text-ink">Vacaville clinic details</Link>
           </div>

@@ -5,19 +5,26 @@ interface FaqItem {
 
 interface FaqAccordionProps {
   items: readonly FaqItem[];
+  tone?: "default" | "light";
 }
 
-export function FaqAccordion({ items }: FaqAccordionProps) {
+export function FaqAccordion({ items, tone = "default" }: FaqAccordionProps) {
+  const isLight = tone === "light";
+  const borderColor = isLight ? "border-white/35" : "border-ink/10";
+  const questionColor = isLight ? "text-white" : "text-ink";
+  const iconColor = isLight ? "text-white" : "text-ink";
+  const answerColor = isLight ? "text-white/80" : "text-ink/70";
+
   return (
-    <div className="max-w-[860px] border-t border-ink/10">
+    <div className={`max-w-[860px] border-t ${borderColor}`}>
       {items.map((item, i) => (
-        <details key={i} className="group border-b border-ink/10">
-          <summary className="flex cursor-pointer list-none items-center justify-between py-5 font-medium text-ink transition-colors hover:text-ink/70 [&::-webkit-details-marker]:hidden">
+        <details key={i} className={`group border-b ${borderColor}`}>
+          <summary className={`flex cursor-pointer list-none items-center justify-between py-5 font-medium ${questionColor} transition-colors hover:opacity-75 [&::-webkit-details-marker]:hidden`}>
             <span>{item.question}</span>
-            <span className="ml-4 shrink-0 text-xl font-light text-ink group-open:hidden">+</span>
-            <span className="ml-4 hidden shrink-0 text-xl font-light text-ink group-open:inline">&minus;</span>
+            <span className={`ml-4 shrink-0 text-xl font-light ${iconColor} group-open:hidden`}>+</span>
+            <span className={`ml-4 hidden shrink-0 text-xl font-light ${iconColor} group-open:inline`}>&minus;</span>
           </summary>
-          <div className="pb-6 text-[0.9375rem] font-light leading-relaxed text-ink/70">
+          <div className={`pb-6 text-[0.9375rem] font-light leading-relaxed ${answerColor}`}>
             <p>{item.answer}</p>
           </div>
         </details>

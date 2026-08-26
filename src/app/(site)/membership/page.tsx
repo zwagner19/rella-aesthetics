@@ -81,7 +81,8 @@ export default function MembershipPage() {
                 <Button
                   href="/contact?intent=membership"
                   variant="ghost"
-                  className="w-full !border-rose !bg-white !text-rose hover:!bg-rose hover:!text-white"
+                  disableHover
+                  className="w-full !border-rose !bg-white !text-rose"
                 >
                   Ask About Membership
                 </Button>
@@ -105,7 +106,7 @@ export default function MembershipPage() {
           <h2 className="mb-12 text-3xl font-medium uppercase leading-[1.08] tracking-[0.08em] text-white md:text-5xl">
             Membership FAQ
           </h2>
-          <FaqAccordion items={faq} />
+          <FaqAccordion items={faq} tone="light" />
         </div>
       </section>
     </>

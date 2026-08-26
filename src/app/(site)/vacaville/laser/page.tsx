@@ -156,20 +156,20 @@ export default function VacavilleLaserPage() {
       <section className="overflow-hidden bg-paper py-16 md:py-24">
         <div className="mx-auto grid max-w-[1200px] items-center gap-12 px-6 md:px-8 lg:grid-cols-[1.04fr_0.96fr] lg:px-12">
           <div>
-            <p className="mb-5 text-[0.6875rem] font-bold uppercase tracking-[0.22em] text-rose-dark">
+            <p className="mb-5 text-[0.6875rem] font-bold uppercase tracking-[0.22em] text-rose">
               Laser &amp; light-based care · Downtown Vacaville
             </p>
-            <h1 className="mb-6 text-[clamp(2.75rem,6vw,4.9rem)] font-medium leading-[0.98] tracking-[-0.06em] text-ink">
+            <h1 className="mb-6 text-[clamp(2.75rem,6vw,4.9rem)] font-medium leading-[0.98] tracking-[-0.06em] text-rose">
               Laser skin planning in Vacaville.
             </h1>
             <p className="mb-8 max-w-[650px] text-lg font-light leading-relaxed text-silver-dark md:text-xl">
               Start with the required laser consult, then match the concern to the device, treatment area, recovery window, and current price.
             </p>
             <div className="flex flex-col gap-3 sm:flex-row">
-              <Button href={BOOKING_HREF} data-cta="service-booking" className="rounded-full">
+              <Button disableHover href={BOOKING_HREF} data-cta="service-booking" className="rounded-full">
                 Book Initial Laser Consult
               </Button>
-              <Button href="tel:+17073582928" data-cta="phone" variant="ghost" className="rounded-full bg-white/75">
+              <Button disableHover href="tel:+17073582928" data-cta="phone" variant="ghost" className="rounded-full bg-white/75">
                 Call 707.358.2928
               </Button>
             </div>
@@ -188,7 +188,7 @@ export default function VacavilleLaserPage() {
               sizes="(min-width: 1024px) 46vw, 92vw"
             />
             <div className="absolute inset-x-0 bottom-0 border-t border-white/30 bg-white/94 p-5 md:p-6">
-              <p className="mb-2 text-[0.625rem] font-bold uppercase tracking-[0.2em] text-rose-dark">
+              <p className="mb-2 text-[0.625rem] font-bold uppercase tracking-[0.2em] text-rose">
                 Rella Aesthetics — Vacaville
               </p>
               <p className="text-lg font-medium leading-snug text-ink">
@@ -207,10 +207,10 @@ export default function VacavilleLaserPage() {
       <section className="py-20 md:py-28" aria-labelledby="vacaville-laser-options">
         <div className="mx-auto max-w-[1120px] px-6 md:px-8">
           <div className="mb-12 max-w-[780px]">
-            <p className="mb-4 text-[0.6875rem] font-bold uppercase tracking-[0.2em] text-rose-dark">
+            <p className="mb-4 text-[0.6875rem] font-bold uppercase tracking-[0.2em] text-rose">
               Device before hype
             </p>
-            <h2 id="vacaville-laser-options" className="mb-5 text-3xl font-medium tracking-[-0.04em] text-ink md:text-5xl">
+            <h2 id="vacaville-laser-options" className="mb-5 text-3xl font-medium tracking-[-0.04em] text-rose md:text-5xl">
               Different concerns need different paths.
             </h2>
             <p className="text-lg font-light leading-relaxed text-ink/70">
@@ -220,7 +220,7 @@ export default function VacavilleLaserPage() {
           <div className="grid gap-5 sm:grid-cols-2">
             {treatmentPaths.map((path) => (
               <article key={path.title} className="border border-ink/12 bg-white p-7 md:p-8">
-                <h3 className="mb-4 text-xl font-medium text-ink">{path.title}</h3>
+                <h3 className="mb-4 text-xl font-medium text-rose">{path.title}</h3>
                 <p className="text-sm leading-7 text-ink/70">{path.body}</p>
               </article>
             ))}
@@ -231,10 +231,10 @@ export default function VacavilleLaserPage() {
       <section className="bg-rose-blush py-20 md:py-28" aria-labelledby="vacaville-laser-pricing">
         <div className="mx-auto grid max-w-[1120px] gap-9 px-6 md:px-8 lg:grid-cols-[0.78fr_1.22fr] lg:items-start">
           <div>
-            <p className="mb-4 text-[0.6875rem] font-bold uppercase tracking-[0.2em] text-rose-dark">
+            <p className="mb-4 text-[0.6875rem] font-bold uppercase tracking-[0.2em] text-rose">
               Current full-face pricing
             </p>
-            <h2 id="vacaville-laser-pricing" className="mb-5 text-3xl font-medium tracking-[-0.04em] text-ink md:text-5xl">
+            <h2 id="vacaville-laser-pricing" className="mb-5 text-3xl font-medium tracking-[-0.04em] text-rose md:text-5xl">
               Two verified amounts. No invented starting price.
             </h2>
             <p className="text-lg font-light leading-relaxed text-ink/70">
@@ -244,22 +244,22 @@ export default function VacavilleLaserPage() {
           <div className="grid gap-5 sm:grid-cols-2">
             <article className="border border-ink/12 bg-white p-7">
               <p className="mb-3 text-4xl font-medium tracking-[-0.045em] text-ink">$420</p>
-              <h3 className="mb-4 text-xs font-bold uppercase tracking-[0.16em] text-rose-dark">IPL full face</h3>
+              <h3 className="mb-4 text-xs font-bold uppercase tracking-[0.16em] text-rose">IPL full face</h3>
               <p className="text-sm leading-7 text-ink/70">Current approved public amount for the full-face IPL service.</p>
             </article>
             <article className="border border-rose bg-white p-7">
               <p className="mb-3 text-4xl font-medium tracking-[-0.045em] text-ink">$1,440</p>
-              <h3 className="mb-4 text-xs font-bold uppercase tracking-[0.16em] text-rose-dark">CO2 CoolPeel full face</h3>
+              <h3 className="mb-4 text-xs font-bold uppercase tracking-[0.16em] text-rose">CO2 CoolPeel full face</h3>
               <p className="text-sm leading-7 text-ink/70">Current approved public amount for the full-face CoolPeel service.</p>
             </article>
           </div>
         </div>
       </section>
 
-      <section className="bg-ink py-20 text-white md:py-28" aria-labelledby="vacaville-laser-plan">
+      <section className="bg-rose py-20 text-white md:py-28" aria-labelledby="vacaville-laser-plan">
         <div className="mx-auto max-w-[1120px] px-6 md:px-8">
           <div className="mb-12 max-w-[760px]">
-            <p className="mb-4 text-[0.6875rem] font-bold uppercase tracking-[0.2em] text-rose">Plan the treatment and the calendar</p>
+            <p className="mb-4 text-[0.6875rem] font-bold uppercase tracking-[0.2em] text-white">Plan the treatment and the calendar</p>
             <h2 id="vacaville-laser-plan" className="mb-5 text-3xl font-medium tracking-[-0.04em] md:text-5xl">
               Four factors shape the recommendation.
             </h2>
@@ -270,7 +270,7 @@ export default function VacavilleLaserPage() {
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {planningFactors.map((factor, index) => (
               <article key={factor.title} className="border border-white/15 bg-white/[0.04] p-6">
-                <span className="mb-8 inline-flex h-9 w-9 items-center justify-center rounded-full bg-rose text-xs font-bold text-ink">
+                <span className="mb-8 inline-flex h-9 w-9 items-center justify-center rounded-full bg-white text-xs font-bold text-rose">
                   {index + 1}
                 </span>
                 <h3 className="mb-3 text-xl font-medium">{factor.title}</h3>
@@ -284,8 +284,8 @@ export default function VacavilleLaserPage() {
       <section className="py-20 md:py-28" aria-labelledby="vacaville-laser-consult">
         <div className="mx-auto grid max-w-[1040px] gap-8 px-6 md:px-8 lg:grid-cols-2 lg:items-center">
           <div>
-            <p className="mb-4 text-[0.6875rem] font-bold uppercase tracking-[0.2em] text-rose-dark">Your first step</p>
-            <h2 id="vacaville-laser-consult" className="mb-5 text-3xl font-medium tracking-[-0.04em] text-ink md:text-5xl">
+            <p className="mb-4 text-[0.6875rem] font-bold uppercase tracking-[0.2em] text-rose">Your first step</p>
+            <h2 id="vacaville-laser-consult" className="mb-5 text-3xl font-medium tracking-[-0.04em] text-rose md:text-5xl">
               Start on the consult—not the wrong device.
             </h2>
             <p className="text-lg font-light leading-relaxed text-ink/70">
@@ -293,14 +293,14 @@ export default function VacavilleLaserPage() {
             </p>
           </div>
           <div className="border-l-4 border-rose bg-rose-blush p-7 md:p-10">
-            <p className="mb-3 text-[0.6875rem] font-bold uppercase tracking-[0.18em] text-rose-dark">Direct booking handoff</p>
+            <p className="mb-3 text-[0.6875rem] font-bold uppercase tracking-[0.18em] text-rose">Direct booking handoff</p>
             <p className="mb-6 text-lg leading-8 text-silver-dark">
               The button below opens the exact Vacaville Initial Laser Consult screen. Rella&apos;s booking experience shows the current professional, timing, and booking terms before confirmation.
             </p>
-            <Button href={BOOKING_HREF} data-cta="service-booking" className="rounded-full">
+            <Button disableHover href={BOOKING_HREF} data-cta="service-booking" className="rounded-full">
               Book Initial Laser Consult
             </Button>
-            <Link href="/services/laser-treatments" className="mt-6 block text-sm font-semibold text-rose-text underline decoration-rose-light underline-offset-4 hover:text-rose-dark">
+            <Link href="/services/laser-treatments" className="mt-6 block text-sm font-semibold text-rose-text underline decoration-rose-light underline-offset-4 hover:text-rose">
               Read the full laser-treatment guide →
             </Link>
           </div>
@@ -310,46 +310,46 @@ export default function VacavilleLaserPage() {
       <section className="bg-rose-blush py-20 md:py-24" aria-labelledby="visit-rella-vacaville-laser">
         <div className="mx-auto grid max-w-[1000px] gap-8 px-6 md:grid-cols-[1fr_auto] md:items-center md:px-8">
           <div>
-            <p className="mb-3 text-[0.6875rem] font-bold uppercase tracking-[0.2em] text-rose-dark">Visit Rella Vacaville</p>
-            <h2 id="visit-rella-vacaville-laser" className="mb-3 text-3xl font-medium tracking-[-0.035em] text-ink">
+            <p className="mb-3 text-[0.6875rem] font-bold uppercase tracking-[0.2em] text-rose">Visit Rella Vacaville</p>
+            <h2 id="visit-rella-vacaville-laser" className="mb-3 text-3xl font-medium tracking-[-0.035em] text-rose">
               542 Main St · Vacaville, CA 95688
             </h2>
             <p className="text-ink/70">Tuesday–Friday: 9am–5pm · Saturday: 9am–1pm · Sunday–Monday: Closed</p>
           </div>
-          <Button href={clinic.mapUrl} variant="ghost" className="rounded-full bg-white">Get Directions</Button>
+          <Button href={clinic.mapUrl} variant="ghost" disableHover className="rounded-full bg-white">Get Directions</Button>
         </div>
       </section>
 
       <section className="py-20 md:py-28" aria-labelledby="vacaville-laser-faq">
         <div className="mx-auto max-w-[900px] px-6 md:px-8">
-          <p className="mb-4 text-[0.6875rem] font-bold uppercase tracking-[0.2em] text-rose-dark">Questions, answered</p>
-          <h2 id="vacaville-laser-faq" className="mb-8 text-3xl font-medium tracking-[-0.035em] text-ink md:text-5xl">
+          <p className="mb-4 text-[0.6875rem] font-bold uppercase tracking-[0.2em] text-rose">Questions, answered</p>
+          <h2 id="vacaville-laser-faq" className="mb-8 text-3xl font-medium tracking-[-0.035em] text-rose md:text-5xl">
             Vacaville laser FAQ
           </h2>
           <FaqAccordion items={faqs} />
         </div>
       </section>
 
-      <section className="bg-rose-cta py-20 text-center text-ink" aria-labelledby="vacaville-laser-next-step">
+      <section className="bg-rose py-20 text-center text-white" aria-labelledby="vacaville-laser-next-step">
         <div className="mx-auto max-w-[720px] px-6">
           <h2 id="vacaville-laser-next-step" className="mb-4 text-3xl font-medium tracking-[-0.035em] md:text-5xl">
             Choose the device after the assessment.
           </h2>
-          <p className="mb-8 text-lg font-light leading-relaxed text-ink/75">
+          <p className="mb-8 text-lg font-light leading-relaxed text-white/90">
             Open the exact Vacaville consult, review the live booking terms, and give the team the context needed to recommend a responsible path.
           </p>
           <div className="flex flex-col justify-center gap-3 sm:flex-row">
-            <Button href={BOOKING_HREF} data-cta="service-booking" className="rounded-full bg-white !text-ink hover:bg-white/90 hover:!text-ink">
+            <Button disableHover href={BOOKING_HREF} data-cta="service-booking" className="rounded-full bg-white !text-rose">
               Book Initial Laser Consult
             </Button>
-            <Button href="tel:+17073582928" data-cta="phone" variant="ghost">
+            <Button disableHover href="tel:+17073582928" data-cta="phone" variant="ghost">
               Call Rella
             </Button>
           </div>
-          <p className="mt-6 text-xs leading-6 text-ink/75">
+          <p className="mt-6 text-xs leading-6 text-white/80">
             Individual results vary. Laser and light-based treatment eligibility, device selection, settings, treatment area, and timing require an individualized assessment.
           </p>
-          <div className="mt-5 flex flex-wrap justify-center gap-x-5 gap-y-2 text-xs text-ink/75">
+          <div className="mt-5 flex flex-wrap justify-center gap-x-5 gap-y-2 text-xs text-white/80">
             <Link href="/cancellation-policy" className="underline underline-offset-4 hover:text-ink">Cancellation policy</Link>
             <Link href="/locations/vacaville" className="underline underline-offset-4 hover:text-ink">Vacaville clinic details</Link>
           </div>

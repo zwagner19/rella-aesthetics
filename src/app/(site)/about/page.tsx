@@ -80,7 +80,7 @@ export default function AboutPage() {
             <h1 className="mb-7 max-w-[720px] text-4xl font-bold uppercase leading-[1.04] tracking-[0.06em] text-white md:text-6xl">
               Care built on judgment, honesty, and the right next step.
             </h1>
-            <p className="mb-7 max-w-[650px] text-lg font-light leading-relaxed text-ink/70 md:text-xl">
+            <p className="mb-7 max-w-[650px] text-lg font-light leading-relaxed text-white md:text-xl">
               Rella Aesthetics brings aesthetic care and medical weight
               management together under founder and owner Dr. Zachary Wagner.
               Dr. Wagner is Rella&apos;s medical weight-loss physician;
@@ -89,24 +89,26 @@ export default function AboutPage() {
             </p>
             <div className="mb-8 border-l-2 border-rose pl-5">
               <p className="font-medium text-white">Dr. Zachary Wagner, DO</p>
-              <p className="mt-1 text-sm leading-relaxed text-ink/70">
+              <p className="mt-1 text-sm leading-relaxed text-white">
                 Founder &amp; Owner · Medical Weight-Loss Physician
               </p>
-              <p className="mt-3 text-sm leading-relaxed text-ink/70">
+              <p className="mt-3 text-sm leading-relaxed text-white">
                 Dr. Wagner does not perform aesthetic treatments or injections.
               </p>
             </div>
             <div className="flex flex-col gap-3 sm:flex-row">
               <Button
                 href={resolveBookingHref({})}
-                className="!border-white !bg-rose !text-white hover:!border-white hover:!bg-rose hover:!text-white"
+                disableHover
+                className="!border-white !bg-rose !text-white"
               >
                 Book a Consultation
               </Button>
               <Button
                 href="tel:+17073582928"
                 variant="ghost"
-                className="!border-rose !bg-white !text-rose hover:!border-rose hover:!bg-white hover:!text-rose"
+                disableHover
+                className="!border-rose !bg-white !text-rose"
               >
                 Call 707.358.2928
               </Button>
@@ -183,7 +185,7 @@ export default function AboutPage() {
             <h2 className="text-3xl font-bold uppercase tracking-[0.06em] text-white md:text-4xl">
               Meet the people behind Rella.
             </h2>
-            <p className="mt-4 leading-relaxed text-ink/70">
+            <p className="mt-4 leading-relaxed text-white">
               Get to know Rella&apos;s leadership and care team serving
               Vacaville and Napa.
             </p>
@@ -191,7 +193,8 @@ export default function AboutPage() {
           <Button
             href="/team"
             variant="ghost"
-            className="shrink-0 !border-rose !bg-white !text-rose hover:!border-rose hover:!bg-white hover:!text-rose"
+            disableHover
+            className="shrink-0 !border-rose !bg-white !text-rose"
           >
             Meet the Team
           </Button>
@@ -279,13 +282,15 @@ export default function AboutPage() {
           <div className="flex flex-col gap-3 sm:flex-row">
             <Button
               href={resolveBookingHref({})}
-              className="!border-white !bg-transparent !text-white hover:!border-white hover:!bg-transparent hover:!text-white"
+              disableHover
+              className="!border-white !bg-transparent !text-white"
             >
               Book a Consultation
             </Button>
             <Button
               href="tel:+17073582928"
-              className="!border-white !bg-white !text-rose hover:!border-white hover:!bg-white hover:!text-rose"
+              disableHover
+              className="!border-white !bg-white !text-rose"
             >
               Call Rella
             </Button>

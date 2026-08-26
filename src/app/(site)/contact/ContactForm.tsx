@@ -203,7 +203,8 @@ export function ContactForm({ initialServiceInterest = "" }: { initialServiceInt
       <Button
         type="submit"
         disabled={status === "sending"}
-        className="w-full !text-white hover:!text-white sm:w-auto"
+        disableHover
+        className="w-full !text-white sm:w-auto"
       >
         {status === "sending" ? "Sending..." : "Send Message"}
       </Button>

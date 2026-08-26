@@ -197,7 +197,8 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
           </p>
           <Button
             href={resolveBookingHref({})}
-            className="!border-white !bg-white !text-rose hover:!border-white hover:!bg-white hover:!text-rose"
+            disableHover
+            className="!border-white !bg-white !text-rose"
           >
             Book Consultation
           </Button>

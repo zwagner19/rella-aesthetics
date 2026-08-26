@@ -49,7 +49,7 @@ export function LocationCard({
           href={googleReviewUrl}
           target="_blank"
           rel="noreferrer"
-          className="inline-flex min-h-11 w-full items-center justify-center gap-2 border border-rose bg-white px-4 py-3 text-center text-[0.6875rem] font-bold uppercase tracking-[0.12em] text-rose transition-colors hover:bg-white hover:text-rose focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink sm:w-auto"
+          className="inline-flex min-h-11 w-full items-center justify-center gap-2 border border-rose bg-white px-4 py-3 text-center text-[0.6875rem] font-bold uppercase tracking-[0.12em] text-rose focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink sm:w-auto"
         >
           Leave a Google review for Rella {name}
           <span aria-hidden="true">↗</span>

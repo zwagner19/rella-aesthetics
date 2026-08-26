@@ -152,20 +152,20 @@ export default function VacavilleMicroneedlingPage() {
       <section className="overflow-hidden bg-paper py-16 md:py-24">
         <div className="mx-auto grid max-w-[1200px] items-center gap-12 px-6 md:px-8 lg:grid-cols-[1.04fr_0.96fr] lg:px-12">
           <div>
-            <p className="mb-5 text-[0.6875rem] font-bold uppercase tracking-[0.22em] text-rose-dark">
+            <p className="mb-5 text-[0.6875rem] font-bold uppercase tracking-[0.22em] text-rose">
               Skin treatment · Downtown Vacaville
             </p>
-            <h1 className="mb-6 text-[clamp(2.75rem,6vw,4.9rem)] font-medium leading-[0.98] tracking-[-0.06em] text-ink">
+            <h1 className="mb-6 text-[clamp(2.75rem,6vw,4.9rem)] font-medium leading-[0.98] tracking-[-0.06em] text-rose">
               Microneedling in Vacaville.
             </h1>
             <p className="mb-8 max-w-[650px] text-lg font-light leading-relaxed text-silver-dark md:text-xl">
               Compare Skin Stylus and RF microneedling, then start with a candidacy and recovery conversation—not a preset package.
             </p>
             <div className="flex flex-col gap-3 sm:flex-row">
-              <Button href={BOOKING_HREF} data-cta="service-booking" className="rounded-full">
+              <Button disableHover href={BOOKING_HREF} data-cta="service-booking" className="rounded-full">
                 Book Initial Consult
               </Button>
-              <Button href="tel:+17073582928" data-cta="phone" variant="ghost" className="rounded-full bg-white/75">
+              <Button disableHover href="tel:+17073582928" data-cta="phone" variant="ghost" className="rounded-full bg-white/75">
                 Call 707.358.2928
               </Button>
             </div>
@@ -184,7 +184,7 @@ export default function VacavilleMicroneedlingPage() {
               sizes="(min-width: 1024px) 46vw, 92vw"
             />
             <div className="absolute inset-x-0 bottom-0 border-t border-white/30 bg-white/94 p-5 md:p-6">
-              <p className="mb-2 text-[0.625rem] font-bold uppercase tracking-[0.2em] text-rose-dark">
+              <p className="mb-2 text-[0.625rem] font-bold uppercase tracking-[0.2em] text-rose">
                 Rella Aesthetics — Vacaville
               </p>
               <p className="text-lg font-medium leading-snug text-ink">
@@ -203,10 +203,10 @@ export default function VacavilleMicroneedlingPage() {
       <section className="py-20 md:py-28" aria-labelledby="vacaville-microneedling-options">
         <div className="mx-auto max-w-[1120px] px-6 md:px-8">
           <div className="mb-12 max-w-[790px]">
-            <p className="mb-4 text-[0.6875rem] font-bold uppercase tracking-[0.2em] text-rose-dark">
+            <p className="mb-4 text-[0.6875rem] font-bold uppercase tracking-[0.2em] text-rose">
               Current Vacaville paths
             </p>
-            <h2 id="vacaville-microneedling-options" className="mb-5 text-3xl font-medium tracking-[-0.04em] text-ink md:text-5xl">
+            <h2 id="vacaville-microneedling-options" className="mb-5 text-3xl font-medium tracking-[-0.04em] text-rose md:text-5xl">
               One consult. Two different technologies.
             </h2>
             <p className="text-lg font-light leading-relaxed text-ink/70">
@@ -219,8 +219,8 @@ export default function VacavilleMicroneedlingPage() {
                 key={path.title}
                 className={`border p-7 md:p-8 ${index === 0 ? "border-rose bg-rose-blush" : "border-ink/12 bg-white"}`}
               >
-                <span className="mb-8 inline-flex h-9 w-9 items-center justify-center rounded-full bg-rose-cta text-xs font-bold text-ink">{index + 1}</span>
-                <h3 className="mb-4 text-xl font-medium tracking-[-0.02em] text-ink">{path.title}</h3>
+                <span className="mb-8 inline-flex h-9 w-9 items-center justify-center rounded-full bg-white text-xs font-bold text-rose">{index + 1}</span>
+                <h3 className="mb-4 text-xl font-medium tracking-[-0.02em] text-rose">{path.title}</h3>
                 <p className="text-sm leading-7 text-ink/70">{path.body}</p>
               </article>
             ))}
@@ -228,10 +228,10 @@ export default function VacavilleMicroneedlingPage() {
         </div>
       </section>
 
-      <section className="bg-ink py-20 text-white md:py-28" aria-labelledby="vacaville-microneedling-plan">
+      <section className="bg-rose py-20 text-white md:py-28" aria-labelledby="vacaville-microneedling-plan">
         <div className="mx-auto max-w-[1120px] px-6 md:px-8">
           <div className="mb-12 max-w-[780px]">
-            <p className="mb-4 text-[0.6875rem] font-bold uppercase tracking-[0.2em] text-rose">Before treatment</p>
+            <p className="mb-4 text-[0.6875rem] font-bold uppercase tracking-[0.2em] text-white">Before treatment</p>
             <h2 id="vacaville-microneedling-plan" className="mb-5 text-3xl font-medium tracking-[-0.04em] md:text-5xl">
               Device, depth, area, and recovery all matter.
             </h2>
@@ -242,7 +242,7 @@ export default function VacavilleMicroneedlingPage() {
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {planningFactors.map((factor, index) => (
               <article key={factor.title} className="border border-white/15 bg-white/[0.04] p-6">
-                <span className="mb-8 inline-flex h-9 w-9 items-center justify-center rounded-full bg-rose text-xs font-bold text-ink">{index + 1}</span>
+                <span className="mb-8 inline-flex h-9 w-9 items-center justify-center rounded-full bg-white text-xs font-bold text-rose">{index + 1}</span>
                 <h3 className="mb-3 text-xl font-medium">{factor.title}</h3>
                 <p className="text-sm leading-7 text-white/70">{factor.body}</p>
               </article>
@@ -254,8 +254,8 @@ export default function VacavilleMicroneedlingPage() {
       <section className="py-20 md:py-28" aria-labelledby="vacaville-microneedling-rf">
         <div className="mx-auto grid max-w-[1040px] gap-8 px-6 md:px-8 lg:grid-cols-[1.03fr_0.97fr] lg:items-center">
           <div>
-            <p className="mb-4 text-[0.6875rem] font-bold uppercase tracking-[0.2em] text-rose-dark">RF deserves a separate conversation</p>
-            <h2 id="vacaville-microneedling-rf" className="mb-5 text-3xl font-medium tracking-[-0.04em] text-ink md:text-5xl">
+            <p className="mb-4 text-[0.6875rem] font-bold uppercase tracking-[0.2em] text-rose">RF deserves a separate conversation</p>
+            <h2 id="vacaville-microneedling-rf" className="mb-5 text-3xl font-medium tracking-[-0.04em] text-rose md:text-5xl">
               Added energy means added questions.
             </h2>
             <p className="text-lg font-light leading-relaxed text-ink/70">
@@ -263,13 +263,13 @@ export default function VacavilleMicroneedlingPage() {
             </p>
           </div>
           <div className="border-l-4 border-rose bg-rose-blush p-7 md:p-10">
-            <p className="mb-3 text-[0.6875rem] font-bold uppercase tracking-[0.18em] text-rose-dark">Important risk context</p>
+            <p className="mb-3 text-[0.6875rem] font-bold uppercase tracking-[0.18em] text-rose">Important risk context</p>
             <p className="mb-6 text-lg leading-8 text-silver-dark">
               The FDA has reported serious complications with certain uses of RF microneedling, including burns, scarring, fat loss, disfigurement, and nerve damage. Your consultation should address the risks relevant to the exact device and plan.
             </p>
             <a
               href="https://www.fda.gov/medical-devices/safety-communications/potential-risks-certain-uses-radiofrequency-rf-microneedling-fda-safety-communication"
-              className="text-sm font-semibold text-rose-text underline decoration-rose-light underline-offset-4 hover:text-rose-dark"
+              className="text-sm font-semibold text-rose-text underline decoration-rose-light underline-offset-4 hover:text-rose"
             >
               Read the FDA safety communication →
             </a>
@@ -280,15 +280,15 @@ export default function VacavilleMicroneedlingPage() {
       <section className="bg-rose-blush py-20 md:py-24" aria-labelledby="vacaville-microneedling-consult">
         <div className="mx-auto grid max-w-[1040px] gap-8 px-6 md:grid-cols-[1fr_auto] md:items-center md:px-8">
           <div>
-            <p className="mb-3 text-[0.6875rem] font-bold uppercase tracking-[0.2em] text-rose-dark">Direct consult handoff</p>
-            <h2 id="vacaville-microneedling-consult" className="mb-3 text-3xl font-medium tracking-[-0.035em] text-ink">
+            <p className="mb-3 text-[0.6875rem] font-bold uppercase tracking-[0.2em] text-rose">Direct consult handoff</p>
+            <h2 id="vacaville-microneedling-consult" className="mb-3 text-3xl font-medium tracking-[-0.035em] text-rose">
               Start with Initial Microneedling Consult.
             </h2>
             <p className="max-w-[700px] text-ink/70">
               The live service describes a skin evaluation and goal discussion used to assess suitability, set expectations, and review potential side effects before treatment.
             </p>
           </div>
-          <Button href={BOOKING_HREF} data-cta="service-booking" className="rounded-full">
+          <Button disableHover href={BOOKING_HREF} data-cta="service-booking" className="rounded-full">
             Book Initial Consult
           </Button>
         </div>
@@ -296,34 +296,34 @@ export default function VacavilleMicroneedlingPage() {
 
       <section className="py-20 md:py-28" aria-labelledby="vacaville-microneedling-faq">
         <div className="mx-auto max-w-[900px] px-6 md:px-8">
-          <p className="mb-4 text-[0.6875rem] font-bold uppercase tracking-[0.2em] text-rose-dark">Questions, answered</p>
-          <h2 id="vacaville-microneedling-faq" className="mb-8 text-3xl font-medium tracking-[-0.035em] text-ink md:text-5xl">
+          <p className="mb-4 text-[0.6875rem] font-bold uppercase tracking-[0.2em] text-rose">Questions, answered</p>
+          <h2 id="vacaville-microneedling-faq" className="mb-8 text-3xl font-medium tracking-[-0.035em] text-rose md:text-5xl">
             Vacaville microneedling FAQ
           </h2>
           <FaqAccordion items={faqs} />
         </div>
       </section>
 
-      <section className="bg-rose-cta py-20 text-center text-ink" aria-labelledby="vacaville-microneedling-next-step">
+      <section className="bg-rose py-20 text-center text-white" aria-labelledby="vacaville-microneedling-next-step">
         <div className="mx-auto max-w-[740px] px-6">
           <h2 id="vacaville-microneedling-next-step" className="mb-4 text-3xl font-medium tracking-[-0.035em] md:text-5xl">
             Choose the modality after the assessment.
           </h2>
-          <p className="mb-8 text-lg font-light leading-relaxed text-ink/75">
+          <p className="mb-8 text-lg font-light leading-relaxed text-white/90">
             Open the exact Vacaville consult, review the professional and booking terms, or call the team before choosing a treatment.
           </p>
           <div className="flex flex-col justify-center gap-3 sm:flex-row">
-            <Button href={BOOKING_HREF} data-cta="service-booking" className="rounded-full bg-white !text-ink hover:bg-white/90 hover:!text-ink">
+            <Button disableHover href={BOOKING_HREF} data-cta="service-booking" className="rounded-full bg-white !text-rose">
               Book Initial Consult
             </Button>
-            <Button href="tel:+17073582928" data-cta="phone" variant="ghost">
+            <Button disableHover href="tel:+17073582928" data-cta="phone" variant="ghost">
               Call Rella
             </Button>
           </div>
-          <p className="mt-6 text-xs leading-6 text-ink/75">
+          <p className="mt-6 text-xs leading-6 text-white/80">
             Individual response and recovery vary. Device selection, settings, treatment area, number of procedures, and suitability require an individualized assessment.
           </p>
-          <div className="mt-5 flex flex-wrap justify-center gap-x-5 gap-y-2 text-xs text-ink/75">
+          <div className="mt-5 flex flex-wrap justify-center gap-x-5 gap-y-2 text-xs text-white/80">
             <Link href="/services/microneedling" className="underline underline-offset-4 hover:text-ink">Full microneedling guide</Link>
             <Link href="/cancellation-policy" className="underline underline-offset-4 hover:text-ink">Cancellation policy</Link>
             <Link href="/locations/vacaville" className="underline underline-offset-4 hover:text-ink">Vacaville clinic details</Link>

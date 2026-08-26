@@ -130,10 +130,10 @@ export default async function BlogPage() {
       {/* Hero */}
       <section className="bg-rose py-24 text-white">
         <div className="mx-auto max-w-[1200px] px-6 md:px-8 lg:px-12">
-          <p className="font-bold text-[0.6875rem] tracking-[0.2em] uppercase text-rose mb-4">
+          <p className="font-bold text-[0.6875rem] tracking-[0.2em] uppercase text-ink mb-4">
             Education
           </p>
-          <h1 className="font-bold text-4xl md:text-6xl tracking-[0.08em] uppercase text-white mb-4 leading-[1.08]">
+          <h1 className="mb-5 text-4xl font-bold uppercase leading-[1.08] tracking-[0.08em] text-white md:text-6xl">
             Insights &amp; Guides
           </h1>
           <p className="max-w-[560px] text-lg font-light leading-relaxed text-white">

@@ -42,10 +42,10 @@ export default function PrivatePartiesPage() {
               follow up to discuss planning details.
             </p>
             <div className="mt-9 flex flex-col gap-4 sm:flex-row">
-              <Button href="/contact?intent=private-parties">
+              <Button href="/contact?intent=private-parties" disableHover>
                 Plan a Private Event
               </Button>
-              <Button href="tel:+17073582928" variant="ghost">
+              <Button href="tel:+17073582928" variant="ghost" disableHover>
                 Call 707.358.2928
               </Button>
             </div>

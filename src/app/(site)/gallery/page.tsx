@@ -48,7 +48,7 @@ export default function GalleryPage() {
           <p className="mx-auto mb-8 max-w-[700px] text-lg font-light leading-relaxed text-silver-dark md:text-xl">
             Rella&apos;s work begins with honest guidance, thoughtful consultation, and a treatment plan designed around your features and goals.
           </p>
-          <Button href={resolveBookingHref({})} className="rounded-full !text-white hover:!text-white">Book a Consultation</Button>
+          <Button href={resolveBookingHref({})} disableHover className="rounded-full !text-white">Book a Consultation</Button>
         </div>
       </section>
 
@@ -90,7 +90,7 @@ export default function GalleryPage() {
               <p className="mb-7 text-lg font-light leading-relaxed text-white/70">
                 Rella is preparing a public gallery using only properly consented patient photography. During your consultation, ask the team to review relevant examples and discuss what may be realistic for you. Individual results vary.
               </p>
-              <Button href={resolveBookingHref({})} className="rounded-full !text-white hover:!text-white">Discuss Your Goals</Button>
+              <Button href={resolveBookingHref({})} disableHover className="rounded-full !text-white">Discuss Your Goals</Button>
             </div>
           </div>
         </section>
@@ -120,7 +120,8 @@ export default function GalleryPage() {
             href={resolveBookingHref({})}
             data-cta="gallery-booking"
             variant="ghost"
-            className="!border-white !bg-transparent !text-white hover:!border-white hover:!bg-transparent hover:!text-white"
+            disableHover
+            className="!border-white !bg-transparent !text-white"
           >
             Book Consultation
           </Button>

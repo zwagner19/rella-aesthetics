@@ -69,7 +69,9 @@ function HomePageContent({ isWeightLoss }: { isWeightLoss: boolean }) {
               and Napa.
             </p>
             <div className="flex flex-wrap gap-4">
-              <Button href={resolveBookingHref({})}>Book Consultation</Button>
+              <Button href={resolveBookingHref({})} disableHover>
+                Book Consultation
+              </Button>
               <Button href="/services" variant="ghost">
                 Explore Services
               </Button>
@@ -205,7 +207,8 @@ function HomePageContent({ isWeightLoss }: { isWeightLoss: boolean }) {
             <Button
               href="/services/weight-loss"
               variant="light"
-              className="rounded-full hover:!border-white hover:!bg-white hover:!text-rose"
+              disableHover
+              className="rounded-full"
             >
               Explore Medical Weight Loss
             </Button>
@@ -254,12 +257,13 @@ function HomePageContent({ isWeightLoss }: { isWeightLoss: boolean }) {
       </div>
 
       {/* Locations */}
-      <section className="rella-preview-reveal py-24 md:py-32">
+      <section className="rella-preview-reveal bg-rose py-24 text-white md:py-32">
         <div className="mx-auto max-w-[1200px] px-6 md:px-8 lg:px-12">
           <SectionHeader
             eyebrow="Two Locations"
             title="Visit Us"
             description="Explore clinic details, directions, and booking paths for Vacaville and Napa."
+            tone="light"
           />
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2 [&_a]:text-rose">
             <LocationCard
@@ -296,7 +300,7 @@ function HomePageContent({ isWeightLoss }: { isWeightLoss: boolean }) {
             Schedule a consultation and discover the right next step for your
             goals.
           </p>
-          <Button href={resolveBookingHref({})} variant="light">
+          <Button href={resolveBookingHref({})} variant="light" disableHover>
             Book Consultation
           </Button>
         </div>

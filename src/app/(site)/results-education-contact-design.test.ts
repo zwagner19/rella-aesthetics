@@ -9,7 +9,7 @@ describe("designer checklist for Results, Education, and Contact", () => {
 
     expect(source).toContain('className="bg-rose py-16 text-center text-white');
     expect(source).toContain("!border-white !bg-transparent !text-white");
-    expect(source).toContain("hover:!bg-transparent hover:!text-white");
+    expect(source).toContain("disableHover");
     expect(source).toContain("bg-white px-5 py-2 text-base font-light text-rose");
     expect(source).toContain(
       'tracking-[0.06em] text-rose md:text-5xl">What patients say about the experience.',
@@ -31,8 +31,8 @@ describe("designer checklist for Results, Education, and Contact", () => {
     const localPost = read("src/components/blog/LocalEditorialPost.tsx");
     const localPosts = read("src/lib/local-editorial-posts.ts");
 
-    expect(page).toContain("uppercase text-rose mb-4");
-    expect(page).toContain("uppercase text-white mb-4 leading-[1.08]");
+    expect(page).toContain("tracking-[0.2em] uppercase text-ink mb-4");
+    expect(page).toContain("uppercase leading-[1.08] tracking-[0.08em] text-white");
     expect(card).toContain("text-lg text-rose");
     expect(content).toContain("text-2xl text-rose");
     expect(content).toContain("text-xl text-rose");
@@ -61,7 +61,7 @@ describe("designer checklist for Results, Education, and Contact", () => {
     const page = read("src/app/(site)/contact/page.tsx");
     const form = read("src/app/(site)/contact/ContactForm.tsx");
 
-    expect(page).toContain("uppercase text-white mb-4 leading-[1.08]");
+    expect(page).toContain("uppercase leading-[1.08] tracking-[0.08em] text-white");
     expect(page).toContain('<SectionHeader title="Send Us a Message" />');
     expect(page).toContain('<SectionHeader title="Other Ways to Reach Us" />');
     expect(page).toContain('href="tel:+17073582928"');
@@ -70,7 +70,8 @@ describe("designer checklist for Results, Education, and Contact", () => {
     expect(form).toContain('fetch("/api/leads"');
     expect(form).toContain('dispatchConversion("contact_form_success")');
     expect(form).toContain("result.accepted === true");
-    expect(form).toContain("w-full !text-white hover:!text-white sm:w-auto");
+    expect(form).toContain("w-full !text-white sm:w-auto");
+    expect(form).toContain("disableHover");
     expect(form).toContain('role="alert" className="mt-3 text-sm font-medium text-ink"');
     expect(form).not.toContain("—");
   });

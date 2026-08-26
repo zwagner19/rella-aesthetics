@@ -14,15 +14,15 @@ const clinicOrder = ["vacaville", "napa"] as const satisfies readonly BookingLoc
 export default function BookPage() {
   return (
     <>
-      <section className="relative overflow-hidden bg-rose-blush py-16 md:py-20">
+      <section className="relative overflow-hidden bg-rose py-16 text-white md:py-20">
         <div className="relative mx-auto max-w-[960px] px-6 text-center md:px-8">
-          <p className="mb-4 text-[0.75rem] font-medium capitalize italic tracking-[0.08em] text-ink">
+          <p className="mb-4 text-[0.75rem] font-medium capitalize italic tracking-[0.08em] text-white">
             Start your visit
           </p>
-          <h1 className="mx-auto mb-5 max-w-[760px] text-[clamp(2.7rem,6.5vw,4.8rem)] font-bold uppercase leading-[0.98] tracking-[0.06em] text-ink">
+          <h1 className="mx-auto mb-5 max-w-[760px] text-[clamp(2.7rem,6.5vw,4.8rem)] font-bold uppercase leading-[0.98] tracking-[0.06em] text-white">
             Choose your Rella clinic.
           </h1>
-          <p className="mx-auto max-w-[680px] text-base font-light leading-relaxed text-silver-dark md:text-lg">
+          <p className="mx-auto max-w-[680px] text-base font-light leading-relaxed text-white md:text-lg">
             Select Napa or Vacaville to continue in Rella&rsquo;s custom booking experience for that clinic.
           </p>
         </div>
@@ -59,6 +59,7 @@ export default function BookPage() {
                     <Button
                       href={bookingHref}
                       data-cta="location-booking"
+                      disableHover
                       className="w-full rounded-full"
                     >
                       See {clinic.name} Times

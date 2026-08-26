@@ -249,7 +249,7 @@ export function PreviewClinicChooser() {
           >
             {step === "success"
               ? "Your reveal is ready"
-              : "Unlock your personal plan"}
+              : "Unlock your Rella Reveal"}
           </h2>
         </div>
 

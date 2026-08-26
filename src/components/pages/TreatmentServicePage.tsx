@@ -101,7 +101,7 @@ export function TreatmentServicePage({ service }: TreatmentServicePageProps) {
                 {service.heroDescription}
               </p>
               <div className="flex flex-col gap-3 sm:flex-row">
-                <Button href="#book-service" data-cta="booking-flow-start">
+                <Button href="#book-service" data-cta="booking-flow-start" disableHover>
                   {hasMultipleLocations
                     ? "Choose Your Clinic"
                     : `Book in ${locationLabel}`}
@@ -109,6 +109,7 @@ export function TreatmentServicePage({ service }: TreatmentServicePageProps) {
                 <Button
                   href="#what-to-expect"
                   variant="ghost"
+                  disableHover
                   className="!border-white"
                 >
                   What to Expect
@@ -117,7 +118,7 @@ export function TreatmentServicePage({ service }: TreatmentServicePageProps) {
             </div>
           </div>
 
-          <div className="relative aspect-[4/5] w-full overflow-hidden bg-ink md:aspect-[4/3] lg:h-full lg:min-h-[520px] lg:aspect-auto">
+          <div className="relative aspect-[4/5] w-full overflow-hidden bg-rose md:aspect-[4/3] lg:h-full lg:min-h-[520px] lg:aspect-auto">
             <Image
               src={service.image}
               alt={service.imageAlt}
@@ -126,7 +127,7 @@ export function TreatmentServicePage({ service }: TreatmentServicePageProps) {
               className="object-cover object-center"
               sizes="(min-width: 1024px) 46vw, 92vw"
             />
-            <div className="absolute inset-x-0 bottom-0 bg-ink/80 p-5 md:p-6">
+            <div className="absolute inset-x-0 bottom-0 bg-rose/90 p-5 md:p-6">
               <p className="mb-2 text-sm font-normal italic text-white">
                 Start with a consultation
               </p>
@@ -239,7 +240,7 @@ export function TreatmentServicePage({ service }: TreatmentServicePageProps) {
                 {service.pricing.note}
               </p>
             )}
-            <Button href="#book-service" data-cta="booking-flow-start">
+            <Button href="#book-service" data-cta="booking-flow-start" disableHover>
               {hasMultipleLocations
                 ? "Choose a Clinic"
                 : `Book in ${locationLabel}`}
@@ -291,7 +292,7 @@ export function TreatmentServicePage({ service }: TreatmentServicePageProps) {
                     0{index + 1}
                   </span>
                 </div>
-                <h3 className="mb-2 text-2xl font-medium tracking-[-0.025em] text-ink">
+                <h3 className="mb-2 text-2xl font-medium tracking-[-0.025em] text-rose">
                   {location.name}
                 </h3>
                 <p className="mb-6 text-sm text-ink/70">{location.address}</p>
@@ -299,6 +300,7 @@ export function TreatmentServicePage({ service }: TreatmentServicePageProps) {
                   <Button
                     href={location.bookingHref}
                     data-cta="service-booking"
+                    disableHover
                     className="w-full px-5"
                   >
                     Book in {location.name}
@@ -344,7 +346,8 @@ export function TreatmentServicePage({ service }: TreatmentServicePageProps) {
                 href={location.bookingHref}
                 data-cta="service-booking"
                 variant="ghost"
-                className="!border-white !bg-white !text-rose hover:!border-white hover:!bg-white hover:!text-rose"
+                disableHover
+                className="!border-white !bg-white !text-rose"
               >
                 Book in {location.name}
               </Button>

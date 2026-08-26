@@ -131,10 +131,10 @@ export function LocationServicePage({
               a plan built around your goals—right in downtown {location.name}.
             </p>
             <div className="flex flex-col gap-3 sm:flex-row">
-              <Button href={bookingHref} data-cta="location-booking">
+              <Button href={bookingHref} data-cta="location-booking" disableHover>
                 Book at {location.name}
               </Button>
-              <Button href={location.mapUrl} variant="ghost">
+              <Button href={location.mapUrl} variant="ghost" disableHover>
                 Get Directions
               </Button>
             </div>
@@ -191,7 +191,7 @@ export function LocationServicePage({
             <p className="mb-4 text-sm font-normal italic text-ink">
               Explore care
             </p>
-            <h2 className="mb-5 text-[clamp(2rem,4vw,3rem)] font-bold uppercase leading-[1.15] tracking-[0.06em] text-ink">
+            <h2 className="mb-5 text-[clamp(2rem,4vw,3rem)] font-bold uppercase leading-[1.15] tracking-[0.06em] text-rose">
               Start with the service that matches your goal.
             </h2>
             <p className="text-lg font-light leading-[1.75] text-ink/70">
@@ -228,9 +228,9 @@ export function LocationServicePage({
           </div>
           <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
             {slug === "napa" && (
-              <Button href="/napa">Explore the Napa Service Hub</Button>
+              <Button href="/napa" disableHover>Explore the Napa Service Hub</Button>
             )}
-            <Button href="/services" variant="ghost">
+            <Button href="/services" variant="ghost" disableHover>
               View All Services
             </Button>
           </div>
@@ -255,14 +255,16 @@ export function LocationServicePage({
             <Button
               href={bookingHref}
               data-cta="location-booking"
-              className="!border-white !bg-white !text-rose hover:!border-white hover:!bg-white hover:!text-rose"
+              disableHover
+              className="!border-white !bg-white !text-rose"
             >
               See Available Times
             </Button>
             <Button
               href={location.mapUrl}
               variant="ghost"
-              className="!border-white !bg-white !text-rose hover:!border-white hover:!bg-white hover:!text-rose"
+              disableHover
+              className="!border-white !bg-white !text-rose"
             >
               Get Directions
             </Button>

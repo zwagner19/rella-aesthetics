@@ -126,7 +126,7 @@ function LocationCard({ option }: { option: LocationOption }) {
           <p className="mb-2 text-sm font-normal italic text-ink">
             Rella Aesthetics
           </p>
-          <h3 className="text-3xl font-bold uppercase leading-tight tracking-[0.06em] text-ink">{option.name}</h3>
+          <h3 className="text-3xl font-bold uppercase leading-tight tracking-[0.06em] text-rose">{option.name}</h3>
         </div>
         <span aria-hidden="true" className="text-3xl font-light text-ink">
           →
@@ -137,6 +137,7 @@ function LocationCard({ option }: { option: LocationOption }) {
       <div>
         <Button
           href={consultHref}
+          disableHover
           className="w-full px-6 sm:w-auto"
           data-cta="weight-loss-consult"
           data-location={option.slug}
@@ -163,7 +164,7 @@ export function WeightLossServicePage() {
         }}
       />
 
-      <section className="bg-ink text-white">
+      <section className="bg-rose text-white">
         <div className="mx-auto grid max-w-[1160px] items-stretch lg:grid-cols-[1.15fr_0.85fr]">
           <div className="relative z-10 flex flex-col justify-center px-5 py-16 md:px-8 md:py-24 lg:px-10 lg:py-20 xl:px-14 xl:py-28">
             <p className="mb-4 text-sm font-normal italic text-white">
@@ -178,7 +179,9 @@ export function WeightLossServicePage() {
             <div className="mb-6">
               <Button
                 href="#consultation-options"
+                disableHover
                 data-cta="booking-flow-start"
+                className="!border-white !bg-white !text-rose"
               >
                 See Available Call Times
               </Button>
@@ -194,7 +197,7 @@ export function WeightLossServicePage() {
             </p>
           </div>
 
-          <div className="relative aspect-[4/3] w-full overflow-hidden bg-ink lg:h-full lg:min-h-[520px] lg:aspect-auto">
+          <div className="relative aspect-[4/3] w-full overflow-hidden bg-rose lg:h-full lg:min-h-[520px] lg:aspect-auto">
               <Image
                 src={weightLossService.image}
                 alt={weightLossService.imageAlt}
@@ -203,7 +206,7 @@ export function WeightLossServicePage() {
                 className="object-cover object-center"
                 sizes="(min-width: 1024px) 46vw, 92vw"
               />
-              <div className="absolute inset-x-0 bottom-0 bg-ink/80 p-5 md:p-6">
+              <div className="absolute inset-x-0 bottom-0 bg-rose/90 p-5 md:p-6">
                 <p className="mb-2 text-sm font-normal italic text-white">Weight-Loss Qualification Call</p>
                 <p className="text-lg font-semibold leading-snug text-white">A medical decision—not a sales pitch.</p>
               </div>
@@ -236,7 +239,7 @@ export function WeightLossServicePage() {
 
           <div>
             <p className="mb-4 text-sm font-normal italic text-ink">A real medical qualification consultation</p>
-            <h2 id="qualification-heading" className="mb-5 text-[clamp(2rem,4vw,3rem)] font-bold uppercase leading-[1.15] tracking-[0.06em] text-ink">
+            <h2 id="qualification-heading" className="mb-5 text-[clamp(2rem,4vw,3rem)] font-bold uppercase leading-[1.15] tracking-[0.06em] text-rose">
               Get a medically grounded answer before choosing treatment.
             </h2>
             <p className="mb-7 text-lg font-light leading-[1.75] text-ink/70">
@@ -276,7 +279,7 @@ export function WeightLossServicePage() {
               <p className="mb-4 text-sm font-normal italic text-ink">
                 Real local patient experiences
               </p>
-              <h2 id="weight-loss-reviews-heading" className="mb-4 text-[clamp(2rem,4vw,3rem)] font-bold uppercase leading-[1.15] tracking-[0.06em] text-ink">
+              <h2 id="weight-loss-reviews-heading" className="mb-4 text-[clamp(2rem,4vw,3rem)] font-bold uppercase leading-[1.15] tracking-[0.06em] text-rose">
                 Care that patients describe as personal, responsive, and supportive.
               </h2>
               <p className="text-base font-light leading-[1.75] text-ink/70 md:text-lg">
@@ -287,9 +290,9 @@ export function WeightLossServicePage() {
               href={weightLossGoogleProof.profileUrl}
               target="_blank"
               rel="noreferrer"
-              className="inline-flex min-h-11 w-fit items-center gap-3 rounded-full border border-ink bg-white px-5 py-3 text-sm font-semibold text-ink transition-colors hover:bg-rose"
+              className="inline-flex min-h-11 w-fit items-center gap-3 rounded-full border border-ink bg-white px-5 py-3 text-sm font-semibold text-ink"
             >
-              <span aria-hidden="true" className="text-rose-dark">★★★★★</span>
+              <span aria-hidden="true" className="text-rose">★★★★★</span>
               <span>{weightLossGoogleProof.ratingLabel}</span>
             </a>
           </div>
@@ -332,7 +335,7 @@ export function WeightLossServicePage() {
 
           <div className="max-w-[520px]">
             <p className="mb-4 text-sm font-normal italic text-ink">{weightLossPatientStory.eyebrow}</p>
-            <h2 id="weight-loss-story-heading" className="mb-5 text-[clamp(2rem,4vw,3rem)] font-bold uppercase leading-[1.15] tracking-[0.06em] text-ink">
+            <h2 id="weight-loss-story-heading" className="mb-5 text-[clamp(2rem,4vw,3rem)] font-bold uppercase leading-[1.15] tracking-[0.06em] text-rose">
               {weightLossPatientStory.heading}
             </h2>
             <p className="text-base font-light leading-[1.75] text-ink/70 md:text-lg">
@@ -357,12 +360,12 @@ export function WeightLossServicePage() {
         <div className="mx-auto max-w-[1160px] px-5 md:px-8">
           <div className="mb-12 max-w-[700px]">
             <p className="mb-4 text-sm font-normal italic text-ink">How it works</p>
-            <h2 className="text-[clamp(2rem,4vw,3rem)] font-bold uppercase leading-[1.15] tracking-[0.06em] text-ink">A simpler path to the right next step.</h2>
+            <h2 className="text-[clamp(2rem,4vw,3rem)] font-bold uppercase leading-[1.15] tracking-[0.06em] text-rose">A simpler path to the right next step.</h2>
           </div>
           <ol className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
             {steps.map((step, index) => (
               <li key={step.label} className="relative border-t border-ink/15 bg-white p-6">
-                <span className="mb-8 inline-flex h-10 w-10 items-center justify-center rounded-full bg-rose-blush text-sm font-bold text-rose-dark">
+                <span className="mb-8 inline-flex h-10 w-10 items-center justify-center rounded-full border border-rose bg-white text-sm font-bold text-rose">
                   {index + 1}
                 </span>
                 <p className="mb-2 text-xs font-bold uppercase tracking-[0.18em] text-ink/70">{step.label}</p>
@@ -378,7 +381,7 @@ export function WeightLossServicePage() {
         <div className="mx-auto grid max-w-[1160px] gap-10 px-5 md:px-8 lg:grid-cols-[0.85fr_1.15fr] lg:gap-20">
           <div>
             <p className="mb-4 text-sm font-normal italic text-ink">Clear expectations</p>
-            <h2 className="mb-5 text-[clamp(2rem,4vw,3rem)] font-bold uppercase leading-[1.15] tracking-[0.06em] text-ink">Understand the investment before you commit.</h2>
+            <h2 className="mb-5 text-[clamp(2rem,4vw,3rem)] font-bold uppercase leading-[1.15] tracking-[0.06em] text-rose">Understand the investment before you commit.</h2>
           </div>
           <div className="border-t border-ink/15 bg-white py-7 md:p-9">
             <p className="mb-5 text-lg leading-[1.75] text-ink/80">
@@ -395,7 +398,7 @@ export function WeightLossServicePage() {
         <div className="mx-auto max-w-[1000px] px-5 md:px-8">
           <div className="mb-10">
             <p className="mb-4 text-sm font-normal italic text-ink">Questions, answered</p>
-            <h2 className="text-[clamp(2rem,4vw,3rem)] font-bold uppercase leading-[1.15] tracking-[0.06em] text-ink">Medical weight-loss FAQ</h2>
+            <h2 className="text-[clamp(2rem,4vw,3rem)] font-bold uppercase leading-[1.15] tracking-[0.06em] text-rose">Medical weight-loss FAQ</h2>
           </div>
           <FaqAccordion items={[...faq]} />
         </div>
@@ -404,22 +407,22 @@ export function WeightLossServicePage() {
       <section id="consultation-options" className="scroll-mt-24 bg-rose py-[clamp(4rem,8vw,7rem)]">
         <div className="mx-auto max-w-[1160px] px-5 md:px-8">
           <div className="mx-auto mb-12 max-w-[760px] text-center">
-            <p className="mb-4 text-sm font-normal italic text-ink">Choose your clinic</p>
-            <h2 className="mb-5 text-[clamp(2rem,4vw,3rem)] font-bold uppercase leading-[1.15] tracking-[0.06em] text-ink">Choose your clinic and book your qualification call.</h2>
-            <p className="text-lg font-light leading-[1.75] text-ink/70">
+            <p className="mb-4 text-sm font-normal italic text-white">Choose your clinic</p>
+            <h2 className="mb-5 text-[clamp(2rem,4vw,3rem)] font-bold uppercase leading-[1.15] tracking-[0.06em] text-white">Choose your clinic and book your qualification call.</h2>
+            <p className="text-lg font-light leading-[1.75] text-white/90">
               Select Napa or Vacaville to see live times for your 30-minute phone consultation with Dr. Wagner. There is one clear next step and no card is required.
             </p>
           </div>
           <div className="grid gap-6 lg:grid-cols-2">
             {locationOptions.map((option) => <LocationCard key={option.slug} option={option} />)}
           </div>
-          <p className="mx-auto mt-8 max-w-[760px] text-center text-sm leading-[1.75] text-ink/70">
+          <p className="mx-auto mt-8 max-w-[760px] text-center text-sm leading-[1.75] text-white/80">
             If medication is not right for you, Dr. Wagner will tell you plainly and discuss other medically appropriate paths.
           </p>
         </div>
       </section>
 
-      <section className="bg-ink py-[clamp(4rem,8vw,6rem)] text-center text-white">
+      <section className="bg-rose py-[clamp(4rem,8vw,6rem)] text-center text-white">
         <div className="mx-auto max-w-[760px] px-6">
           <p className="mb-4 text-sm font-normal italic text-white">The next step is medical qualification</p>
           <h2 className="mb-5 text-[clamp(2rem,4vw,3rem)] font-bold uppercase leading-[1.15] tracking-[0.06em]">Find out if you medically qualify.</h2>
@@ -428,6 +431,8 @@ export function WeightLossServicePage() {
           </p>
           <Button
             href="#consultation-options"
+            disableHover
+            className="!border-white !bg-white !text-rose"
             data-cta="booking-flow-start"
           >
             Choose Napa or Vacaville

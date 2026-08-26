@@ -32,17 +32,6 @@ export default function ServicesPage() {
             </div>
           </div>
 
-          <div className="relative mb-20 aspect-[3/2] overflow-hidden bg-rose-blush md:aspect-[16/7]">
-            <Image
-              src="/images/clinic/vacaville-treatment-room.jpg"
-              alt="Treatment chairs inside Rella Aesthetics in Vacaville"
-              fill
-              preload
-              className="object-cover object-center"
-              sizes="(min-width: 1200px) 1104px, 92vw"
-            />
-          </div>
-
           {categories.map((category) => {
             const categoryServices = services.filter((s) => s.category === category);
             return (

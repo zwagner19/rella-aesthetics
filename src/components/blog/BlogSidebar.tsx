@@ -65,7 +65,8 @@ export function BlogSidebar({ categories, recentPosts }: BlogSidebarProps) {
         <Button
           href={resolveBookingHref({})}
           size="sm"
-          className="!border-white !bg-white !text-rose hover:!border-white hover:!bg-white hover:!text-rose"
+          disableHover
+          className="!border-white !bg-white !text-rose"
         >
           Book Consultation
         </Button>

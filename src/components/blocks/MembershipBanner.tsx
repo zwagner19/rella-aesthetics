@@ -20,7 +20,8 @@ export function MembershipBanner() {
           <Button
             href="/membership"
             variant="ghost"
-            className="shrink-0 border-white bg-white text-rose hover:!border-white hover:!bg-white hover:!text-rose"
+            disableHover
+            className="shrink-0 border-white bg-white text-rose"
           >
             Compare Memberships
           </Button>

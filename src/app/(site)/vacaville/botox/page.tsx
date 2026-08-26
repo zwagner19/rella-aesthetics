@@ -133,20 +133,20 @@ export default function VacavilleBotoxPage() {
       <section className="overflow-hidden bg-paper py-16 md:py-24">
         <div className="mx-auto grid max-w-[1200px] items-center gap-12 px-6 md:px-8 lg:grid-cols-[1.04fr_0.96fr] lg:px-12">
           <div>
-            <p className="mb-5 text-[0.6875rem] font-bold uppercase tracking-[0.22em] text-rose-dark">
+            <p className="mb-5 text-[0.6875rem] font-bold uppercase tracking-[0.22em] text-rose">
               Injectables · Downtown Vacaville
             </p>
-            <h1 className="mb-6 text-[clamp(2.75rem,6vw,4.9rem)] font-medium leading-[0.98] tracking-[-0.06em] text-ink">
+            <h1 className="mb-6 text-[clamp(2.75rem,6vw,4.9rem)] font-medium leading-[0.98] tracking-[-0.06em] text-rose">
               Botox &amp; Dysport in Vacaville.
             </h1>
             <p className="mb-8 max-w-[650px] text-lg font-light leading-relaxed text-silver-dark md:text-xl">
               Current per-unit pricing, product-specific timing, and a consultation-led plan at Rella Aesthetics on Main Street.
             </p>
             <div className="flex flex-col gap-3 sm:flex-row">
-              <Button href={BOOKING_HREF} data-cta="service-booking" className="rounded-full">
+              <Button disableHover href={BOOKING_HREF} data-cta="service-booking" className="rounded-full">
                 Book New Patient Tox
               </Button>
-              <Button href="tel:+17073582928" data-cta="phone" variant="ghost" className="rounded-full bg-white/75">
+              <Button disableHover href="tel:+17073582928" data-cta="phone" variant="ghost" className="rounded-full bg-white/75">
                 Call 707.358.2928
               </Button>
             </div>
@@ -165,7 +165,7 @@ export default function VacavilleBotoxPage() {
               sizes="(min-width: 1024px) 46vw, 92vw"
             />
             <div className="absolute inset-x-0 bottom-0 border-t border-white/30 bg-white/94 p-5 md:p-6">
-              <p className="mb-2 text-[0.625rem] font-bold uppercase tracking-[0.2em] text-rose-dark">Rella Aesthetics — Vacaville</p>
+              <p className="mb-2 text-[0.625rem] font-bold uppercase tracking-[0.2em] text-rose">Rella Aesthetics — Vacaville</p>
               <p className="text-lg font-medium leading-snug text-ink">542 Main St · Tuesday–Friday, 9am–5pm · Saturday, 9am–1pm · Sunday–Monday: Closed</p>
             </div>
           </div>
@@ -180,8 +180,8 @@ export default function VacavilleBotoxPage() {
       <section className="py-20 md:py-28" aria-labelledby="vacaville-botox-pricing">
         <div className="mx-auto max-w-[1120px] px-6 md:px-8">
           <div className="mb-12 max-w-[760px]">
-            <p className="mb-4 text-[0.6875rem] font-bold uppercase tracking-[0.2em] text-rose-dark">Pricing first</p>
-            <h2 id="vacaville-botox-pricing" className="mb-5 text-3xl font-medium tracking-[-0.04em] text-ink md:text-5xl">
+            <p className="mb-4 text-[0.6875rem] font-bold uppercase tracking-[0.2em] text-rose">Pricing first</p>
+            <h2 id="vacaville-botox-pricing" className="mb-5 text-3xl font-medium tracking-[-0.04em] text-rose md:text-5xl">
               Know the rate before you choose the plan.
             </h2>
             <p className="text-lg font-light leading-relaxed text-ink/70">
@@ -192,7 +192,7 @@ export default function VacavilleBotoxPage() {
           <div className="grid gap-5 md:grid-cols-3">
             {pricingCards.map((card, index) => (
               <article key={card.label} className="border border-ink/12 bg-white p-7">
-                <span className="mb-8 block text-xs font-bold tracking-[0.18em] text-rose-dark">0{index + 1}</span>
+                <span className="mb-8 block text-xs font-bold tracking-[0.18em] text-rose">0{index + 1}</span>
                 <p className="mb-2 text-3xl font-medium tracking-[-0.035em] text-ink">{card.value}</p>
                 <h3 className="mb-4 text-xs font-bold uppercase tracking-[0.16em] text-silver-dark">{card.label}</h3>
                 <p className="text-sm leading-7 text-ink/70">{card.detail}</p>
@@ -204,17 +204,17 @@ export default function VacavilleBotoxPage() {
             <p className="max-w-[700px] text-sm leading-7 text-silver-dark">
               Membership pricing has a one-year commitment. Compare every injectable plan, included benefit, and current member rate before enrolling.
             </p>
-            <Link href="/membership" className="shrink-0 text-sm font-semibold text-rose-text underline decoration-rose-light underline-offset-4 hover:text-rose-dark">
+            <Link href="/membership" className="shrink-0 text-sm font-semibold text-rose-text underline decoration-rose-light underline-offset-4 hover:text-rose">
               Compare memberships →
             </Link>
           </div>
         </div>
       </section>
 
-      <section className="bg-ink py-20 text-white md:py-28" aria-labelledby="vacaville-botox-visit">
+      <section className="bg-rose py-20 text-white md:py-28" aria-labelledby="vacaville-botox-visit">
         <div className="mx-auto grid max-w-[1120px] gap-10 px-6 md:px-8 lg:grid-cols-[0.8fr_1.2fr]">
           <div>
-            <p className="mb-4 text-[0.6875rem] font-bold uppercase tracking-[0.2em] text-rose">Your visit</p>
+            <p className="mb-4 text-[0.6875rem] font-bold uppercase tracking-[0.2em] text-white">Your visit</p>
             <h2 id="vacaville-botox-visit" className="mb-5 text-3xl font-medium tracking-[-0.04em] md:text-5xl">
               Consultation first. Product second.
             </h2>
@@ -230,7 +230,7 @@ export default function VacavilleBotoxPage() {
               "Review product-specific onset, the two-week assessment point, aftercare, and an appropriate follow-up plan.",
             ].map((step, index) => (
               <li key={step} className="border border-white/15 bg-white/[0.04] p-6">
-                <span className="mb-7 inline-flex h-9 w-9 items-center justify-center rounded-full bg-rose text-xs font-bold text-ink">{index + 1}</span>
+                <span className="mb-7 inline-flex h-9 w-9 items-center justify-center rounded-full bg-white text-xs font-bold text-rose">{index + 1}</span>
                 <p className="text-sm leading-7 text-white/75">{step}</p>
               </li>
             ))}
@@ -241,8 +241,8 @@ export default function VacavilleBotoxPage() {
       <section className="py-20 md:py-28" aria-labelledby="vacaville-botox-timing">
         <div className="mx-auto grid max-w-[1040px] gap-8 px-6 md:px-8 lg:grid-cols-2 lg:items-center">
           <div>
-            <p className="mb-4 text-[0.6875rem] font-bold uppercase tracking-[0.2em] text-rose-dark">Timing &amp; expectations</p>
-            <h2 id="vacaville-botox-timing" className="mb-5 text-3xl font-medium tracking-[-0.04em] text-ink md:text-5xl">
+            <p className="mb-4 text-[0.6875rem] font-bold uppercase tracking-[0.2em] text-rose">Timing &amp; expectations</p>
+            <h2 id="vacaville-botox-timing" className="mb-5 text-3xl font-medium tracking-[-0.04em] text-rose md:text-5xl">
               Temporary improvement, assessed over time.
             </h2>
             <p className="text-lg font-light leading-relaxed text-ink/70">
@@ -250,11 +250,11 @@ export default function VacavilleBotoxPage() {
             </p>
           </div>
           <div className="border-l-4 border-rose bg-rose-blush p-7 md:p-10">
-            <p className="mb-3 text-[0.6875rem] font-bold uppercase tracking-[0.18em] text-rose-dark">Important distinction</p>
+            <p className="mb-3 text-[0.6875rem] font-bold uppercase tracking-[0.18em] text-rose">Important distinction</p>
             <p className="mb-6 text-lg leading-8 text-silver-dark">
               A lower per-unit number does not make Dysport directly cheaper than Botox because the products use different dosing units.
             </p>
-            <Link href="/services/botox" className="text-sm font-semibold text-rose-text underline decoration-rose-light underline-offset-4 hover:text-rose-dark">
+            <Link href="/services/botox" className="text-sm font-semibold text-rose-text underline decoration-rose-light underline-offset-4 hover:text-rose">
               Read the full Botox &amp; Dysport guide →
             </Link>
           </div>
@@ -264,49 +264,49 @@ export default function VacavilleBotoxPage() {
       <section className="bg-rose-blush py-20 md:py-24" aria-labelledby="visit-rella-vacaville">
         <div className="mx-auto grid max-w-[1000px] gap-8 px-6 md:grid-cols-[1fr_auto] md:items-center md:px-8">
           <div>
-            <p className="mb-3 text-[0.6875rem] font-bold uppercase tracking-[0.2em] text-rose-dark">Visit Rella Vacaville</p>
-            <h2 id="visit-rella-vacaville" className="mb-3 text-3xl font-medium tracking-[-0.035em] text-ink">
+            <p className="mb-3 text-[0.6875rem] font-bold uppercase tracking-[0.2em] text-rose">Visit Rella Vacaville</p>
+            <h2 id="visit-rella-vacaville" className="mb-3 text-3xl font-medium tracking-[-0.035em] text-rose">
               542 Main St · Vacaville, CA 95688
             </h2>
             <p className="text-ink/70">Tuesday–Friday: 9am–5pm · Saturday: 9am–1pm · Sunday–Monday: Closed</p>
           </div>
           <div className="flex flex-col gap-3">
-            <Button href={BOOKING_HREF} data-cta="service-booking" className="rounded-full">Book New Patient Tox</Button>
-            <Button href={clinic.mapUrl} variant="ghost" className="rounded-full bg-white">Get Directions</Button>
+            <Button href={BOOKING_HREF} data-cta="service-booking" disableHover className="rounded-full">Book New Patient Tox</Button>
+            <Button href={clinic.mapUrl} variant="ghost" disableHover className="rounded-full bg-white">Get Directions</Button>
           </div>
         </div>
       </section>
 
       <section className="py-20 md:py-28" aria-labelledby="vacaville-botox-faq">
         <div className="mx-auto max-w-[900px] px-6 md:px-8">
-          <p className="mb-4 text-[0.6875rem] font-bold uppercase tracking-[0.2em] text-rose-dark">Questions, answered</p>
-          <h2 id="vacaville-botox-faq" className="mb-8 text-3xl font-medium tracking-[-0.035em] text-ink md:text-5xl">
+          <p className="mb-4 text-[0.6875rem] font-bold uppercase tracking-[0.2em] text-rose">Questions, answered</p>
+          <h2 id="vacaville-botox-faq" className="mb-8 text-3xl font-medium tracking-[-0.035em] text-rose md:text-5xl">
             Vacaville Botox FAQ
           </h2>
           <FaqAccordion items={faqs} />
         </div>
       </section>
 
-      <section className="bg-rose-cta py-20 text-center text-ink" aria-labelledby="vacaville-botox-next-step">
+      <section className="bg-rose py-20 text-center text-white" aria-labelledby="vacaville-botox-next-step">
         <div className="mx-auto max-w-[720px] px-6">
           <h2 id="vacaville-botox-next-step" className="mb-4 text-3xl font-medium tracking-[-0.035em] md:text-5xl">
             Ready for a clear Vacaville next step?
           </h2>
-          <p className="mb-8 text-lg font-light leading-relaxed text-ink/75">
+          <p className="mb-8 text-lg font-light leading-relaxed text-white/90">
             Open the live New Patient Tox service, review the current booking terms, or call Rella if you have a question before choosing a visit.
           </p>
           <div className="flex flex-col justify-center gap-3 sm:flex-row">
-            <Button href={BOOKING_HREF} data-cta="service-booking" className="rounded-full bg-white !text-ink hover:bg-white/90 hover:!text-ink">
+            <Button disableHover href={BOOKING_HREF} data-cta="service-booking" className="rounded-full bg-white !text-rose">
               Book New Patient Tox
             </Button>
-            <Button href="tel:+17073582928" data-cta="phone" variant="ghost">
+            <Button disableHover href="tel:+17073582928" data-cta="phone" variant="ghost">
               Call Rella
             </Button>
           </div>
-          <p className="mt-6 text-xs leading-6 text-ink/75">
+          <p className="mt-6 text-xs leading-6 text-white/80">
             Individual results vary. Treatment eligibility, product, dose, placement, and timing require an individualized assessment.
           </p>
-          <div className="mt-5 flex flex-wrap justify-center gap-x-5 gap-y-2 text-xs text-ink/75">
+          <div className="mt-5 flex flex-wrap justify-center gap-x-5 gap-y-2 text-xs text-white/80">
             <Link href="/cancellation-policy" className="underline underline-offset-4 hover:text-ink">Cancellation policy</Link>
             <Link href="/locations/vacaville" className="underline underline-offset-4 hover:text-ink">Vacaville clinic details</Link>
           </div>
