@@ -160,17 +160,6 @@ export const beforeAfterResults: readonly BeforeAfterResult[] = [
     caption: "Patient result shared with permission. Individual results vary.",
   },
   {
-    id: "rf-microneedling-01",
-    status: "approved",
-    placement: ["main-gallery"],
-    treatment: "RF Microneedling",
-    beforeSrc: "/images/results/before-after/rf-microneedling-before.webp",
-    afterSrc: "/images/results/before-after/rf-microneedling-after.webp",
-    beforeAlt: "Before radiofrequency microneedling treatment",
-    afterAlt: "After radiofrequency microneedling treatment",
-    caption: "Patient result shared with permission. Individual results vary.",
-  },
-  {
     id: "botox-dysport-neurotoxin-01",
     status: "approved",
     placement: ["main-gallery"],

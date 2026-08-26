@@ -20,8 +20,8 @@ describe("labeled before-and-after result assets", () => {
   const assets = beforeAfterResults.flatMap((result) => [result.beforeSrc, result.afterSrc]);
 
   it("ships one before and one after image for every labeled treatment", () => {
-    expect(beforeAfterResults).toHaveLength(15);
-    expect(new Set(assets).size).toBe(30);
+    expect(beforeAfterResults).toHaveLength(14);
+    expect(new Set(assets).size).toBe(28);
   });
 
   it("keeps every published result image unique, including the top cards", () => {
