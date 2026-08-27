@@ -66,7 +66,7 @@ function TeamProfile({ member }: { member: TeamProfileMember }) {
   }
 
   return (
-    <article className="border-t border-silver/30 pt-6">
+    <article className="grid gap-6 border-t border-silver/30 pt-6 lg:grid-cols-[minmax(170px,0.85fr)_minmax(0,1.15fr)] lg:gap-8">
       <div className="relative aspect-[4/5] overflow-hidden bg-rose-blush">
         <Image
           src={member.image}
@@ -76,7 +76,7 @@ function TeamProfile({ member }: { member: TeamProfileMember }) {
           sizes="(min-width: 1024px) 480px, (min-width: 768px) 45vw, 100vw"
         />
       </div>
-      <div className="pt-6">
+      <div className="pt-0 lg:pt-1">
         <h5 className="text-2xl font-medium text-rose">{member.name}</h5>
         <p className="mt-2 text-xs font-bold uppercase tracking-[0.12em] text-silver-dark">
           {member.role}
@@ -162,7 +162,14 @@ function NapaRoleSection({
       </h4>
       <div className="grid gap-x-8 gap-y-14 md:grid-cols-2">
         {selected.map((member) => (
-          <article key={member.name} className="border-t border-silver/30 pt-6">
+          <article
+            key={member.name}
+            className={
+              member.image
+                ? "grid gap-6 border-t border-silver/30 pt-6 lg:grid-cols-[minmax(170px,0.85fr)_minmax(0,1.15fr)] lg:gap-8"
+                : "border-t border-silver/30 pt-6"
+            }
+          >
             {member.image ? (
               <div className="relative aspect-[4/5] overflow-hidden bg-rose-blush">
                 <Image
@@ -174,7 +181,7 @@ function NapaRoleSection({
                 />
               </div>
             ) : null}
-            <div className="pt-6">
+            <div className="pt-0 lg:pt-1">
               <h5 className="text-2xl font-medium text-rose">{member.name}</h5>
               <p className="mt-2 text-xs font-bold uppercase tracking-[0.12em] text-silver-dark">
                 {label}
