@@ -51,7 +51,7 @@ function TeamProfile({ member }: { member: TeamProfileMember }) {
     return (
       <article className="border-t border-silver/30 py-8 md:col-span-2 md:grid md:grid-cols-[0.65fr_1.35fr] md:gap-12">
         <div>
-          <h5 className="text-2xl font-medium text-rose">{member.name}</h5>
+          <h4 className="text-2xl font-medium text-rose">{member.name}</h4>
           <p className="mt-2 text-xs font-bold uppercase tracking-[0.12em] text-silver-dark">
             {member.role}
           </p>
@@ -77,7 +77,7 @@ function TeamProfile({ member }: { member: TeamProfileMember }) {
         />
       </div>
       <div className="pt-0 lg:pt-1">
-        <h5 className="text-2xl font-medium text-rose">{member.name}</h5>
+        <h4 className="text-2xl font-medium text-rose">{member.name}</h4>
         <p className="mt-2 text-xs font-bold uppercase tracking-[0.12em] text-silver-dark">
           {member.role}
         </p>
@@ -110,9 +110,9 @@ function AdditionalTeamGrid({
       className="mt-16 border-t border-silver/25 pt-10"
       aria-label={label}
     >
-      <h4 className="mb-7 text-sm font-bold uppercase tracking-[0.16em] text-silver-dark">
+      <h3 className="mb-7 text-sm font-bold uppercase tracking-[0.16em] text-silver-dark">
         {label}
-      </h4>
+      </h3>
       <ul className="grid gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3">
         {members.map((member) => (
           <li key={member.name}>
@@ -157,9 +157,9 @@ function NapaRoleSection({
 
   return (
     <section className="mb-16" aria-label={`Napa ${label}`}>
-      <h4 className="mb-7 text-sm font-bold uppercase tracking-[0.16em] text-silver-dark">
+      <h3 className="mb-7 text-sm font-bold uppercase tracking-[0.16em] text-silver-dark">
         {label}
-      </h4>
+      </h3>
       <div className="grid gap-x-8 gap-y-14 md:grid-cols-2">
         {selected.map((member) => (
           <article
@@ -182,10 +182,7 @@ function NapaRoleSection({
               </div>
             ) : null}
             <div className="pt-0 lg:pt-1">
-              <h5 className="text-2xl font-medium text-rose">{member.name}</h5>
-              <p className="mt-2 text-xs font-bold uppercase tracking-[0.12em] text-silver-dark">
-                {label}
-              </p>
+              <h4 className="text-2xl font-medium text-rose">{member.name}</h4>
               {member.alsoServes ? (
                 <p className="mt-3 text-xs font-bold uppercase tracking-[0.12em] text-rose-dark">
                   Also serves {locationName(member.alsoServes)}
@@ -219,8 +216,8 @@ export default function TeamPage() {
           </h1>
           <p className="mt-7 max-w-[720px] text-lg font-light leading-relaxed text-ink/70 md:text-xl">
             Rella brings together medical weight-loss care, nursing, advanced
-            practice, esthetics, medical assisting, and body-contouring support
-            for our two local communities.
+            practice, esthetics, medical assisting, and patient services for our
+            two local communities.
           </p>
         </div>
       </section>
@@ -256,7 +253,7 @@ export default function TeamPage() {
 
           <div>
             <p className="mb-4 text-[0.75rem] font-medium capitalize italic tracking-[0.08em] text-ink">
-              Leadership · Across both locations
+              Leadership
             </p>
             <h2
               id="leadership-heading"
@@ -270,12 +267,11 @@ export default function TeamPage() {
             <p className="mt-7 border-l-2 border-rose pl-5 text-lg font-medium text-ink">
               {leadershipMember.focus}
             </p>
-            <p className="mt-6 max-w-[620px] leading-relaxed text-ink/70">
-              Dr. Wagner founded and owns Rella Aesthetics. His clinical role at
-              Rella is medical weight-loss care. He does not perform aesthetic
-              treatments or injections; those services are provided by
-              Rella&apos;s aesthetics team.
-            </p>
+            <div className="mt-6 max-w-[620px] space-y-4 leading-relaxed text-ink/70">
+              {leadershipMember.bio.map((paragraph) => (
+                <p key={paragraph}>{paragraph}</p>
+              ))}
+            </div>
             <Link
               href="/services/weight-loss"
               className="mt-7 inline-flex border-b border-ink pb-1 text-xs font-bold uppercase tracking-[0.14em] text-ink"
@@ -286,21 +282,11 @@ export default function TeamPage() {
         </div>
       </section>
 
-      <section className="border-y border-silver/20 bg-paper py-20 md:py-28">
+      <section
+        className="border-y border-silver/20 bg-paper py-20 md:py-28"
+        aria-label="Rella team by location"
+      >
         <div className="mx-auto max-w-[1120px] px-6 md:px-8 lg:px-12">
-          <div className="mb-14 max-w-[720px]">
-            <p className="mb-4 text-[0.75rem] font-medium capitalize italic tracking-[0.08em] text-ink">
-              Team by location
-            </p>
-            <h2 className="text-3xl font-bold uppercase tracking-[0.06em] text-ink md:text-5xl">
-              Napa and Vacaville.
-            </h2>
-            <p className="mt-5 max-w-[650px] leading-relaxed text-ink/75">
-              Find the people based at each Rella location. Rella-wide
-              leadership and support are shown separately.
-            </p>
-          </div>
-
           <div className="space-y-28">
             {teamLocations.map((location) => {
               const directoryMembers: readonly DirectoryMember[] = [
@@ -361,18 +347,12 @@ export default function TeamPage() {
                 >
                   <div className="mb-14 grid gap-6 md:grid-cols-[1fr_auto] md:items-end">
                     <div>
-                      <p className="mb-4 text-[0.75rem] font-medium capitalize italic tracking-[0.08em] text-ink">
-                        Rella {location.name}
-                      </p>
-                      <h3
+                      <h2
                         id={`team-location-${location.id}-heading`}
                         className="text-3xl font-bold uppercase tracking-[0.06em] text-ink md:text-5xl"
                       >
-                        Meet the {location.name} team.
-                      </h3>
-                      <p className="mt-4 leading-relaxed text-ink/75">
-                        {location.description}
-                      </p>
+                        {location.name} team
+                      </h2>
                     </div>
                     <Link
                       href={location.href}
@@ -417,11 +397,8 @@ export default function TeamPage() {
                   {featuredMembers.length > 0 ? (
                     <section
                       className="mb-16"
-                      aria-label="Featured Vacaville care team"
+                      aria-label="Vacaville clinical team"
                     >
-                      <h4 className="mb-7 text-sm font-bold uppercase tracking-[0.16em] text-silver-dark">
-                        Vacaville care team
-                      </h4>
                       <div className="grid gap-x-8 gap-y-14 md:grid-cols-2">
                         {featuredMembers.map((member) => (
                           <TeamProfile key={member.name} member={member} />
@@ -446,12 +423,12 @@ export default function TeamPage() {
 
                       return (
                         <section key={group.title} aria-labelledby={groupId}>
-                          <h4
+                          <h3
                             id={groupId}
                             className="mb-7 text-sm font-bold uppercase tracking-[0.16em] text-silver-dark"
                           >
                             {group.title}
-                          </h4>
+                          </h3>
                           <div className="grid gap-x-8 gap-y-14 md:grid-cols-2">
                             {displayedMembers.map((member) => (
                               <TeamProfile key={member.name} member={member} />

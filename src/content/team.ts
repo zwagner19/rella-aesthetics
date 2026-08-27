@@ -5,6 +5,10 @@ export const leadershipMember = {
   focus: "Medical Weight-Loss Physician",
   image: "/images/dr-zachary-wagner.jpg",
   locations: ["napa", "vacaville"],
+  bio: [
+    "An American Board of Obesity Medicine diplomate, Dr. Wagner leads Rella's medical weight-loss care. He works directly with patients to understand their history, goals, previous efforts, and safety considerations before recommending a next step.",
+    "He founded Rella around a simple idea: people should feel heard before they are asked to make a decision. His approach is clear and individualized—explain the options plainly, recommend only what makes sense, and build a plan that can be supported over time. Dr. Wagner does not perform aesthetic treatments or injections; those services are provided by Rella's aesthetics team.",
+  ],
 } as const;
 
 export const teamLocations = [
@@ -105,26 +109,25 @@ export const teamRoleGroups = [
     ],
   },
   {
-    title: "Weight Loss & Body Contouring",
+    title: "Medical Assisting",
     members: [
       {
         name: "Hailey Butler",
-        role: "Weight Loss & Body Contouring",
+        role: "Medical Assistant",
         image: null,
         primaryLocation: "napa",
         alsoServes: null,
         bio: [
-          "At Rella Aesthetics, I customize GLP-1 weight-loss treatments based on your goals and adjust your dosing as your journey evolves.",
-          "I also offer BodyTone treatments to help build and strengthen muscle, an ideal complement to weight loss, as well as vitamin injections to keep your energy and wellness optimized throughout the week.",
-          "The best part of working at Rella? The connections. The trust. And being part of a team that truly supports each other and our clients every step of the way.",
+          "Hailey supports Rella's medical weight-loss patients directly under Dr. Zachary Wagner's supervision. She helps administer injections, perform lab draws, and complete 3D body scans during patient visits.",
+          "Dr. Wagner directs medical decisions, dosing, and individualized care plans; Hailey helps carry out the clinical support work that keeps each visit organized and consistent.",
         ],
       },
     ],
   },
 ] as const;
 
-// The Aug. 9 handoff supplies portraits for these team members, but does not
-// confirm public roles or bios. Keep their public presentation name-only.
+// These team members have approved portraits and owner-confirmed care-area
+// groupings on the Team page, but no approved individual biographies yet.
 export const additionalTeamMembers = [
   {
     name: "Devyn Pickett",

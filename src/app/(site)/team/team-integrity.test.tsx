@@ -31,6 +31,9 @@ describe("team roster integrity", () => {
     expect(teamHtml).toContain(
       "does not perform aesthetic treatments or injections",
     );
+    for (const paragraph of leadershipMember.bio) {
+      expect(teamHtml).toContain(escapeHtmlText(paragraph));
+    }
     expect(teamHtml.indexOf("Leadership")).toBeLessThan(
       teamHtml.indexOf("Aesthetic Injectors"),
     );
@@ -53,7 +56,7 @@ describe("team roster integrity", () => {
       ["Michaela", "Esthetician & MA", "vacaville"],
       ["Sandra Maldonado", "MA", "vacaville"],
       ["Pia Tiaoqui", "MA", "vacaville"],
-      ["Hailey Butler", "Weight Loss & Body Contouring", "napa"],
+      ["Hailey Butler", "Medical Assistant", "napa"],
     ]);
 
     for (const group of teamRoleGroups) {
@@ -76,6 +79,25 @@ describe("team roster integrity", () => {
     expect(teamHtml).toContain("Esthetician");
     expect(teamHtml).toContain("Medical Assistant");
     expect(teamHtml).toContain("Front Desk / Patient Services");
+    expect(teamHtml).toContain(
+      "under Dr. Zachary Wagner&#x27;s supervision",
+    );
+    expect(teamHtml).toContain("administer injections");
+    expect(teamHtml).toContain("perform lab draws");
+    expect(teamHtml).toContain("3D body scans");
+    expect(teamHtml).toContain(
+      "Dr. Wagner directs medical decisions, dosing, and individualized care plans",
+    );
+    expect(teamHtml).not.toMatch(
+      /I customize GLP-1|adjust your dosing|I also offer BodyTone/i,
+    );
+    expect(teamRoleGroups.map((group) => group.title)).toContain(
+      "Medical Assisting",
+    );
+    expect(teamRoleGroups.map((group) => group.title)).not.toContain(
+      "Weight Loss & Body Contouring",
+    );
+    expect(teamHtml).not.toContain("body-contouring support");
   });
 
   it("presents the photo-only team members without inventing public roles or bios", () => {
@@ -145,9 +167,11 @@ describe("team roster integrity", () => {
     });
     expect(teamHtml).toContain('id="team-location-napa"');
     expect(teamHtml).toContain('id="team-location-vacaville"');
-    expect(teamHtml).toContain("Meet the Napa team.");
-    expect(teamHtml).toContain("Meet the Vacaville team.");
+    expect(teamHtml).toContain("Napa team");
+    expect(teamHtml).toContain("Vacaville team");
     expect(teamHtml).toContain("Across both locations.");
+    expect(teamHtml).not.toContain("Napa and Vacaville.");
+    expect(teamHtml).not.toContain("Vacaville care team");
     expect(
       teamRoleGroups.flatMap((group) =>
         group.members.flatMap((member) =>
@@ -223,6 +247,7 @@ describe("team roster integrity", () => {
     );
     expect(teamSource).not.toMatch(/\b(?:rounded|shadow|gradient)-/);
     expect(teamSource).not.toMatch(/boulevard|joinblvd|rella-hq/i);
+    expect(teamSource).not.toMatch(/<p[^>]*>\s*\{label\}\s*<\/p>/);
     expect(teamSource).toContain("resolveBookingHref({})");
   });
 
