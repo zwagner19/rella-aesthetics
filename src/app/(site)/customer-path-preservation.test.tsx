@@ -37,6 +37,7 @@ describe("preserved customer information paths", () => {
     expect(widgetSource).toContain("https://files.withcherry.com/widgets/widget.js");
     expect(widgetSource).toContain('CHERRY_MERCHANT_SLUG = "experiencerella"');
     expect(widgetSource).toContain('["all"]');
+    expect(widgetSource).toContain('max-w-full overflow-hidden');
     expect(widgetSource).not.toMatch(/email|phone|patient|diagnosis/i);
     expect(paymentMetadata.alternates?.canonical).toBe("/payment-plans");
   });

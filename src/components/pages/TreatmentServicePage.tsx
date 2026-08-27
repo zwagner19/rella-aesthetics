@@ -88,8 +88,8 @@ export function TreatmentServicePage({ service }: TreatmentServicePageProps) {
   return (
     <>
       <section className="bg-rose text-white">
-        <div className="mx-auto grid max-w-[1160px] items-stretch lg:grid-cols-2">
-          <div className="relative z-10">
+        <div className="mx-auto grid min-w-0 max-w-[1160px] items-stretch lg:grid-cols-2">
+          <div className="relative z-10 min-w-0">
             <div className="flex h-full flex-col justify-center px-5 py-16 md:px-8 md:py-24 lg:px-14 lg:py-28">
               <p className="mb-5 text-sm font-normal italic tracking-normal text-white">
                 {service.heroEyebrow} · {locationLabel}
@@ -118,7 +118,7 @@ export function TreatmentServicePage({ service }: TreatmentServicePageProps) {
             </div>
           </div>
 
-          <div className="relative aspect-[4/5] w-full overflow-hidden bg-rose md:aspect-[4/3] lg:h-full lg:min-h-[520px] lg:aspect-auto">
+          <div className="relative min-w-0 aspect-[4/5] w-full overflow-hidden bg-rose md:aspect-[4/3] lg:h-full lg:min-h-[520px] lg:aspect-auto">
             <Image
               src={service.image}
               alt={service.imageAlt}

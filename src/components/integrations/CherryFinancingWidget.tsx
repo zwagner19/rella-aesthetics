@@ -68,7 +68,7 @@ export function CherryFinancingWidget() {
   return (
     <div
       id="all"
-      className="min-h-[520px]"
+      className="min-h-[520px] max-w-full overflow-hidden"
       aria-label="Cherry payment-plan information and application options"
     />
   );
