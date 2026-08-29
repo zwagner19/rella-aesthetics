@@ -177,7 +177,7 @@ function HomePageContent({ isWeightLoss }: { isWeightLoss: boolean }) {
             />
           </div>
           <div className="lg:pl-8">
-            <p className="mb-5 text-[0.75rem] font-medium capitalize italic tracking-[0.08em] text-ink">
+            <p className="mb-5 text-[0.75rem] font-medium capitalize italic tracking-[0.08em] text-white">
               Medical weight management
             </p>
             <h2 className="mb-6 text-3xl font-bold uppercase leading-[1.08] tracking-[0.06em] text-white md:text-5xl">
@@ -221,7 +221,7 @@ function HomePageContent({ isWeightLoss }: { isWeightLoss: boolean }) {
         <div className="mx-auto max-w-[1200px] px-6 md:px-8 lg:px-12">
           <div className="mb-12 grid gap-8 lg:grid-cols-[0.75fr_1.25fr] lg:items-end lg:gap-20">
             <div>
-              <p className="mb-4 text-[0.75rem] font-medium capitalize italic tracking-[0.08em] text-ink">
+              <p className="mb-4 text-[0.75rem] font-medium capitalize italic tracking-[0.08em] text-white">
                 Care should feel clear
               </p>
               <h2 className="text-4xl font-bold uppercase leading-[1.02] tracking-[0.08em] text-white md:text-6xl">

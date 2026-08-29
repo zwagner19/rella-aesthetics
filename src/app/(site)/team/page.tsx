@@ -125,14 +125,22 @@ function AdditionalTeamGrid({
                 sizes="(min-width: 1024px) 320px, (min-width: 640px) 45vw, calc(100vw - 3rem)"
               />
             </div>
-            <p className="border-t border-silver/35 py-5 text-lg font-medium text-rose">
+            <p className="border-t border-silver/35 pb-2 pt-5 text-lg font-medium text-rose">
               {member.name}
             </p>
+            <p className="text-xs font-bold uppercase tracking-[0.12em] text-silver-dark">
+              {member.role}
+            </p>
             {member.alsoServes ? (
-              <p className="-mt-3 pb-5 text-xs font-bold uppercase tracking-[0.12em] text-rose-dark">
+              <p className="mt-2 text-xs font-bold uppercase tracking-[0.12em] text-rose-dark">
                 Also serves {locationName(member.alsoServes)}
               </p>
             ) : null}
+            <div className="mt-4 space-y-4 text-[0.9375rem] leading-relaxed text-ink/75">
+              {member.bio.map((paragraph) => (
+                <p key={paragraph}>{paragraph}</p>
+              ))}
+            </div>
           </li>
         ))}
       </ul>
@@ -183,6 +191,9 @@ function NapaRoleSection({
             ) : null}
             <div className="pt-0 lg:pt-1">
               <h4 className="text-2xl font-medium text-rose">{member.name}</h4>
+              <p className="mt-2 text-xs font-bold uppercase tracking-[0.12em] text-silver-dark">
+                {member.role}
+              </p>
               {member.alsoServes ? (
                 <p className="mt-3 text-xs font-bold uppercase tracking-[0.12em] text-rose-dark">
                   Also serves {locationName(member.alsoServes)}
@@ -208,13 +219,13 @@ export default function TeamPage() {
     <>
       <section className="border-b border-silver/25 bg-rose">
         <div className="mx-auto max-w-[1050px] px-6 py-20 md:px-8 md:py-28 lg:px-12">
-          <p className="mb-5 text-[0.75rem] font-medium capitalize italic tracking-[0.08em] text-ink">
+          <p className="mb-5 text-[0.75rem] font-medium capitalize italic tracking-[0.08em] text-white">
             Vacaville + Napa
           </p>
           <h1 className="max-w-[850px] text-4xl font-bold uppercase leading-[1.04] tracking-[0.06em] text-white md:text-6xl">
             Meet the people behind Rella.
           </h1>
-          <p className="mt-7 max-w-[720px] text-lg font-light leading-relaxed text-ink/70 md:text-xl">
+          <p className="mt-7 max-w-[720px] text-lg font-light leading-relaxed text-white md:text-xl">
             Rella brings together medical weight-loss care, nursing, advanced
             practice, esthetics, medical assisting, and patient services for our
             two local communities.
@@ -483,9 +494,17 @@ export default function TeamPage() {
                         sizes="(min-width: 1024px) 180px, (min-width: 768px) 28vw, (min-width: 640px) 45vw, calc(100vw - 3rem)"
                       />
                     </div>
-                    <p className="border-t border-silver/35 py-5 text-lg font-medium text-rose">
+                    <p className="border-t border-silver/35 pb-2 pt-5 text-lg font-medium text-rose">
                       {member.name}
                     </p>
+                    <p className="text-xs font-bold uppercase tracking-[0.12em] text-silver-dark">
+                      {member.role}
+                    </p>
+                    <div className="mt-4 space-y-4 text-[0.9375rem] leading-relaxed text-ink/75">
+                      {member.bio.map((paragraph) => (
+                        <p key={paragraph}>{paragraph}</p>
+                      ))}
+                    </div>
                   </li>
                 ))}
             </ul>
@@ -495,7 +514,7 @@ export default function TeamPage() {
 
       <section className="bg-rose py-16 text-white md:py-20">
         <div className="mx-auto flex max-w-[900px] flex-col items-center px-6 text-center">
-          <p className="mb-4 text-[0.75rem] font-medium capitalize italic tracking-[0.08em] text-ink">
+          <p className="mb-4 text-[0.75rem] font-medium capitalize italic tracking-[0.08em] text-white">
             Start with a conversation
           </p>
           <h2 className="text-3xl font-bold uppercase tracking-[0.06em] md:text-5xl">

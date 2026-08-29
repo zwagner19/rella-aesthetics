@@ -28,13 +28,13 @@ export default function MembershipPage() {
       {/* Hero */}
       <section className="bg-rose py-24 md:py-28">
         <div className="mx-auto max-w-[1200px] px-6 md:px-8 lg:px-12">
-          <p className="mb-4 text-[0.75rem] font-medium capitalize italic tracking-[0.08em] text-ink">
+          <p className="mb-4 text-[0.75rem] font-medium capitalize italic tracking-[0.08em] text-white">
             Membership
           </p>
           <h1 className="mb-5 text-4xl font-bold uppercase leading-[1.08] tracking-[0.08em] text-white md:text-6xl">
             2026 Memberships
           </h1>
-          <p className="max-w-[560px] text-lg font-light leading-relaxed text-ink/70">
+          <p className="max-w-[560px] text-lg font-light leading-relaxed text-white">
             Compare current injectable membership dues, member rates, included benefits, and the terms that matter before you enroll.
           </p>
         </div>
@@ -44,7 +44,7 @@ export default function MembershipPage() {
       <section className="py-20 md:py-28">
         <div className="mx-auto max-w-[1200px] px-6 md:px-8 lg:px-12">
           <div className="mb-12 max-w-[680px]">
-            <p className="mb-4 text-sm font-medium italic tracking-[0.04em] text-ink">
+            <p className="mb-4 text-sm font-medium italic tracking-[0.04em] text-rose">
               2026 Public Plans
             </p>
             <h2 className="mb-5 text-3xl font-medium uppercase leading-[1.08] tracking-[0.08em] text-rose md:text-5xl">

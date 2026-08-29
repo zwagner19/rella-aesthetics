@@ -39,7 +39,7 @@ describe("designer-approved color hierarchy", () => {
     expect(trustStrip).toContain("bg-rose px-5 text-center");
     expect(trustStrip).toContain("text-white");
     expect(membership).toContain("bg-rose");
-    expect(membership).toContain("italic text-ink");
+    expect(membership).toContain("italic text-white");
     expect(membership).toContain("text-white");
   });
 });

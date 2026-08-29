@@ -39,13 +39,13 @@ const patientResultImages = approvedPatientResultImages("main-gallery");
 export default function GalleryPage() {
   return (
     <>
-      <section className="bg-rose-blush py-20 md:py-28">
+      <section className="bg-rose py-20 text-white md:py-28">
         <div className="mx-auto max-w-[1000px] px-6 text-center md:px-8">
           <p className="mb-5 text-[0.75rem] font-medium capitalize italic tracking-[0.08em] text-ink">Our approach to results</p>
-          <h1 className="mb-6 text-[clamp(2.75rem,7vw,5rem)] font-bold uppercase leading-[0.98] tracking-[0.06em] text-rose">
+          <h1 className="mb-6 text-[clamp(2.75rem,7vw,5rem)] font-bold uppercase leading-[0.98] tracking-[0.06em] text-white">
             Results that still look like you.
           </h1>
-          <p className="mx-auto mb-8 max-w-[700px] text-lg font-light leading-relaxed text-silver-dark md:text-xl">
+          <p className="mx-auto mb-8 max-w-[700px] text-lg font-light leading-relaxed text-white md:text-xl">
             Rella&apos;s work begins with honest guidance, thoughtful consultation, and a treatment plan designed around your features and goals.
           </p>
           <Button href={resolveBookingHref({})} disableHover className="rounded-full !text-white">Book a Consultation</Button>
@@ -84,7 +84,7 @@ export default function GalleryPage() {
           <div className="mx-auto grid max-w-[1000px] gap-8 px-6 md:grid-cols-[0.9fr_1.1fr] md:items-center md:px-8">
             <div>
               <p className="mb-4 text-[0.75rem] font-medium capitalize italic tracking-[0.08em] text-white">Before and after photography</p>
-              <h2 className="text-3xl font-bold uppercase tracking-[0.06em] text-rose md:text-5xl">Real examples. Proper permission.</h2>
+              <h2 className="text-3xl font-bold uppercase tracking-[0.06em] text-white md:text-5xl">Real examples. Proper permission.</h2>
             </div>
             <div>
               <p className="mb-7 text-lg font-light leading-relaxed text-white/70">

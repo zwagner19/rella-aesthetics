@@ -70,7 +70,7 @@ export const teamRoleGroups = [
     ],
   },
   {
-    title: "Esthetics & Medical Assisting",
+    title: "Esthetics, Medical Assisting & Patient Services",
     members: [
       {
         name: "Michaela",
@@ -106,6 +106,16 @@ export const teamRoleGroups = [
           "Hi! I'm a medical assistant at Rella. I assist with treatments and help providers during patient care to help create a smooth, personalized experience for each patient. I also work closely with my own patients, supporting them through weight loss and vitamin injections for overall wellness. My favorite thing about working at Rella is the supportive environment and the level of care we put into every patient experience.",
         ],
       },
+      {
+        name: "Paula",
+        role: "Front Desk / Patient Services",
+        image: "/images/team/paula.jpg",
+        primaryLocation: "vacaville",
+        alsoServes: null,
+        bio: [
+          "Paula supports front desk and patient services at Rella Vacaville. She helps keep communication, scheduling, and day-to-day patient needs moving smoothly so every visit feels welcoming and well organized.",
+        ],
+      },
     ],
   },
   {
@@ -126,37 +136,45 @@ export const teamRoleGroups = [
   },
 ] as const;
 
-// These team members have approved portraits and owner-confirmed care-area
-// groupings on the Team page, but no approved individual biographies yet.
 export const additionalTeamMembers = [
   {
     name: "Devyn Pickett",
+    role: "Aesthetic RN",
     image: "/images/team/devyn.jpg",
     primaryLocation: "napa",
     alsoServes: "vacaville",
-  },
-  {
-    name: "Paula",
-    image: "/images/team/paula.jpg",
-    primaryLocation: "vacaville",
-    alsoServes: null,
+    bio: [
+      "Devyn is a registered nurse on Rella's aesthetic injection team. She serves primarily in Napa and also supports Vacaville, taking time to understand each patient's goals and help make treatment visits feel clear, thoughtful, and comfortable.",
+    ],
   },
   {
     name: "Ayano",
+    role: "Front Desk / Patient Services",
     image: "/images/team/ayano.jpg",
     primaryLocation: "napa",
     alsoServes: null,
+    bio: [
+      "Ayano supports front desk and patient services at Rella Napa. She helps patients navigate questions, scheduling, and the details around each visit so the experience feels organized and welcoming from the first conversation.",
+    ],
   },
   {
     name: "Natalie",
+    role: "Esthetician",
     image: "/images/team/natalie.jpg",
     primaryLocation: "napa",
     alsoServes: null,
+    bio: [
+      "Natalie is an esthetician at Rella Napa. She focuses on thoughtful, personalized skin-care visits and helps patients understand the options that fit their goals, routine, and comfort level.",
+    ],
   },
   {
     name: "Ryan",
+    role: "Director",
     image: "/images/team/ryan.jpg",
     primaryLocation: "both",
     alsoServes: null,
+    bio: [
+      "Ryan serves as Rella's Director, supporting patient communication and the day-to-day coordination that connects both locations. He helps the team keep inquiries, follow-up, and the patient experience moving clearly from first contact onward.",
+    ],
   },
 ] as const;

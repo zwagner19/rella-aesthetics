@@ -56,17 +56,14 @@ describe("team roster integrity", () => {
       ["Michaela", "Esthetician & MA", "vacaville"],
       ["Sandra Maldonado", "MA", "vacaville"],
       ["Pia Tiaoqui", "MA", "vacaville"],
+      ["Paula", "Front Desk / Patient Services", "vacaville"],
       ["Hailey Butler", "Medical Assistant", "napa"],
     ]);
 
     for (const group of teamRoleGroups) {
       for (const member of group.members) {
         expect(teamHtml).toContain(member.name);
-        if (!(
-          member.name === "Marisa Avalos" || member.name === "Hailey Butler"
-        )) {
-          expect(teamHtml).toContain(member.role.replace("&", "&amp;"));
-        }
+        expect(teamHtml).toContain(member.role.replace("&", "&amp;"));
         expect(member.bio.length).toBeGreaterThan(0);
         for (const paragraph of member.bio) {
           expect(teamHtml).toContain(escapeHtmlText(paragraph));
@@ -100,7 +97,7 @@ describe("team roster integrity", () => {
     expect(teamHtml).not.toContain("body-contouring support");
   });
 
-  it("presents the photo-only team members without inventing public roles or bios", () => {
+  it("publishes the owner-confirmed roles and biographies for the remaining team", () => {
     expect(
       additionalTeamMembers.map((member) => [
         member.name,
@@ -108,13 +105,16 @@ describe("team roster integrity", () => {
       ]),
     ).toEqual([
       ["Devyn Pickett", "napa"],
-      ["Paula", "vacaville"],
       ["Ayano", "napa"],
       ["Natalie", "napa"],
       ["Ryan", "both"],
     ]);
     for (const member of additionalTeamMembers) {
       expect(teamHtml).toContain(member.name);
+      expect(teamHtml).toContain(member.role);
+      for (const paragraph of member.bio) {
+        expect(teamHtml).toContain(escapeHtmlText(paragraph));
+      }
       expect(existsSync(`public${member.image}`)).toBe(true);
     }
     expect(teamHtml).not.toMatch(
@@ -158,11 +158,12 @@ describe("team roster integrity", () => {
         "Michaela",
         "Sandra Maldonado",
         "Pia Tiaoqui",
+        "Paula",
       ],
     });
     expect(additionalByLocation).toEqual({
       napa: ["Devyn Pickett", "Ayano", "Natalie"],
-      vacaville: ["Paula"],
+      vacaville: [],
       both: ["Ryan"],
     });
     expect(teamHtml).toContain('id="team-location-napa"');

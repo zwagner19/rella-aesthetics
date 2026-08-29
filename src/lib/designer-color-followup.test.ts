@@ -11,7 +11,7 @@ function tsxFiles(root: string): string[] {
 }
 
 describe("designer color follow-up", () => {
-  it("renders light/pink-surface eyebrows in Ink and preserves visible dark-surface exceptions", () => {
+  it("uses only the approved Ink, White, or Rose eyebrow colors", () => {
     const sources = [...tsxFiles("src/app"), ...tsxFiles("src/components")];
     const violations: string[] = [];
     const darkSurfaceCounts = new Map<string, number>();
@@ -22,6 +22,7 @@ describe("designer color follow-up", () => {
         const classes = match[1];
         if (!classes.split(/\s+/).includes("italic")) continue;
         if (classes.split(/\s+/).includes("text-ink")) continue;
+        if (classes.split(/\s+/).includes("text-rose")) continue;
         if (classes.split(/\s+/).includes("text-white")) {
           darkSurfaceCounts.set(path, (darkSurfaceCounts.get(path) ?? 0) + 1);
           continue;
@@ -32,9 +33,16 @@ describe("designer color follow-up", () => {
 
     expect(violations).toEqual([]);
     expect(Object.fromEntries(darkSurfaceCounts)).toEqual({
+      "src/app/(site)/about/page.tsx": 4,
       "src/app/(site)/book/page.tsx": 1,
       "src/app/(site)/gallery/page.tsx": 1,
+      "src/app/(site)/membership/page.tsx": 1,
+      "src/app/(site)/page.tsx": 2,
       "src/app/(site)/payment-plans/page.tsx": 1,
+      "src/app/(site)/private-parties/page.tsx": 1,
+      "src/app/(site)/team/page.tsx": 2,
+      "src/components/blocks/MembershipBanner.tsx": 1,
+      "src/components/blocks/PatientResultImageGallery.tsx": 1,
       "src/components/pages/LocationServicePage.tsx": 2,
       "src/components/pages/TreatmentServicePage.tsx": 4,
       "src/components/pages/WeightLossServicePage.tsx": 4,
@@ -62,7 +70,7 @@ describe("designer color follow-up", () => {
     expect(about).toContain("tracking-[0.06em] text-white md:text-4xl");
     expect(team).toContain("tracking-[0.06em] text-white md:text-6xl");
     expect(team).toContain("text-2xl font-medium text-rose");
-    expect(team).toContain("py-5 text-lg font-medium text-rose");
+    expect(team).toContain("pb-2 pt-5 text-lg font-medium text-rose");
     expect(team).toContain('className="bg-rose py-16 text-white md:py-20"');
     expect(team).toContain('variant="light"');
     expect(membership).toContain("tracking-[0.08em] text-white md:text-6xl");

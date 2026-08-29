@@ -74,7 +74,7 @@ export default function AboutPage() {
       <section className="overflow-hidden bg-rose">
         <div className="mx-auto grid max-w-[1200px] gap-14 px-6 py-20 md:px-8 md:py-28 lg:grid-cols-[1.05fr_0.95fr] lg:items-center lg:gap-24 lg:px-12">
           <div>
-            <p className="mb-5 text-[0.75rem] font-medium capitalize italic tracking-[0.08em] text-ink">
+            <p className="mb-5 text-[0.75rem] font-medium capitalize italic tracking-[0.08em] text-white">
               Locally owned · Vacaville + Napa
             </p>
             <h1 className="mb-7 max-w-[720px] text-4xl font-bold uppercase leading-[1.04] tracking-[0.06em] text-white md:text-6xl">
@@ -143,7 +143,7 @@ export default function AboutPage() {
       <section className="py-20 md:py-28">
         <div className="mx-auto grid max-w-[1200px] gap-10 px-6 md:px-8 lg:grid-cols-[0.8fr_1.2fr] lg:gap-20 lg:px-12">
           <div>
-            <p className="mb-4 text-[0.75rem] font-medium capitalize italic tracking-[0.08em] text-ink">
+            <p className="mb-4 text-[0.75rem] font-medium capitalize italic tracking-[0.08em] text-rose">
               The Rella standard
             </p>
             <h2 className="text-3xl font-bold uppercase leading-tight tracking-[0.06em] text-rose md:text-5xl">
@@ -179,7 +179,7 @@ export default function AboutPage() {
       <section className="border-y border-silver/20 bg-rose py-16 md:py-20">
         <div className="mx-auto flex max-w-[1120px] flex-col gap-8 px-6 md:px-8 lg:flex-row lg:items-center lg:justify-between lg:px-12">
           <div className="max-w-[700px]">
-            <p className="mb-3 text-[0.75rem] font-medium capitalize italic tracking-[0.08em] text-ink">
+            <p className="mb-3 text-[0.75rem] font-medium capitalize italic tracking-[0.08em] text-white">
               The people behind Rella
             </p>
             <h2 className="text-3xl font-bold uppercase tracking-[0.06em] text-white md:text-4xl">
@@ -204,7 +204,7 @@ export default function AboutPage() {
       <section className="bg-rose py-20 text-white md:py-28">
         <div className="mx-auto max-w-[1200px] px-6 md:px-8 lg:px-12">
           <div className="mb-12 max-w-[720px]">
-            <p className="mb-4 text-[0.75rem] font-medium capitalize italic tracking-[0.08em] text-ink">
+            <p className="mb-4 text-[0.75rem] font-medium capitalize italic tracking-[0.08em] text-white">
               How Rella approaches care
             </p>
             <h2 className="text-3xl font-bold uppercase tracking-[0.06em] text-white md:text-5xl">
@@ -269,7 +269,7 @@ export default function AboutPage() {
 
       <section className="bg-rose py-16 text-white md:py-20">
         <div className="mx-auto flex max-w-[900px] flex-col items-center px-6 text-center">
-          <p className="mb-4 text-[0.75rem] font-medium capitalize italic tracking-[0.08em] text-ink">
+          <p className="mb-4 text-[0.75rem] font-medium capitalize italic tracking-[0.08em] text-white">
             Start with clarity
           </p>
           <h2 className="mb-5 text-3xl font-bold uppercase tracking-[0.06em] md:text-5xl">

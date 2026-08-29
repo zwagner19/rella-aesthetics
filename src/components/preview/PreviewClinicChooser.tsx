@@ -240,12 +240,12 @@ export function PreviewClinicChooser() {
               <path d="M6 6l12 12M18 6L6 18" />
             </svg>
           </button>
-          <p className="mb-3 pr-12 text-[0.6875rem] font-bold uppercase tracking-[0.2em] text-ink">
+          <p className="mb-3 pr-12 text-[0.6875rem] font-bold uppercase tracking-[0.2em] text-white">
             The Rella Reveal
           </p>
           <h2
             id="preview-clinic-chooser-title"
-            className="max-w-[34rem] pr-10 text-3xl font-bold uppercase leading-[1.08] tracking-[0.05em] text-ink md:text-4xl"
+            className="max-w-[34rem] pr-10 text-3xl font-bold uppercase leading-[1.08] tracking-[0.05em] text-white md:text-4xl"
           >
             {step === "success"
               ? "Your reveal is ready"
