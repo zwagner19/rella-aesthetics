@@ -176,7 +176,8 @@ export const additionalTeamMembers = [
     primaryLocation: "both",
     alsoServes: null,
     bio: [
-      "Ryan serves as Rella's Director, supporting patient communication and the day-to-day coordination that connects both locations. He helps the team keep inquiries, follow-up, and the patient experience moving clearly from first contact onward.",
+      "I’ve always been crazy about wellness journeys and being the best versions of ourselves, for ourselves first. I love the challenge and results of helping others get healthy and happy, physically and mentally. Having experienced life-changing goals and results myself from within the industry, I’m truly blessed and always humble.",
+      "I love being with Rella Aesthetics because the team truly matches my desire to make the world better, more beautiful, and the best it can be. The amount of actual care, from the doctor to the front desk, is unbelievable. The dedication to results for patients is unmatched. It aligns perfectly with everything I could ever want and strive for.",
     ],
   },
 ] as const;

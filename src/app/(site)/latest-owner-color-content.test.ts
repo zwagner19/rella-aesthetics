@@ -70,5 +70,9 @@ describe("latest owner color and team-content decisions", () => {
     expect(remaining.Ayano.bio).toContain(
       "I love working at Rella because I get to talk to different people and hear different stories. I have met incredible people through Rella and I love the support I get from both clients and my coworkers.",
     );
+    expect(remaining.Ryan.bio).toEqual([
+      "I’ve always been crazy about wellness journeys and being the best versions of ourselves, for ourselves first. I love the challenge and results of helping others get healthy and happy, physically and mentally. Having experienced life-changing goals and results myself from within the industry, I’m truly blessed and always humble.",
+      "I love being with Rella Aesthetics because the team truly matches my desire to make the world better, more beautiful, and the best it can be. The amount of actual care, from the doctor to the front desk, is unbelievable. The dedication to results for patients is unmatched. It aligns perfectly with everything I could ever want and strive for.",
+    ]);
   });
 });
