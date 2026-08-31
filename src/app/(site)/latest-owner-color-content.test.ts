@@ -64,5 +64,11 @@ describe("latest owner color and team-content decisions", () => {
     const paula = vacavilleGroup?.members.find((member) => member.name === "Paula");
     expect(paula?.image).toBe("/images/team/paula.jpg");
     expect(paula?.bio.join(" ").length).toBeGreaterThan(60);
+    expect(paula?.bio).toContain(
+      "My favorite thing about being a part of the Rella team is the people! I love getting to know our regulars and seeing familiar faces walk through the door. Our patients make every day fun, and I love being part of a team that feels like family.",
+    );
+    expect(remaining.Ayano.bio).toContain(
+      "I love working at Rella because I get to talk to different people and hear different stories. I have met incredible people through Rella and I love the support I get from both clients and my coworkers.",
+    );
   });
 });

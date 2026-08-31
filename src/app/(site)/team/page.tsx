@@ -480,11 +480,14 @@ export default function TeamPage() {
                 Across both locations.
               </h2>
             </div>
-            <ul className="grid gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3">
+            <ul className="grid gap-y-10">
               {additionalTeamMembers
                 .filter((member) => member.primaryLocation === "both")
                 .map((member) => (
-                  <li key={member.name}>
+                  <li
+                    key={member.name}
+                    className="grid gap-6 lg:grid-cols-[minmax(180px,0.8fr)_minmax(0,1.2fr)] lg:items-start lg:gap-8"
+                  >
                     <div className="relative aspect-[4/5] overflow-hidden bg-paper">
                       <Image
                         src={member.image}
@@ -494,16 +497,18 @@ export default function TeamPage() {
                         sizes="(min-width: 1024px) 180px, (min-width: 768px) 28vw, (min-width: 640px) 45vw, calc(100vw - 3rem)"
                       />
                     </div>
-                    <p className="border-t border-silver/35 pb-2 pt-5 text-lg font-medium text-rose">
-                      {member.name}
-                    </p>
-                    <p className="text-xs font-bold uppercase tracking-[0.12em] text-silver-dark">
-                      {member.role}
-                    </p>
-                    <div className="mt-4 space-y-4 text-[0.9375rem] leading-relaxed text-ink/75">
-                      {member.bio.map((paragraph) => (
-                        <p key={paragraph}>{paragraph}</p>
-                      ))}
+                    <div className="min-w-0 lg:pt-1">
+                      <p className="border-t border-silver/35 pb-2 pt-5 text-lg font-medium text-rose lg:pt-4">
+                        {member.name}
+                      </p>
+                      <p className="text-xs font-bold uppercase tracking-[0.12em] text-silver-dark">
+                        {member.role}
+                      </p>
+                      <div className="mt-4 space-y-4 text-[0.9375rem] leading-relaxed text-ink/75">
+                        {member.bio.map((paragraph) => (
+                          <p key={paragraph}>{paragraph}</p>
+                        ))}
+                      </div>
                     </div>
                   </li>
                 ))}

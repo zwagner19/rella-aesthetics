@@ -35,7 +35,7 @@ describe("designer color follow-up", () => {
     expect(Object.fromEntries(darkSurfaceCounts)).toEqual({
       "src/app/(site)/about/page.tsx": 4,
       "src/app/(site)/book/page.tsx": 1,
-      "src/app/(site)/gallery/page.tsx": 1,
+      "src/app/(site)/gallery/page.tsx": 2,
       "src/app/(site)/membership/page.tsx": 1,
       "src/app/(site)/page.tsx": 2,
       "src/app/(site)/payment-plans/page.tsx": 1,

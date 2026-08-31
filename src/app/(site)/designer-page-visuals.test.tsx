@@ -49,6 +49,9 @@ describe("designer page color checklist", () => {
       expect(existsSync(`public${service.image}`), service.image).toBe(true);
       expect(service.imageAlt.length).toBeGreaterThan(0);
     }
+    expect(servicesSource).toContain(
+      'italic tracking-[0.04em] text-rose">\n                Treatments',
+    );
     expect(servicesSource).toContain("text-rose md:text-5xl");
     expect(servicesSource).toContain("group-hover:text-white");
     expect(servicesSource).toContain("group-focus-visible:text-white");

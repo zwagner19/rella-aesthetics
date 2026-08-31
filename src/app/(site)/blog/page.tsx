@@ -130,7 +130,7 @@ export default async function BlogPage() {
       {/* Hero */}
       <section className="bg-rose py-24 text-white">
         <div className="mx-auto max-w-[1200px] px-6 md:px-8 lg:px-12">
-          <p className="font-bold text-[0.6875rem] tracking-[0.2em] uppercase text-ink mb-4">
+          <p className="font-bold text-[0.6875rem] tracking-[0.2em] uppercase text-white mb-4">
             Education
           </p>
           <h1 className="mb-5 text-4xl font-bold uppercase leading-[1.08] tracking-[0.08em] text-white md:text-6xl">
@@ -150,6 +150,7 @@ export default async function BlogPage() {
             <div>
               <SectionHeader
                 eyebrow="Latest Article"
+                eyebrowTone="rose"
                 title="Local answers that lead somewhere useful"
                 description="Each article is built from Rella's current public facts and connects to the relevant clinic, service, and booking path."
               />
@@ -180,6 +181,7 @@ export default async function BlogPage() {
           <div className="mt-20 border-t border-silver-pale pt-16">
             <SectionHeader
               eyebrow="Verified Starting Points"
+              eyebrowTone="rose"
               title="Go straight to the treatment guide"
               description="Prefer the essentials? These service guides use the same current pricing and booking rules."
             />

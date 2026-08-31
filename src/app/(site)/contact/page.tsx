@@ -25,7 +25,7 @@ export default async function ContactPage({
       {/* Hero */}
       <section className="bg-rose py-24 text-white">
         <div className="mx-auto max-w-[1200px] px-6 md:px-8 lg:px-12">
-          <p className="mb-4 text-[0.6875rem] font-bold uppercase tracking-[0.2em] text-ink">
+          <p className="mb-4 text-[0.6875rem] font-bold uppercase tracking-[0.2em] text-white">
             Contact
           </p>
           <h1 className="mb-5 text-4xl font-bold uppercase leading-[1.08] tracking-[0.08em] text-white md:text-6xl">

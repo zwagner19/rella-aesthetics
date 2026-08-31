@@ -120,6 +120,9 @@ describe("team roster integrity", () => {
     expect(teamHtml).not.toMatch(
       /Director of Ops|Nurse Injector|verified roles|confirmed team members|approved for publication|listed without titles or biographies/i,
     );
+    expect(teamSource).toContain(
+      "lg:grid-cols-[minmax(180px,0.8fr)_minmax(0,1.2fr)]",
+    );
   });
 
   it("breaks the roster down by Napa, Vacaville, and Rella-wide support", () => {

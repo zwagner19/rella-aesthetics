@@ -114,6 +114,7 @@ export const teamRoleGroups = [
         alsoServes: null,
         bio: [
           "Paula supports front desk and patient services at Rella Vacaville. She helps keep communication, scheduling, and day-to-day patient needs moving smoothly so every visit feels welcoming and well organized.",
+          "My favorite thing about being a part of the Rella team is the people! I love getting to know our regulars and seeing familiar faces walk through the door. Our patients make every day fun, and I love being part of a team that feels like family.",
         ],
       },
     ],
@@ -155,6 +156,7 @@ export const additionalTeamMembers = [
     alsoServes: null,
     bio: [
       "Ayano supports front desk and patient services at Rella Napa. She helps patients navigate questions, scheduling, and the details around each visit so the experience feels organized and welcoming from the first conversation.",
+      "I love working at Rella because I get to talk to different people and hear different stories. I have met incredible people through Rella and I love the support I get from both clients and my coworkers.",
     ],
   },
   {

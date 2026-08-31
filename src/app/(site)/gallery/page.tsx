@@ -3,9 +3,8 @@ import { resolveBookingHref } from "@/lib/booking-routes";
 import { Button } from "@/components/ui/Button";
 import { TrustStrip } from "@/components/blocks/TrustStrip";
 import { TestimonialCard } from "@/components/blocks/TestimonialCard";
-import { BeforeAfterGallery } from "@/components/blocks/BeforeAfterGallery";
 import { PatientResultImageGallery } from "@/components/blocks/PatientResultImageGallery";
-import { approvedPatientResultImages, approvedResultsFor } from "@/content/results";
+import { approvedPatientResultImages } from "@/content/results";
 import { testimonials } from "@/lib/data";
 
 export const metadata: Metadata = {
@@ -33,7 +32,6 @@ const resultPrinciples = [
   },
 ] as const;
 
-const mainGalleryResults = approvedResultsFor("main-gallery");
 const patientResultImages = approvedPatientResultImages("main-gallery");
 
 export default function GalleryPage() {
@@ -41,14 +39,14 @@ export default function GalleryPage() {
     <>
       <section className="bg-rose py-20 text-white md:py-28">
         <div className="mx-auto max-w-[1000px] px-6 text-center md:px-8">
-          <p className="mb-5 text-[0.75rem] font-medium capitalize italic tracking-[0.08em] text-ink">Our approach to results</p>
+          <p className="mb-5 text-[0.75rem] font-medium capitalize italic tracking-[0.08em] text-white">Our approach to results</p>
           <h1 className="mb-6 text-[clamp(2.75rem,7vw,5rem)] font-bold uppercase leading-[0.98] tracking-[0.06em] text-white">
             Results that still look like you.
           </h1>
           <p className="mx-auto mb-8 max-w-[700px] text-lg font-light leading-relaxed text-white md:text-xl">
             Rella&apos;s work begins with honest guidance, thoughtful consultation, and a treatment plan designed around your features and goals.
           </p>
-          <Button href={resolveBookingHref({})} disableHover className="rounded-full !text-white">Book a Consultation</Button>
+          <Button href={resolveBookingHref({})} disableHover className="rounded-full !border-white !text-white">Book a Consultation</Button>
         </div>
       </section>
 
@@ -62,7 +60,7 @@ export default function GalleryPage() {
       <section className="py-20 md:py-28">
         <div className="mx-auto max-w-[1200px] px-6 md:px-8 lg:px-12">
           <div className="mb-12 max-w-[760px]">
-            <p className="mb-4 text-[0.75rem] font-medium capitalize italic tracking-[0.08em] text-ink">What guides the work</p>
+            <p className="mb-4 text-[0.75rem] font-medium capitalize italic tracking-[0.08em] text-rose">What guides the work</p>
             <h2 className="text-3xl font-bold uppercase tracking-[0.06em] text-rose md:text-5xl">Natural does not mean one size fits all.</h2>
           </div>
           <div className="grid gap-px bg-silver-pale md:grid-cols-3">
@@ -77,34 +75,17 @@ export default function GalleryPage() {
         </div>
       </section>
 
-      {mainGalleryResults.length > 0 ? (
-        <BeforeAfterGallery results={mainGalleryResults} tone="blush" />
-      ) : (
-        <section className="bg-ink py-20 text-white md:py-24">
-          <div className="mx-auto grid max-w-[1000px] gap-8 px-6 md:grid-cols-[0.9fr_1.1fr] md:items-center md:px-8">
-            <div>
-              <p className="mb-4 text-[0.75rem] font-medium capitalize italic tracking-[0.08em] text-white">Before and after photography</p>
-              <h2 className="text-3xl font-bold uppercase tracking-[0.06em] text-white md:text-5xl">Real examples. Proper permission.</h2>
-            </div>
-            <div>
-              <p className="mb-7 text-lg font-light leading-relaxed text-white/70">
-                Rella is preparing a public gallery using only properly consented patient photography. During your consultation, ask the team to review relevant examples and discuss what may be realistic for you. Individual results vary.
-              </p>
-              <Button href={resolveBookingHref({})} disableHover className="rounded-full !text-white">Discuss Your Goals</Button>
-            </div>
-          </div>
-        </section>
-      )}
-
-      <section className="bg-rose-blush py-20 md:py-24">
+      <section className="bg-rose py-20 text-white md:py-24">
         <div className="mx-auto max-w-[1200px] px-6 md:px-8 lg:px-12">
           <div className="mb-10 max-w-[720px]">
-            <p className="mb-4 text-[0.75rem] font-medium capitalize italic tracking-[0.08em] text-ink">Patient perspective</p>
-            <h2 className="text-3xl font-bold uppercase tracking-[0.06em] text-rose md:text-5xl">What patients say about the experience.</h2>
+            <p className="mb-4 text-[0.75rem] font-medium capitalize italic tracking-[0.08em] text-white">Patient perspective</p>
+            <h2 className="text-3xl font-bold uppercase tracking-[0.06em] text-white md:text-5xl">What patients say about the experience.</h2>
           </div>
           <div className="grid gap-10 md:grid-cols-3">
             {testimonials.map((item) => (
-              <TestimonialCard key={item.name} quote={item.quote} name={item.name} source={item.source} />
+              <div key={item.name} className="bg-white p-6">
+                <TestimonialCard quote={item.quote} name={item.name} source={item.source} />
+              </div>
             ))}
           </div>
         </div>

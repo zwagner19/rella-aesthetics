@@ -35,7 +35,13 @@ describe("designer-approved color hierarchy", () => {
 
     expect(button).toContain("border-rose bg-rose text-white");
     expect(button).toContain("border-rose bg-white text-rose");
-    expect(sectionHeader).toContain('tone === "light" ? "text-white" : "text-ink"');
+    expect(sectionHeader).toContain(
+      'eyebrowTone = tone === "light" ? "light" : "default"',
+    );
+    expect(sectionHeader).toContain('eyebrowTone === "rose"');
+    expect(sectionHeader).toContain(
+      'tone === "light" ? "text-white" : "text-rose"',
+    );
     expect(trustStrip).toContain("bg-rose px-5 text-center");
     expect(trustStrip).toContain("text-white");
     expect(membership).toContain("bg-rose");

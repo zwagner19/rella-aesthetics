@@ -45,11 +45,24 @@ describe("before-and-after publishing safeguards", () => {
     }
   });
 
-  it("labels every top result card without inventing a treatment or timeframe", () => {
+  it("labels every patient result in the owner-confirmed reading order", () => {
     expect(patientResultImages).toHaveLength(9);
+    expect(patientResultImages.map((result) => result.treatment)).toEqual([
+      "Lip Filler",
+      "CoolPeel",
+      "Microneedling + CoolPeel",
+      "Botox",
+      "3 Sessions of CoolPeel, 4 Weeks Apart",
+      "Lips",
+      "Deluxe HydraFacial",
+      "Botox",
+      "Under-Eye Filler",
+    ]);
     for (const result of patientResultImages) {
-      expect(result.treatmentArea.trim()).not.toBe("");
-      expect(result.caption).toContain("Service details and timing were not provided");
+      expect(result.treatment.trim()).not.toBe("");
+      expect(result.caption).toBe(
+        "Patient result shared with permission. Individual results vary.",
+      );
       expect(result.alt).toContain("shared with Rella Aesthetics");
     }
   });

@@ -4,6 +4,7 @@ interface SectionHeaderProps {
   description?: string;
   headingLevel?: 1 | 2;
   tone?: "default" | "light";
+  eyebrowTone?: "default" | "rose" | "light";
 }
 
 export function SectionHeader({
@@ -12,9 +13,15 @@ export function SectionHeader({
   description,
   headingLevel = 2,
   tone = "default",
+  eyebrowTone = tone === "light" ? "light" : "default",
 }: SectionHeaderProps) {
   const Heading = headingLevel === 1 ? "h1" : "h2";
-  const eyebrowColor = tone === "light" ? "text-white" : "text-ink";
+  const eyebrowColor =
+    eyebrowTone === "light"
+      ? "text-white"
+      : eyebrowTone === "rose"
+        ? "text-rose"
+        : "text-ink";
   const titleColor = tone === "light" ? "text-white" : "text-rose";
   const descriptionColor = tone === "light" ? "text-white/90" : "text-ink/70";
 
