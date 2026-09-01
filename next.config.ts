@@ -1,8 +1,14 @@
 import type { NextConfig } from "next";
+import legacyRedirects from "./legacy-redirects.json";
 
 const nextConfig: NextConfig = {
+  // Let proxy return a direct 410 for both slash variants of retired URLs.
+  // The proxy preserves the existing slashless canonical redirect everywhere
+  // else, so this does not create duplicate public page routes.
+  skipTrailingSlashRedirect: true,
   images: {
     formats: ["image/avif", "image/webp"],
+    qualities: [75, 90],
   },
 
 
@@ -53,31 +59,13 @@ const nextConfig: NextConfig = {
   },
 
   async redirects() {
-    return [
-      // Old WordPress → new Next.js routes
-      { source: "/treatments/", destination: "/services", permanent: true },
-      { source: "/treatments", destination: "/services", permanent: true },
-      { source: "/botox/", destination: "/services/botox", permanent: true },
-      { source: "/botox", destination: "/services/botox", permanent: true },
-      { source: "/dermal-fillers/", destination: "/services/dermal-fillers", permanent: true },
-      { source: "/dermal-fillers", destination: "/services/dermal-fillers", permanent: true },
-      { source: "/weight-loss/", destination: "/services/weight-loss", permanent: true },
-      { source: "/weight-loss", destination: "/services/weight-loss", permanent: true },
-      { source: "/iv-hydration/", destination: "/services/iv-hydration", permanent: true },
-      { source: "/iv-hydration", destination: "/services/iv-hydration", permanent: true },
-      { source: "/laser-treatments/", destination: "/services/laser-treatments", permanent: true },
-      { source: "/laser-treatments", destination: "/services/laser-treatments", permanent: true },
-      { source: "/membership/", destination: "/membership", permanent: true },
-      { source: "/upcoming-events/", destination: "/", permanent: true },
-      { source: "/upcoming-events", destination: "/", permanent: true },
-      { source: "/private-parties/", destination: "/contact", permanent: true },
-      { source: "/private-parties", destination: "/contact", permanent: true },
-      { source: "/testimonials/", destination: "/gallery", permanent: true },
-      { source: "/testimonials", destination: "/gallery", permanent: true },
-      { source: "/about/", destination: "/about", permanent: true },
-      { source: "/contact/", destination: "/contact", permanent: true },
-      { source: "/privacy-policy/", destination: "/privacy-policy", permanent: true },
-    ];
+    // Keep every moved WordPress URL in one audited source of truth. Both
+    // variants are retained so the mapping stays explicit if trailing-slash
+    // normalization changes later.
+    return legacyRedirects.flatMap(({ source, destination }) => [
+      { source: `${source}/`, destination, permanent: true as const },
+      { source, destination, permanent: true as const },
+    ]);
   },
 };
 

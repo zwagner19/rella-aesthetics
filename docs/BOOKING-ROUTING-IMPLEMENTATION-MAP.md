@@ -1,32 +1,41 @@
-# Booking-CTA Routing — audit + implementation map (Large Sprint 06, Workstream D)
+# Booking-CTA routing — current implementation map
+
+> Updated August 13, 2026. This document supersedes the earlier browser-side
+> Boulevard-widget routing described in the August 3 audit notes. Boulevard is
+> now server-side behind the separate Rella-owned booking application.
 
 Single source of truth: `src/lib/booking-routes.ts` (`resolveBookingHref`), proven by
 `src/lib/booking-routes.test.ts` (Vacaville + generic CTAs can never reach the Napa Tox app; only an
 explicit Napa Tox/Botox intent does). Targets:
 
 - Napa New Patient Tox / Botox → `https://book.experiencerella.com/book/napa/botox` (canonical hardened app)
-- Napa other verified service (Hydrafacial) → verified Boulevard deep link
-- Napa, unspecified service → Napa-scoped Boulevard widget (not Tox)
-- Vacaville (any) → Vacaville-scoped Boulevard widget (never Napa Tox)
-- Generic / no location → business-level Boulevard widget (never silently Napa Tox)
+- Napa other verified services → `https://book.experiencerella.com/book?location=napa&service=<intent>`
+- Vacaville verified services → `https://book.experiencerella.com/book?location=vacaville&service=<intent>`
+- Generic / no location → first-party website `/book`, then the Rella-owned booking chooser
+- Medical weight loss → `https://book.rellaweightloss.com/book/<city>/weight-loss-consult`
+- IV hydration → call-assisted/chooser workflow until the clinical formula-selection path is approved
 
 ## CTA audit + status
 | Surface | Was | Now | Notes |
 |---|---|---|---|
-| `locations/napa/page.tsx` "Book at Napa" | `/booking` | `resolveBookingHref({location:"napa"})` → Napa widget | ✅ rewired. Design pass: add a dedicated "Book New Patient Tox" CTA → canonical app. |
-| `locations/vacaville/page.tsx` "Book at Vacaville" | `/booking` | `resolveBookingHref({location:"vacaville"})` → Vacaville widget | ✅ rewired. Never routes to Napa Tox. |
-| `services/[slug]/page.tsx` (×3) | `/booking?service=slug` | `resolveBookingHref({service:slug})` | ✅ rewired. Location-agnostic → generic/deeplink; Botox slug → generic (no location assumed). |
+| `locations/napa/page.tsx` "Book at Napa" | `/booking` | `resolveBookingHref({location:"napa"})` → branded custom chooser | ✅ Never routes to a browser-side vendor widget. |
+| `locations/vacaville/page.tsx` "Book at Vacaville" | `/booking` | `resolveBookingHref({location:"vacaville"})` → branded custom chooser | ✅ Never routes to Napa Tox. |
+| Shared treatment pages | `/booking?service=slug` | on-page Vacaville/Napa choice, then `resolveBookingHref({location,service})` | ✅ Location and service intent remain explicit. |
 | `components/blocks/BookingCta.tsx` | `/booking?service=slug` | `resolveBookingHref({location?,service})` + optional `location` prop | ✅ rewired (shared component). |
-| `components/layout/Header.tsx`, `MobileNav.tsx`, `Footer.tsx` "Book/Book Online" | `/booking` | **mapped** → `resolveBookingHref({})` (generic widget) | ⏭ design pass — generic nav CTAs; safe today (they point at the internal wizard, not Napa Tox). |
-| `app/page.tsx` (home), `gallery`, `about`, `membership`, `blog/[slug]`, `blog/BlogSidebar` | `/booking` | **mapped** → `resolveBookingHref({})` or a section-appropriate location/service | ⏭ design pass — generic content CTAs. |
-| `app/booking/page.tsx` + `components/integrations/BoulevardCustomBooking.tsx` + `BoulevardBookingWizard.tsx` | embedded Boulevard SDK wizard (second booking implementation) | **QUARANTINE** | ⏭ design pass — remove public routing to `/booking`; do not maintain a second booking implementation. Keep the code out of the public nav; final removal ships with the design package. |
+| `components/layout/Header.tsx`, `MobileNav.tsx`, `Footer.tsx` "Book/Book Online" | `/booking` | `resolveBookingHref({})` → `/book` | ✅ first-party clinic choice before any Boulevard handoff. |
+| `app/page.tsx`, `gallery`, `about`, `membership`, `blog/[slug]`, `BlogSidebar` | `/booking` | `resolveBookingHref({})` or a section-appropriate location/service | ✅ no public CTA routes into the retired internal wizard. |
+| `app/booking/page.tsx` | embedded Boulevard SDK wizard | server redirect to `/book` | ✅ Retired from the public journey. |
+| `app/book/page.tsx` | — | exactly Napa and Vacaville, then the branded custom-booking origin | ✅ Keeps vendor implementation details server-side. |
 
-## Quarantine plan for the embedded wizard (`/booking`)
-The retired embedded custom wizard must not be a public destination. This PR rewires the location/service
-CTAs off `/booking`; the remaining generic `/booking` links (nav/footer/home/content) are mapped above and
-should be repointed to `resolveBookingHref(...)` in the design-package pass, after which `/booking` can be
-redirected to a safe explicit location/service choice (or removed). No second booking UI is maintained.
+## External destination health
+
+`npm run check:booking-links` discovers booking links rendered for both public
+website host contexts and verifies the approved Rella-owned destinations
+without submitting a form. It must find `book.experiencerella.com` on the main
+site and `book.rellaweightloss.com` on the weight-loss site. It must reject
+direct Boulevard/JoinBLVD and Rella HQ destinations.
 
 ## Preserved
-SEO/metadata, analytics, and privacy are unchanged (only CTA `href`s changed on the rewired surfaces).
-No DNS, no repo-visibility, no deploy. Do not convert `.dc.html` design runtime artifacts into production.
+The booking smoke check sends no form contents or patient information and does
+not create a cart, appointment, checkout, or payment. No DNS, deployment,
+Boulevard setting, or Rella HQ change is part of the verification workflow.

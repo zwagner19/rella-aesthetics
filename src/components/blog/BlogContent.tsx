@@ -6,28 +6,28 @@ import type { PortableTextBlock } from "next-sanity";
 const components: PortableTextComponents = {
   block: {
     h2: ({ children }) => (
-      <h2 className="font-medium text-2xl text-silver-dark mt-10 mb-4">{children}</h2>
+      <h2 className="font-medium text-2xl text-rose mt-10 mb-4">{children}</h2>
     ),
     h3: ({ children }) => (
-      <h3 className="font-medium text-xl text-silver-dark mt-8 mb-3">{children}</h3>
+      <h3 className="font-medium text-xl text-rose mt-8 mb-3">{children}</h3>
     ),
     h4: ({ children }) => (
-      <h4 className="font-medium text-lg text-silver-dark mt-6 mb-2">{children}</h4>
+      <h4 className="font-medium text-lg text-rose mt-6 mb-2">{children}</h4>
     ),
     blockquote: ({ children }) => (
-      <blockquote className="border-l-4 border-rose-light pl-6 my-6 italic text-silver">
+      <blockquote className="border-l-4 border-rose-light pl-6 my-6 italic text-ink/70">
         {children}
       </blockquote>
     ),
     normal: ({ children }) => (
-      <p className="text-silver-dark leading-relaxed mb-4">{children}</p>
+      <p className="text-ink/70 leading-relaxed mb-4">{children}</p>
     ),
   },
   marks: {
     link: ({ children, value }) => (
       <a
         href={value?.href}
-        className="text-rose-text underline underline-offset-2 hover:text-rose-dark transition-colors"
+        className="text-rose underline underline-offset-2 hover:text-ink transition-colors"
         target={value?.href?.startsWith("http") ? "_blank" : undefined}
         rel={value?.href?.startsWith("http") ? "noopener noreferrer" : undefined}
       >
@@ -45,7 +45,7 @@ const components: PortableTextComponents = {
             alt={value.alt || ""}
             width={800}
             height={450}
-            className="rounded-lg w-full h-auto"
+            className="w-full h-auto"
           />
           {value.caption && (
             <figcaption className="mt-2 text-sm text-silver text-center">

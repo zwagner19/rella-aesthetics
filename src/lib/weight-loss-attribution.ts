@@ -1,4 +1,4 @@
-const WEIGHT_LOSS_BOOKING_ORIGIN = "https://book.rellaweightloss.com";
+import { WEIGHT_LOSS_BOOKING_ORIGIN } from "./booking-routes";
 
 const CLICK_ID_FIELDS = ["gclid", "gbraid", "wbraid", "gclsrc"] as const;
 const MARKETING_FIELDS = [

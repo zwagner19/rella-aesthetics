@@ -1,8 +1,11 @@
 import { describe, expect, it } from "vitest";
+import {
+  resolveWeightLossConsultHref,
+  WEIGHT_LOSS_BOOKING_ORIGIN,
+} from "./booking-routes";
 import { withWeightLossAttribution } from "./weight-loss-attribution";
 
-const BOOKING_URL =
-  "https://book.rellaweightloss.com/book/vacaville/weight-loss-consult";
+const BOOKING_URL = resolveWeightLossConsultHref("vacaville");
 
 describe("weight-loss paid attribution handoff", () => {
   it("preserves approved click and campaign fields for the booking app", () => {
@@ -15,7 +18,7 @@ describe("weight-loss paid attribution handoff", () => {
       ),
     );
 
-    expect(result.origin).toBe("https://book.rellaweightloss.com");
+    expect(result.origin).toBe(WEIGHT_LOSS_BOOKING_ORIGIN);
     expect(result.searchParams.get("gclid")).toBe("Cj0K.real-1");
     expect(result.searchParams.get("utm_campaign")).toBe(
       "vacaville-weight-loss",

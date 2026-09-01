@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Poppins } from "next/font/google";
+import { AestheticsAttributionHandoff } from "@/components/integrations/AestheticsAttributionHandoff";
 import "./globals.css";
 
 const poppins = Poppins({
@@ -21,6 +22,9 @@ export const metadata: Metadata = {
     type: "website",
     locale: "en_US",
     siteName: "Rella Aesthetics",
+  },
+  twitter: {
+    card: "summary_large_image",
   },
   robots: {
     index: true,
@@ -48,6 +52,7 @@ export default function RootLayout({
         Both groups keep their URLs unchanged — route groups are path-invisible.
       */}
       <body className="min-h-screen flex flex-col font-sans text-silver-dark bg-white">
+        <AestheticsAttributionHandoff />
         {children}
       </body>
     </html>

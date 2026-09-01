@@ -10,7 +10,7 @@ export default function NotFound() {
         <h1 className="font-bold text-5xl md:text-6xl tracking-[0.08em] uppercase text-rose-text mb-6">
           404
         </h1>
-        <p className="text-lg text-silver mb-8">
+        <p className="text-lg text-ink/70 mb-8">
           The page you&apos;re looking for doesn&apos;t exist or has moved.
         </p>
         <div className="flex flex-wrap justify-center gap-4">

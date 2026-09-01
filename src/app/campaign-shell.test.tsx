@@ -5,6 +5,9 @@ import { describe, it, expect, vi } from "vitest";
 vi.mock("next/font/google", () => ({
   Poppins: () => ({ variable: "--font-poppins", className: "font-poppins" }),
 }));
+vi.mock("next/headers", () => ({
+  headers: async () => new Headers({ host: "rella-aesthetics.vercel.app" }),
+}));
 import { renderToStaticMarkup } from "react-dom/server";
 import { readFileSync, readdirSync } from "node:fs";
 import { join } from "node:path";
@@ -40,9 +43,7 @@ const campaignDoc = renderToStaticMarkup(
 
 /** What an ordinary marketing route gets: root → site chrome → its page. */
 const siteDoc = renderToStaticMarkup(
-  <SiteLayout>
-    <p>ordinary marketing page</p>
-  </SiteLayout>,
+  await SiteLayout({ children: <p>ordinary marketing page</p> }),
 );
 
 describe("the campaign route renders the focused B01 shell", () => {
@@ -257,10 +258,13 @@ describe("FULL-DOCUMENT booking and call destination matrix", () => {
     expect(campaignDoc).toContain("(707) 358-2928");
   });
 
-  it("generic and Vacaville routing behaviour is unchanged", () => {
-    expect(resolveBookingHref({})).toMatch(/dashboard\.boulevard\.io/);
-    expect(resolveBookingHref({ location: "vacaville" })).toMatch(/locationId=0f146f87/);
+  it("generic and Vacaville routing stay city-safe and widget-free", () => {
+    expect(resolveBookingHref({})).toBe("/book");
+    expect(resolveBookingHref({ location: "vacaville" })).toBe(
+      "https://book.experiencerella.com/book?location=vacaville",
+    );
     expect(resolveBookingHref({ location: "vacaville", service: "botox" })).not.toBe(CANONICAL_NAPA_TOX);
+    expect(resolveBookingHref({ location: "vacaville", service: "botox" })).not.toContain("dashboard.boulevard.io");
   });
 });
 

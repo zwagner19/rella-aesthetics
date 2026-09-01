@@ -22,9 +22,9 @@ describe("medical-weight-loss conversion foundation", () => {
     expect(serviceSchema.url).toBe(MEDICAL_WEIGHT_LOSS_CANONICAL_URL);
     expect(serviceSchema["@id"]).toBe(`${MEDICAL_WEIGHT_LOSS_CANONICAL_URL}#service`);
   });
-
-  it("leads with a clear local, physician-led offer", () => {
-    expect(weightLossHtml).toContain("Talk with an obesity-medicine physician about GLP-1 options in Vacaville &amp; Napa.");
+  it("leads with a concise medical-qualification offer", () => {
+    expect(weightLossHtml).toContain("Find out if you medically qualify for GLP-1 care.");
+    expect(weightLossHtml).not.toContain("Talk with an obesity-medicine physician about GLP-1 options in Vacaville &amp; Napa.");
     expect(weightLossHtml).toContain("Vacaville");
     expect(weightLossHtml).toContain("Napa");
     expect(weightLossHtml).toContain("30-minute phone consultation");

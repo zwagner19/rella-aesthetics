@@ -1,9 +1,21 @@
+import { headers } from "next/headers";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { SkipNav } from "@/components/layout/SkipNav";
 import { GhlChatWidget } from "@/components/integrations/GhlChatWidget";
 import { GoogleAnalytics } from "@/components/integrations/GoogleAnalytics";
 import { MetaPixel } from "@/components/integrations/MetaPixel";
+import { ConversionTracker } from "@/components/integrations/ConversionTracker";
+import { ClarityAnalytics } from "@/components/integrations/ClarityAnalytics";
+import { MobileConversionBar } from "@/components/layout/MobileConversionBar";
+import { PreviewClinicChooser } from "@/components/preview/PreviewClinicChooser";
+import { isPreviewExperienceHost } from "@/lib/preview-experience";
+import { isWeightLossHost } from "@/lib/site-hosts";
+import {
+  getClarityProjectId,
+  isClarityEligibleHost,
+  isClarityEnabled,
+} from "@/lib/clarity-policy";
 
 /**
  * Global site chrome for every ordinary marketing route.
@@ -14,20 +26,43 @@ import { MetaPixel } from "@/components/integrations/MetaPixel";
  * after the fact. Every route in this group keeps its existing URL, chrome, and
  * behaviour; route groups do not appear in the path.
  */
-export default function SiteLayout({ children }: Readonly<{ children: React.ReactNode }>) {
+export default async function SiteLayout({ children }: Readonly<{ children: React.ReactNode }>) {
+  const host = (await headers()).get("host");
+  const weightLossExperience = isWeightLossHost(host);
+  const previewExperience =
+    !weightLossExperience && isPreviewExperienceHost(host);
+  const clarityProjectId = getClarityProjectId(process.env.CLARITY_PROJECT_ID);
+  const clarityAvailable =
+    isClarityEnabled(process.env.CLARITY_ENABLED) &&
+    Boolean(clarityProjectId) &&
+    isClarityEligibleHost(host);
+
   return (
     <>
       {/* Direct GA + Meta belong to ordinary marketing routes ONLY. Moved here
           from the root layout so the campaign group cannot inherit them. */}
       <GoogleAnalytics />
       <MetaPixel />
+      <ConversionTracker />
       <SkipNav />
-      <Header />
-      <main id="main" className="flex-1">
+      <Header weightLossExperience={weightLossExperience} />
+      <main
+        id="main"
+        className="flex-1 pb-20 xl:pb-0"
+        data-preview-motion={previewExperience ? "true" : undefined}
+      >
         {children}
       </main>
-      <Footer />
+      <Footer
+        weightLossExperience={weightLossExperience}
+        clarityPreferencesAvailable={clarityAvailable}
+      />
       <GhlChatWidget />
+      <MobileConversionBar weightLossExperience={weightLossExperience} />
+      {previewExperience ? <PreviewClinicChooser /> : null}
+      {clarityAvailable && clarityProjectId ? (
+        <ClarityAnalytics projectId={clarityProjectId} />
+      ) : null}
     </>
   );
 }

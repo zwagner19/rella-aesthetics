@@ -1,9 +1,9 @@
 /**
- * B01 Napa Botox campaign styles — Revision 06.
+ * B01 Napa Botox campaign styles — Revision 06 structure, Aug. 9 palette.
  *
- * Every value here is transcribed from the accepted `Napa Botox Landing.dc.html`
- * and `boards/20-landing-production-ready.jpg`. Notes on the three things a
- * reviewer is most likely to check:
+ * The approved campaign structure is preserved, while the surface colors follow
+ * Rella's binding four-color system: Rose, Silver, Ink, White, and transparent
+ * tints of those colors only.
  *
  *  TYPOGRAPHY — the accepted design loads exactly ONE family, Poppins, and uses
  *  an uppercase, wide-tracked display treatment for the hero. The package
@@ -16,22 +16,20 @@
  *  SHAPE — every action in the accepted design is a 999px pill. The board shows
  *  uppercase, 700-weight, 0.12em-tracked labels inside them.
  *
- *  CONTRAST — the legacy silver token is 3.58:1 and is decorative/large-display
- *  only, so it is absent here (naming its hex would defeat the release scan).
- *  Small text uses muted #70757A (4.65:1) on white; on the rose-50 tint that
- *  drops to 4.24:1, so filled bands use ink-soft #4A4A4A (8.9:1) instead.
+ *  CONTRAST — Silver is decorative/large-display only. Normal text uses an Ink
+ *  alpha, and Rose actions always use Ink labels.
  */
 .nb {
   --nb-paper: #ffffff;
-  --nb-porcelain: #fafaf9;
-  --nb-rose50: #fdf2f0;
+  --nb-porcelain: rgba(131, 136, 141, 0.08);
+  --nb-rose50: rgba(247, 161, 154, 0.28);
   --nb-rose: #f7a19a;
   --nb-ink: #1a1a1a;
-  --nb-ink-soft: #4a4a4a;
-  --nb-muted: #70757a;
-  --nb-hairline: #e8e6e3;
-  --nb-clay: #b04a40;
-  --nb-clay-pressed: #963e36;
+  --nb-ink-soft: rgba(26, 26, 26, 0.72);
+  --nb-muted: rgba(26, 26, 26, 0.72);
+  --nb-hairline: rgba(26, 26, 26, 0.12);
+  --nb-clay: #f7a19a;
+  --nb-clay-pressed: rgba(247, 161, 154, 0.72);
 
   --nb-target: 44px;
   --nb-focus-width: 3px;
@@ -63,7 +61,7 @@
   border-radius: 999px;
 }
 
-/* Skip link: off-screen until focused, then a visible clay pill. */
+/* Skip link: off-screen until focused, then a visible Rose pill. */
 .nb a.nb-skip {
   position: absolute;
   left: -9999px;
@@ -74,7 +72,7 @@
   left: 8px;
   top: 8px;
   background: var(--nb-clay);
-  color: var(--nb-paper);
+  color: var(--nb-ink);
   border-radius: 999px;
   padding: 10px 18px;
   font-size: 13.5px;
@@ -148,7 +146,7 @@
 }
 .nb-btn--primary {
   background: var(--nb-clay);
-  color: var(--nb-paper);
+  color: var(--nb-ink);
   border: 1.5px solid var(--nb-clay);
 }
 .nb-btn--primary:hover {
@@ -173,8 +171,8 @@
 }
 .nb-btn--quiet {
   background: transparent;
-  color: var(--nb-clay);
-  border: 1px solid var(--nb-hairline);
+  color: var(--nb-ink);
+  border: 1px solid var(--nb-clay);
 }
 .nb-btn--quiet:hover { border-color: var(--nb-clay); }
 
@@ -222,7 +220,7 @@
 .nb-eyebrow span {
   font-size: clamp(13px, 3.4vw, 15px);
   font-style: italic;
-  color: var(--nb-clay);
+  color: var(--nb-ink);
 }
 .nb-kicker {
   font-size: 12px;
@@ -260,7 +258,7 @@
 .nb-card {
   background: var(--nb-paper);
   border: 1px solid var(--nb-hairline);
-  border-radius: 18px;
+  border-radius: 0;
   padding: 22px 24px;
 }
 .nb-card--rose { background: var(--nb-rose50); }
@@ -278,6 +276,50 @@
   line-height: 1;
   color: var(--nb-ink);
   margin: 0;
+}
+
+/* ── Shared Napa campaign service modules ───────────────────────────────── */
+.nb-step-list {
+  list-style: none;
+  padding: 0;
+}
+.nb-step-list > li {
+  margin: 0;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: start;
+  gap: 14px;
+}
+.nb-step-number {
+  color: var(--nb-clay);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  line-height: 1.7;
+}
+.nb a.nb-service-card {
+  display: flex;
+  min-height: 220px;
+  flex-direction: column;
+  align-items: flex-start;
+  color: var(--nb-ink);
+  transition: border-color 0.15s ease;
+}
+.nb a.nb-service-card:hover {
+  border-color: var(--nb-clay);
+}
+.nb-service-card strong {
+  margin-top: 18px;
+  font-size: clamp(20px, 4vw, 27px);
+  line-height: 1.2;
+}
+.nb-service-card .nb-body { margin: 14px 0 0; }
+.nb-service-arrow {
+  margin-top: auto;
+  padding-top: 24px;
+  color: var(--nb-clay);
+  font-size: 13px;
+  font-weight: 600;
 }
 
 /* ── FAQ ─────────────────────────────────────────────────────────────────── */
@@ -343,7 +385,6 @@
   z-index: 30;
   display: flex;
   border-top: 1px solid var(--nb-hairline);
-  box-shadow: 0 -6px 24px rgba(26, 26, 26, 0.08);
   padding-bottom: env(safe-area-inset-bottom, 0px);
   background: var(--nb-paper);
 }
@@ -358,7 +399,7 @@
   align-items: center;
   justify-content: center;
 }
-.nb-sticky .nb-sticky-book { flex: 1.5; background: var(--nb-clay); color: var(--nb-paper); }
+.nb-sticky .nb-sticky-book { flex: 1.5; background: var(--nb-clay); color: var(--nb-ink); }
 .nb-sticky .nb-sticky-book:hover { background: var(--nb-clay-pressed); }
 .nb-sticky .nb-sticky-call { flex: 1; background: var(--nb-paper); color: var(--nb-ink); }
 /* Reserves space so the fixed bar can never cover the last content. */

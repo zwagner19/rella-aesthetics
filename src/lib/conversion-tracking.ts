@@ -1,0 +1,269 @@
+import {
+  BOOKING_LOCATION_CHOOSER,
+  CUSTOM_BOOKING_ORIGIN,
+  WEIGHT_LOSS_BOOKING_ORIGIN,
+  resolveBookingHref,
+} from "@/lib/booking-routes";
+
+export const CONVERSION_EVENT_NAME = "rella:conversion";
+
+export type ConversionIntent =
+  | "assessment_intent"
+  | "booking_flow_start"
+  | "booking_intent"
+  | "contact_form_success"
+  | "contact_intent"
+  | "email_intent"
+  | "phone_intent";
+
+export interface ConversionMeasurement {
+  gaEvent: "generate_lead" | "select_content";
+  metaEvent: "Contact" | "Lead" | "RellaBookingIntent" | "RellaFunnelStart";
+  metaStandard: boolean;
+}
+
+const BOOKING_HOSTS = new Set([
+  new URL(CUSTOM_BOOKING_ORIGIN).hostname,
+  new URL(WEIGHT_LOSS_BOOKING_ORIGIN).hostname,
+]);
+
+/**
+ * Classify only revenue-intent actions. Ordinary navigation is intentionally
+ * ignored so reporting stays focused and does not inflate conversion counts.
+ */
+export function classifyConversionHref(
+  href: string,
+  cta = "",
+): ConversionIntent | null {
+  const normalizedCta = cta.trim().toLowerCase();
+
+  if (normalizedCta.includes("assessment")) return "assessment_intent";
+  if (normalizedCta === "booking-flow-start") return "booking_flow_start";
+
+  if (href.startsWith("tel:")) return "phone_intent";
+  if (href.startsWith("mailto:")) return "email_intent";
+
+  const url = new URL(href, "https://experiencerella.com");
+  if (url.hostname === "experiencerella.com" && url.pathname === "/book") {
+    return "booking_flow_start";
+  }
+  if (BOOKING_HOSTS.has(url.hostname)) {
+    return url.pathname.includes("/assessment/")
+      ? "assessment_intent"
+      : "booking_intent";
+  }
+
+  if (url.hostname === "experiencerella.com" && url.pathname === "/contact") {
+    return "contact_intent";
+  }
+
+  return null;
+}
+
+/** Keep analytics payloads deliberately generic; never send form or health data. */
+export function conversionMeasurement(
+  intent: ConversionIntent,
+): ConversionMeasurement {
+  if (intent === "contact_form_success") {
+    return { gaEvent: "generate_lead", metaEvent: "Lead", metaStandard: true };
+  }
+
+  if (intent === "phone_intent" || intent === "email_intent") {
+    return { gaEvent: "select_content", metaEvent: "Contact", metaStandard: true };
+  }
+
+  if (intent === "booking_intent") {
+    return {
+      gaEvent: "select_content",
+      metaEvent: "RellaBookingIntent",
+      metaStandard: false,
+    };
+  }
+
+  return {
+    gaEvent: "select_content",
+    metaEvent: "RellaFunnelStart",
+    metaStandard: false,
+  };
+}
+
+export function dispatchConversion(intent: ConversionIntent) {
+  if (typeof window === "undefined") return;
+  window.dispatchEvent(
+    new CustomEvent<ConversionIntent>(CONVERSION_EVENT_NAME, { detail: intent }),
+  );
+}
+
+export interface MobileBookingDestination {
+  href: string;
+  label: string;
+  cta: string;
+}
+
+const MOBILE_BAR_EXCLUDED_PATHS = new Set([
+  BOOKING_LOCATION_CHOOSER,
+  "/booking",
+  "/cancellation-policy",
+  "/contact",
+  "/giveaway-terms-and-conditions",
+  "/privacy-policy",
+  "/terms",
+]);
+
+export function shouldShowMobileConversionBar(pathname: string | null): boolean {
+  return !pathname || !MOBILE_BAR_EXCLUDED_PATHS.has(pathname);
+}
+
+export function resolveMobileBookingDestination(
+  pathname: string | null,
+): MobileBookingDestination {
+  const currentPath = pathname ?? "";
+
+  if (currentPath === "/blog/botox-cost-napa") {
+    return {
+      href: resolveBookingHref({ location: "napa", service: "botox" }),
+      label: "Book Napa Botox",
+      cta: "service-booking",
+    };
+  }
+
+  if (currentPath === "/vacaville/botox") {
+    return {
+      href: resolveBookingHref({ location: "vacaville", service: "botox" }),
+      label: "Book New Patient Tox",
+      cta: "service-booking",
+    };
+  }
+
+  if (currentPath === "/vacaville/filler") {
+    return {
+      href: resolveBookingHref({
+        location: "vacaville",
+        service: "dermal-fillers",
+      }),
+      label: "Book Dermal Fillers",
+      cta: "service-booking",
+    };
+  }
+
+  if (currentPath === "/vacaville/laser") {
+    return {
+      href: resolveBookingHref({
+        location: "vacaville",
+        service: "laser-treatments",
+      }),
+      label: "Book Laser Consult",
+      cta: "service-booking",
+    };
+  }
+
+  if (currentPath === "/vacaville/hydrafacial") {
+    return {
+      href: resolveBookingHref({
+        location: "vacaville",
+        service: "hydrafacial",
+      }),
+      label: "Book Signature",
+      cta: "service-booking",
+    };
+  }
+
+  if (currentPath === "/vacaville/facials") {
+    return {
+      href: resolveBookingHref({
+        location: "vacaville",
+        service: "facials",
+      }),
+      label: "Book Skin Consult",
+      cta: "service-booking",
+    };
+  }
+
+  if (currentPath === "/vacaville/chemical-peels") {
+    return {
+      href: resolveBookingHref({
+        location: "vacaville",
+        service: "chemical-peels",
+      }),
+      label: "Open Peel Menu",
+      cta: "service-booking",
+    };
+  }
+
+  if (currentPath === "/vacaville/microneedling") {
+    return {
+      href: resolveBookingHref({
+        location: "vacaville",
+        service: "microneedling",
+      }),
+      label: "Book Initial Consult",
+      cta: "service-booking",
+    };
+  }
+
+  if (currentPath === "/napa/facials") {
+    return {
+      href: resolveBookingHref({
+        location: "napa",
+        service: "facials",
+      }),
+      label: "Book Skin Consult",
+      cta: "service-booking",
+    };
+  }
+
+  if (currentPath === "/services/weight-loss") {
+    return {
+      href: "#consultation-options",
+      label: "See Call Times",
+      cta: "booking-flow-start",
+    };
+  }
+
+  if (currentPath === "/locations/napa") {
+    return {
+      href: resolveBookingHref({ location: "napa" }),
+      label: "Book Napa",
+      cta: "location-booking",
+    };
+  }
+
+  if (currentPath === "/locations/vacaville") {
+    return {
+      href: resolveBookingHref({ location: "vacaville" }),
+      label: "Book Vacaville",
+      cta: "location-booking",
+    };
+  }
+
+  if (currentPath === "/services/chemical-peels") {
+    return {
+      href: "#book-service",
+      label: "Book Vacaville",
+      cta: "booking-flow-start",
+    };
+  }
+
+  if (currentPath === "/services/microneedling") {
+    return {
+      href: "#book-service",
+      label: "Book Vacaville",
+      cta: "booking-flow-start",
+    };
+  }
+
+  const serviceSlug = currentPath.match(/^\/services\/([^/]+)$/)?.[1];
+  if (serviceSlug) {
+    return {
+      href: "#book-service",
+      label: "Choose a Clinic",
+      cta: "booking-flow-start",
+    };
+  }
+
+  return {
+    href: resolveBookingHref({}),
+    label: "Book Consultation",
+    cta: "site-booking",
+  };
+}

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
+import { WEIGHT_LOSS_BOOKING_ORIGIN } from "@/lib/booking-routes";
 import { withWeightLossAttribution } from "@/lib/weight-loss-attribution";
 
 declare global {
@@ -25,7 +26,9 @@ export function WeightLossConversionTracker() {
     }
 
     document
-      .querySelectorAll<HTMLAnchorElement>('a[href^="https://book.rellaweightloss.com/"]')
+      .querySelectorAll<HTMLAnchorElement>(
+        `a[href^="${WEIGHT_LOSS_BOOKING_ORIGIN}/"]`,
+      )
       .forEach(preservePaidAttribution);
 
     function handleClick(event: MouseEvent) {

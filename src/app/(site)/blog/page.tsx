@@ -1,15 +1,18 @@
 import type { Metadata } from "next";
-import { client, projectId } from "@/sanity/client";
+import Link from "next/link";
+import { client } from "@/sanity/client";
 import { allBlogPostsQuery, allCategoriesQuery } from "@/sanity/queries";
 import { urlFor } from "@/sanity/image";
 import { SectionHeader } from "@/components/ui/SectionHeader";
 import { BlogCard } from "@/components/blog/BlogCard";
 import { BlogSidebar } from "@/components/blog/BlogSidebar";
+import { LOCAL_EDITORIAL_POSTS } from "@/lib/local-editorial-posts";
 
 export const metadata: Metadata = {
   title: "Education & Blog",
   description:
-    "Expert insights on Botox, fillers, skin care, weight loss, and aesthetic treatments from the Rella Aesthetics team. Stay informed and empowered.",
+    "Transparent local guides to Botox pricing, fillers, skin care, laser treatments, and medical weight management from Rella Aesthetics in Napa and Vacaville.",
+  alternates: { canonical: "/blog" },
 };
 
 interface SanityPost {
@@ -29,37 +32,43 @@ interface SanityCategory {
   slug: { current: string };
 }
 
-const placeholderPosts = [
+interface BlogCardRecord {
+  id: string;
+  title: string;
+  slug: string;
+  publishedAt: string;
+  excerpt: string;
+  category: string;
+  image?: string;
+}
+
+const educationPaths = [
   {
-    slug: "botox-vs-dysport",
-    title: "Botox vs. Dysport: Which Is Right for You?",
-    excerpt:
-      "Both neuromodulators deliver excellent results, but subtle differences make one a better fit depending on your goals and anatomy.",
+    href: "/services/botox",
+    title: "Understand Botox and Dysport",
+    description:
+      "Compare treatment basics, current per-unit pricing, common questions, and what to discuss at a consultation.",
     category: "Injectables",
-    date: "2026-04-01",
   },
   {
-    slug: "semaglutide-weight-loss-guide",
-    title: "Your Complete Guide to Semaglutide Weight Loss",
-    excerpt:
-      "Everything you need to know about our physician-supervised medical weight loss program — how it works, what to expect, and who qualifies.",
-    category: "Weight Loss",
-    date: "2026-03-25",
+    href: "/services/weight-loss",
+    title: "Explore medical weight management",
+    description:
+      "See how the physician-led program starts, what the first conversation covers, and how to choose your nearest clinic.",
+    category: "Medical Weight Management",
   },
   {
-    slug: "hydrafacial-benefits",
-    title: "5 Reasons the HydraFacial Is Worth the Hype",
-    excerpt:
-      "From instant glow to long-term skin health improvements, here is why HydraFacial is one of our most requested treatments.",
+    href: "/services/hydrafacial",
+    title: "Review HydraFacial options",
+    description:
+      "Compare the three published HydraFacial tiers, treatment steps, and questions to bring to your skin consultation.",
     category: "Skin Care",
-    date: "2026-03-18",
   },
 ];
 
 export default async function BlogPage() {
   let posts: SanityPost[] = [];
   let categories: SanityCategory[] = [];
-  let usingSanity = false;
 
   if (client) {
     try {
@@ -67,25 +76,69 @@ export default async function BlogPage() {
         client.fetch<SanityPost[]>(allBlogPostsQuery),
         client.fetch<SanityCategory[]>(allCategoriesQuery),
       ]);
-      usingSanity = true;
     } catch {
-      usingSanity = false;
+      posts = [];
+      categories = [];
     }
   }
+
+  const localCards: BlogCardRecord[] = LOCAL_EDITORIAL_POSTS.map((post) => ({
+    id: `local-${post.slug}`,
+    title: post.title,
+    slug: post.slug,
+    publishedAt: post.publishedAt,
+    excerpt: post.excerpt,
+    category: post.category,
+    image: post.coverImage,
+  }));
+
+  const localSlugs = new Set(localCards.map((post) => post.slug));
+  const sanityCards: BlogCardRecord[] = posts
+    .filter((post) => !localSlugs.has(post.slug.current))
+    .map((post) => ({
+      id: post._id,
+      title: post.title,
+      slug: post.slug.current,
+      publishedAt: post.publishedAt,
+      excerpt: post.excerpt,
+      category: post.categoryName ?? "Education",
+      image: post.coverImage
+        ? urlFor(post.coverImage).width(600).height(340).url()
+        : undefined,
+    }));
+
+  const publishedPosts = [...localCards, ...sanityCards].sort(
+    (a, b) =>
+      new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime(),
+  );
+
+  const categoryMap = new Map<string, { name: string; slug: string }>();
+  for (const category of categories) {
+    categoryMap.set(category.slug.current, {
+      name: category.name,
+      slug: category.slug.current,
+    });
+  }
+  for (const post of LOCAL_EDITORIAL_POSTS) {
+    const slug = post.category.toLowerCase().replace(/[^a-z0-9]+/g, "-");
+    categoryMap.set(slug, { name: post.category, slug });
+  }
+  const publishedCategories = [...categoryMap.values()];
 
   return (
     <>
       {/* Hero */}
-      <section className="py-24 bg-rose-blush">
+      <section className="bg-rose py-24 text-white">
         <div className="mx-auto max-w-[1200px] px-6 md:px-8 lg:px-12">
-          <p className="font-bold text-[0.6875rem] tracking-[0.2em] uppercase text-silver mb-4">
+          <p className="font-bold text-[0.6875rem] tracking-[0.2em] uppercase text-white mb-4">
             Education
           </p>
-          <h1 className="font-bold text-4xl md:text-5xl tracking-[0.08em] uppercase text-rose-text mb-4 leading-[1.1]">
+          <h1 className="mb-5 text-4xl font-bold uppercase leading-[1.08] tracking-[0.08em] text-white md:text-6xl">
             Insights &amp; Guides
           </h1>
-          <p className="text-lg font-light text-silver max-w-[560px] leading-relaxed">
-            Expert knowledge to help you make informed decisions about your aesthetic journey.
+          <p className="max-w-[560px] text-lg font-light leading-relaxed text-white">
+            Local facts, transparent pricing, and practical questions to help
+            you make a more informed treatment decision.
           </p>
         </div>
       </section>
@@ -93,61 +146,68 @@ export default async function BlogPage() {
       {/* Posts */}
       <section className="py-20">
         <div className="mx-auto max-w-[1200px] px-6 md:px-8 lg:px-12">
-          {usingSanity && posts.length > 0 ? (
-            <div className="grid grid-cols-1 lg:grid-cols-[1fr_300px] gap-12">
-              <div>
-                <SectionHeader eyebrow="Latest Articles" title="From the Blog" />
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  {posts.map((post) => (
-                    <BlogCard
-                      key={post._id}
-                      slug={post.slug.current}
-                      title={post.title}
-                      excerpt={post.excerpt}
-                      date={post.publishedAt}
-                      category={post.categoryName ?? "Uncategorized"}
-                      image={
-                        post.coverImage
-                          ? urlFor(post.coverImage).width(600).height(340).url()
-                          : undefined
-                      }
-                    />
-                  ))}
-                </div>
-              </div>
-              <BlogSidebar
-                categories={categories.map((c) => ({
-                  name: c.name,
-                  slug: c.slug.current,
-                }))}
-                recentPosts={posts.slice(0, 5).map((p) => ({
-                  slug: p.slug.current,
-                  title: p.title,
-                  date: p.publishedAt,
-                }))}
-              />
-            </div>
-          ) : (
+          <div className="grid grid-cols-1 gap-12 lg:grid-cols-[1fr_300px]">
             <div>
-              <SectionHeader eyebrow="Latest Articles" title="From the Blog" />
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                {placeholderPosts.map((post) => (
+              <SectionHeader
+                eyebrow="Latest Article"
+                eyebrowTone="rose"
+                title="Local answers that lead somewhere useful"
+                description="Each article is built from Rella's current public facts and connects to the relevant clinic, service, and booking path."
+              />
+              <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+                {publishedPosts.map((post) => (
                   <BlogCard
-                    key={post.slug}
+                    key={post.id}
                     slug={post.slug}
                     title={post.title}
                     excerpt={post.excerpt}
-                    date={post.date}
+                    date={post.publishedAt}
                     category={post.category}
+                    image={post.image}
                   />
                 ))}
               </div>
-              <p className="mt-12 text-center text-silver text-sm">
-                Blog content will be managed through Sanity CMS once integrated.
-                These are placeholder articles.
-              </p>
             </div>
-          )}
+            <BlogSidebar
+              categories={publishedCategories}
+              recentPosts={publishedPosts.slice(0, 5).map((post) => ({
+                slug: post.slug,
+                title: post.title,
+                date: post.publishedAt,
+              }))}
+            />
+          </div>
+
+          <div className="mt-20 border-t border-silver-pale pt-16">
+            <SectionHeader
+              eyebrow="Verified Starting Points"
+              eyebrowTone="rose"
+              title="Go straight to the treatment guide"
+              description="Prefer the essentials? These service guides use the same current pricing and booking rules."
+            />
+            <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
+              {educationPaths.map((path) => (
+                <Link
+                  key={path.href}
+                  href={path.href}
+                  className="group flex min-h-[260px] flex-col border border-ink/12 bg-white p-7 transition-colors hover:border-rose"
+                >
+                  <p className="mb-8 text-[0.625rem] font-bold uppercase tracking-[0.2em] text-rose">
+                    {path.category}
+                  </p>
+                  <h2 className="mb-3 text-xl font-medium leading-snug text-rose">
+                    {path.title}
+                  </h2>
+                  <p className="mb-6 flex-1 text-sm leading-relaxed text-ink/70">
+                    {path.description}
+                  </p>
+                  <span className="text-sm font-medium text-rose transition-colors group-hover:text-ink">
+                    Read the verified guide →
+                  </span>
+                </Link>
+              ))}
+            </div>
+          </div>
         </div>
       </section>
     </>

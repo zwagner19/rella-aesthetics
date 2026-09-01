@@ -1,20 +1,28 @@
 @import "tailwindcss";
 
 @theme inline {
-  /* Brand Colors */
+  /*
+   * Rella's owner-approved four-color system.
+   *
+   * Compatibility names remain because the existing page catalog already uses
+   * them, but every value below is one of the four colors or an alpha tint of
+   * one of them. The current designer-approved system uses Rose headings and
+   * Rose actions with White labels.
+   */
   --color-rose: #F7A19A;
-  --color-rose-dark: #e8887f;
-  --color-rose-light: #fbc8c4;
-  --color-rose-blush: #FDF7F5;
+  --color-rose-dark: #1A1A1A;
+  --color-rose-light: #F7A19A70;
+  --color-rose-blush: rgba(247, 161, 154, 0.28);
   --color-rose-text: #F7A19A;
-  --color-rose-cta: #e8887f;
+  --color-rose-cta: #F7A19A;
 
   --color-silver: #83888D;
-  --color-silver-dark: #5a5e62;
-  --color-silver-light: #b0b4b8;
-  --color-silver-pale: #f4f4f5;
+  --color-silver-dark: #1A1A1A;
+  --color-silver-light: #83888D66;
+  --color-silver-pale: #83888D14;
 
   --color-ink: #1a1a1a;
+  --color-paper: #ffffff;
   --color-white: #ffffff;
 
   /* Typography */
@@ -29,8 +37,8 @@
 
 /* Base styles */
 body {
-  color: var(--color-silver-dark);
-  background: var(--color-white);
+  color: var(--color-ink);
+  background: var(--color-paper);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -41,11 +49,11 @@ body {
   color: var(--color-ink);
 }
 
-/* Focus visible for accessibility */
+/* Dual-contrast focus treatment stays visible on White, Rose, and Ink. */
 :focus-visible {
-  outline: 2px solid var(--color-rose);
+  outline: 2px solid var(--color-white);
   outline-offset: 2px;
-  border-radius: 4px;
+  box-shadow: 0 0 0 4px var(--color-ink);
 }
 
 /* Smooth scrolling */
@@ -56,4 +64,115 @@ html {
 /* List markers */
 li::marker {
   color: var(--color-rose);
+}
+
+/*
+ * Review-only dialog. Native <dialog> puts the mobile sheet in the top layer,
+ * so it cannot collide with the fixed conversion bar or shift page content.
+ */
+html:has(.rella-preview-dialog) {
+  scrollbar-gutter: stable;
+}
+
+.rella-preview-dialog {
+  inset: auto 0 0;
+  width: 100%;
+  max-width: none;
+  max-height: calc(100dvh - max(0.75rem, env(safe-area-inset-top)));
+  margin: 0;
+  padding: 0;
+  overflow: auto;
+  border: 0;
+  border-radius: 1.75rem 1.75rem 0 0;
+  background: transparent;
+  color: var(--color-ink);
+  box-shadow: 0 -1.25rem 4rem rgba(26, 26, 26, 0.2);
+  overscroll-behavior: contain;
+}
+
+.rella-preview-dialog::backdrop {
+  background: rgba(26, 26, 26, 0.52);
+  backdrop-filter: blur(3px);
+}
+
+@media (min-width: 768px) {
+  .rella-preview-dialog {
+    inset: 0;
+    width: min(92vw, 44rem);
+    max-height: min(82dvh, 46rem);
+    margin: auto;
+    border-radius: 2rem;
+    box-shadow: 0 2rem 6rem rgba(26, 26, 26, 0.24);
+  }
+}
+
+@keyframes rella-dialog-enter-mobile {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 1.25rem, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes rella-dialog-backdrop-enter {
+  from { background: rgba(26, 26, 26, 0); }
+  to { background: rgba(26, 26, 26, 0.52); }
+}
+
+@keyframes rella-section-enter {
+  from {
+    opacity: 0.15;
+    transform: translate3d(0, 1.25rem, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .rella-preview-dialog[open] {
+    animation: rella-dialog-enter-mobile 320ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  }
+
+  .rella-preview-dialog[open]::backdrop {
+    animation: rella-dialog-backdrop-enter 260ms ease-out both;
+  }
+}
+
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    main[data-preview-motion="true"] .rella-preview-reveal {
+      animation: rella-section-enter linear both;
+      animation-timeline: view();
+      animation-range: entry 5% cover 28%;
+    }
+  }
+}
+
+/* Keep the optional third-party launcher clear of mobile navigation and CTAs. */
+@media (max-width: 1279px) {
+  chat-widget,
+  div[data-chat-widget] {
+    display: none !important;
+  }
+}
+
+/* Respect motion preferences across both Tailwind utilities and native UI. */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }
