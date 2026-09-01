@@ -125,7 +125,7 @@ export const teamRoleGroups = [
       {
         name: "Hailey Butler",
         role: "Medical Assistant",
-        image: null,
+        image: "/images/team/hailey-butler.jpg",
         primaryLocation: "napa",
         alsoServes: null,
         bio: [

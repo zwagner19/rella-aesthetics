@@ -235,17 +235,19 @@ describe("team roster integrity", () => {
     expect(allLocationsHtml).toContain("Ryan");
   });
 
-  it("uses every supplied portrait once and keeps the portraitless profile honest", () => {
-    expect(teamHtml.match(/<img\b/g)).toHaveLength(13);
-    expect(teamHtml.match(/<img\b[^>]*alt=""/g)).toHaveLength(11);
+  it("uses every supplied portrait once", () => {
+    expect(teamHtml.match(/<img\b/g)).toHaveLength(14);
+    expect(teamHtml.match(/<img\b[^>]*alt=""/g)).toHaveLength(12);
     expect(existsSync("public/images/clinic/rella-team-storefront.webp")).toBe(
       true,
     );
+    expect(existsSync("public/images/team/hailey-butler.jpg")).toBe(true);
     expect(teamHtml).toContain(
       'alt="Rella Aesthetics team outside the Napa clinic"',
     );
     expect(teamSource).toContain("/images/clinic/rella-team-storefront.webp");
     expect(teamHtml).toContain("Hailey Butler");
+    expect(teamHtml).toContain("/_next/image?url=%2Fimages%2Fteam%2Fhailey-butler.jpg");
     expect(teamHtml).not.toMatch(
       /portrait coming soon|stock portrait|placeholder portrait/i,
     );

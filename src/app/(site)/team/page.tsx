@@ -47,24 +47,6 @@ function locationName(locationId: "napa" | "vacaville") {
 }
 
 function TeamProfile({ member }: { member: TeamProfileMember }) {
-  if (!member.image) {
-    return (
-      <article className="border-t border-silver/30 py-8 md:col-span-2 md:grid md:grid-cols-[0.65fr_1.35fr] md:gap-12">
-        <div>
-          <h4 className="text-2xl font-medium text-rose">{member.name}</h4>
-          <p className="mt-2 text-xs font-bold uppercase tracking-[0.12em] text-silver-dark">
-            {member.role}
-          </p>
-        </div>
-        <div className="mt-6 space-y-4 text-[0.9375rem] leading-relaxed text-ink/75 md:mt-0">
-          {member.bio.map((paragraph) => (
-            <p key={paragraph}>{paragraph}</p>
-          ))}
-        </div>
-      </article>
-    );
-  }
-
   return (
     <article className="grid gap-6 border-t border-silver/30 pt-6 lg:grid-cols-[minmax(170px,0.85fr)_minmax(0,1.15fr)] lg:gap-8">
       <div className="relative aspect-[4/5] overflow-hidden bg-rose-blush">
