@@ -66,7 +66,7 @@ SCREENSHOTS = [
         "path": TMP / "weight-loss.png",
         "annotated": TMP / "weight-loss-annotated.png",
         "title": "Medical weight-loss website",
-        "site": "weightloss.experiencerella.com experience",
+        "site": "rellaweightloss.com experience",
         "markers": [
             ("W1", 0.04),
             ("W2", 0.18),

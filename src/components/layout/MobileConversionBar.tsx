@@ -6,6 +6,7 @@ import {
   resolveMobileBookingDestination,
   shouldShowMobileConversionBar,
 } from "@/lib/conversion-tracking";
+import { isWeightLossLandingPath } from "@/lib/site-hosts";
 
 export function MobileConversionBar({
   weightLossExperience = false,
@@ -14,7 +15,7 @@ export function MobileConversionBar({
 }) {
   const pathname = usePathname();
   const booking =
-    weightLossExperience && pathname === "/"
+    weightLossExperience && isWeightLossLandingPath(pathname)
       ? {
           href: "#consultation-options",
           label: "See Call Times",

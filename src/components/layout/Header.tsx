@@ -5,6 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useCallback, useState } from "react";
 import { resolveGlobalBookingAction } from "@/lib/site-experience";
+import { isWeightLossLandingPath } from "@/lib/site-hosts";
 import { MobileNav } from "./MobileNav";
 
 const mainNavLinks = [
@@ -19,7 +20,7 @@ const mainNavLinks = [
 ];
 
 function weightLossNavLinks(pathname: string | null) {
-  const root = pathname === "/" ? "" : "/";
+  const root = isWeightLossLandingPath(pathname) ? "" : "/";
   return [
     { href: `${root}#weight-loss-reviews-heading`, label: "Reviews" },
     { href: `${root}#how-it-works`, label: "How It Works" },

@@ -2,10 +2,10 @@
 
 import { useEffect } from "react";
 import {
-  AESTHETICS_ATTRIBUTION_CONSENT_EVENT,
   isCurrentAttributionCaptureAcknowledgement,
   planAttributionConsentTransition,
   readAttributionConsent,
+  WEIGHT_LOSS_ATTRIBUTION_CONSENT_EVENT,
   type AttributionConsentState,
 } from "@/lib/attribution-consent";
 import {
@@ -25,17 +25,17 @@ import {
   type AttributionRevocationHandleRotation,
 } from "@/lib/attribution-revocation-handle";
 import { createAttributionRevocationRetry } from "@/lib/attribution-revocation-retry";
+import { isWeightLossHost } from "@/lib/site-hosts";
 import {
-  AESTHETICS_ATTRIBUTION_STORAGE_KEY,
-  isGeneralAestheticsHost,
-  postAestheticsAttribution,
-  resolveAestheticsAttribution,
-  revokeAestheticsAttribution,
-  stripAestheticsAttributionFromPageHref,
-  type AttributionSessionStorage,
-} from "@/lib/aesthetics-attribution";
+  postWeightLossAttribution,
+  resolveWeightLossAttribution,
+  revokeWeightLossAttribution,
+  stripWeightLossAttributionFromPageHref,
+  WEIGHT_LOSS_ATTRIBUTION_STORAGE_KEY,
+  type WeightLossAttributionSessionStorage,
+} from "@/lib/weight-loss-attribution";
 
-function sessionStorageOrNull(): AttributionSessionStorage | null {
+function sessionStorageOrNull(): WeightLossAttributionSessionStorage | null {
   try {
     return window.sessionStorage;
   } catch {
@@ -44,12 +44,12 @@ function sessionStorageOrNull(): AttributionSessionStorage | null {
 }
 
 /**
- * Consent-gated first-party attribution capture for the exact aesthetics hosts.
+ * Consent-gated first-party attribution capture for the exact weight-loss host.
  * It renders nothing and never emits a booking-complete or ad-conversion event.
  */
-export function AestheticsAttributionHandoff() {
+export function WeightLossAttributionHandoff() {
   useEffect(() => {
-    if (!isGeneralAestheticsHost(window.location.hostname)) return;
+    if (!isWeightLossHost(window.location.hostname)) return;
 
     let active = true;
     let acknowledged = false;
@@ -59,7 +59,7 @@ export function AestheticsAttributionHandoff() {
     let consentState: AttributionConsentState = "unknown";
     let postDenialRotation: AttributionRevocationHandleRotation | null = null;
     let storageResolved = false;
-    let storage: AttributionSessionStorage | null = null;
+    let storage: WeightLossAttributionSessionStorage | null = null;
     const requestQueue = createAttributionRequestQueue();
     const revocation = createAttributionRevocationRetry({
       getState: () => ({
@@ -73,7 +73,7 @@ export function AestheticsAttributionHandoff() {
         document.cookie,
       ),
       enqueue: (request) => requestQueue.enqueue(request),
-      revoke: (signal, revocationHandle) => revokeAestheticsAttribution({
+      revoke: (signal, revocationHandle) => revokeWeightLossAttribution({
         marketingOrigin: window.location.origin,
         pathname: window.location.pathname,
         fetchImpl: window.fetch.bind(window),
@@ -94,14 +94,14 @@ export function AestheticsAttributionHandoff() {
     }
 
     function cleanPageUrl() {
-      const clean = stripAestheticsAttributionFromPageHref(window.location.href);
+      const clean = stripWeightLossAttributionFromPageHref(window.location.href);
       if (clean !== window.location.href) {
         window.history.replaceState(window.history.state, "", clean);
       }
     }
 
     function currentAttribution() {
-      return resolveAestheticsAttribution(
+      return resolveWeightLossAttribution(
         window.location.search,
         attributionStorage(),
       );
@@ -109,7 +109,7 @@ export function AestheticsAttributionHandoff() {
 
     function removeSessionFallback() {
       try {
-        attributionStorage()?.removeItem(AESTHETICS_ATTRIBUTION_STORAGE_KEY);
+        attributionStorage()?.removeItem(WEIGHT_LOSS_ATTRIBUTION_STORAGE_KEY);
       } catch {
         // The server cookie is authoritative after ack; denial removes fallback.
       }
@@ -117,7 +117,7 @@ export function AestheticsAttributionHandoff() {
 
     function applyConsentState() {
       const nextConsentState = readAttributionConsent(
-        window.__rellaAestheticsAttributionConsent,
+        window.__rellaWeightLossAttributionConsent,
       );
       const transition = planAttributionConsentTransition(
         consentState,
@@ -207,7 +207,7 @@ export function AestheticsAttributionHandoff() {
           return Promise.resolve(false);
         }
         const attempt = createAbortableAttributionCapture((signal) => (
-          postAestheticsAttribution({
+          postWeightLossAttribution({
             attribution,
             consentState,
             marketingOrigin: window.location.origin,
@@ -249,7 +249,7 @@ export function AestheticsAttributionHandoff() {
     }
 
     window.addEventListener(
-      AESTHETICS_ATTRIBUTION_CONSENT_EVENT,
+      WEIGHT_LOSS_ATTRIBUTION_CONSENT_EVENT,
       applyConsentState,
     );
     window.addEventListener("online", applyConsentState);
@@ -264,7 +264,7 @@ export function AestheticsAttributionHandoff() {
       captureAttempt?.abort();
       revocation.dispose();
       window.removeEventListener(
-        AESTHETICS_ATTRIBUTION_CONSENT_EVENT,
+        WEIGHT_LOSS_ATTRIBUTION_CONSENT_EVENT,
         applyConsentState,
       );
       window.removeEventListener("online", applyConsentState);

@@ -30,7 +30,7 @@ npm run check:seo
 The production build also regenerates `public/sitemap.xml` through `next-sitemap`.
 `check:links` reads the generated sitemap from `http://localhost:3000` by default and fails if a public page or internal destination returns an error, an indexed page has no internal inlink, an indexed page is unreachable from the homepage, or homepage crawl depth exceeds three. Set `SITE_URL` to run the same read-only check against another local port or an approved preview.
 
-`check:booking-links` discovers the external booking URLs rendered in both website host contexts, requires the Rella-owned booking surfaces, rejects direct vendor/HQ links, follows each approved destination without submitting a form, and fails on unreachable responses, non-HTTPS links, or redirects outside those approved hosts. It requires outbound network access. A local exact build automatically checks both the aesthetics and weight-loss host branches by presenting the canonical weight-loss Host header. A hosted PR preview checks its actual aesthetics response only; do not override its Host, because that can route to a different deployment. After promotion, set `BOOKING_CHECK_WEIGHT_LOSS_SITE_URL=https://weightloss.experiencerella.com` to check the branded host separately. For a protected booking preview, also set `BOOKING_CHECK_AESTHETICS_ORIGIN` to that exact preview origin.
+`check:booking-links` discovers the external booking URLs rendered in both website host contexts, requires the Rella-owned booking surfaces, rejects direct vendor/HQ links, follows each approved destination without submitting a form, and fails on unreachable responses, non-HTTPS links, or redirects outside those approved hosts. It requires outbound network access. A local exact build automatically checks both the aesthetics and weight-loss host branches by presenting the canonical weight-loss Host header. A hosted PR preview checks its actual aesthetics response only; do not override its Host, because that can route to a different deployment. After promotion, set `BOOKING_CHECK_WEIGHT_LOSS_SITE_URL=https://rellaweightloss.com` to check the branded host separately. For a protected booking preview, also set `BOOKING_CHECK_AESTHETICS_ORIGIN` to that exact preview origin.
 
 ## Environment configuration
 
@@ -70,6 +70,8 @@ The HighLevel token must be a sub-account/private integration token with `contac
 | `NEXT_PUBLIC_AI_CHATBOT_URL` | Optional approved chatbot URL |
 
 Do not place names, emails, phone numbers, messages, provider selections, or health information into analytics events.
+Aesthetics and weight-loss paid attribution require the production CMP and booking API contracts documented in
+[`docs/WEIGHT-LOSS-ATTRIBUTION-CONSENT.md`](docs/WEIGHT-LOSS-ATTRIBUTION-CONSENT.md).
 Clarity is additionally restricted to an exact low-sensitivity page allowlist. It must stay disabled
 in Preview and on contact, booking, payment, treatment-detail, and weight-loss routes. See
 [`docs/CLARITY-LAUNCH-RUNBOOK-2026-08-16.md`](docs/CLARITY-LAUNCH-RUNBOOK-2026-08-16.md).

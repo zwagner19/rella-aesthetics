@@ -98,8 +98,13 @@ Prescription-drug terms may appear in United States ad copy and landing pages su
 Use this final URL suffix without patient or health information:
 
 ```text
-utm_source=google&utm_medium=cpc&utm_campaign={campaignid}&utm_adgroup={adgroupid}&utm_term={keyword}&utm_content={creative}&utm_matchtype={matchtype}&utm_device={device}
+campaignid={campaignid}&adgroupid={adgroupid}
 ```
+
+The longer UTM/keyword/creative/device suffix in the original August 4 artifact
+is historical and non-actionable. Do not recreate it: the current minimized
+client contract accepts only the numeric campaign and ad-group diagnostics,
+and only alongside exactly one valid Google click-ID class.
 
 Do not place a visitor's name, email, phone, message, chosen provider, treatment detail, or other health information in a URL, event parameter, audience, or analytics property.
 

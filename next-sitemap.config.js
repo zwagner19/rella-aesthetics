@@ -51,6 +51,8 @@ module.exports = {
     "/booking",
     "/giveaway-terms-and-conditions",
     "/locations.kml",
+    "/medical-weight-loss-napa",
+    "/medical-weight-loss-vacaville",
     "/opengraph-image",
     "/twitter-image",
   ],
