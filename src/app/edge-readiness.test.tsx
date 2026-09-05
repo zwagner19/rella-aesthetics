@@ -3,7 +3,6 @@ import { renderToStaticMarkup } from "react-dom/server";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import NapaBotoxPage from "./(campaign)/napa/botox/page";
-import { CAMPAIGN_GTM_ENV_VAR } from "@/components/integrations/CampaignGtm";
 import { CANONICAL_NAPA_TOX } from "@/lib/booking-routes";
 import { MARKETING_PHONE, PUBLIC_LINKS } from "@/lib/napa-botox-facts";
 
@@ -14,13 +13,12 @@ vi.mock("next/font/google", () => ({
 /**
  * Wave 4B edge-readiness contracts.
  *
- * The public plan is to proxy ONLY this route onto experiencerella.com while the
- * rest of that host stays WordPress. Three things follow, and each is asserted
- * here because each was a verified launch blocker:
+ * This route can be served through the dedicated release origin before the full
+ * site cutover. Three things follow, and each is asserted here:
  *
- *  - Root-relative navigation to `/services` or `/terms` 404s on the public host.
- *  - The proxied document does NOT inherit WordPress's GTM, so campaign routes
- *    must carry their own container.
+ *  - Navigation must return visitors to canonical public-site destinations.
+ *  - The proxied document must preserve the exact-Napa suppression of every
+ *    browser marketing loader; consent permits only first-party attribution.
  *  - The `*.vercel.app` aliases must be noindex while the public response stays
  *    indexable.
  */
@@ -34,12 +32,11 @@ const navLinks = [...html.matchAll(/<a\b([^>]*)>/g)]
   .filter((h) => h && !h.startsWith("tel:") && h !== CANONICAL_NAPA_TOX && h !== "#main");
 
 describe("the complete non-booking link matrix targets verified public destinations", () => {
-  /** Verified live against experiencerella.com on 2026-07-27. */
   const APPROVED = new Set([
-    "https://experiencerella.com/botox/",
-    "https://experiencerella.com/privacy-policy/",
-    "https://experiencerella.com/terms-and-conditions/",
-    "https://experiencerella.com/cancellation-policy/",
+    "https://experiencerella.com/services/botox",
+    "https://experiencerella.com/privacy-policy",
+    "https://experiencerella.com/terms",
+    "https://experiencerella.com/cancellation-policy",
   ]);
 
   it("every rendered navigation link is an approved public destination", () => {
@@ -49,20 +46,14 @@ describe("the complete non-booking link matrix targets verified public destinati
     }
   });
 
-  it("the two destinations that 404 on the public host are gone", () => {
-    for (const broken of ['href="/services"', 'href="/terms"']) {
-      expect(html, `${broken} 404s on experiencerella.com`).not.toContain(broken);
-    }
+  it("privacy policy uses the canonical public URL", () => {
+    expect(PUBLIC_LINKS.privacy).toBe("https://experiencerella.com/privacy-policy");
+    expect(navLinks).toContain("https://experiencerella.com/privacy-policy");
   });
 
-  it("privacy policy is preserved, at its trailing-slash public URL", () => {
-    expect(PUBLIC_LINKS.privacy).toBe("https://experiencerella.com/privacy-policy/");
-    expect(navLinks).toContain("https://experiencerella.com/privacy-policy/");
-  });
-
-  it("treatments and terms point at the verified live pages", () => {
-    expect(PUBLIC_LINKS.treatments).toBe("https://experiencerella.com/botox/");
-    expect(PUBLIC_LINKS.terms).toBe("https://experiencerella.com/terms-and-conditions/");
+  it("treatments and terms point at canonical post-cutover pages", () => {
+    expect(PUBLIC_LINKS.treatments).toBe("https://experiencerella.com/services/botox");
+    expect(PUBLIC_LINKS.terms).toBe("https://experiencerella.com/terms");
   });
 
   it("no navigation link is root-relative, so none can 404 after proxying", () => {
@@ -70,84 +61,42 @@ describe("the complete non-booking link matrix targets verified public destinati
   });
 });
 
-describe("campaign GTM: opt-in, campaign-only, never near the booking app", () => {
-  it("renders nothing when the environment variable is absent", async () => {
-    vi.resetModules();
-    delete process.env[CAMPAIGN_GTM_ENV_VAR];
-    const { CampaignGtm, CampaignGtmNoScript } = await import("@/components/integrations/CampaignGtm");
-    expect(renderToStaticMarkup(<CampaignGtm />)).toBe("");
-    expect(renderToStaticMarkup(<CampaignGtmNoScript />)).toBe("");
-  });
-
-  it("emits the standard container snippet AND the noscript fallback when set", async () => {
-    vi.resetModules();
-    process.env[CAMPAIGN_GTM_ENV_VAR] = "GTM-TEST123";
-    const { CampaignGtm, CampaignGtmNoScript } = await import("@/components/integrations/CampaignGtm");
-    // `next/script` with strategy="afterInteractive" injects on the client, so it
-    // emits nothing during SSR. Assert the ELEMENT contract instead of markup.
-    const el = CampaignGtm() as React.ReactElement<{ id: string; children: string }>;
-    expect(el).not.toBeNull();
-    expect(el.props.id).toBe("campaign-gtm");
-    expect(el.props.children).toContain("gtm.js?id=");
-    expect(el.props.children).toContain("GTM-TEST123");
-    expect(el.props.children).toContain("dataLayer");
-    // The noscript half is plain markup and does render.
-    const ns = renderToStaticMarkup(<CampaignGtmNoScript />);
-    expect(ns).toContain("googletagmanager.com/ns.html?id=GTM-TEST123");
-    expect(ns).toMatch(/<iframe[^>]+height="0"[^>]*>/);
-    delete process.env[CAMPAIGN_GTM_ENV_VAR];
-  });
-
-  it("is mounted by the campaign layout only — the site group is untouched", () => {
+describe("exact-Napa browser marketing suppression", () => {
+  it("mounts the first-party consent controller and no marketing loader", () => {
     const campaign = readFileSync(join(APP, "(campaign)", "layout.tsx"), "utf8");
-    expect(campaign).toContain("CampaignGtm");
+    expect(campaign).toContain("AestheticsAttributionConsent");
+    expect(campaign).not.toMatch(
+      /CampaignGtm|GoogleAnalytics|MetaPixel|GhlChatWidget|CallRail/,
+    );
     const site = readFileSync(join(APP, "(site)", "layout.tsx"), "utf8");
-    expect(site).not.toContain("CampaignGtm");
-    const root = readFileSync(join(APP, "layout.tsx"), "utf8");
-    expect(root).not.toContain("CampaignGtm");
+    expect(site).not.toContain("AestheticsAttributionConsent");
   });
 
-  it("adds no GHL chat widget to the campaign route", () => {
-    const campaign = readFileSync(join(APP, "(campaign)", "layout.tsx"), "utf8");
-    expect(campaign).not.toContain("GhlChatWidget");
-    expect(html).not.toMatch(/leadconnector|msgsndr/i);
-  });
-
-  it("hardcodes no patient data, click identifier, or secret", () => {
-    const raw = readFileSync(join(APP, "..", "components", "integrations", "CampaignGtm.tsx"), "utf8");
-    // Scan CODE, not the explanatory comment — the comment legitimately explains
-    // what the component must never do.
-    const code = raw.replace(/\/\*[\s\S]*?\*\//g, " ").replace(/\/\/[^\n]*/g, " ");
-    expect(code).not.toMatch(/gclid|utm_source|utm_medium|patient|email|phone_number/i);
-    expect(code).not.toMatch(/GTM-[A-Z0-9]{5,}/);         // no literal container id
-    expect(code).toContain("process.env.NEXT_PUBLIC_GTM_ID");
-    // And nothing is pushed into dataLayer by this component beyond GTM's own boot.
-    expect(code).not.toMatch(/dataLayer\.push\((?!\{'gtm\.start')/);
-  });
-
-  it("rejects a malformed container ID — no script, no iframe", async () => {
-    const { GTM_ID_PATTERN } = await import("@/components/integrations/CampaignGtm");
-    for (const bad of ["", "  ", "GTM", "GTM-", "gtm-5D84LL73", "GTM_5D84LL73", "G-5D84LL73",
-                       "UA-12345-1", "GTM-ABC", "<script>alert(1)</script>", "GTM-5D84LL73; evil()"]) {
-      vi.resetModules();
-      process.env[CAMPAIGN_GTM_ENV_VAR] = bad;
-      const { CampaignGtm, CampaignGtmNoScript } = await import("@/components/integrations/CampaignGtm");
-      expect(CampaignGtm(), `malformed value rendered a script: ${JSON.stringify(bad)}`).toBeNull();
-      expect(renderToStaticMarkup(<CampaignGtmNoScript />), JSON.stringify(bad)).toBe("");
-      expect(GTM_ID_PATTERN.test(bad)).toBe(false);
+  it("has no browser tracker or conversion sink in any reachable source", () => {
+    const sources = [
+      join(APP, "(campaign)", "layout.tsx"),
+      join(APP, "(campaign)", "napa", "botox", "page.tsx"),
+      join(APP, "..", "components", "integrations", "AestheticsAttributionConsent.tsx"),
+      join(APP, "..", "lib", "aesthetics-attribution.ts"),
+    ];
+    for (const source of sources) {
+      const code = readFileSync(source, "utf8")
+        .replace(/\/\*[\s\S]*?\*\//g, " ");
+      expect(code, source).not.toMatch(
+        /googletagmanager|googleadservices|doubleclick|connect\.facebook|leadconnector|msgsndr|callrail|dataLayer|gtag\(|fbq\(|sendBeacon/i,
+      );
     }
-    delete process.env[CAMPAIGN_GTM_ENV_VAR];
   });
 
-  it("accepts the confirmed production container ID format", async () => {
-    const { GTM_ID_PATTERN } = await import("@/components/integrations/CampaignGtm");
-    expect(GTM_ID_PATTERN.test("GTM-5D84LL73")).toBe(true);
-  });
-
-  it("documents the duplicate-GA4 hazard next to the code", () => {
-    const src = readFileSync(join(APP, "..", "components", "integrations", "CampaignGtm.tsx"), "utf8");
-    expect(src).toMatch(/DUPLICATE GA4/);
-    expect(src).toContain("NEXT_PUBLIC_GA_MEASUREMENT_ID");
+  it("retains only the credentialed first-party attribution endpoint", () => {
+    const source = readFileSync(
+      join(APP, "..", "lib", "aesthetics-attribution.ts"),
+      "utf8",
+    );
+    expect(source).toContain(
+      "https://book.experiencerella.com/api/booking-v2/attribution",
+    );
+    expect(source).toContain('credentials: "include"');
   });
 });
 

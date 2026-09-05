@@ -6,17 +6,16 @@ import {
   proxy,
   isReleaseOriginHost,
   isAllowedOnReleaseOrigin,
+  isWeightLossAsset,
   isWeightLossHost,
 } from "./proxy";
 
 /**
  * Release-origin surface guard.
  *
- * Without this, the release alias would expose the ENTIRE application to anyone
- * who guessed the hostname. That is not abstract: `sanity` is a PRODUCTION
- * dependency because Studio mounts at `/studio`, so the Studio toolchain — and
- * its current critical/high advisories — ships in the production tree. Blocking
- * `/studio` here is what keeps it unreachable from the public origin.
+ * Without this, the release alias would expose the entire application to anyone
+ * who guessed the hostname. Blocking `/studio` here ensures even the guarded
+ * hosted-Studio redirect is absent from the narrow campaign surface.
  */
 
 const RELEASE = "rella-napa-botox-release.vercel.app";
@@ -52,13 +51,104 @@ describe("medical weight-loss subdomain", () => {
     expect(rootPage).toContain("<WeightLossServicePage />");
   });
 
-  it("does not rewrite paths or the main domains", () => {
-    for (const [path, host] of [
-      ["/services/weight-loss", WEIGHT_LOSS],
-      ["/", "experiencerella.com"],
-      ["/", "www.experiencerella.com"],
-    ] as const) {
-      expect(proxy(req(path, host)).headers.get("x-middleware-rewrite")).toBeNull();
+  it("keeps only the root and required assets on the dedicated host", () => {
+    for (const path of [
+      "/",
+      "/_next/static/chunks/app.js",
+      "/brand/rella-logo-black.svg",
+      "/images/treatments/medical-weight-loss.webp",
+      "/media/semaglutide-story.mp4",
+      "/favicon.ico",
+    ]) {
+      expect(isWeightLossAsset(path) || path === "/", path).toBe(true);
+      const response = proxy(req(path, WEIGHT_LOSS));
+      expect(response.headers.get("location"), path).toBeNull();
+      expect(response.status, path).not.toBe(404);
+    }
+  });
+
+  it("rejects traversal and near-match paths from the asset allowlist", () => {
+    for (const path of [
+      "/images/../api/leads",
+      "/images/%2e%2e/api/leads",
+      "/images/%5c..%5capi/leads",
+      "/image/treatments/medical-weight-loss.webp",
+      "/_next/server/app.js",
+    ]) {
+      expect(isWeightLossAsset(path), path).toBe(false);
+    }
+  });
+
+  it("redirects the duplicate weight-loss path to its canonical root", () => {
+    const response = proxy(req("/services/weight-loss?utm_source=google&gclid=test-click", WEIGHT_LOSS));
+    expect(response.status).toBe(308);
+    expect(response.headers.get("location")).toBe(
+      "https://weightloss.experiencerella.com/?utm_source=google&gclid=test-click",
+    );
+  });
+
+  it("moves unrelated pages to the main domain without leaking ad identifiers", () => {
+    const response = proxy(
+      req("/about?utm_source=google&gclid=private-click&campaignid=123&ref=header", WEIGHT_LOSS),
+    );
+    expect(response.status).toBe(308);
+    expect(response.headers.get("location")).toBe("https://experiencerella.com/about");
+    expect(response.headers.get("referrer-policy")).toBe("no-referrer");
+
+    const slashResponse = proxy(req("/about/?gclid=private-click", WEIGHT_LOSS));
+    expect(slashResponse.headers.get("location")).toBe("https://experiencerella.com/about");
+  });
+
+  it("blocks APIs and Studio without redirecting or exposing route details", async () => {
+    for (const path of ["/api", "/api/leads", "/api/revalidate", "/studio", "/studio/desk"]) {
+      const response = proxy(req(`${path}?gclid=private-click`, WEIGHT_LOSS));
+      expect(response.status, path).toBe(404);
+      expect(response.headers.get("location"), path).toBeNull();
+      expect(response.headers.get("x-robots-tag"), path).toBe("noindex, nofollow");
+      expect(response.headers.get("cache-control"), path).toBe("no-store");
+      expect(await response.text(), path).toBe("Not Found");
+    }
+  });
+
+  it("serves a one-page sitemap and host-correct robots policy", async () => {
+    const sitemap = proxy(req("/sitemap.xml", WEIGHT_LOSS));
+    const sitemapBody = await sitemap.text();
+    expect(sitemap.headers.get("content-type")).toContain("application/xml");
+    expect(sitemap.headers.get("cache-control")).toContain("s-maxage");
+    expect(sitemapBody).toContain("https://weightloss.experiencerella.com/");
+    expect(sitemapBody).not.toContain("experiencerella.com/services/");
+
+    const robots = proxy(req("/robots.txt", WEIGHT_LOSS));
+    expect(await robots.text()).toContain(
+      "Sitemap: https://weightloss.experiencerella.com/sitemap.xml",
+    );
+  });
+
+  it("canonicalizes SEO document variants without forwarding their query", () => {
+    for (const path of ["/robots.txt/", "/sitemap.xml/", "/sitemap-0.xml/"]) {
+      const response = proxy(req(`${path}?gclid=private-click`, WEIGHT_LOSS));
+      expect(response.status, path).toBe(308);
+      expect(response.headers.get("location"), path).toBe(
+        `https://${WEIGHT_LOSS}${path.slice(0, -1)}`,
+      );
+    }
+  });
+
+  it("does not change the main domains", () => {
+    for (const host of ["experiencerella.com", "www.experiencerella.com"]) {
+      const response = proxy(req("/", host));
+      expect(response.headers.get("x-middleware-rewrite")).toBeNull();
+      expect(response.headers.get("location")).toBeNull();
+    }
+  });
+
+  it("canonicalizes ordinary trailing-slash pages in one hop", () => {
+    for (const host of ["experiencerella.com", "www.experiencerella.com"]) {
+      const response = proxy(req("/about/?utm_source=newsletter", host));
+      expect(response.status).toBe(308);
+      expect(response.headers.get("location")).toBe(
+        `https://${host}/about?utm_source=newsletter`,
+      );
     }
   });
 });
@@ -136,6 +226,14 @@ describe("ALLOWED on the release alias — exactly the campaign surface", () => 
       expect(proxy(req(p, RELEASE)).status).not.toBe(404);
     });
   }
+
+  it("canonicalizes the campaign trailing slash without losing its query", () => {
+    const response = proxy(req("/napa/botox/?utm_source=google", RELEASE));
+    expect(response.status).toBe(308);
+    expect(response.headers.get("location")).toBe(
+      `https://${RELEASE}/napa/botox?utm_source=google`,
+    );
+  });
 });
 
 describe("no other host is affected", () => {

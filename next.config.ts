@@ -1,6 +1,10 @@
 import type { NextConfig } from "next";
+import legacyRedirects from "./legacy-redirects.json";
 
 const nextConfig: NextConfig = {
+  // Let the audited redirect matrix send historical slash URLs directly to
+  // their final destination instead of inserting Next's generic strip-slash hop.
+  skipTrailingSlashRedirect: true,
   images: {
     formats: ["image/avif", "image/webp"],
   },
@@ -53,31 +57,12 @@ const nextConfig: NextConfig = {
   },
 
   async redirects() {
-    return [
-      // Old WordPress → new Next.js routes
-      { source: "/treatments/", destination: "/services", permanent: true },
-      { source: "/treatments", destination: "/services", permanent: true },
-      { source: "/botox/", destination: "/services/botox", permanent: true },
-      { source: "/botox", destination: "/services/botox", permanent: true },
-      { source: "/dermal-fillers/", destination: "/services/dermal-fillers", permanent: true },
-      { source: "/dermal-fillers", destination: "/services/dermal-fillers", permanent: true },
-      { source: "/weight-loss/", destination: "/services/weight-loss", permanent: true },
-      { source: "/weight-loss", destination: "/services/weight-loss", permanent: true },
-      { source: "/iv-hydration/", destination: "/services/iv-hydration", permanent: true },
-      { source: "/iv-hydration", destination: "/services/iv-hydration", permanent: true },
-      { source: "/laser-treatments/", destination: "/services/laser-treatments", permanent: true },
-      { source: "/laser-treatments", destination: "/services/laser-treatments", permanent: true },
-      { source: "/membership/", destination: "/membership", permanent: true },
-      { source: "/upcoming-events/", destination: "/", permanent: true },
-      { source: "/upcoming-events", destination: "/", permanent: true },
-      { source: "/private-parties/", destination: "/contact", permanent: true },
-      { source: "/private-parties", destination: "/contact", permanent: true },
-      { source: "/testimonials/", destination: "/gallery", permanent: true },
-      { source: "/testimonials", destination: "/gallery", permanent: true },
-      { source: "/about/", destination: "/about", permanent: true },
-      { source: "/contact/", destination: "/contact", permanent: true },
-      { source: "/privacy-policy/", destination: "/privacy-policy", permanent: true },
-    ];
+    // Keep moved WordPress URLs in one audited source of truth. Both forms are
+    // explicit so every historical URL reaches its replacement in one hop.
+    return legacyRedirects.flatMap(({ source, destination }) => [
+      { source: `${source}/`, destination, permanent: true as const },
+      { source, destination, permanent: true as const },
+    ]);
   },
 };
 

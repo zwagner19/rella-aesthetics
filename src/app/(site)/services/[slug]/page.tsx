@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import { notFound } from "next/navigation";
 import { servicePages } from "@/lib/service-data";
 import { FaqAccordion, FaqSchema } from "@/components/blocks/FaqAccordion";
 import { Button } from "@/components/ui/Button";
-import { resolveBookingHref } from "@/lib/booking-routes";
+import { resolveBookingHref, type BookingLocation } from "@/lib/booking-routes";
 import { WeightLossServicePage } from "@/components/pages/WeightLossServicePage";
 import { getServiceMetadata } from "@/lib/service-metadata";
 
@@ -11,8 +12,14 @@ interface ServicePageProps {
   params: Promise<{ slug: string }>;
 }
 
+const clinicNames: Record<BookingLocation, string> = {
+  vacaville: "Vacaville",
+  napa: "Napa",
+};
+const RELLA_PHONE_HREF = "tel:+17073582928";
+
 export async function generateStaticParams() {
-  return servicePages.map((s) => ({ slug: s.slug }));
+  return servicePages.map((service) => ({ slug: service.slug }));
 }
 
 export async function generateMetadata({ params }: ServicePageProps): Promise<Metadata> {
@@ -22,130 +29,200 @@ export async function generateMetadata({ params }: ServicePageProps): Promise<Me
 
 export default async function ServicePage({ params }: ServicePageProps) {
   const { slug } = await params;
-  const service = servicePages.find((s) => s.slug === slug);
+  const service = servicePages.find((item) => item.slug === slug);
   if (!service) notFound();
 
   if (service.slug === "weight-loss") {
     return <WeightLossServicePage />;
   }
 
+  const availableLocations: readonly BookingLocation[] =
+    service.availableLocations ?? (["vacaville", "napa"] as const);
+  const soleLocation =
+    availableLocations.length === 1 ? availableLocations[0] : undefined;
+  const isCallAssisted = service.slug === "iv-hydration";
+  const primaryHref = isCallAssisted
+    ? RELLA_PHONE_HREF
+    : resolveBookingHref({
+        location: soleLocation,
+        service: service.slug,
+      });
+  const primaryLabel = isCallAssisted
+    ? "Call About IV Hydration"
+    : soleLocation
+      ? `Book ${service.title} in ${clinicNames[soleLocation]}`
+      : `Book ${service.title}`;
+
   return (
     <>
       <FaqSchema items={service.faq} />
 
-      {/* Hero */}
-      <section className="py-24 bg-rose-blush">
-        <div className="mx-auto max-w-[1200px] px-6 md:px-8 lg:px-12">
-          <p className="font-bold text-[0.6875rem] tracking-[0.2em] uppercase text-silver mb-4">
-            {service.heroEyebrow}
+      <section className="bg-white py-20 md:py-28">
+        <div className="mx-auto grid max-w-[1200px] items-center gap-12 px-6 md:px-8 lg:grid-cols-[1fr_0.9fr] lg:gap-20 lg:px-12">
+          <div>
+            <p className="mb-5 text-sm font-medium italic tracking-[0.04em] text-ink">
+              {service.heroEyebrow}
+            </p>
+            <h1 className="mb-6 break-words text-[clamp(1.9rem,9vw,2.25rem)] font-bold uppercase leading-[1.04] tracking-[0.04em] text-rose-text sm:text-4xl sm:tracking-[0.08em] md:text-6xl">
+              {service.heroTitle}
+            </h1>
+            <p className="mb-9 max-w-[620px] text-lg font-light leading-relaxed text-ink/70">
+              {service.heroDescription}
+            </p>
+            <Button
+              href={primaryHref}
+              data-cta={isCallAssisted ? "phone" : "service-booking"}
+              disableHover
+            >
+              {primaryLabel}
+            </Button>
+          </div>
+          <div className="relative aspect-[4/5] overflow-hidden bg-rose-blush">
+            <Image
+              src={service.image}
+              alt={service.imageAlt}
+              fill
+              loading="eager"
+              className="object-cover object-center"
+              sizes="(min-width: 1024px) 42vw, 100vw"
+            />
+          </div>
+        </div>
+      </section>
+
+      <section className="border-y border-rose/25 bg-white py-20 md:py-28">
+        <div className="mx-auto max-w-[900px] px-6 md:px-8">
+          <p className="mb-4 text-sm font-medium italic text-ink">Treatment overview</p>
+          <h2 className="mb-6 break-words text-[clamp(1.75rem,8.5vw,1.875rem)] font-bold uppercase tracking-[0.035em] text-rose-text sm:text-3xl sm:tracking-[0.06em] md:text-5xl">
+            {service.whatItIs.heading}
+          </h2>
+          <p className="text-lg font-light leading-relaxed text-ink/70">{service.whatItIs.body}</p>
+        </div>
+      </section>
+
+      <section className="bg-rose-blush py-20 md:py-28">
+        <div className="mx-auto max-w-[1000px] px-6 md:px-8">
+          <h2 className="mb-5 break-words text-[clamp(1.75rem,8.5vw,1.875rem)] font-bold uppercase tracking-[0.035em] text-rose-text sm:text-3xl sm:tracking-[0.06em] md:text-5xl">
+            {service.whoItsFor.heading}
+          </h2>
+          <p className="mb-9 max-w-[780px] text-lg font-light leading-relaxed text-ink/70">
+            {service.whoItsFor.body}
           </p>
-          <h1 className="font-bold text-4xl md:text-5xl tracking-[0.08em] uppercase text-rose-text mb-4 leading-[1.1]">
-            {service.heroTitle}
-          </h1>
-          <p className="text-lg font-light text-silver max-w-[560px] leading-relaxed mb-8">
-            {service.heroDescription}
+          <ul className="grid gap-px bg-rose/35 sm:grid-cols-2">
+            {service.whoItsFor.bullets.map((item) => (
+              <li key={item} className="flex gap-4 bg-white p-6 text-ink">
+                <span aria-hidden="true" className="font-bold text-ink">✓</span>
+                <span>{item}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+
+      <section className="bg-rose py-20 md:py-28">
+        <div className="mx-auto max-w-[1000px] px-6 md:px-8">
+          <p className="mb-4 text-sm font-medium italic text-ink">Your visit</p>
+          <h2 className="mb-6 break-words text-[clamp(1.75rem,8.5vw,1.875rem)] font-bold uppercase tracking-[0.035em] text-ink sm:text-3xl sm:tracking-[0.06em] md:text-5xl">
+            {service.whatToExpect.heading}
+          </h2>
+          <p className="mb-10 max-w-[780px] text-lg font-light leading-relaxed text-ink">
+            {service.whatToExpect.body}
           </p>
-          <Button href={resolveBookingHref({ service: service.slug })}>
-            Book {service.title}
-          </Button>
+          <ol className="grid gap-4 sm:grid-cols-2">
+            {service.whatToExpect.steps.map((step, index) => (
+              <li key={step} className="flex gap-5 border border-ink/35 bg-rose p-6 text-ink">
+                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white text-sm font-bold text-rose-text">
+                  {String(index + 1).padStart(2, "0")}
+                </span>
+                <span className="pt-2 leading-relaxed">{step}</span>
+              </li>
+            ))}
+          </ol>
         </div>
       </section>
 
-      {/* Section 1 — What It Is */}
-      <section className="py-20">
-        <div className="mx-auto max-w-[1200px] px-6 md:px-8 lg:px-12">
-          <div className="max-w-[720px]">
-            <h2 className="font-medium text-2xl md:text-3xl text-silver-dark mb-4">
-              {service.whatItIs.heading}
-            </h2>
-            <p className="text-silver leading-relaxed">{service.whatItIs.body}</p>
-          </div>
+      <section className="bg-white py-20 md:py-28">
+        <div className="mx-auto max-w-[900px] px-6 md:px-8">
+          <h2 className="mb-6 break-words text-[clamp(1.75rem,8.5vw,1.875rem)] font-bold uppercase tracking-[0.035em] text-rose-text sm:text-3xl sm:tracking-[0.06em] md:text-5xl">
+            {service.pricing.heading}
+          </h2>
+          <p className="text-lg font-light leading-relaxed text-ink/70">{service.pricing.body}</p>
+          {service.pricing.note ? (
+            <p className="mt-5 border-l-2 border-rose pl-5 text-sm leading-relaxed text-ink/70">
+              {service.pricing.note}
+            </p>
+          ) : null}
         </div>
       </section>
 
-      {/* Section 2 — Who It's For */}
-      <section className="py-20 bg-rose-blush">
-        <div className="mx-auto max-w-[1200px] px-6 md:px-8 lg:px-12">
-          <div className="max-w-[720px]">
-            <h2 className="font-medium text-2xl md:text-3xl text-silver-dark mb-4">
-              {service.whoItsFor.heading}
-            </h2>
-            <p className="text-silver leading-relaxed mb-4">{service.whoItsFor.body}</p>
-            <ul className="space-y-2">
-              {service.whoItsFor.bullets.map((b, i) => (
-                <li key={i} className="flex gap-3 text-silver-dark">
-                  <span className="text-rose shrink-0 mt-0.5">&#10003;</span>
-                  {b}
-                </li>
-              ))}
-            </ul>
-          </div>
-        </div>
-      </section>
-
-      {/* Section 3 — What to Expect */}
-      <section className="py-20">
-        <div className="mx-auto max-w-[1200px] px-6 md:px-8 lg:px-12">
-          <div className="max-w-[720px]">
-            <h2 className="font-medium text-2xl md:text-3xl text-silver-dark mb-4">
-              {service.whatToExpect.heading}
-            </h2>
-            <p className="text-silver leading-relaxed mb-6">{service.whatToExpect.body}</p>
-            <ol className="space-y-3 list-decimal list-inside">
-              {service.whatToExpect.steps.map((step, i) => (
-                <li key={i} className="text-silver-dark pl-2">
-                  {step}
-                </li>
-              ))}
-            </ol>
-          </div>
-        </div>
-      </section>
-
-      {/* Section 4 — Pricing */}
-      <section className="py-20 bg-rose-blush">
-        <div className="mx-auto max-w-[1200px] px-6 md:px-8 lg:px-12">
-          <div className="max-w-[720px]">
-            <h2 className="font-medium text-2xl md:text-3xl text-silver-dark mb-4">
-              {service.pricing.heading}
-            </h2>
-            <p className="text-silver leading-relaxed">{service.pricing.body}</p>
-            {service.pricing.note && (
-              <p className="text-sm text-silver-light mt-2">{service.pricing.note}</p>
-            )}
-            <div className="mt-8">
-              <Button href={resolveBookingHref({ service: service.slug })}>
-                Book {service.title}
+      <section className="bg-rose py-20 md:py-24">
+        <div className="mx-auto max-w-[1000px] px-6 text-center md:px-8">
+          <p className="mb-4 text-sm font-medium italic text-ink">
+            {isCallAssisted
+              ? "Call-assisted booking"
+              : soleLocation
+                ? clinicNames[soleLocation]
+                : "Vacaville + Napa"}
+          </p>
+          <h2 className="mb-8 break-words text-[clamp(1.75rem,8.5vw,1.875rem)] font-bold uppercase tracking-[0.035em] text-ink sm:text-3xl sm:tracking-[0.06em] md:text-5xl">
+            {isCallAssisted
+              ? "Call Rella for IV availability"
+              : soleLocation
+                ? `${service.title} is bookable in ${clinicNames[soleLocation]}`
+                : "Choose your Rella clinic"}
+          </h2>
+          <div className="flex flex-col items-center justify-center gap-3 sm:flex-row">
+            {isCallAssisted ? (
+              <Button
+                href={RELLA_PHONE_HREF}
+                data-cta="phone"
+                variant="light"
+                disableHover
+              >
+                Call 707.358.2928
               </Button>
-            </div>
+            ) : availableLocations.map((location) => (
+              <Button
+                key={location}
+                href={resolveBookingHref({ location, service: service.slug })}
+                data-cta="service-booking"
+                data-location={location}
+                variant="light"
+                disableHover
+              >
+                Book in {clinicNames[location]}
+              </Button>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* Section 5 — FAQ */}
-      <section className="py-20">
-        <div className="mx-auto max-w-[1200px] px-6 md:px-8 lg:px-12">
-          <h2 className="font-medium text-2xl md:text-3xl text-silver-dark mb-8">
-            Frequently Asked Questions
+      <section className="bg-white py-20 md:py-28">
+        <div className="mx-auto max-w-[1000px] px-6 md:px-8">
+          <h2 className="mb-10 break-words text-[clamp(1.75rem,8.5vw,1.875rem)] font-bold uppercase tracking-[0.035em] text-rose-text sm:text-3xl sm:tracking-[0.06em] md:text-5xl">
+            {service.title} FAQ
           </h2>
           <FaqAccordion items={service.faq} />
         </div>
       </section>
 
-      {/* Bottom CTA */}
-      <section className="py-16 bg-rose text-white text-center">
-        <div className="mx-auto max-w-[600px] px-6">
-          <h2 className="font-bold text-2xl md:text-3xl tracking-[0.06em] uppercase mb-4">
-            Ready to Get Started?
+      <section className="bg-rose py-16 text-center md:py-20">
+        <div className="mx-auto max-w-[700px] px-6">
+          <h2 className="mb-4 break-words text-[clamp(1.75rem,8.5vw,1.875rem)] font-bold uppercase tracking-[0.035em] text-ink sm:text-3xl sm:tracking-[0.06em] md:text-4xl">
+            Ready for a clear next step?
           </h2>
-          <p className="font-light text-lg mb-6 opacity-90">
-            Schedule your consultation to learn if {service.title.toLowerCase()} is right for you.
+          <p className="mb-8 text-lg font-light leading-relaxed text-ink">
+            {isCallAssisted
+              ? "Call Rella, name your preferred clinic, and ask about IV hydration availability and next steps."
+              : `Schedule a consultation to learn whether ${service.title.toLowerCase()} is appropriate for your goals.`}
           </p>
           <Button
-            href={resolveBookingHref({ service: service.slug })}
-            className="bg-white !text-rose hover:bg-white/90 hover:!text-rose-dark"
+            href={primaryHref}
+            data-cta={isCallAssisted ? "phone" : "service-booking"}
+            variant="light"
+            disableHover
           >
-            Book {service.title}
+            {primaryLabel}
           </Button>
         </div>
       </section>

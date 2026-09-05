@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "Privacy Policy",
   description: "Rella Aesthetics privacy policy — how we collect, use, and protect your personal information.",
+  alternates: { canonical: "/privacy-policy" },
 };
 
 export default function PrivacyPolicyPage() {
@@ -14,7 +15,7 @@ export default function PrivacyPolicyPage() {
         </h1>
         <div className="prose prose-lg text-silver max-w-none space-y-6">
           <p>
-            <strong className="text-silver-dark">Last Updated:</strong> April 2026
+            <strong className="text-silver-dark">Last Updated:</strong> September 2026
           </p>
           <p>
             Rella Aesthetics (&ldquo;we,&rdquo; &ldquo;us,&rdquo; or &ldquo;our&rdquo;) respects your privacy and is
@@ -43,11 +44,27 @@ export default function PrivacyPolicyPage() {
             your information.
           </p>
 
+          <h2 className="font-medium text-xl text-silver-dark mt-8">Cookies and Ad Measurement</h2>
+          <p>
+            On the Napa Botox advertising page, Rella asks before using a Google ad click identifier
+            to determine whether that visit leads to a booked appointment. If you accept, the approved
+            identifier is sent directly to Rella&apos;s first-party booking system and stored there in
+            encrypted form. The capture request does not include your name, email address, phone number,
+            or treatment details.
+          </p>
+          <p>
+            A first-party cookie records your choice for up to 30 days. An opaque first-party handle
+            supports withdrawal without placing the ad click identifier in a cookie or booking link.
+            If you decline or later turn cookies off, Rella does not store a new ad click identifier and
+            asks the booking system to revoke any identifier covered by that choice. Your ability to
+            view the page, request care, and book an appointment does not depend on accepting.
+          </p>
+
           <h2 className="font-medium text-xl text-silver-dark mt-8">Contact Us</h2>
           <p>
             If you have questions about this Privacy Policy, contact us at{" "}
-            <a href="mailto:hello@experiencerella.com" className="text-rose-text hover:underline">
-              hello@experiencerella.com
+            <a href="mailto:info@experiencerella.com" className="text-rose-text hover:underline">
+              info@experiencerella.com
             </a>{" "}
             or call <a href="tel:+17073582928" className="text-rose-text hover:underline">707.358.2928</a>.
           </p>

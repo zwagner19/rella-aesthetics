@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { readFileSync, readdirSync, statSync } from "node:fs";
+import { existsSync, readFileSync, readdirSync, statSync } from "node:fs";
 import { join } from "node:path";
 
 /**
@@ -47,7 +47,7 @@ describe("employee-only Rella HQ is outside the public website", () => {
   });
 });
 
-describe("retired embedded wizard is quarantined (no public import)", () => {
+describe("retired embedded wizard is absent from the public website", () => {
   it("no page/route imports BoulevardCustomBooking / BoulevardBookingWizard", () => {
     const importers = FILES.filter((p) => {
       const t = readFileSync(p, "utf8");
@@ -56,5 +56,25 @@ describe("retired embedded wizard is quarantined (no public import)", () => {
       return /import[^;]*Boulevard(CustomBooking|BookingWizard)/.test(t);
     }).map(rel);
     expect(importers, `retired wizard must have no public importers: ${importers.join(", ")}`).toEqual([]);
+  });
+
+  it("removes the local Boulevard SDK engine and dependency entirely", () => {
+    const retiredPaths = [
+      join(SRC, "components", "booking", "BookingAppointmentSummary.tsx"),
+      join(SRC, "components", "booking", "BookingProgress.tsx"),
+      join(SRC, "components", "booking", "BookingQuestionsForm.tsx"),
+      join(SRC, "components", "booking", "BoulevardBookingWizard.tsx"),
+      join(SRC, "components", "booking", "booking-styles.ts"),
+      join(SRC, "components", "booking", "mapBlvdError.ts"),
+      join(SRC, "components", "integrations", "BoulevardCustomBooking.tsx"),
+      join(SRC, "lib", "boulevard-config.ts"),
+      join(SRC, "types", "boulevard-book-sdk.d.ts"),
+    ];
+    expect(retiredPaths.filter(existsSync)).toEqual([]);
+
+    const packageJson = readFileSync(join(SRC, "..", "package.json"), "utf8");
+    const packageLock = readFileSync(join(SRC, "..", "package-lock.json"), "utf8");
+    expect(packageJson).not.toContain("@boulevard/blvd-book-sdk");
+    expect(packageLock).not.toContain("@boulevard/blvd-book-sdk");
   });
 });

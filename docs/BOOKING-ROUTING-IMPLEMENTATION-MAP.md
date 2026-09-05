@@ -1,32 +1,41 @@
-# Booking-CTA Routing — audit + implementation map (Large Sprint 06, Workstream D)
+# Canonical booking routing map
 
-Single source of truth: `src/lib/booking-routes.ts` (`resolveBookingHref`), proven by
-`src/lib/booking-routes.test.ts` (Vacaville + generic CTAs can never reach the Napa Tox app; only an
-explicit Napa Tox/Botox intent does). Targets:
+The website does not implement booking. Every public booking CTA resolves through
+`src/lib/booking-routes.ts`; the patient booking application remains
+`https://book.experiencerella.com`.
 
-- Napa New Patient Tox / Botox → `https://book.experiencerella.com/book/napa/botox` (canonical hardened app)
-- Napa other verified service (Hydrafacial) → verified Boulevard deep link
-- Napa, unspecified service → Napa-scoped Boulevard widget (not Tox)
-- Vacaville (any) → Vacaville-scoped Boulevard widget (never Napa Tox)
-- Generic / no location → business-level Boulevard widget (never silently Napa Tox)
+## Approved destinations
 
-## CTA audit + status
-| Surface | Was | Now | Notes |
-|---|---|---|---|
-| `locations/napa/page.tsx` "Book at Napa" | `/booking` | `resolveBookingHref({location:"napa"})` → Napa widget | ✅ rewired. Design pass: add a dedicated "Book New Patient Tox" CTA → canonical app. |
-| `locations/vacaville/page.tsx` "Book at Vacaville" | `/booking` | `resolveBookingHref({location:"vacaville"})` → Vacaville widget | ✅ rewired. Never routes to Napa Tox. |
-| `services/[slug]/page.tsx` (×3) | `/booking?service=slug` | `resolveBookingHref({service:slug})` | ✅ rewired. Location-agnostic → generic/deeplink; Botox slug → generic (no location assumed). |
-| `components/blocks/BookingCta.tsx` | `/booking?service=slug` | `resolveBookingHref({location?,service})` + optional `location` prop | ✅ rewired (shared component). |
-| `components/layout/Header.tsx`, `MobileNav.tsx`, `Footer.tsx` "Book/Book Online" | `/booking` | **mapped** → `resolveBookingHref({})` (generic widget) | ⏭ design pass — generic nav CTAs; safe today (they point at the internal wizard, not Napa Tox). |
-| `app/page.tsx` (home), `gallery`, `about`, `membership`, `blog/[slug]`, `blog/BlogSidebar` | `/booking` | **mapped** → `resolveBookingHref({})` or a section-appropriate location/service | ⏭ design pass — generic content CTAs. |
-| `app/booking/page.tsx` + `components/integrations/BoulevardCustomBooking.tsx` + `BoulevardBookingWizard.tsx` | embedded Boulevard SDK wizard (second booking implementation) | **QUARANTINE** | ⏭ design pass — remove public routing to `/booking`; do not maintain a second booking implementation. Keep the code out of the public nav; final removal ships with the design package. |
+| Intent | Destination |
+|---|---|
+| Generic booking | `https://book.experiencerella.com/book` |
+| Clinic only | `/book?location=napa` or `/book?location=vacaville` |
+| Broad service | `/book?category=<approved-category>` with optional `location` |
+| Napa Botox / New Patient Tox | `https://book.experiencerella.com/book/napa/botox` |
+| Medical weight-loss consultation | `https://book.rellaweightloss.com/book/<napa|vacaville>/weight-loss-consult` |
+| IV hydration | Call `707.358.2928` for current availability |
 
-## Quarantine plan for the embedded wizard (`/booking`)
-The retired embedded custom wizard must not be a public destination. This PR rewires the location/service
-CTAs off `/booking`; the remaining generic `/booking` links (nav/footer/home/content) are mapped above and
-should be repointed to `resolveBookingHref(...)` in the design-package pass, after which `/booking` can be
-redirected to a safe explicit location/service choice (or removed). No second booking UI is maintained.
+Approved broad categories are `injectables`, `laser`, `microneedling`,
+`facials`, and `peels`. A broad category opens the chooser and never selects an
+appointment. Medical weight-loss uses its existing dedicated consultation host
+and exact clinic route. IV hydration remains call-assisted because no approved
+online IV category exists.
 
-## Preserved
-SEO/metadata, analytics, and privacy are unchanged (only CTA `href`s changed on the rewired surfaces).
-No DNS, no repo-visibility, no deploy. Do not convert `.dc.html` design runtime artifacts into production.
+## Prohibited destinations
+
+Public CTAs must never point to Boulevard dashboards or widgets, JoinBLVD,
+Rella HQ, the retired `/booking` wizard, or a booking hostname other than the
+two approved first-party hosts above.
+`/booking` is a non-indexed server redirect to the generic canonical chooser.
+
+## Retired website booking engine
+
+The unused Boulevard SDK wizard, wrapper, helpers, configuration, type shim,
+and package dependency have been removed. Booking attribution, consent, cart,
+checkout, outcome, and conversion-job behavior remains owned by the separate
+`zwagner19/rella-booking` repository and is not recreated here.
+
+## Release boundary
+
+This map does not authorize a merge, deployment, DNS change, WordPress change,
+appointment/cart creation, payment action, or conversion upload.

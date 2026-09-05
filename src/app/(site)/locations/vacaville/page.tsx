@@ -1,64 +1,176 @@
 import type { Metadata } from "next";
-import { SectionHeader } from "@/components/ui/SectionHeader";
+import Image from "next/image";
+import Link from "next/link";
 import { Button } from "@/components/ui/Button";
+import { TrustStrip } from "@/components/blocks/TrustStrip";
 import { resolveBookingHref } from "@/lib/booking-routes";
-import { locations } from "@/lib/data";
+import { locations, services } from "@/lib/data";
 import { localBusinessSchema } from "@/lib/schemas";
 
 export const metadata: Metadata = {
-  title: "Vacaville Med Spa",
+  title: "Vacaville Med Spa | Hours, Address & Booking",
   description:
-    "Visit Rella Aesthetics in downtown Vacaville — 542 Main St. Botox, fillers, laser treatments, weight loss, and more. Book your appointment today.",
+    "Visit Rella Aesthetics at 542 Main St in downtown Vacaville. Explore services, hours, directions, and city-pinned booking.",
+  alternates: { canonical: "/locations/vacaville" },
 };
 
 const loc = locations.vacaville;
+const featuredSlugs = new Set([
+  "botox",
+  "dermal-fillers",
+  "chemical-peels",
+  "facials",
+  "hydrafacial",
+  "microneedling",
+  "laser-treatments",
+  "weight-loss",
+]);
+const featuredServices = services.filter((service) => featuredSlugs.has(service.slug));
+const localServiceHrefs: Readonly<Record<string, string>> = {
+  botox: "/vacaville/botox",
+  "dermal-fillers": "/vacaville/filler",
+  "chemical-peels": "/vacaville/chemical-peels",
+  facials: "/vacaville/facials",
+  hydrafacial: "/vacaville/hydrafacial",
+  microneedling: "/vacaville/microneedling",
+  "laser-treatments": "/vacaville/laser",
+};
 
 export default function VacavillePage() {
+  const bookingHref = resolveBookingHref({ location: "vacaville" });
+  const fullAddress = `${loc.address}, ${loc.city}, ${loc.state} ${loc.zip}`;
+
   return (
     <>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
-          __html: JSON.stringify(localBusinessSchema(loc)),
+          __html: JSON.stringify(localBusinessSchema(loc)).replace(/</g, "\\u003c"),
         }}
       />
 
-      <section className="py-24 bg-rose-blush">
-        <div className="mx-auto max-w-[1200px] px-6 md:px-8 lg:px-12">
-          <p className="font-bold text-[0.6875rem] tracking-[0.2em] uppercase text-silver mb-4">
-            Location
-          </p>
-          <h1 className="font-bold text-4xl md:text-5xl tracking-[0.08em] uppercase text-rose-text mb-4 leading-[1.1]">
-            Rella Aesthetics — Vacaville
-          </h1>
-          <p className="text-lg font-light text-silver max-w-[560px] leading-relaxed">
-            Our original location in the heart of downtown Vacaville.
-          </p>
+      <section className="bg-paper py-20 md:py-28">
+        <div className="mx-auto grid max-w-[1160px] items-center gap-12 px-6 md:px-8 lg:grid-cols-[1.05fr_0.95fr] lg:gap-20">
+          <div>
+            <p className="mb-5 text-sm font-medium italic text-ink">
+              Consultation-led care · Downtown Vacaville
+            </p>
+            <h1 className="mb-6 text-4xl font-bold uppercase leading-[1.08] tracking-[0.08em] text-rose-text md:text-6xl">
+              Med spa care in Vacaville, California.
+            </h1>
+            <p className="mb-8 max-w-[650px] text-lg font-light leading-relaxed text-ink/70">
+              Consultation-led aesthetic and wellness care, honest guidance, and a plan built
+              around your goals—right in downtown Vacaville.
+            </p>
+            <div className="flex flex-col gap-3 sm:flex-row">
+              <Button href={bookingHref} disableHover>Book at Vacaville</Button>
+              <Button href={loc.mapUrl} variant="ghost" disableHover>Get Directions</Button>
+            </div>
+          </div>
+          <div className="relative aspect-[4/3] overflow-hidden bg-rose-blush">
+            <Image
+              src="/images/clinic/vacaville-exterior.webp"
+              alt="The Rella Aesthetics storefront and pink entrance at the Vacaville clinic"
+              fill
+              priority
+              className="object-cover object-center"
+              sizes="(min-width: 1024px) 46vw, 100vw"
+            />
+          </div>
         </div>
       </section>
 
-      <section className="py-20">
-        <div className="mx-auto max-w-[1200px] px-6 md:px-8 lg:px-12">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 lg:gap-20">
-            <div>
-              <SectionHeader title="Visit Us" />
-              <address className="not-italic text-silver leading-relaxed mb-6">
-                {loc.address}<br />
-                {loc.city}, {loc.state} {loc.zip}<br /><br />
-                <strong className="text-silver-dark">Phone: </strong>
-                <a href={`tel:+1${loc.phone.replace(/\D/g, "")}`} className="hover:text-rose-text transition-colors">
-                  {loc.phone}
-                </a>
-              </address>
-              <h3 className="font-medium text-lg text-silver-dark mb-3">Hours</h3>
-              {loc.hours.map((line, i) => (
-                <p key={i} className="text-silver text-sm">{line}</p>
-              ))}
-              <div className="mt-8">
-                <Button href={resolveBookingHref({ location: "vacaville" })}>Book at Vacaville</Button>
-              </div>
-            </div>
-            <div className="aspect-[4/3] bg-silver-pale rounded-lg" />
+      <TrustStrip
+        ariaLabel="Why patients choose Rella Aesthetics Vacaville"
+        items={["Clear guidance", "Personalized plans", "Downtown Vacaville", "Two local clinics"]}
+      />
+
+      <section className="bg-rose py-16 md:py-20">
+        <div className="mx-auto grid max-w-[1000px] gap-10 px-6 md:grid-cols-2 md:items-start md:px-8">
+          <div>
+            <p className="mb-3 text-sm font-medium italic text-ink">Visit us</p>
+            <h2 className="mb-5 text-3xl font-bold uppercase tracking-[0.06em] text-ink md:text-4xl">
+              Rella Vacaville
+            </h2>
+            <address className="not-italic text-ink">
+              <p className="text-xl font-semibold">{loc.address}</p>
+              <p className="mt-2">{loc.city}, {loc.state} {loc.zip}</p>
+              <a
+                href={`tel:+1${loc.phone.replace(/\D/g, "")}`}
+                className="mt-5 inline-flex min-h-11 items-center font-bold underline underline-offset-4"
+              >
+                {loc.phone}
+              </a>
+            </address>
+          </div>
+          <div className="border-t border-ink/30 pt-6 md:border-l md:border-t-0 md:pl-10 md:pt-0">
+            <h3 className="mb-4 text-xl font-bold uppercase tracking-[0.06em] text-ink">Hours</h3>
+            {loc.hours.map((line) => (
+              <p key={line} className="text-sm leading-7 text-ink">{line}</p>
+            ))}
+            <a
+              href={loc.googleReviewUrl}
+              target="_blank"
+              rel="noreferrer"
+              className="mt-6 inline-flex min-h-11 items-center justify-center rounded-full border border-white bg-white px-6 py-3 text-xs font-bold uppercase tracking-[0.12em] text-ink"
+            >
+              Leave a Google review
+              <span className="sr-only"> for Rella Vacaville (opens in a new tab)</span>
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <section className="py-20 md:py-28">
+        <div className="mx-auto max-w-[1160px] px-6 md:px-8">
+          <div className="mb-12 max-w-[760px]">
+            <p className="mb-4 text-sm font-medium italic text-ink">Explore care</p>
+            <h2 className="mb-5 text-3xl font-bold uppercase leading-[1.15] tracking-[0.06em] text-rose-text md:text-5xl">
+              Start with the service that matches your goal.
+            </h2>
+            <p className="text-lg font-light leading-relaxed text-ink/70">
+              Not sure what to choose? Book a consultation and the Rella team can help you identify
+              the appropriate next step.
+            </p>
+          </div>
+          <div className="grid gap-5 sm:grid-cols-2">
+            {featuredServices.map((service, index) => (
+              <Link
+                key={service.slug}
+                href={localServiceHrefs[service.slug] ?? `/services/${service.slug}`}
+                className="group border-t border-rose bg-white p-6 transition-colors hover:bg-rose focus-visible:bg-rose md:p-8"
+              >
+                <div className="mb-8 flex items-start justify-between gap-4 text-ink">
+                  <span className="text-xs font-bold tracking-[0.18em]">0{index + 1}</span>
+                  <span aria-hidden="true" className="text-2xl font-light">→</span>
+                </div>
+                <h3 className="mb-3 text-xl font-bold uppercase leading-tight tracking-[0.06em] text-rose-text group-hover:text-ink group-focus-visible:text-ink md:text-2xl">
+                  {service.title}
+                </h3>
+                <p className="text-sm leading-relaxed text-ink/70 group-hover:text-ink group-focus-visible:text-ink">
+                  {service.description}
+                </p>
+              </Link>
+            ))}
+          </div>
+          <div className="mt-8 text-center">
+            <Button href="/services" variant="ghost" disableHover>View All Services</Button>
+          </div>
+        </div>
+      </section>
+
+      <section className="bg-rose py-16 md:py-20">
+        <div className="mx-auto grid max-w-[1000px] gap-8 px-6 md:grid-cols-[1fr_auto] md:items-center md:px-8">
+          <div>
+            <p className="mb-3 text-sm font-medium italic text-ink">Plan your visit</p>
+            <h2 className="mb-3 text-3xl font-bold uppercase leading-tight tracking-[0.06em] text-ink">
+              {fullAddress}
+            </h2>
+            <p className="text-ink">Choose a time online, call the team, or open directions before you leave.</p>
+          </div>
+          <div className="flex flex-col gap-3 sm:flex-row md:flex-col">
+            <Button href={bookingHref} variant="light" disableHover>See Available Times</Button>
+            <Button href={loc.mapUrl} variant="light" disableHover>Get Directions</Button>
           </div>
         </div>
       </section>

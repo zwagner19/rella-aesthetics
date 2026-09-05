@@ -10,8 +10,10 @@ import "./napa-botox.css";
  * B01 — Napa Botox campaign landing (Revision 06 Wave 3).
  *
  * A MARKETING page on the marketing domain, not a second booking application:
- * it renders no form, collects nothing, stores nothing, and every booking CTA
- * hands off to the hardened booking app. Marketing ends at that click.
+ * it renders no appointment form or medical-data collection, and every booking
+ * CTA hands off to the hardened booking app. Its isolated consent controller may
+ * store a first-party choice and send one bounded ad-click payload only after
+ * explicit acceptance.
  *
  * It supplies its OWN focused shell — logo, phone, one primary action — because
  * the general site chrome brings two competing generic Boulevard booking links
@@ -27,22 +29,14 @@ import "./napa-botox.css";
  */
 
 const BOOKING_HREF = resolveBookingHref({ location: "napa", service: "botox" });
-const CANONICAL = "https://experiencerella.com/napa/botox/";
+const CANONICAL = "https://experiencerella.com/napa/botox";
 const LOGO = "/brand/rella-logo-black.svg";
 
 /**
  * Non-booking navigation, as ABSOLUTE public URLs.
  *
- * Verified against `experiencerella.com` on 2026-07-27:
- *   /services              → 404   (was linked; broken)
- *   /terms                 → 404   (was linked; broken)
- *   /botox/                → 200   ✅ semantically the treatments destination
- *   /privacy-policy/       → 200   ✅ unchanged
- *   /terms-and-conditions/ → 200   ✅ the real terms page
- *
- * They are absolute rather than root-relative so the link target is identical
- * whether the document is served from a Vercel alias or proxied onto the public
- * WordPress host — a root-relative `/terms` would 404 in production.
+ * They use the canonical Next.js paths and remain absolute so a direct Vercel
+ * preview or dedicated release alias always returns visitors to the public site.
  */
 export const metadata: Metadata = {
   title: "Botox in Napa — Physician-Owned Med Spa",
@@ -289,19 +283,14 @@ export default function NapaBotoxLandingPage() {
           <p className="nb-footer-legal">
             Individual results vary. Botox&reg; is a registered trademark of Allergan. Treatment eligibility is
             determined at your in-person consultation with a licensed provider. Pricing shown is current
-            published pricing and may change. This page uses approved marketing analytics; our booking
-            application contains no marketing tracking of any kind.
+            published pricing and may change. This page loads no browser marketing trackers. If you accept
+            cookies, ad-click information goes only to Rella&rsquo;s first-party booking attribution service.
           </p>
           <div className="nb-footer-row">
             {/* eslint-disable-next-line @next/next/no-img-element -- see header */}
             <img src={LOGO} alt="Rella Aesthetics" width={360} height={176} style={{ width: 96, height: "auto" }} decoding="async" />
-            {/* Footer destinations must resolve on the PUBLIC WordPress domain,
-                because this page is intended to be proxied onto
-                experiencerella.com while the rest of that host stays WordPress.
-                Verified live 2026-07-27: /services → 404 and /terms → 404, while
-                /botox/, /privacy-policy/ and /terms-and-conditions/ all → 200.
-                These are absolute public URLs precisely so they cannot silently
-                resolve against a Vercel alias in staging and 404 in production. */}
+            {/* Keep footer destinations absolute so previews and the dedicated
+                release alias always return visitors to the public site. */}
             <div className="nb-footer-links">
               <a href={PUBLIC_LINKS.treatments}>Explore treatments</a>
               <a href={PUBLIC_LINKS.privacy}>Privacy Policy</a>

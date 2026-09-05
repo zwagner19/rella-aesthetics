@@ -1,78 +1,108 @@
 import type { Metadata } from "next";
 import { resolveBookingHref } from "@/lib/booking-routes";
-import { SectionHeader } from "@/components/ui/SectionHeader";
 import { Button } from "@/components/ui/Button";
+import { TrustStrip } from "@/components/blocks/TrustStrip";
+import { TestimonialCard } from "@/components/blocks/TestimonialCard";
+import { PatientResultImageGallery } from "@/components/blocks/PatientResultImageGallery";
+import { approvedPatientResultImages } from "@/content/results";
+import { testimonials } from "@/lib/data";
 
 export const metadata: Metadata = {
-  title: "Gallery",
+  title: "Natural Results & Before and After Photos",
   description:
-    "View before-and-after results from Rella Aesthetics patients. Real results from Botox, fillers, laser treatments, and more in Vacaville and Napa.",
+    "Learn how Rella Aesthetics approaches natural looking results and responsible before and after photography in Vacaville and Napa.",
+  alternates: { canonical: "/gallery" },
 };
 
-const galleryItems = [
-  { src: "/images/gallery-1.jpg", alt: "Botox treatment result", category: "Injectables" },
-  { src: "/images/gallery-2.jpg", alt: "Dermal filler result", category: "Injectables" },
-  { src: "/images/gallery-3.jpg", alt: "Chemical peel result", category: "Skin Care" },
-  { src: "/images/gallery-4.jpg", alt: "Laser treatment result", category: "Laser" },
-  { src: "/images/gallery-5.jpg", alt: "Microneedling result", category: "Skin Care" },
-  { src: "/images/gallery-6.jpg", alt: "Weight loss result", category: "Body & Wellness" },
-];
+const resultPrinciples = [
+  {
+    number: "01",
+    title: "Your features stay yours",
+    body: "The goal is a refreshed, balanced result that does not copy someone else's face or follow a treatment trend.",
+  },
+  {
+    number: "02",
+    title: "The plan comes first",
+    body: "Consultation, anatomy, health history, and realistic expectations determine the appropriate next step.",
+  },
+  {
+    number: "03",
+    title: "Photography needs consent",
+    body: "Rella publishes patient imagery only when the patient has provided the appropriate permission for public use.",
+  },
+] as const;
+
+const patientResultImages = approvedPatientResultImages("main-gallery");
 
 export default function GalleryPage() {
   return (
     <>
-      {/* Hero */}
-      <section className="py-24 bg-rose-blush">
-        <div className="mx-auto max-w-[1200px] px-6 md:px-8 lg:px-12">
-          <p className="font-bold text-[0.6875rem] tracking-[0.2em] uppercase text-silver mb-4">
-            Results
-          </p>
-          <h1 className="font-bold text-4xl md:text-5xl tracking-[0.08em] uppercase text-rose-text mb-4 leading-[1.1]">
-            Patient Gallery
+      <section className="bg-rose py-20 text-ink md:py-28">
+        <div className="mx-auto max-w-[1000px] px-6 text-center md:px-8">
+          <p className="mb-5 text-[0.75rem] font-medium capitalize italic tracking-[0.08em] text-ink">Our approach to results</p>
+          <h1 className="mb-6 text-[clamp(2.75rem,7vw,5rem)] font-bold uppercase leading-[0.98] tracking-[0.06em] text-ink">
+            Results that still look like you.
           </h1>
-          <p className="text-lg font-light text-silver max-w-[560px] leading-relaxed">
-            Real patients, real results. Browse before-and-after photos from our treatments.
+          <p className="mx-auto mb-8 max-w-[700px] text-lg font-light leading-relaxed text-ink md:text-xl">
+            Rella&apos;s work begins with honest guidance, thoughtful consultation, and a treatment plan designed around your features and goals.
           </p>
+          <Button href={resolveBookingHref({})} disableHover className="rounded-full !border-white !text-ink">Book a Consultation</Button>
         </div>
       </section>
 
-      {/* Gallery Grid — placeholder until real images are added */}
-      <section className="py-20">
+      <TrustStrip
+        ariaLabel="Rella Aesthetics results principles"
+        items={["Natural looking goals", "Consultation first", "Individualized plans", "Patient consent first"]}
+      />
+
+      <PatientResultImageGallery results={patientResultImages} />
+
+      <section className="py-20 md:py-28">
         <div className="mx-auto max-w-[1200px] px-6 md:px-8 lg:px-12">
-          <SectionHeader
-            eyebrow="Before & After"
-            title="Treatment Results"
-            description="Each result reflects our commitment to natural, physician-led outcomes. Images will be updated with real patient photos."
-          />
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {galleryItems.map((item, i) => (
-              <div key={i} className="relative group">
-                <div className="aspect-[4/3] bg-silver-pale rounded-lg overflow-hidden">
-                  <div className="w-full h-full flex items-center justify-center text-silver-light text-sm">
-                    {item.alt}
-                  </div>
-                </div>
-                <span className="mt-2 block text-xs font-bold tracking-[0.15em] uppercase text-silver">
-                  {item.category}
-                </span>
+          <div className="mb-12 max-w-[760px]">
+            <p className="mb-4 text-[0.75rem] font-medium capitalize italic tracking-[0.08em] text-rose-text">What guides the work</p>
+            <h2 className="text-3xl font-bold uppercase tracking-[0.06em] text-rose-text md:text-5xl">Natural does not mean one size fits all.</h2>
+          </div>
+          <div className="grid gap-px bg-silver-pale md:grid-cols-3">
+            {resultPrinciples.map((item) => (
+              <article key={item.number} className="border-t-2 border-t-rose bg-white p-7 md:p-8">
+                <p className="mb-10 text-xs font-bold tracking-[0.18em] text-rose-text">{item.number}</p>
+                <h3 className="mb-3 text-xl font-bold uppercase tracking-[0.06em] text-rose-text">{item.title}</h3>
+                <p className="text-sm leading-relaxed text-ink/70">{item.body}</p>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="bg-rose py-20 text-ink md:py-24">
+        <div className="mx-auto max-w-[1200px] px-6 md:px-8 lg:px-12">
+          <div className="mb-10 max-w-[720px]">
+            <p className="mb-4 text-[0.75rem] font-medium capitalize italic tracking-[0.08em] text-ink">Patient perspective</p>
+            <h2 className="text-3xl font-bold uppercase tracking-[0.06em] text-ink md:text-5xl">What patients say about the experience.</h2>
+          </div>
+          <div className="grid gap-10 md:grid-cols-3">
+            {testimonials.map((item) => (
+              <div key={item.name} className="bg-white p-6">
+                <TestimonialCard quote={item.quote} name={item.name} source={item.source} />
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* CTA */}
-      <section className="py-16 bg-rose text-white text-center">
-        <div className="mx-auto max-w-[600px] px-6">
-          <h2 className="font-bold text-2xl md:text-3xl tracking-[0.06em] uppercase mb-4">
-            Ready for Your Transformation?
-          </h2>
-          <p className="font-light text-lg mb-6 opacity-90">
-            Book a consultation and discover what&apos;s possible.
+      <section className="bg-rose py-16 text-center text-ink md:py-20">
+        <div className="mx-auto max-w-[640px] px-6">
+          <h2 className="mb-4 text-3xl font-bold uppercase tracking-[0.06em] text-ink md:text-4xl">Start with the right conversation.</h2>
+          <p className="mx-auto mb-7 w-fit bg-white px-5 py-2 text-base font-light text-rose-text md:text-lg">
+            Share your goal, ask questions, and understand the appropriate next step before you decide.
           </p>
           <Button
             href={resolveBookingHref({})}
-            className="bg-white !text-rose hover:bg-white/90 hover:!text-rose-dark"
+            data-cta="gallery-booking"
+            variant="ghost"
+            disableHover
+            className="!border-white !bg-transparent !text-ink"
           >
             Book Consultation
           </Button>

@@ -32,9 +32,7 @@ export function getServiceMetadata(slug: string): Metadata {
       title: service.metaTitle,
       description: service.metaDescription,
       url: canonicalUrl,
-      ...(service.slug === "weight-loss"
-        ? { images: [{ url: service.image, alt: service.title }] }
-        : {}),
+      images: [{ url: service.image, alt: service.imageAlt }],
     },
   };
 }

@@ -1,4 +1,4 @@
-import { createClient, type SanityClient } from "next-sanity";
+import { createClient, type SanityClient } from "@sanity/client";
 
 export const projectId = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID ?? "";
 export const dataset = process.env.NEXT_PUBLIC_SANITY_DATASET ?? "production";

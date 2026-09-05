@@ -1,4 +1,4 @@
-import { CampaignGtm, CampaignGtmNoScript } from "@/components/integrations/CampaignGtm";
+import { AestheticsAttributionConsent } from "@/components/integrations/AestheticsAttributionConsent";
 
 /**
  * Campaign routes — policy layout.
@@ -20,19 +20,16 @@ import { CampaignGtm, CampaignGtmNoScript } from "@/components/integrations/Camp
  * top-level banner or contentinfo. Each campaign page owns its own
  * skip-link / header / main / footer / sticky-actions shell.
  *
- * GTM is mounted HERE and only here. When this route is proxied onto the public
- * WordPress host the browser gets the Vercel document, which does not inherit
- * WordPress's GTM — so campaign routes must carry their own container or public
- * marketing measurement is lost. It renders nothing unless `NEXT_PUBLIC_GTM_ID`
- * is set, so the ordinary site and today's staging are unchanged. GTM is a tag
- * container only: no GHL chat widget appears on this page.
+ * The exact-Napa pilot deliberately loads no third-party browser analytics,
+ * advertising, chat, or call-tracking stack, even after consent. The consent
+ * component may send one bounded, consented click payload to Rella's first-party
+ * booking endpoint; that is the complete measurement boundary.
  */
 export default function CampaignLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <>
-      <CampaignGtmNoScript />
-      <CampaignGtm />
       {children}
+      <AestheticsAttributionConsent />
     </>
   );
 }

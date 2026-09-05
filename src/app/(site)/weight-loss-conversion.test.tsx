@@ -1,7 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { renderToStaticMarkup } from "react-dom/server";
 import { WeightLossServicePage } from "@/components/pages/WeightLossServicePage";
-import { resolveWeightLossConsultHref } from "@/lib/booking-routes";
 import {
   MEDICAL_WEIGHT_LOSS_CANONICAL_URL,
   medicalWeightLossServiceSchema,
@@ -35,8 +34,14 @@ describe("medical-weight-loss conversion foundation", () => {
   });
 
   it("gives visitors one city-correct qualification-call path", () => {
-    for (const location of ["napa", "vacaville"] as const) {
-      expect(weightLossHtml).toContain(`href="${resolveWeightLossConsultHref(location)}"`);
+    const routes = {
+      napa: "https://book.rellaweightloss.com/book/napa/weight-loss-consult",
+      vacaville:
+        "https://book.rellaweightloss.com/book/vacaville/weight-loss-consult",
+    } as const;
+
+    for (const [location, href] of Object.entries(routes)) {
+      expect(weightLossHtml).toContain(`href="${href}"`);
       expect(weightLossHtml).toContain(`data-location="${location}"`);
     }
     expect([...weightLossHtml.matchAll(/data-cta="weight-loss-consult"/g)]).toHaveLength(2);

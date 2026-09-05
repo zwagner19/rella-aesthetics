@@ -17,8 +17,8 @@
  *     deposit-application promise, no ratings, no credentials beyond the
  *     approved line, no delivery channel for confirmations.
  *
- * The repository's older `service-data.ts` still carries superseded 2023-era
- * figures ($13 / $4.33 as *standard*). Those are history; this file is canon.
+ * `service-data.ts` mirrors these prices for shared service pages. Tests guard
+ * both files against reintroducing historical standard-price figures.
  */
 
 export const PRICING = {
@@ -50,13 +50,13 @@ export const CANCELLATION_POLICY =
   "Please give at least 48 hours’ notice if you need to cancel. Rella may retain your $50 deposit for " +
   "cancellations within 48 hours. Emergencies are reviewed individually.";
 
-export const CANCELLATION_POLICY_URL = "https://experiencerella.com/cancellation-policy/";
+export const CANCELLATION_POLICY_URL = "https://experiencerella.com/cancellation-policy";
 
 /** Verified public destinations used by the campaign page footer. */
 export const PUBLIC_LINKS = {
-  treatments: "https://experiencerella.com/botox/",
-  privacy: "https://experiencerella.com/privacy-policy/",
-  terms: "https://experiencerella.com/terms-and-conditions/",
+  treatments: "https://experiencerella.com/services/botox",
+  privacy: "https://experiencerella.com/privacy-policy",
+  terms: "https://experiencerella.com/terms",
 } as const;
 
 /** Approved credential + trust lines (D5). Nothing further may be claimed. */
@@ -78,7 +78,7 @@ export const MARKETING_PHONE = {
 export const NAPA = {
   street: "1541 3rd St",
   cityStateZip: "Napa, CA 94559",
-  hoursCopy: "Open Wednesday – Saturday",
+  hoursCopy: "See current appointment availability when you book online",
   parkingCopy: "Street & garage parking within one block",
 } as const;
 

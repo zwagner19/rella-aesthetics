@@ -1,8 +1,11 @@
-"use client";
+import { notFound, redirect } from "next/navigation";
+import { getSanityStudioUrl } from "@/lib/sanity-studio-url";
 
-import { NextStudio } from "next-sanity/studio";
-import config from "../../../../../sanity.config";
+export const dynamic = "force-dynamic";
 
 export default function StudioPage() {
-  return <NextStudio config={config} />;
+  const studioUrl = getSanityStudioUrl(process.env.SANITY_STUDIO_URL);
+  if (!studioUrl) notFound();
+
+  redirect(studioUrl);
 }

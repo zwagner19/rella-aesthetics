@@ -41,10 +41,10 @@ export default function RootLayout({
         INHERITED them. They rendered null only because the canonical project
         has no corresponding environment variables; that is a coincidence of
         configuration, not a contract. Analytics ownership is now structural:
-        direct GA/Meta belong to `(site)`, GTM belongs to `(campaign)`, and the
-        campaign route has exactly one possible delivery path. Site chrome (SkipNav / Header / MobileNav /
-        Footer / GHL chat) lives in the `(site)` route group, so the `(campaign)`
-        group can render the focused B01 shell instead of hiding chrome with CSS.
+        direct GA/Meta belong to `(site)`, while `(campaign)` loads no third-party
+        tracking code. Site chrome (SkipNav / Header / MobileNav / Footer / GHL
+        chat) also lives in the `(site)` route group, so the `(campaign)` group
+        can render the focused B01 shell instead of hiding chrome with CSS.
         Both groups keep their URLs unchanged — route groups are path-invisible.
       */}
       <body className="min-h-screen flex flex-col font-sans text-silver-dark bg-white">

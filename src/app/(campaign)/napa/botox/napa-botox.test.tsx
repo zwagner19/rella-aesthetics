@@ -276,7 +276,9 @@ describe("accepted light design, no photography", () => {
 
 describe("marketing/booking privacy boundary", () => {
   it("adds no tracker, pixel, or analytics script to this page", () => {
-    expect(html).not.toMatch(/googletagmanager|gtag\(|fbq\(|clarity\.ms|hotjar|callrail|leadconnector/i);
+    expect(html).not.toMatch(
+      /googletagmanager|googleadservices|doubleclick|gtag\(|fbq\(|dataLayer|sendBeacon|clarity\.ms|hotjar|callrail|leadconnector|msgsndr/i,
+    );
     const scripts = [...html.matchAll(/<script([^>]*)>/g)].map((m) => m[1]);
     for (const attrs of scripts) {
       // The only script on the page is the inline FAQ JSON-LD.
@@ -301,7 +303,7 @@ describe("SEO metadata", () => {
     expect(metadata.title).toBe("Botox in Napa — Physician-Owned Med Spa");
     expect(String(metadata.description)).toMatch(/Napa/);
     expect(String(metadata.description)).toMatch(/\$18\/unit/);
-    expect(metadata.alternates?.canonical).toBe("https://experiencerella.com/napa/botox/");
+    expect(metadata.alternates?.canonical).toBe("https://experiencerella.com/napa/botox");
   });
 
   it("the canonical is the MARKETING url, never the booking app", () => {
@@ -311,7 +313,8 @@ describe("SEO metadata", () => {
   it("states accurate Napa location facts", () => {
     expect(decoded).toContain("1541 3rd St");
     expect(decoded).toContain("Napa, CA 94559");
-    expect(decoded).toContain("Open Wednesday – Saturday");
+    expect(decoded).toContain("See current appointment availability when you book online");
+    expect(decoded).not.toMatch(/Open (Wednesday|Thursday)/);
   });
 });
 

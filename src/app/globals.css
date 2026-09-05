@@ -1,20 +1,23 @@
 @import "tailwindcss";
 
 @theme inline {
-  /* Brand Colors */
+  /* Rella's approved Rose, Silver, Ink, and Paper visual system. */
   --color-rose: #F7A19A;
-  --color-rose-dark: #e8887f;
-  --color-rose-light: #fbc8c4;
-  --color-rose-blush: #FDF7F5;
-  --color-rose-text: #F7A19A;
-  --color-rose-cta: #e8887f;
+  --color-rose-dark: #1A1A1A;
+  --color-rose-light: #F7A19A70;
+  --color-rose-blush: rgba(247, 161, 154, 0.28);
+  /* Dark companion colors keep Rose recognizable without using it as low-contrast text. */
+  --color-rose-text: #8C3F3A;
+  --color-rose-cta: #8C3F3A;
+  --color-rose-on-ink: #F7A19A;
 
-  --color-silver: #83888D;
-  --color-silver-dark: #5a5e62;
-  --color-silver-light: #b0b4b8;
-  --color-silver-pale: #f4f4f5;
+  --color-silver: #64696E;
+  --color-silver-dark: #1A1A1A;
+  --color-silver-light: #83888D66;
+  --color-silver-pale: #83888D14;
 
   --color-ink: #1a1a1a;
+  --color-paper: #ffffff;
   --color-white: #ffffff;
 
   /* Typography */
@@ -29,8 +32,8 @@
 
 /* Base styles */
 body {
-  color: var(--color-silver-dark);
-  background: var(--color-white);
+  color: var(--color-ink);
+  background: var(--color-paper);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -41,11 +44,11 @@ body {
   color: var(--color-ink);
 }
 
-/* Focus visible for accessibility */
+/* Dual-contrast focus treatment remains visible on Paper, Rose, and Ink. */
 :focus-visible {
-  outline: 2px solid var(--color-rose);
+  outline: 2px solid var(--color-white);
   outline-offset: 2px;
-  border-radius: 4px;
+  box-shadow: 0 0 0 4px var(--color-ink);
 }
 
 /* Smooth scrolling */
@@ -56,4 +59,24 @@ html {
 /* List markers */
 li::marker {
   color: var(--color-rose);
+}
+
+.details-summary::-webkit-details-marker {
+  display: none;
+}
+
+/* Preserve keyboard and motion comfort across the visual refresh. */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }
