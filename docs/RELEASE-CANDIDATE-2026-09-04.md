@@ -4,8 +4,9 @@
 
 The reconciled website revamp was merged through GitHub PR 20 as commit
 `54c9257`. All three connected Vercel production builds completed successfully.
-The project that owns `weightloss.experiencerella.com` is live on deployment
-`dpl_64A17UPVSJQhrW533qfdqc1ZZ7fB` and passed its post-deploy checks.
+The functional release was verified on deployment
+`dpl_64A17UPVSJQhrW533qfdqc1ZZ7fB`; later documentation-only builds may have a
+newer deployment ID without changing the verified runtime code.
 
 The main `experiencerella.com` domain remains on the existing WP Engine site.
 The full Next.js site and Napa Botox replacement have not been connected to that
