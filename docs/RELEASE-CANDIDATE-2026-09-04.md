@@ -2,10 +2,14 @@
 
 ## Status
 
-The reconciled website revamp is code-complete on
-`codex/reconcile-pr14-from-main-20260901` and is open for review in GitHub PR
-20. Its Vercel preview is ready and independently verified. The PR has not been
-merged, promoted, or connected to a production domain by this work.
+The reconciled website revamp was merged through GitHub PR 20 as commit
+`54c9257`. All three connected Vercel production builds completed successfully.
+The project that owns `weightloss.experiencerella.com` is live on deployment
+`dpl_64A17UPVSJQhrW533qfdqc1ZZ7fB` and passed its post-deploy checks.
+
+The main `experiencerella.com` domain remains on the existing WP Engine site.
+The full Next.js site and Napa Botox replacement have not been connected to that
+public domain.
 
 No appointment, cart, payment, contact-form submission, Google conversion,
 conversion upload, or WordPress mutation was created during verification.
@@ -66,6 +70,9 @@ conversion upload, or WordPress mutation was created during verification.
 - Vercel preview check: all 34 public routes, 78 redirect variants, two retired
   routes, and the campaign external-script boundary passed against the deployed
   preview.
+- Post-merge production check: the live weight-loss host served the expected
+  deployment, both clinic consultation routes, host-correct SEO documents, a
+  blocked API surface, and identifier-free redirects back to the main site.
 
 The full dependency audit still reports four moderate and four high advisories
 through the development-only Sanity CLI tree. The deployed production
@@ -74,8 +81,9 @@ breaking Sanity downgrade and is not an acceptable release fix.
 
 ## Required release operations
 
-1. Complete review of GitHub PR 20, then merge through the protected release
-   process. All connected Vercel preview checks are green.
+1. Before moving the full `experiencerella.com` domain, select one of the three
+   duplicate Vercel projects as canonical and retire the redundant project
+   connections.
 2. Configure the five GHL contact variables listed in `.env.example` and submit
    one clearly identified contact-form QA lead after deployment.
 3. Run the post-launch checks in `POST_LAUNCH_CHECKLIST.md` before moving the
