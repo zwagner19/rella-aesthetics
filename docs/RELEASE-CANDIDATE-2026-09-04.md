@@ -3,8 +3,9 @@
 ## Status
 
 The reconciled website revamp is code-complete on
-`codex/reconcile-pr14-from-main-20260901`. It has not been pushed, merged,
-deployed, or connected to a production domain by this work.
+`codex/reconcile-pr14-from-main-20260901` and is open for review in GitHub PR
+20. Its Vercel preview is ready and independently verified. The PR has not been
+merged, promoted, or connected to a production domain by this work.
 
 No appointment, cart, payment, contact-form submission, Google conversion,
 conversion upload, or WordPress mutation was created during verification.
@@ -62,6 +63,9 @@ conversion upload, or WordPress mutation was created during verification.
   1440 × 900 with no horizontal overflow.
 - Safe external check: the Napa Botox, Napa weight-loss, and Vacaville
   weight-loss booking pages each returned HTTP 200. No booking step was taken.
+- Vercel preview check: all 34 public routes, 78 redirect variants, two retired
+  routes, and the campaign external-script boundary passed against the deployed
+  preview.
 
 The full dependency audit still reports four moderate and four high advisories
 through the development-only Sanity CLI tree. The deployed production
@@ -70,7 +74,8 @@ breaking Sanity downgrade and is not an acceptable release fix.
 
 ## Required release operations
 
-1. Review and push this branch, then create a protected Vercel preview.
+1. Complete review of GitHub PR 20, then merge through the protected release
+   process. All connected Vercel preview checks are green.
 2. Configure the five GHL contact variables listed in `.env.example` and submit
    one clearly identified contact-form QA lead after deployment.
 3. Run the post-launch checks in `POST_LAUNCH_CHECKLIST.md` before moving the
