@@ -1,36 +1,60 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Rella Aesthetics marketing site
 
-## Getting Started
+Next.js App Router site for `experiencerella.com`, including the focused Napa
+Botox campaign page and the dedicated medical weight-loss host presentation.
+Booking remains owned by the separate first-party booking application; this
+repository only creates verified links to approved booking routes.
 
-First, run the development server:
+## Local verification
+
+Use the Node version in `.nvmrc`, then run:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm ci
+npm test
+npm run lint
+npx tsc --noEmit
+npm run audit:production
+npm run build
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+`npm run audit:production` must report zero high or critical production
+advisories before release. The optional Sanity CLI is development-only and is
+assessed separately with `npm audit`; do not apply npm's proposed breaking
+Sanity downgrade.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Production configuration
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Start from `.env.example` and set secrets only in the deployment platform.
+Never commit real values.
 
-## Learn More
+The contact form is operational only when `GHL_API_KEY` and `GHL_LOCATION_ID`
+are configured. `GHL_CUSTOM_FIELD_MESSAGE_ID` is also required to accept a
+submission containing free text. Configure all three custom-field IDs so the
+CRM preserves the visitor's selected service, clinic, and message in dedicated
+fields.
 
-To learn more about Next.js, take a look at the following resources:
+Sanity content is optional at runtime: the site retains its local fallback
+content when `NEXT_PUBLIC_SANITY_PROJECT_ID` is absent. See
+`docs/SANITY-STUDIO-OPERATIONS.md` for the separate hosted Studio workflow.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Ordinary marketing pages may load the configured GA, Meta, and GHL chat
+integrations. The exact `experiencerella.com/napa/botox` pilot is structurally
+isolated from those integrations. It may send one bounded Google click payload
+to the first-party booking endpoint only after the visitor accepts cookies.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Release boundaries
 
-## Deploy on Vercel
+- `experiencerella.com` serves the full marketing site.
+- `weightloss.experiencerella.com` serves only the qualification funnel, its
+  required assets, and host-correct SEO documents.
+- The restricted Napa release alias serves only `/napa/botox` and required
+  static assets.
+- Public booking CTAs use `book.experiencerella.com` or the approved
+  `book.rellaweightloss.com` consultation routes.
+- No Boulevard SDK, cart, checkout, payment, appointment mutation, or Google
+  conversion uploader runs in this repository.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+See `POST_LAUNCH_CHECKLIST.md` and
+`docs/BOOKING-ROUTING-IMPLEMENTATION-MAP.md` for the production verification
+sequence.

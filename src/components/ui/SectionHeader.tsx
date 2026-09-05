@@ -2,18 +2,40 @@ interface SectionHeaderProps {
   eyebrow?: string;
   title: string;
   description?: string;
+  headingLevel?: 1 | 2;
+  tone?: "default" | "light";
+  eyebrowTone?: "default" | "rose" | "light";
 }
 
-export function SectionHeader({ eyebrow, title, description }: SectionHeaderProps) {
+export function SectionHeader({
+  eyebrow,
+  title,
+  description,
+  headingLevel = 2,
+  tone = "default",
+  eyebrowTone = "default",
+}: SectionHeaderProps) {
+  const Heading = headingLevel === 1 ? "h1" : "h2";
+  const eyebrowColor =
+    eyebrowTone === "light"
+      ? "text-ink"
+      : eyebrowTone === "rose"
+        ? "text-rose-text"
+        : "text-ink";
+  const titleColor = tone === "light" ? "text-ink" : "text-rose-text";
+  const descriptionColor = tone === "light" ? "text-ink" : "text-ink/70";
+
   return (
-    <div className="mb-12 max-w-[600px]">
+    <div className="mb-12 max-w-[680px]">
       {eyebrow && (
-        <p className="font-bold text-[0.6875rem] tracking-[0.2em] uppercase text-silver mb-4">
+        <p className={`mb-4 text-sm font-medium italic tracking-[0.04em] ${eyebrowColor}`}>
           {eyebrow}
         </p>
       )}
-      <h2 className="font-medium text-2xl md:text-3xl text-silver-dark mb-4">{title}</h2>
-      {description && <p className="text-silver leading-relaxed">{description}</p>}
+      <Heading className={`mb-5 text-3xl font-medium uppercase leading-[1.08] tracking-[0.08em] ${titleColor} md:text-5xl`}>
+        {title}
+      </Heading>
+      {description && <p className={`max-w-[620px] leading-relaxed ${descriptionColor}`}>{description}</p>}
     </div>
   );
 }

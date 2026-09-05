@@ -1,104 +1,140 @@
 /**
- * Centralized, typed booking-CTA routing (Large Sprint 06, Workstream D).
+ * Canonical public booking routes owned by Rella.
  *
- * Single source of truth for where every booking CTA sends a visitor. Hard
- * safety rules encoded here + proven by booking-routes.test.ts:
- *  - Napa New Patient Tox / Botox → the canonical hardened booking app.
- *  - Other Napa services → their VERIFIED Boulevard deep link.
- *  - A Napa CTA with no specific service → the Napa-scoped Boulevard widget
- *    (NOT Tox — never silently assume the service).
- *  - Vacaville → the Vacaville-scoped Boulevard widget. NEVER Napa Tox.
- *  - A generic CTA with no location → the business-level Boulevard widget.
- *    NEVER silently Napa Tox.
- *
- * Only the two service deep links below are verified (Admin-read + live); any
- * other service intentionally falls back to a location/business widget. Do not
- * invent Boulevard ids.
+ * `rella-booking` collects clinic and category intent before a patient chooses
+ * an appointment. Keep broad website CTAs on those chooser routes; only the
+ * verified Napa Botox campaign may enter an exact appointment flow.
  */
 
-/** Canonical, hardened New Patient Tox booking (rella-booking). */
-export const CANONICAL_NAPA_TOX = "https://book.experiencerella.com/book/napa/botox";
+export type BookingLocation = "napa" | "vacaville";
+export type BookingCategory =
+  | "injectables"
+  | "laser"
+  | "microneedling"
+  | "facials"
+  | "peels";
 
-const WIDGET_BASE =
-  "https://dashboard.boulevard.io/booking/businesses/a12f397a-6db3-4b18-bc34-01f02dfb7216/widget";
-const NAPA_LOCATION_ID = "91eba843-57fb-49e9-8505-431d501ffec7";
-const VACAVILLE_LOCATION_ID = "0f146f87-364e-4dfd-b938-61ba49528820";
+export interface BookingIntent {
+  location?: BookingLocation;
+  service?: string;
+  category?: BookingCategory;
+}
 
-/** Business-level generic widget (safe fallback; visitor picks location/service). */
-export const BOULEVARD_WIDGET_GENERIC = WIDGET_BASE;
-export const BOULEVARD_WIDGET_NAPA = `${WIDGET_BASE}?locationId=${NAPA_LOCATION_ID}`;
-export const BOULEVARD_WIDGET_VACAVILLE = `${WIDGET_BASE}?locationId=${VACAVILLE_LOCATION_ID}`;
+export const AESTHETICS_BOOKING_ORIGIN =
+  "https://book.experiencerella.com";
+export const BOOKING_LOCATION_CHOOSER =
+  `${AESTHETICS_BOOKING_ORIGIN}/book`;
+export const CANONICAL_NAPA_TOX =
+  `${AESTHETICS_BOOKING_ORIGIN}/book/napa/botox`;
 
-/**
- * Dedicated medical-weight-loss funnel.
- *
- * These public consultation routes were checked directly on 2026-08-03 and
- * returned HTTP 200. Keep the path order location-first: an older audit recorded the
- * segments in the opposite order, and those stale URLs now return 404.
- */
 export const WEIGHT_LOSS_BOOKING_ORIGIN = "https://book.rellaweightloss.com";
 export const WEIGHT_LOSS_CONSULT_SERVICE = "weight-loss-consult";
 
-export function resolveWeightLossConsultHref(location: BookingLocation): string {
+export function resolveWeightLossConsultHref(
+  location: BookingLocation,
+): string {
   return `${WEIGHT_LOSS_BOOKING_ORIGIN}/book/${location}/${WEIGHT_LOSS_CONSULT_SERVICE}`;
 }
 
-const deepLink = (menuPath: string) =>
-  `${WIDGET_BASE}?path=${encodeURIComponent(`/cart/menu/${menuPath}`)}&locationId=${NAPA_LOCATION_ID}&visitType=SELF_VISIT`;
+const SUPPORTED_CATEGORIES = new Set<BookingCategory>([
+  "injectables",
+  "laser",
+  "microneedling",
+  "facials",
+  "peels",
+]);
 
-/**
- * VERIFIED Boulevard service deep links, by canonical service slug — Napa menu,
- * with the Napa locationId pinned (a service path alone is not sufficient). These
- * are ONLY used for an explicit `location: "napa"` intent; a locationless service
- * intent never resolves here (it must not assume Napa).
- */
-const VERIFIED_NAPA_SERVICE_DEEPLINKS: Readonly<Record<string, string>> = {
-  hydrafacial: deepLink("Facials/s_68b27f62-4a04-4f9f-953e-ec4b2918ad3d"),
-  // botox/tox intentionally NOT here — Napa Tox routes to the canonical app.
+const TOX_SLUGS = new Set([
+  "botox",
+  "tox",
+  "new-patient-tox",
+  "new-patient-botox",
+  "napa-botox",
+]);
+
+const WEIGHT_LOSS_SLUGS = new Set([
+  "weight-loss",
+  "medical-weight-loss",
+  WEIGHT_LOSS_CONSULT_SERVICE,
+]);
+
+const CATEGORY_BY_SERVICE: Readonly<Record<string, BookingCategory>> = {
+  botox: "injectables",
+  tox: "injectables",
+  "new-patient-tox": "injectables",
+  "new-patient-botox": "injectables",
+  "napa-botox": "injectables",
+  "dermal-fillers": "injectables",
+  filler: "injectables",
+  hyperhidrosis: "injectables",
+  laser: "laser",
+  "laser-treatments": "laser",
+  microneedling: "microneedling",
+  facial: "facials",
+  facials: "facials",
+  hydrafacial: "facials",
+  peel: "peels",
+  peels: "peels",
+  "chemical-peels": "peels",
 };
 
-export type BookingLocation = "napa" | "vacaville";
-
-export interface BookingIntent {
-  /** Explicit location, when the CTA is location-specific. */
-  location?: BookingLocation;
-  /** Service slug / name, when the CTA is service-specific. */
-  service?: string;
+function normalizeSlug(value?: string): string {
+  return (value ?? "")
+    .toLowerCase()
+    .trim()
+    .replace(/\s+/g, "-")
+    .replace(/[^a-z0-9-]/g, "")
+    .slice(0, 64);
 }
 
-const TOX_SLUGS = new Set(["botox", "tox", "new-patient-tox", "new-patient-botox", "napa-botox"]);
-const WEIGHT_LOSS_SLUGS = new Set(["weight-loss", "medical-weight-loss", WEIGHT_LOSS_CONSULT_SERVICE]);
-
-function normalizeService(service?: string): string {
-  return (service ?? "").toLowerCase().trim().replace(/\s+/g, "-").replace(/[^a-z0-9-]/g, "");
+function supportedCategory(value?: string): BookingCategory | undefined {
+  const normalized = normalizeSlug(value);
+  return SUPPORTED_CATEGORIES.has(normalized as BookingCategory)
+    ? (normalized as BookingCategory)
+    : undefined;
 }
 
 /**
- * Resolve a booking CTA intent to its destination URL. Total function — always
- * returns a safe URL and never silently routes to Napa Tox except for an
- * explicit Napa Tox/Botox intent.
+ * Build a branded chooser URL without selecting an appointment. The booking
+ * app supports an optional clinic and one of its public category slugs.
+ */
+export function resolveBookingChooserHref(
+  intent: Pick<BookingIntent, "location" | "category" | "service"> = {},
+): string {
+  const service = normalizeSlug(intent.service);
+  const category =
+    supportedCategory(intent.category) ?? CATEGORY_BY_SERVICE[service];
+  const url = new URL(BOOKING_LOCATION_CHOOSER);
+
+  if (intent.location) url.searchParams.set("location", intent.location);
+  if (category) url.searchParams.set("category", category);
+
+  return url.toString();
+}
+
+/**
+ * Total, city-safe customer routing. Broad service/category intent always
+ * opens the chooser; it never auto-selects an appointment.
  */
 export function resolveBookingHref(intent: BookingIntent = {}): string {
-  const svc = normalizeService(intent.service);
+  const service = normalizeSlug(intent.service);
 
-  // The weight-loss consultation is owned by the dedicated, verified booking
-  // app. An explicit city is required; a locationless CTA still falls back to
-  // the business widget rather than guessing a clinic.
-  if (intent.location && WEIGHT_LOSS_SLUGS.has(svc)) {
+  if (intent.location && WEIGHT_LOSS_SLUGS.has(service)) {
     return resolveWeightLossConsultHref(intent.location);
   }
 
-  // Vacaville: always the Vacaville widget. No service ever escalates to Napa.
-  if (intent.location === "vacaville") return BOULEVARD_WIDGET_VACAVILLE;
-
-  if (intent.location === "napa") {
-    if (TOX_SLUGS.has(svc)) return CANONICAL_NAPA_TOX;
-    if (svc && VERIFIED_NAPA_SERVICE_DEEPLINKS[svc]) return VERIFIED_NAPA_SERVICE_DEEPLINKS[svc];
-    return BOULEVARD_WIDGET_NAPA; // Napa, unspecified/other service — not Tox
+  if (intent.location === "napa" && TOX_SLUGS.has(service)) {
+    return CANONICAL_NAPA_TOX;
   }
 
-  // No explicit location: never assume Napa — not even for a known service slug
-  // like hydrafacial. Route to the generic widget so the visitor selects a
-  // location before any location-specific menu/deep link is used.
-  return BOULEVARD_WIDGET_GENERIC;
+  // A clinic is required before entering the dedicated consultation flow.
+  if (WEIGHT_LOSS_SLUGS.has(service)) {
+    return BOOKING_LOCATION_CHOOSER;
+  }
+
+  return resolveBookingChooserHref({
+    location: intent.location,
+    category: intent.category,
+    service,
+  });
 }

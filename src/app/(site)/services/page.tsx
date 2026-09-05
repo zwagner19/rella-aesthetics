@@ -6,46 +6,48 @@ import { services } from "@/lib/data";
 export const metadata: Metadata = {
   title: "Our Services",
   description:
-    "Explore Rella Aesthetics' full range of treatments — injectables, skin care, laser, IV hydration, and medical weight loss in Vacaville and Napa.",
+    "Explore Rella Aesthetics' full range of treatments: injectables, skin care, laser, IV hydration, and medical weight loss in Vacaville and Napa.",
+  alternates: { canonical: "/services" },
 };
 
 const categories = ["Injectables", "Skin Care", "Body & Wellness"] as const;
 
 export default function ServicesPage() {
   return (
-    <>
-      <section className="py-24">
-        <div className="mx-auto max-w-[1200px] px-6 md:px-8 lg:px-12">
-          <SectionHeader
-            eyebrow="Treatments"
-            title="Our Services"
-            description="Physician-led aesthetic and wellness treatments designed around your goals. Every service follows a personalized treatment plan for natural, lasting results."
-          />
+    <section className="bg-white py-24 md:py-32">
+      <div className="mx-auto max-w-[1200px] px-6 md:px-8 lg:px-12">
+        <SectionHeader
+          eyebrow="Treatments"
+          eyebrowTone="rose"
+          title="Our Services"
+          headingLevel={1}
+          description="Explore consultation-led aesthetic, skin, wellness, and medical weight-management options available through Rella in Vacaville and Napa."
+        />
 
-          {categories.map((category) => {
-            const categoryServices = services.filter((s) => s.category === category);
-            return (
-              <div key={category} className="mb-16 last:mb-0">
-                <h3 className="font-medium text-lg text-silver-dark mb-6 border-b border-silver-pale pb-3">
-                  {category}
-                </h3>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {categoryServices.map((service) => (
-                    <ServiceCard
-                      key={service.slug}
-                      href={`/services/${service.slug}`}
-                      title={service.title}
-                      description={service.description}
-                      image={service.image}
-                      imageAlt={service.title}
-                    />
-                  ))}
-                </div>
+        {categories.map((category) => {
+          const categoryServices = services.filter((service) => service.category === category);
+
+          return (
+            <section key={category} className="mb-20 border-t border-rose pt-6 last:mb-0">
+              <h2 className="mb-8 text-sm font-bold uppercase tracking-[0.16em] text-rose-text">
+                {category}
+              </h2>
+              <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                {categoryServices.map((service) => (
+                  <ServiceCard
+                    key={service.slug}
+                    href={`/services/${service.slug}`}
+                    title={service.title}
+                    description={service.description}
+                    image={service.image}
+                    imageAlt={service.imageAlt}
+                  />
+                ))}
               </div>
-            );
-          })}
-        </div>
-      </section>
-    </>
+            </section>
+          );
+        })}
+      </div>
+    </section>
   );
 }

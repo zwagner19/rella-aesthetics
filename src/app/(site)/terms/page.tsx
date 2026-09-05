@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "Terms & Conditions",
   description: "Terms and conditions for using the Rella Aesthetics website and services.",
+  alternates: { canonical: "/terms" },
 };
 
 export default function TermsPage() {
@@ -14,7 +15,7 @@ export default function TermsPage() {
         </h1>
         <div className="prose prose-lg text-silver max-w-none space-y-6">
           <p>
-            <strong className="text-silver-dark">Last Updated:</strong> April 2026
+            <strong className="text-silver-dark">Last Updated:</strong> September 2026
           </p>
           <p>
             By accessing and using the Rella Aesthetics website, you agree to be bound by these
@@ -30,8 +31,14 @@ export default function TermsPage() {
 
           <h2 className="font-medium text-xl text-silver-dark mt-8">Appointment Policy</h2>
           <p>
-            Appointments booked through our website are subject to confirmation. We require 24 hours&apos;
-            notice for cancellations. Late cancellations or no-shows may be subject to a fee.
+            Appointments booked through our website are subject to confirmation and the terms shown
+            during booking. Our current policy asks for at least 48 hours&apos; notice before a
+            cancellation; Rella may retain an applicable booking deposit for a cancellation within
+            that window. Emergencies are reviewed individually. Please review the current{" "}
+            <a href="/cancellation-policy" className="text-rose-text hover:underline">
+              cancellation policy
+            </a>
+            .
           </p>
 
           <h2 className="font-medium text-xl text-silver-dark mt-8">Intellectual Property</h2>
@@ -43,8 +50,8 @@ export default function TermsPage() {
           <h2 className="font-medium text-xl text-silver-dark mt-8">Contact</h2>
           <p>
             Questions about these terms? Contact us at{" "}
-            <a href="mailto:hello@experiencerella.com" className="text-rose-text hover:underline">
-              hello@experiencerella.com
+            <a href="mailto:info@experiencerella.com" className="text-rose-text hover:underline">
+              info@experiencerella.com
             </a>.
           </p>
         </div>

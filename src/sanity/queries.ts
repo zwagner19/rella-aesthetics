@@ -1,6 +1,4 @@
-import { groq } from "next-sanity";
-
-export const allBlogPostsQuery = groq`
+export const allBlogPostsQuery = `
   *[_type == "blogPost"] | order(publishedAt desc) {
     _id,
     title,
@@ -14,7 +12,7 @@ export const allBlogPostsQuery = groq`
   }
 `;
 
-export const blogPostBySlugQuery = groq`
+export const blogPostBySlugQuery = `
   *[_type == "blogPost" && slug.current == $slug][0] {
     _id,
     title,
@@ -36,13 +34,13 @@ export const blogPostBySlugQuery = groq`
   }
 `;
 
-export const blogPostSlugsQuery = groq`
+export const blogPostSlugsQuery = `
   *[_type == "blogPost" && defined(slug.current)] {
     "slug": slug.current
   }
 `;
 
-export const allServicesQuery = groq`
+export const allServicesQuery = `
   *[_type == "service"] | order(category asc, name asc) {
     _id,
     name,
@@ -54,7 +52,7 @@ export const allServicesQuery = groq`
   }
 `;
 
-export const serviceBySlugQuery = groq`
+export const serviceBySlugQuery = `
   *[_type == "service" && slug.current == $slug][0] {
     _id,
     name,
@@ -73,7 +71,7 @@ export const serviceBySlugQuery = groq`
   }
 `;
 
-export const allTeamMembersQuery = groq`
+export const allTeamMembersQuery = `
   *[_type == "teamMember"] | order(order asc) {
     _id,
     name,
@@ -85,7 +83,7 @@ export const allTeamMembersQuery = groq`
   }
 `;
 
-export const allLocationsQuery = groq`
+export const allLocationsQuery = `
   *[_type == "location"] {
     _id,
     name,
@@ -103,7 +101,7 @@ export const allLocationsQuery = groq`
   }
 `;
 
-export const allCategoriesQuery = groq`
+export const allCategoriesQuery = `
   *[_type == "category"] | order(name asc) {
     _id,
     name,

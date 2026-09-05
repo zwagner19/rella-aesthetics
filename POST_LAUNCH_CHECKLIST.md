@@ -17,8 +17,8 @@
 - [ ] `/laser-treatments/` → `/services/laser-treatments` (200 OK)
 - [ ] `/membership/` → `/membership` (200 OK)
 - [ ] `/testimonials/` → `/gallery` (200 OK)
-- [ ] `/upcoming-events/` → `/` (200 OK)
-- [ ] `/private-parties/` → `/contact` (200 OK)
+- [ ] `/upcoming-events/` returns retired content status (410 Gone)
+- [ ] `/private-parties/` serves the Private Parties page (200 OK)
 - [ ] `/about/` → `/about` (200 OK)
 - [ ] `/contact/` → `/contact` (200 OK)
 
@@ -42,10 +42,14 @@
 - [ ] Confirm LCP < 2.5s, INP < 200ms, CLS < 0.1
 
 ### Integrations
-- [ ] Boulevard booking widget loads and opens
+- [ ] Canonical `book.experiencerella.com` booking app opens from public CTAs
+- [ ] Configure the five GHL contact variables documented in `.env.example`
 - [ ] Submit a test lead via contact form → appears in GHL
-- [ ] GHL chat widget loads on all pages
-- [ ] Sanity Studio accessible at `/studio`
+- [ ] GHL chat widget loads on ordinary marketing pages only, never the focused Napa campaign route
+- [ ] Run `npm run audit:production`; release only with zero high/critical production advisories
+- [ ] Deploy Sanity Studio separately with `npm run studio:deploy`
+- [ ] Set `SANITY_STUDIO_URL` to its `https://*.sanity.studio` URL
+- [ ] `/studio` redirects to that hosted Studio (and returns 404 when the variable is absent or unsafe)
 
 ## Week 2 — Monitoring & Optimization
 

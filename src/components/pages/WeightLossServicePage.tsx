@@ -3,7 +3,10 @@ import { Button } from "@/components/ui/Button";
 import { FaqAccordion, FaqSchema } from "@/components/blocks/FaqAccordion";
 import { TrustStrip } from "@/components/blocks/TrustStrip";
 import { WeightLossConversionTracker } from "@/components/integrations/WeightLossConversionTracker";
-import { resolveBookingHref, type BookingLocation } from "@/lib/booking-routes";
+import {
+  resolveWeightLossConsultHref,
+  type BookingLocation,
+} from "@/lib/booking-routes";
 import { medicalWeightLossServiceSchema } from "@/lib/schemas";
 
 const steps = [
@@ -120,10 +123,7 @@ const locationOptions: LocationOption[] = [
 ];
 
 function LocationCard({ option }: { option: LocationOption }) {
-  const consultHref = resolveBookingHref({
-    location: option.slug,
-    service: "weight-loss",
-  });
+  const consultHref = resolveWeightLossConsultHref(option.slug);
 
   return (
     <article className="group rounded-[1.75rem] border border-rose-light/70 bg-white p-6 shadow-[0_18px_60px_rgba(90,94,98,0.08)] md:p-8">
@@ -134,7 +134,7 @@ function LocationCard({ option }: { option: LocationOption }) {
           </p>
           <h3 className="text-3xl font-medium tracking-[-0.03em] text-ink">{option.name}</h3>
         </div>
-        <span aria-hidden="true" className="text-3xl font-light text-rose transition-transform group-hover:translate-x-1">
+        <span aria-hidden="true" className="text-3xl font-light text-rose-text transition-transform group-hover:translate-x-1">
           →
         </span>
       </div>
@@ -192,11 +192,11 @@ export function WeightLossServicePage() {
             </div>
             <p className="flex flex-wrap gap-x-5 gap-y-2 text-sm font-medium text-silver">
               <span>30-minute phone consultation</span>
-              <span aria-hidden="true" className="hidden text-rose sm:inline">•</span>
+              <span aria-hidden="true" className="hidden text-rose-text sm:inline">•</span>
               <span>No card required</span>
-              <span aria-hidden="true" className="hidden text-rose sm:inline">•</span>
+              <span aria-hidden="true" className="hidden text-rose-text sm:inline">•</span>
               <span>No pressure</span>
-              <span aria-hidden="true" className="hidden text-rose sm:inline">•</span>
+              <span aria-hidden="true" className="hidden text-rose-text sm:inline">•</span>
               <span>Medication only if medically appropriate</span>
             </p>
           </div>
@@ -330,7 +330,7 @@ export function WeightLossServicePage() {
           <div className="mx-auto w-full max-w-[420px] overflow-hidden rounded-[1.75rem] border border-rose-light/80 bg-ink shadow-[0_20px_60px_rgba(40,42,44,0.14)]">
             <video
               aria-label="Rella semaglutide patient story"
-              className="aspect-[9/16] w-full bg-ink object-cover"
+              className="aspect-[9/16] w-full bg-ink object-cover text-white"
               controls
               playsInline
               preload="metadata"
@@ -423,7 +423,7 @@ export function WeightLossServicePage() {
 
       <section className="bg-ink py-20 text-center text-white md:py-24">
         <div className="mx-auto max-w-[760px] px-6">
-          <p className="mb-4 text-[0.6875rem] font-bold uppercase tracking-[0.2em] text-rose">The next step is medical qualification</p>
+          <p className="mb-4 text-[0.6875rem] font-bold uppercase tracking-[0.2em] text-rose-on-ink">The next step is medical qualification</p>
           <h2 className="mb-5 text-3xl font-medium tracking-[-0.035em] md:text-5xl">Find out if you medically qualify.</h2>
           <p className="mb-8 text-lg font-light leading-relaxed text-white/70">
             Choose the Rella clinic that is most convenient for your consultation and follow-up.

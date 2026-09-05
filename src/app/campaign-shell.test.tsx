@@ -12,7 +12,11 @@ import RootLayout from "./layout";
 import SiteLayout from "./(site)/layout";
 import CampaignLayout from "./(campaign)/layout";
 import NapaBotoxPage from "./(campaign)/napa/botox/page";
-import { CANONICAL_NAPA_TOX, resolveBookingHref } from "@/lib/booking-routes";
+import {
+  BOOKING_LOCATION_CHOOSER,
+  CANONICAL_NAPA_TOX,
+  resolveBookingHref,
+} from "@/lib/booking-routes";
 import { MARKETING_PHONE } from "@/lib/napa-botox-facts";
 
 /**
@@ -126,8 +130,8 @@ describe("campaign landmarks: header and footer are SIBLINGS of one main", () =>
       .replace(/\/\*[\s\S]*?\*\//g, " ")
       .replace(/\/\/[^\n]*/g, " ");
     expect(layout).not.toMatch(/<main/);
-    // Still a fragment — it wraps children in <>…</> and adds only the campaign
-    // GTM container (Wave 4B), never a landmark element.
+    // Still a fragment: it adds only the first-party consent boundary, never a
+    // second landmark or browser marketing loader.
     expect(layout).toMatch(/<>[\s\S]*\{children\}[\s\S]*<\/>/);
     expect(layout).not.toMatch(/<(header|footer|nav|section)\b/);
   });
@@ -257,10 +261,14 @@ describe("FULL-DOCUMENT booking and call destination matrix", () => {
     expect(campaignDoc).toContain("(707) 358-2928");
   });
 
-  it("generic and Vacaville routing behaviour is unchanged", () => {
-    expect(resolveBookingHref({})).toMatch(/dashboard\.boulevard\.io/);
-    expect(resolveBookingHref({ location: "vacaville" })).toMatch(/locationId=0f146f87/);
-    expect(resolveBookingHref({ location: "vacaville", service: "botox" })).not.toBe(CANONICAL_NAPA_TOX);
+  it("generic and Vacaville routing use the branded chooser", () => {
+    expect(resolveBookingHref({})).toBe(BOOKING_LOCATION_CHOOSER);
+    expect(resolveBookingHref({ location: "vacaville" })).toBe(
+      `${BOOKING_LOCATION_CHOOSER}?location=vacaville`,
+    );
+    expect(resolveBookingHref({ location: "vacaville", service: "botox" })).toBe(
+      `${BOOKING_LOCATION_CHOOSER}?location=vacaville&category=injectables`,
+    );
   });
 });
 
@@ -272,7 +280,9 @@ describe("the campaign route adds no tracking of its own", () => {
       expect(attrs).toContain('type="application/ld+json"');
       expect(attrs).not.toMatch(/\bsrc=/);
     }
-    expect(campaignDoc).not.toMatch(/googletagmanager|gtag\(|fbq\(|clarity\.ms|hotjar|callrail/i);
+    expect(campaignDoc).not.toMatch(
+      /googletagmanager|googleadservices|doubleclick|gtag\(|fbq\(|dataLayer|sendBeacon|clarity\.ms|hotjar|callrail|leadconnector|msgsndr/i,
+    );
   });
 
   it("the site layout's analytics are untouched by the campaign work", () => {
@@ -283,6 +293,22 @@ describe("the campaign route adds no tracking of its own", () => {
     const campaign = readFileSync(join(APP, "(campaign)", "layout.tsx"), "utf8");
     expect(campaign).not.toContain("GoogleAnalytics");
     expect(campaign).not.toContain("MetaPixel");
+    expect(campaign).not.toContain("CampaignGtm");
+    expect(campaign).not.toContain("GhlChatWidget");
+  });
+
+  it("the consent boundary has no browser marketing or conversion emitter", () => {
+    const sources = [
+      join(APP, "..", "components", "integrations", "AestheticsAttributionConsent.tsx"),
+      join(APP, "..", "lib", "aesthetics-attribution.ts"),
+    ];
+    for (const source of sources) {
+      const code = readFileSync(source, "utf8")
+        .replace(/\/\*[\s\S]*?\*\//g, " ");
+      expect(code, source).not.toMatch(
+        /googletagmanager|googleadservices|doubleclick|connect\.facebook|leadconnector|msgsndr|callrail|dataLayer|gtag\(|fbq\(|sendBeacon/i,
+      );
+    }
   });
 });
 

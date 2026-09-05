@@ -1,126 +1,139 @@
-import { describe, it, expect, vi } from "vitest";
-import { renderToStaticMarkup } from "react-dom/server";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
+import { renderToStaticMarkup } from "react-dom/server";
+import { describe, expect, it, vi } from "vitest";
 
 vi.mock("next/font/google", () => ({
   Poppins: () => ({ variable: "--font-poppins", className: "font-poppins" }),
 }));
 
 /**
- * Analytics ownership is STRUCTURAL, not incidental.
- *
- * Direct GA and Meta used to live in the root layout, so campaign routes
- * inherited them. They rendered null only because the canonical Vercel project
- * has no matching environment variables — a coincidence of configuration, not a
- * contract. Setting `NEXT_PUBLIC_GA_MEASUREMENT_ID` would have silently given
- * the campaign page a second measurement path and double-counted GA4.
- *
- * Now: root = document only · (site) = direct GA + Meta · (campaign) = GTM only.
+ * Analytics ownership is structural, not dependent on environment settings.
+ * Ordinary site routes retain their existing direct analytics. The exact-Napa
+ * campaign route suppresses the entire browser marketing stack for its full
+ * session; consent permits only the bounded first-party attribution request.
  */
 const APP = __dirname;
-const read = (p: string) => readFileSync(join(APP, p), "utf8");
-/** Scan CODE, not explanatory comments. */
-const code = (p: string) => read(p).replace(/\/\*[\s\S]*?\*\//g, " ").replace(/\/\/[^\n]*/g, " ");
+const read = (path: string) => readFileSync(join(APP, path), "utf8");
+const code = (path: string) =>
+  read(path)
+    .replace(/\/\*[\s\S]*?\*\//g, " ")
+    .replace(/\/\/[^\n]*/g, " ");
 
-describe("root layout owns no analytics at all", () => {
-  it("does not import or render GoogleAnalytics or MetaPixel", () => {
-    const c = code("layout.tsx");
-    expect(c).not.toMatch(/GoogleAnalytics/);
-    expect(c).not.toMatch(/MetaPixel/);
-  });
-  it("does not render the campaign GTM either", () => {
-    expect(code("layout.tsx")).not.toMatch(/CampaignGtm/);
-  });
-  it("still owns the document and the font", () => {
-    const c = code("layout.tsx");
-    expect(c).toMatch(/<html/);
-    expect(c).toMatch(/Poppins/);
-  });
-});
+const BROWSER_MARKETING_PATTERN =
+  /googletagmanager|googleadservices|doubleclick|connect\.facebook|leadconnector|msgsndr|callrail|dataLayer|gtag\(|fbq\(|sendBeacon/i;
 
-describe("(site) layout owns the direct GA and Meta components", () => {
-  const c = code("(site)/layout.tsx");
-  it("renders GoogleAnalytics", () => expect(c).toMatch(/<GoogleAnalytics\s*\/>/));
-  it("renders MetaPixel", () => expect(c).toMatch(/<MetaPixel\s*\/>/));
-  it("keeps the existing site chrome", () => {
-    for (const x of ["SkipNav", "Header", "Footer", "GhlChatWidget"]) expect(c).toContain(x);
-  });
-  it("does NOT render the campaign GTM", () => expect(c).not.toMatch(/CampaignGtm/));
-});
-
-describe("(campaign) layout owns CampaignGtm and nothing else", () => {
-  const c = code("(campaign)/layout.tsx");
-  it("renders the campaign GTM container and its noscript half", () => {
-    expect(c).toMatch(/<CampaignGtm\s*\/>/);
-    expect(c).toMatch(/<CampaignGtmNoScript\s*\/>/);
-  });
-  it("renders no direct GA, Meta, GHL chat, or CallRail", () => {
-    for (const banned of ["GoogleAnalytics", "MetaPixel", "GhlChatWidget", "callrail", "CallRail"]) {
-      expect(c, `campaign layout must not contain ${banned}`).not.toContain(banned);
+describe("root layout owns no analytics", () => {
+  it("does not import or render any marketing integration", () => {
+    const source = code("layout.tsx");
+    for (const banned of [
+      "GoogleAnalytics",
+      "MetaPixel",
+      "GhlChatWidget",
+      "CampaignGtm",
+    ]) {
+      expect(source).not.toContain(banned);
     }
   });
+
+  it("still owns the document and font", () => {
+    const source = code("layout.tsx");
+    expect(source).toMatch(/<html/);
+    expect(source).toMatch(/Poppins/);
+  });
 });
 
-describe("the campaign ROUTE has exactly one possible analytics path", () => {
-  /** Every module reachable from the campaign route, scanned for tracker imports. */
+describe("ordinary site routes retain their existing integrations", () => {
+  const source = code("(site)/layout.tsx");
+
+  it("renders direct GA and Meta", () => {
+    expect(source).toMatch(/<GoogleAnalytics\s*\/>/);
+    expect(source).toMatch(/<MetaPixel\s*\/>/);
+  });
+
+  it("keeps the existing site chrome and GHL widget", () => {
+    for (const expected of ["SkipNav", "Header", "Footer", "GhlChatWidget"]) {
+      expect(source).toContain(expected);
+    }
+  });
+
+  it("does not inherit the exact-Napa consent controller", () => {
+    expect(source).not.toContain("AestheticsAttributionConsent");
+  });
+});
+
+describe("the exact-Napa campaign route has no browser marketing path", () => {
   const campaignSources = [
     "(campaign)/layout.tsx",
     "(campaign)/napa/botox/page.tsx",
+    "../components/integrations/AestheticsAttributionConsent.tsx",
+    "../lib/aesthetics-attribution.ts",
   ];
-  it("no campaign source imports a direct GA, Meta, or GHL component", () => {
-    for (const f of campaignSources) {
-      const c = code(f);
-      for (const banned of ["GoogleAnalytics", "MetaPixel", "GhlChatWidget"]) {
-        expect(c, `${f} imports ${banned}`).not.toContain(banned);
-      }
+
+  it("mounts only the first-party consent boundary", () => {
+    const source = code("(campaign)/layout.tsx");
+    expect(source).toMatch(/<AestheticsAttributionConsent\s*\/>/);
+    for (const banned of [
+      "CampaignGtm",
+      "GoogleAnalytics",
+      "MetaPixel",
+      "GhlChatWidget",
+      "CallRail",
+    ]) {
+      expect(source).not.toContain(banned);
     }
   });
 
-  it("setting direct GA/Meta env vars CANNOT put them in the campaign route", async () => {
-    // The decisive test: with both direct-tracker variables set, render the
-    // campaign layout + page and prove neither tracker appears. Previously this
-    // would have failed, because the root layout mounted them for every route.
+  it("contains no data-layer, browser conversion, tracker, or beacon sink", () => {
+    for (const path of campaignSources) {
+      const source = read(path).replace(/\/\*[\s\S]*?\*\//g, " ");
+      expect(source, path).not.toMatch(BROWSER_MARKETING_PATTERN);
+    }
+  });
+
+  it("cannot be activated by marketing environment variables", async () => {
     vi.resetModules();
-    process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID = "G-SHOULDNOTAPPEAR";
-    process.env.NEXT_PUBLIC_META_PIXEL_ID = "1234567890";
+    const configured = {
+      NEXT_PUBLIC_GA_MEASUREMENT_ID: "G-SHOULD-NOT-APPEAR",
+      NEXT_PUBLIC_META_PIXEL_ID: "1234567890",
+      NEXT_PUBLIC_GTM_ID: "GTM-SHOULDNOTAPPEAR",
+      NEXT_PUBLIC_GHL_CHAT_WIDGET_ID:
+        "00000000-0000-0000-0000-000000000000",
+      NEXT_PUBLIC_CALLRAIL_NUMBER: "7075550100",
+    };
+    Object.assign(process.env, configured);
     try {
       const { default: CampaignLayout } = await import("./(campaign)/layout");
       const { default: Page } = await import("./(campaign)/napa/botox/page");
-      const html = renderToStaticMarkup(<CampaignLayout><Page /></CampaignLayout>);
-      expect(html).not.toContain("G-SHOULDNOTAPPEAR");
-      expect(html).not.toContain("1234567890");
-      expect(html).not.toMatch(/gtag\(|fbq\(|connect\.facebook|googletagmanager/i);
+      const html = renderToStaticMarkup(
+        <CampaignLayout>
+          <Page />
+        </CampaignLayout>,
+      );
+      for (const value of Object.values(configured)) {
+        expect(html).not.toContain(value);
+      }
+      expect(html).not.toMatch(BROWSER_MARKETING_PATTERN);
+      const scripts = [...html.matchAll(/<script([^>]*)>/g)].map(
+        (match) => match[1],
+      );
+      for (const attributes of scripts) {
+        expect(attributes).toContain('type="application/ld+json"');
+        expect(attributes).not.toMatch(/\bsrc=/);
+      }
     } finally {
-      delete process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID;
-      delete process.env.NEXT_PUBLIC_META_PIXEL_ID;
+      for (const key of Object.keys(configured)) delete process.env[key];
     }
   });
 
-  it("a malformed or missing GTM ID still renders nothing", async () => {
-    for (const bad of [undefined, "", "   ", "gtm-lowercase", "G-12345678", "GTM-"]) {
-      vi.resetModules();
-      if (bad === undefined) delete process.env.NEXT_PUBLIC_GTM_ID;
-      else process.env.NEXT_PUBLIC_GTM_ID = bad;
-      const { default: CampaignLayout } = await import("./(campaign)/layout");
-      const html = renderToStaticMarkup(<CampaignLayout><p>x</p></CampaignLayout>);
-      expect(html, `rendered for ${JSON.stringify(bad)}`).not.toMatch(/googletagmanager/i);
-    }
-    delete process.env.NEXT_PUBLIC_GTM_ID;
-  });
-
-  it("a valid GTM ID renders the container exactly once", async () => {
-    vi.resetModules();
-    process.env.NEXT_PUBLIC_GTM_ID = "GTM-5D84LL73";
-    try {
-      const { default: CampaignLayout } = await import("./(campaign)/layout");
-      const html = renderToStaticMarkup(<CampaignLayout><p>x</p></CampaignLayout>);
-      // The noscript half renders server-side; the script half is injected by
-      // next/script on the client. Exactly one container reference either way.
-      expect([...html.matchAll(/GTM-5D84LL73/g)]).toHaveLength(1);
-      expect(html).toContain("googletagmanager.com/ns.html?id=GTM-5D84LL73");
-    } finally {
-      delete process.env.NEXT_PUBLIC_GTM_ID;
-    }
+  it("keeps the sole network mutation on Rella's booking endpoint", () => {
+    const controller = read("../lib/aesthetics-attribution.ts");
+    expect(controller).toContain(
+      '"https://book.experiencerella.com/api/booking-v2/attribution"',
+    );
+    expect(controller).toContain('credentials: "include"');
+    expect(controller).not.toMatch(
+      /google-analytics|analytics\.google|facebook\.com\/tr|googletagmanager|googleadservices|doubleclick/i,
+    );
   });
 });

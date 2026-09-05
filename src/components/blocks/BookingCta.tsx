@@ -24,7 +24,7 @@ export function BookingCta({
   return (
     <Link
       href={href}
-      className={`inline-flex items-center justify-center font-bold text-[0.6875rem] tracking-[0.18em] uppercase bg-rose text-white px-10 py-[18px] hover:bg-rose-dark transition-colors duration-150 ${className}`}
+      className={`inline-flex items-center justify-center rounded-full border-[1.5px] border-rose bg-rose px-10 py-[18px] text-[0.6875rem] font-bold uppercase tracking-[0.2em] text-ink transition-colors duration-150 hover:bg-rose/70 ${className}`}
     >
       Book {serviceName}
     </Link>
