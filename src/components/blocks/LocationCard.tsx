@@ -23,7 +23,7 @@ export function LocationCard({
 }: LocationCardProps) {
   return (
     <div className="border border-ink/10 border-t-2 border-t-rose bg-white p-8">
-      <h3 className="mb-5 text-xl font-bold uppercase tracking-[0.08em] text-rose-text md:text-2xl">
+      <h3 className="mb-5 text-xl font-bold uppercase tracking-[0.08em] text-rose md:text-2xl">
         {name}
       </h3>
       <address className="mb-6 text-[0.9375rem] font-light not-italic leading-relaxed text-ink/70">
@@ -50,7 +50,7 @@ export function LocationCard({
             href={googleReviewUrl}
             target="_blank"
             rel="noreferrer"
-            className="inline-flex min-h-11 w-full items-center justify-center gap-2 border border-rose bg-white px-4 py-3 text-center text-[0.6875rem] font-bold uppercase tracking-[0.12em] text-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink sm:w-auto"
+            className="inline-flex min-h-11 w-full items-center justify-center gap-2 border border-rose bg-white px-4 py-3 text-center text-[0.6875rem] font-bold uppercase tracking-[0.12em] text-rose focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink sm:w-auto"
           >
             Leave a Google review for Rella {name}
             <span aria-hidden="true">↗</span>

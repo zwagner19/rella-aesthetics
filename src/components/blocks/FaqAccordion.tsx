@@ -10,10 +10,10 @@ interface FaqAccordionProps {
 
 export function FaqAccordion({ items, tone = "default" }: FaqAccordionProps) {
   const isLight = tone === "light";
-  const borderColor = isLight ? "border-ink/35" : "border-ink/10";
-  const questionColor = "text-ink";
-  const iconColor = "text-ink";
-  const answerColor = isLight ? "text-ink/80" : "text-ink/70";
+  const borderColor = isLight ? "border-white/35" : "border-ink/10";
+  const questionColor = isLight ? "text-white" : "text-ink";
+  const iconColor = isLight ? "text-white" : "text-rose";
+  const answerColor = isLight ? "text-white/90" : "text-ink/70";
 
   return (
     <div className={`max-w-[860px] border-t ${borderColor}`}>

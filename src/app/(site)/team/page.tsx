@@ -201,13 +201,13 @@ export default function TeamPage() {
     <>
       <section className="border-b border-silver/25 bg-rose">
         <div className="mx-auto max-w-[1050px] px-6 py-20 md:px-8 md:py-28 lg:px-12">
-          <p className="mb-5 text-[0.75rem] font-medium capitalize italic tracking-[0.08em] text-ink">
+          <p className="mb-5 text-[0.75rem] font-medium capitalize italic tracking-[0.08em] text-white">
             Vacaville + Napa
           </p>
-          <h1 className="max-w-[850px] text-4xl font-bold uppercase leading-[1.04] tracking-[0.06em] text-ink md:text-6xl">
+          <h1 className="max-w-[850px] text-4xl font-bold uppercase leading-[1.04] tracking-[0.06em] text-white md:text-6xl">
             Meet the people behind Rella.
           </h1>
-          <p className="mt-7 max-w-[720px] text-lg font-light leading-relaxed text-ink md:text-xl">
+          <p className="mt-7 max-w-[720px] text-lg font-light leading-relaxed text-white md:text-xl">
             Rella brings together medical weight-loss care, nursing, advanced
             practice, esthetics, medical assisting, and patient services for our
             two local communities.
@@ -499,15 +499,15 @@ export default function TeamPage() {
         </div>
       </section>
 
-      <section className="bg-rose py-16 text-ink md:py-20">
+      <section className="bg-rose py-16 text-white md:py-20">
         <div className="mx-auto flex max-w-[900px] flex-col items-center px-6 text-center">
-          <p className="mb-4 text-[0.75rem] font-medium capitalize italic tracking-[0.08em] text-ink">
+          <p className="mb-4 text-[0.75rem] font-medium capitalize italic tracking-[0.08em] text-white">
             Start with a conversation
           </p>
           <h2 className="text-3xl font-bold uppercase tracking-[0.06em] md:text-5xl">
             Find the right next step.
           </h2>
-          <p className="mb-8 mt-5 max-w-[650px] font-light leading-relaxed text-ink md:text-lg">
+          <p className="mb-8 mt-5 max-w-[650px] font-light leading-relaxed text-white md:text-lg">
             Book a consultation or contact Rella with a question about care in
             Vacaville or Napa.
           </p>
@@ -516,14 +516,14 @@ export default function TeamPage() {
               href={resolveBookingHref({})}
               variant="light"
               disableHover
-              className="!border-ink !bg-white !text-rose-text"
+              className="!border-white !bg-white !text-rose"
             >
               Book a Consultation
             </Button>
             <Button
               href="/contact"
               disableHover
-              className="!border-ink !bg-transparent !text-ink"
+              className="!border-white !bg-transparent !text-white"
             >
               Ask a Question
             </Button>

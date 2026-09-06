@@ -4,6 +4,7 @@ import { SkipNav } from "@/components/layout/SkipNav";
 import { GhlChatWidget } from "@/components/integrations/GhlChatWidget";
 import { GoogleAnalytics } from "@/components/integrations/GoogleAnalytics";
 import { MetaPixel } from "@/components/integrations/MetaPixel";
+import { MobileConversionBar } from "@/components/layout/MobileConversionBar";
 
 /**
  * Global site chrome for every ordinary marketing route.
@@ -23,11 +24,12 @@ export default function SiteLayout({ children }: Readonly<{ children: React.Reac
       <MetaPixel />
       <SkipNav />
       <Header />
-      <main id="main" className="flex-1">
+      <main id="main" className="flex-1 pb-20 xl:pb-0" data-site-motion="true">
         {children}
       </main>
       <Footer />
       <GhlChatWidget />
+      <MobileConversionBar />
     </>
   );
 }

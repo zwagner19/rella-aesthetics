@@ -25,11 +25,11 @@ export function ServiceCard({ href, title, description, image, imageAlt }: Servi
         />
       </div>
       <div className="p-6 flex flex-col flex-1">
-        <h3 className="mb-3 text-xl font-bold uppercase leading-tight tracking-[0.08em] text-rose-text transition-colors duration-150 group-hover:text-ink group-focus-visible:text-ink">
+        <h3 className="mb-3 text-xl font-bold uppercase leading-tight tracking-[0.08em] text-rose transition-colors duration-150 group-hover:text-white group-focus-visible:text-white">
           {title}
         </h3>
-        <p className="mb-5 flex-1 text-sm font-light leading-relaxed text-ink/70 transition-colors duration-150 group-hover:text-ink group-focus-visible:text-ink">{description}</p>
-        <span className="inline-flex items-center gap-2 border-t border-ink/10 pt-4 text-[0.75rem] font-bold uppercase tracking-[0.14em] text-ink transition-colors duration-150 group-hover:border-ink/30 group-focus-visible:border-ink/30">
+        <p className="mb-5 flex-1 text-sm font-light leading-relaxed text-ink/70 transition-colors duration-150 group-hover:text-white group-focus-visible:text-white">{description}</p>
+        <span className="inline-flex items-center gap-2 border-t border-ink/10 pt-4 text-[0.75rem] font-bold uppercase tracking-[0.14em] text-rose transition-colors duration-150 group-hover:border-white/40 group-hover:text-white group-focus-visible:border-white/40 group-focus-visible:text-white">
           Learn more <span aria-hidden="true">&rarr;</span>
         </span>
       </div>

@@ -256,14 +256,14 @@ export default function VacavilleLaserPage() {
         </div>
       </section>
 
-      <section className="bg-rose py-20 text-ink md:py-28" aria-labelledby="vacaville-laser-plan">
+      <section className="bg-rose py-20 text-white md:py-28" aria-labelledby="vacaville-laser-plan">
         <div className="mx-auto max-w-[1120px] px-6 md:px-8">
           <div className="mb-12 max-w-[760px]">
-            <p className="mb-4 text-[0.6875rem] font-bold uppercase tracking-[0.2em] text-ink">Plan the treatment and the calendar</p>
+            <p className="mb-4 text-[0.6875rem] font-bold uppercase tracking-[0.2em] text-white">Plan the treatment and the calendar</p>
             <h2 id="vacaville-laser-plan" className="mb-5 text-3xl font-medium tracking-[-0.04em] md:text-5xl">
               Four factors shape the recommendation.
             </h2>
-            <p className="text-lg font-light leading-relaxed text-ink">
+            <p className="text-lg font-light leading-relaxed text-white">
               The responsible option depends on more than the concern alone. Skin, history, exposure, and recovery time all belong in the decision.
             </p>
           </div>
@@ -274,7 +274,7 @@ export default function VacavilleLaserPage() {
                   {index + 1}
                 </span>
                 <h3 className="mb-3 text-xl font-medium">{factor.title}</h3>
-                <p className="text-sm leading-7 text-ink">{factor.body}</p>
+                <p className="text-sm leading-7 text-white">{factor.body}</p>
               </article>
             ))}
           </div>
@@ -330,12 +330,12 @@ export default function VacavilleLaserPage() {
         </div>
       </section>
 
-      <section className="bg-rose py-20 text-center text-ink" aria-labelledby="vacaville-laser-next-step">
+      <section className="bg-rose py-20 text-center text-white" aria-labelledby="vacaville-laser-next-step">
         <div className="mx-auto max-w-[720px] px-6">
           <h2 id="vacaville-laser-next-step" className="mb-4 text-3xl font-medium tracking-[-0.035em] md:text-5xl">
             Choose the device after the assessment.
           </h2>
-          <p className="mb-8 text-lg font-light leading-relaxed text-ink">
+          <p className="mb-8 text-lg font-light leading-relaxed text-white">
             Open the live Vacaville laser category, review the Initial Laser Consult, and give the team the context needed to recommend a responsible path.
           </p>
           <div className="flex flex-col justify-center gap-3 sm:flex-row">
@@ -346,12 +346,12 @@ export default function VacavilleLaserPage() {
               Call Rella
             </Button>
           </div>
-          <p className="mt-6 text-xs leading-6 text-ink">
+          <p className="mt-6 text-xs leading-6 text-white">
             Individual results vary. Laser and light-based treatment eligibility, device selection, settings, treatment area, and timing require an individualized assessment.
           </p>
-          <div className="mt-5 flex flex-wrap justify-center gap-x-5 gap-y-2 text-xs text-ink">
-            <Link href="/cancellation-policy" className="underline underline-offset-4 hover:text-ink">Cancellation policy</Link>
-            <Link href="/locations/vacaville" className="underline underline-offset-4 hover:text-ink">Vacaville clinic details</Link>
+          <div className="mt-5 flex flex-wrap justify-center gap-x-5 gap-y-2 text-xs text-white">
+            <Link href="/cancellation-policy" className="underline underline-offset-4 hover:text-white">Cancellation policy</Link>
+            <Link href="/locations/vacaville" className="underline underline-offset-4 hover:text-white">Vacaville clinic details</Link>
           </div>
         </div>
       </section>

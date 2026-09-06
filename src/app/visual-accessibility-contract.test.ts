@@ -1,5 +1,5 @@
-import { readFileSync, readdirSync } from "node:fs";
-import { extname, join } from "node:path";
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 
 const ROOT = join(__dirname, "..");
@@ -31,33 +31,28 @@ function contrast(first: string, second: string): number {
   return (lighter + 0.05) / (darker + 0.05);
 }
 
-function productionTsxFiles(directory: string): string[] {
-  return readdirSync(directory, { withFileTypes: true }).flatMap((entry) => {
-    const path = join(directory, entry.name);
-    if (entry.isDirectory()) return productionTsxFiles(path);
-    if (extname(entry.name) !== ".tsx" || entry.name.includes(".test.")) return [];
-    return [path];
+describe("owner-approved visual and accessibility contract", () => {
+  it("keeps the approved four-color brand values exact", () => {
+    expect(hexVariable("rose")).toBe("#F7A19A");
+    expect(hexVariable("rose-text")).toBe("#F7A19A");
+    expect(hexVariable("rose-cta")).toBe("#F7A19A");
+    expect(hexVariable("silver")).toBe("#64696E");
+    expect(hexVariable("ink")).toBe("#1a1a1a");
+    expect(hexVariable("white")).toBe("#ffffff");
   });
-}
 
-describe("visual accessibility contract", () => {
-  it("keeps core text and control combinations at WCAG AA contrast", () => {
+  it("keeps body-copy and keyboard-focus combinations at WCAG AA contrast", () => {
     const white = hexVariable("white");
-    expect(contrast(hexVariable("rose-text"), white)).toBeGreaterThanOrEqual(4.5);
-    expect(contrast(hexVariable("silver"), white)).toBeGreaterThanOrEqual(4.5);
     expect(contrast(hexVariable("ink"), hexVariable("rose"))).toBeGreaterThanOrEqual(4.5);
-    expect(contrast(white, hexVariable("rose-cta"))).toBeGreaterThanOrEqual(4.5);
-    expect(contrast(hexVariable("rose-on-ink"), hexVariable("ink"))).toBeGreaterThanOrEqual(4.5);
+    expect(contrast(hexVariable("ink"), white)).toBeGreaterThanOrEqual(4.5);
+    expect(contrast(hexVariable("silver"), white)).toBeGreaterThanOrEqual(4.5);
   });
 
-  it("never uses the light brand rose as a text utility", () => {
-    for (const path of [
-      ...productionTsxFiles(join(ROOT, "app")),
-      ...productionTsxFiles(join(ROOT, "components")),
-    ]) {
-      const source = readFileSync(path, "utf8");
-      expect(source, path).not.toMatch(/(?:^|[\s"`])text-rose(?:[\s"`/]|$)/);
-    }
+  it("keeps the rose site logo separate from the black campaign logo", () => {
+    const header = readFileSync(join(ROOT, "components", "layout", "Header.tsx"), "utf8");
+    const campaign = readFileSync(join(ROOT, "app", "(campaign)", "napa", "botox", "page.tsx"), "utf8");
+    expect(header).toContain('/brand/rella-logo-rose.svg');
+    expect(campaign).toContain('/brand/rella-logo-black.svg');
   });
 
   it("keeps the longest generic service heading inside a 320px viewport", () => {

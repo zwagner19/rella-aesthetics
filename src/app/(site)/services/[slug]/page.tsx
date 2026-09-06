@@ -121,16 +121,16 @@ export default async function ServicePage({ params }: ServicePageProps) {
 
       <section className="bg-rose py-20 md:py-28">
         <div className="mx-auto max-w-[1000px] px-6 md:px-8">
-          <p className="mb-4 text-sm font-medium italic text-ink">Your visit</p>
-          <h2 className="mb-6 break-words text-[clamp(1.75rem,8.5vw,1.875rem)] font-bold uppercase tracking-[0.035em] text-ink sm:text-3xl sm:tracking-[0.06em] md:text-5xl">
+          <p className="mb-4 text-sm font-medium italic text-white">Your visit</p>
+          <h2 className="mb-6 break-words text-[clamp(1.75rem,8.5vw,1.875rem)] font-bold uppercase tracking-[0.035em] text-white sm:text-3xl sm:tracking-[0.06em] md:text-5xl">
             {service.whatToExpect.heading}
           </h2>
-          <p className="mb-10 max-w-[780px] text-lg font-light leading-relaxed text-ink">
+          <p className="mb-10 max-w-[780px] text-lg font-light leading-relaxed text-white">
             {service.whatToExpect.body}
           </p>
           <ol className="grid gap-4 sm:grid-cols-2">
             {service.whatToExpect.steps.map((step, index) => (
-              <li key={step} className="flex gap-5 border border-ink/35 bg-rose p-6 text-ink">
+              <li key={step} className="flex gap-5 border border-white/35 bg-rose p-6 text-white">
                 <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white text-sm font-bold text-rose-text">
                   {String(index + 1).padStart(2, "0")}
                 </span>
@@ -157,14 +157,14 @@ export default async function ServicePage({ params }: ServicePageProps) {
 
       <section className="bg-rose py-20 md:py-24">
         <div className="mx-auto max-w-[1000px] px-6 text-center md:px-8">
-          <p className="mb-4 text-sm font-medium italic text-ink">
+          <p className="mb-4 text-sm font-medium italic text-white">
             {isCallAssisted
               ? "Call-assisted booking"
               : soleLocation
                 ? clinicNames[soleLocation]
                 : "Vacaville + Napa"}
           </p>
-          <h2 className="mb-8 break-words text-[clamp(1.75rem,8.5vw,1.875rem)] font-bold uppercase tracking-[0.035em] text-ink sm:text-3xl sm:tracking-[0.06em] md:text-5xl">
+          <h2 className="mb-8 break-words text-[clamp(1.75rem,8.5vw,1.875rem)] font-bold uppercase tracking-[0.035em] text-white sm:text-3xl sm:tracking-[0.06em] md:text-5xl">
             {isCallAssisted
               ? "Call Rella for IV availability"
               : soleLocation
@@ -208,10 +208,10 @@ export default async function ServicePage({ params }: ServicePageProps) {
 
       <section className="bg-rose py-16 text-center md:py-20">
         <div className="mx-auto max-w-[700px] px-6">
-          <h2 className="mb-4 break-words text-[clamp(1.75rem,8.5vw,1.875rem)] font-bold uppercase tracking-[0.035em] text-ink sm:text-3xl sm:tracking-[0.06em] md:text-4xl">
+          <h2 className="mb-4 break-words text-[clamp(1.75rem,8.5vw,1.875rem)] font-bold uppercase tracking-[0.035em] text-white sm:text-3xl sm:tracking-[0.06em] md:text-4xl">
             Ready for a clear next step?
           </h2>
-          <p className="mb-8 text-lg font-light leading-relaxed text-ink">
+          <p className="mb-8 text-lg font-light leading-relaxed text-white">
             {isCallAssisted
               ? "Call Rella, name your preferred clinic, and ask about IV hydration availability and next steps."
               : `Schedule a consultation to learn whether ${service.title.toLowerCase()} is appropriate for your goals.`}

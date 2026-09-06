@@ -13,17 +13,17 @@ export function SectionHeader({
   description,
   headingLevel = 2,
   tone = "default",
-  eyebrowTone = "default",
+  eyebrowTone = tone === "light" ? "light" : "default",
 }: SectionHeaderProps) {
   const Heading = headingLevel === 1 ? "h1" : "h2";
   const eyebrowColor =
     eyebrowTone === "light"
-      ? "text-ink"
+      ? "text-white"
       : eyebrowTone === "rose"
-        ? "text-rose-text"
+        ? "text-rose"
         : "text-ink";
-  const titleColor = tone === "light" ? "text-ink" : "text-rose-text";
-  const descriptionColor = tone === "light" ? "text-ink" : "text-ink/70";
+  const titleColor = tone === "light" ? "text-white" : "text-rose";
+  const descriptionColor = tone === "light" ? "text-white/90" : "text-ink/70";
 
   return (
     <div className="mb-12 max-w-[680px]">
