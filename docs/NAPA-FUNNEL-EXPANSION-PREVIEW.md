@@ -7,8 +7,9 @@
 
 ## Decision
 
-The owner approved the visual direction on September 7, 2026 and corrected the
-Napa schedule and laser-consult duration. The pages are not approved for
+The owner approved the visual direction on September 7, 2026 and confirmed Napa
+hours as Wednesday through Saturday, 9am-5pm, with a 30-minute laser consult.
+The pages are not approved for
 publication or paid traffic. They remain `noindex, nofollow`, are excluded from
 the sitemap, and are intentionally outside the exact Napa Botox attribution
 pilot.
