@@ -228,14 +228,14 @@ export default function VacavilleMicroneedlingPage() {
         </div>
       </section>
 
-      <section className="bg-rose py-20 text-ink md:py-28" aria-labelledby="vacaville-microneedling-plan">
+      <section className="bg-rose py-20 text-white md:py-28" aria-labelledby="vacaville-microneedling-plan">
         <div className="mx-auto max-w-[1120px] px-6 md:px-8">
           <div className="mb-12 max-w-[780px]">
-            <p className="mb-4 text-[0.6875rem] font-bold uppercase tracking-[0.2em] text-ink">Before treatment</p>
+            <p className="mb-4 text-[0.6875rem] font-bold uppercase tracking-[0.2em] text-white">Before treatment</p>
             <h2 id="vacaville-microneedling-plan" className="mb-5 text-3xl font-medium tracking-[-0.04em] md:text-5xl">
               Device, depth, area, and recovery all matter.
             </h2>
-            <p className="text-lg font-light leading-relaxed text-ink">
+            <p className="text-lg font-light leading-relaxed text-white">
               Microneedling is not suitable for everyone, and a desired cosmetic result is not guaranteed. Give the provider enough context to assess the proposed plan.
             </p>
           </div>
@@ -244,7 +244,7 @@ export default function VacavilleMicroneedlingPage() {
               <article key={factor.title} className="border border-white/15 bg-white/[0.04] p-6">
                 <span className="mb-8 inline-flex h-9 w-9 items-center justify-center rounded-full bg-white text-xs font-bold text-rose-text">{index + 1}</span>
                 <h3 className="mb-3 text-xl font-medium">{factor.title}</h3>
-                <p className="text-sm leading-7 text-ink">{factor.body}</p>
+                <p className="text-sm leading-7 text-white">{factor.body}</p>
               </article>
             ))}
           </div>
@@ -304,12 +304,12 @@ export default function VacavilleMicroneedlingPage() {
         </div>
       </section>
 
-      <section className="bg-rose py-20 text-center text-ink" aria-labelledby="vacaville-microneedling-next-step">
+      <section className="bg-rose py-20 text-center text-white" aria-labelledby="vacaville-microneedling-next-step">
         <div className="mx-auto max-w-[740px] px-6">
           <h2 id="vacaville-microneedling-next-step" className="mb-4 text-3xl font-medium tracking-[-0.035em] md:text-5xl">
             Choose the modality after the assessment.
           </h2>
-          <p className="mb-8 text-lg font-light leading-relaxed text-ink">
+          <p className="mb-8 text-lg font-light leading-relaxed text-white">
             Open the live Vacaville microneedling category to review the Initial Microneedling Consult, or call the team before choosing a treatment.
           </p>
           <div className="flex flex-col justify-center gap-3 sm:flex-row">
@@ -320,13 +320,13 @@ export default function VacavilleMicroneedlingPage() {
               Call Rella
             </Button>
           </div>
-          <p className="mt-6 text-xs leading-6 text-ink">
+          <p className="mt-6 text-xs leading-6 text-white">
             Individual response and recovery vary. Device selection, settings, treatment area, number of procedures, and suitability require an individualized assessment.
           </p>
-          <div className="mt-5 flex flex-wrap justify-center gap-x-5 gap-y-2 text-xs text-ink">
-            <Link href="/services/microneedling" className="underline underline-offset-4 hover:text-ink">Full microneedling guide</Link>
-            <Link href="/cancellation-policy" className="underline underline-offset-4 hover:text-ink">Cancellation policy</Link>
-            <Link href="/locations/vacaville" className="underline underline-offset-4 hover:text-ink">Vacaville clinic details</Link>
+          <div className="mt-5 flex flex-wrap justify-center gap-x-5 gap-y-2 text-xs text-white">
+            <Link href="/services/microneedling" className="underline underline-offset-4 hover:text-white">Full microneedling guide</Link>
+            <Link href="/cancellation-policy" className="underline underline-offset-4 hover:text-white">Cancellation policy</Link>
+            <Link href="/locations/vacaville" className="underline underline-offset-4 hover:text-white">Vacaville clinic details</Link>
           </div>
         </div>
       </section>

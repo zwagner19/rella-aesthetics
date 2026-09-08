@@ -46,7 +46,7 @@ function HomePageContent({ isWeightLoss }: { isWeightLoss: boolean }) {
             <p className="mb-6 text-sm font-medium italic tracking-[0.04em] text-ink">
               Northern California&apos;s Luxury Med Spa
             </p>
-            <h1 className="mb-5 text-4xl font-bold uppercase leading-[1.04] tracking-[0.08em] text-rose-text md:text-5xl lg:text-6xl">
+            <h1 className="mb-5 text-4xl font-bold uppercase leading-[1.04] tracking-[0.08em] text-rose md:text-5xl lg:text-6xl">
               Ageless Beauty
             </h1>
             <p className="mb-9 max-w-[520px] text-lg font-light leading-relaxed text-ink/70">
@@ -78,7 +78,7 @@ function HomePageContent({ isWeightLoss }: { isWeightLoss: boolean }) {
         ]}
       />
 
-      <section className="border-y border-rose/25 bg-white py-24 md:py-32">
+      <section className="rella-site-reveal border-y border-rose-light/60 bg-white py-24 md:py-32">
         <div className="mx-auto max-w-[1200px] px-6 md:px-8 lg:px-12">
           <SectionHeader
             eyebrow="Treatments"
@@ -101,7 +101,7 @@ function HomePageContent({ isWeightLoss }: { isWeightLoss: boolean }) {
         </div>
       </section>
 
-      <section className="bg-white py-24 md:py-32">
+      <section className="rella-site-reveal bg-white py-24 md:py-32">
         <div className="mx-auto grid max-w-[1200px] items-center gap-12 px-6 md:px-8 lg:grid-cols-[0.95fr_1.05fr] lg:gap-20 lg:px-12">
           <div className="relative aspect-[4/5] overflow-hidden bg-rose-blush">
             <Image
@@ -116,7 +116,7 @@ function HomePageContent({ isWeightLoss }: { isWeightLoss: boolean }) {
             <p className="mb-5 text-[0.75rem] font-medium capitalize italic tracking-[0.08em] text-ink">
               Feel Comfortable
             </p>
-            <h2 className="mb-6 text-3xl font-bold uppercase leading-[1.08] tracking-[0.06em] text-rose-text md:text-5xl">
+            <h2 className="mb-6 text-3xl font-bold uppercase leading-[1.08] tracking-[0.06em] text-rose md:text-5xl">
               Your questions belong in the room.
             </h2>
             <p className="mb-5 text-lg font-light leading-relaxed text-ink/70">
@@ -131,7 +131,7 @@ function HomePageContent({ isWeightLoss }: { isWeightLoss: boolean }) {
               {["Two local clinics", "Consultation first", "Clear next steps"].map((item) => (
                 <p
                   key={item}
-                  className="bg-white px-4 py-5 text-xs font-bold uppercase tracking-[0.12em] text-ink"
+                  className="bg-white px-4 py-5 text-xs font-bold uppercase tracking-[0.12em] text-rose"
                 >
                   {item}
                 </p>
@@ -142,7 +142,7 @@ function HomePageContent({ isWeightLoss }: { isWeightLoss: boolean }) {
         </div>
       </section>
 
-      <section className="bg-rose py-24 text-ink md:py-32">
+      <section className="rella-site-reveal bg-rose py-24 text-white md:py-32">
         <div className="mx-auto grid max-w-[1200px] items-center gap-12 px-6 md:px-8 lg:grid-cols-2 lg:gap-20 lg:px-12">
           <div className="relative aspect-[4/5] overflow-hidden bg-white/20">
             <Image
@@ -154,18 +154,18 @@ function HomePageContent({ isWeightLoss }: { isWeightLoss: boolean }) {
             />
           </div>
           <div className="lg:pl-8">
-            <p className="mb-5 text-[0.75rem] font-medium capitalize italic tracking-[0.08em] text-ink">
+            <p className="mb-5 text-[0.75rem] font-medium capitalize italic tracking-[0.08em] text-white">
               Medical weight management
             </p>
-            <h2 className="mb-6 text-3xl font-bold uppercase leading-[1.08] tracking-[0.06em] text-ink md:text-5xl">
+            <h2 className="mb-6 text-3xl font-bold uppercase leading-[1.08] tracking-[0.06em] text-white md:text-5xl">
               Built around more than medication.
             </h2>
-            <p className="mb-7 text-lg font-light leading-relaxed text-ink">
+            <p className="mb-7 text-lg font-light leading-relaxed text-white">
               Start with a 30-minute phone consultation with Zachary Wagner, DO, an American Board
               of Obesity Medicine diplomate, to understand how Rella works and review the
               appropriate next step and costs before deciding.
             </p>
-            <ul className="mb-8 space-y-3 text-sm text-ink">
+            <ul className="mb-8 space-y-3 text-sm text-white">
               {[
                 "ABOM-certified physician",
                 "Napa and Vacaville clinic support",
@@ -173,7 +173,7 @@ function HomePageContent({ isWeightLoss }: { isWeightLoss: boolean }) {
                 "Medication only when clinically appropriate",
               ].map((item) => (
                 <li key={item} className="flex gap-3">
-                  <span aria-hidden="true">✓</span>
+                  <span aria-hidden="true" className="text-white">✓</span>
                   {item}
                 </li>
               ))}
@@ -185,18 +185,18 @@ function HomePageContent({ isWeightLoss }: { isWeightLoss: boolean }) {
         </div>
       </section>
 
-      <section className="bg-rose py-24 md:py-32">
+      <section className="rella-site-reveal bg-rose py-24 md:py-32">
         <div className="mx-auto max-w-[1200px] px-6 md:px-8 lg:px-12">
           <div className="mb-12 grid gap-8 lg:grid-cols-[0.75fr_1.25fr] lg:items-end lg:gap-20">
             <div>
-              <p className="mb-4 text-[0.75rem] font-medium capitalize italic tracking-[0.08em] text-ink">
+              <p className="mb-4 text-[0.75rem] font-medium capitalize italic tracking-[0.08em] text-white">
                 Care should feel clear
               </p>
-              <h2 className="text-4xl font-bold uppercase leading-[1.02] tracking-[0.08em] text-ink md:text-6xl">
+              <h2 className="text-4xl font-bold uppercase leading-[1.02] tracking-[0.08em] text-white md:text-6xl">
                 We Get It
               </h2>
             </div>
-            <p className="max-w-[700px] text-lg font-light leading-relaxed text-ink md:text-xl">
+            <p className="max-w-[700px] text-lg font-light leading-relaxed text-white md:text-xl">
               It can be hard to sort through treatment options, timing, and expectations. Rella
               makes room for the questions, explains the choices plainly, and helps you decide
               what feels right for you.
@@ -204,7 +204,7 @@ function HomePageContent({ isWeightLoss }: { isWeightLoss: boolean }) {
           </div>
           <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
             {testimonials.map((item, i) => (
-              <article key={i} className="border border-white bg-white p-7">
+              <article key={i} className="border border-white bg-white p-7 [&>div>div:first-child]:text-rose">
                 <TestimonialCard quote={item.quote} name={item.name} source={item.source} />
               </article>
             ))}
@@ -212,9 +212,11 @@ function HomePageContent({ isWeightLoss }: { isWeightLoss: boolean }) {
         </div>
       </section>
 
-      <MembershipBanner />
+      <div className="border-y border-rose-light/60">
+        <MembershipBanner />
+      </div>
 
-      <section className="bg-rose py-24 text-ink md:py-32">
+      <section className="rella-site-reveal bg-rose py-24 text-white md:py-32">
         <div className="mx-auto max-w-[1200px] px-6 md:px-8 lg:px-12">
           <SectionHeader
             eyebrow="Two Locations"
@@ -222,7 +224,7 @@ function HomePageContent({ isWeightLoss }: { isWeightLoss: boolean }) {
             description="Explore clinic details, directions, and booking paths for Vacaville and Napa."
             tone="light"
           />
-          <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 [&_a]:text-rose">
             <LocationCard
               name={locations.vacaville.name}
               address={locations.vacaville.address}
@@ -247,12 +249,12 @@ function HomePageContent({ isWeightLoss }: { isWeightLoss: boolean }) {
         </div>
       </section>
 
-      <section className="bg-rose py-20 text-center text-ink md:py-24">
+      <section className="rella-site-reveal bg-rose py-20 text-center text-white md:py-24">
         <div className="mx-auto max-w-[600px] px-6">
           <h2 className="mb-4 text-3xl font-bold uppercase tracking-[0.08em] md:text-4xl">
             Ready to Begin?
           </h2>
-          <p className="mb-8 text-lg font-light text-ink">
+          <p className="mb-8 text-lg font-light">
             Schedule a consultation and discover the right next step for your goals.
           </p>
           <Button href={resolveBookingHref({})} variant="light" disableHover>

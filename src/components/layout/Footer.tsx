@@ -13,7 +13,7 @@ export function Footer() {
           <div className="max-w-[340px]">
             <Link href="/" aria-label="Rella Aesthetics — Home" className="mb-5 inline-flex">
               <Image
-                src="/brand/rella-logo-black.svg"
+                src="/brand/rella-logo-rose.svg"
                 alt=""
                 width={360}
                 height={176}
@@ -27,7 +27,7 @@ export function Footer() {
             <div className="mt-5 flex flex-wrap gap-3">
               <a
                 aria-label="Rella Aesthetics on Instagram, @experiencerella"
-                className="inline-flex min-h-11 items-center rounded-full border border-rose bg-white px-4 py-2 text-xs font-bold uppercase tracking-[0.08em] text-ink transition-colors hover:bg-rose/20"
+                className="inline-flex min-h-11 items-center rounded-full border border-white bg-white px-4 py-2 text-xs font-bold uppercase tracking-[0.08em] text-ink transition-colors hover:bg-white/80"
                 href="https://www.instagram.com/experiencerella/"
                 rel="noreferrer"
                 target="_blank"
@@ -36,7 +36,7 @@ export function Footer() {
               </a>
               <a
                 aria-label="Rella Aesthetics on Facebook"
-                className="inline-flex min-h-11 items-center rounded-full border border-rose bg-white px-4 py-2 text-xs font-bold uppercase tracking-[0.08em] text-ink transition-colors hover:bg-rose/20"
+                className="inline-flex min-h-11 items-center rounded-full border border-white bg-white px-4 py-2 text-xs font-bold uppercase tracking-[0.08em] text-ink transition-colors hover:bg-white/80"
                 href="https://www.facebook.com/rellaaesthetics/"
                 rel="noreferrer"
                 target="_blank"

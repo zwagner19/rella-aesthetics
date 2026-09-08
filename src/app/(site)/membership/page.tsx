@@ -27,13 +27,13 @@ export default function MembershipPage() {
 
       <section className="bg-rose py-24 md:py-28">
         <div className="mx-auto max-w-[1200px] px-6 md:px-8 lg:px-12">
-          <p className="mb-4 text-[0.75rem] font-medium capitalize italic tracking-[0.08em] text-ink">
+          <p className="mb-4 text-[0.75rem] font-medium capitalize italic tracking-[0.08em] text-white">
             Membership
           </p>
-          <h1 className="mb-5 break-words text-[clamp(1.9rem,9vw,2.25rem)] font-bold uppercase leading-[1.08] tracking-[0.04em] text-ink sm:text-4xl sm:tracking-[0.08em] md:text-6xl">
+          <h1 className="mb-5 break-words text-[clamp(1.9rem,9vw,2.25rem)] font-bold uppercase leading-[1.08] tracking-[0.04em] text-white sm:text-4xl sm:tracking-[0.08em] md:text-6xl">
             2026 Memberships
           </h1>
-          <p className="max-w-[560px] text-lg font-light leading-relaxed text-ink">
+          <p className="max-w-[560px] text-lg font-light leading-relaxed text-white">
             Compare current injectable membership dues, member rates, included benefits, and the
             terms that matter before you enroll.
           </p>
@@ -97,9 +97,9 @@ export default function MembershipPage() {
         </div>
       </section>
 
-      <section className="bg-rose py-20 md:py-28">
+      <section className="bg-rose py-20 text-white md:py-28">
         <div className="mx-auto max-w-[1200px] px-6 md:px-8 lg:px-12">
-          <h2 className="mb-12 text-3xl font-medium uppercase leading-[1.08] tracking-[0.08em] text-ink md:text-5xl">
+          <h2 className="mb-12 text-3xl font-medium uppercase leading-[1.08] tracking-[0.08em] text-white md:text-5xl">
             Membership FAQ
           </h2>
           <FaqAccordion items={faq} tone="light" />

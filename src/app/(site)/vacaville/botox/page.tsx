@@ -211,14 +211,14 @@ export default function VacavilleBotoxPage() {
         </div>
       </section>
 
-      <section className="bg-rose py-20 text-ink md:py-28" aria-labelledby="vacaville-botox-visit">
+      <section className="bg-rose py-20 text-white md:py-28" aria-labelledby="vacaville-botox-visit">
         <div className="mx-auto grid max-w-[1120px] gap-10 px-6 md:px-8 lg:grid-cols-[0.8fr_1.2fr]">
           <div>
-            <p className="mb-4 text-[0.6875rem] font-bold uppercase tracking-[0.2em] text-ink">Your visit</p>
+            <p className="mb-4 text-[0.6875rem] font-bold uppercase tracking-[0.2em] text-white">Your visit</p>
             <h2 id="vacaville-botox-visit" className="mb-5 text-3xl font-medium tracking-[-0.04em] md:text-5xl">
               Consultation first. Product second.
             </h2>
-            <p className="text-lg font-light leading-relaxed text-ink">
+            <p className="text-lg font-light leading-relaxed text-white">
               The responsible plan starts with facial movement, goals, treatment history, and a clear explanation of product-specific dosing.
             </p>
           </div>
@@ -231,7 +231,7 @@ export default function VacavilleBotoxPage() {
             ].map((step, index) => (
               <li key={step} className="border border-white/15 bg-white/[0.04] p-6">
                 <span className="mb-7 inline-flex h-9 w-9 items-center justify-center rounded-full bg-white text-xs font-bold text-rose-text">{index + 1}</span>
-                <p className="text-sm leading-7 text-ink">{step}</p>
+                <p className="text-sm leading-7 text-white">{step}</p>
               </li>
             ))}
           </ol>
@@ -287,12 +287,12 @@ export default function VacavilleBotoxPage() {
         </div>
       </section>
 
-      <section className="bg-rose py-20 text-center text-ink" aria-labelledby="vacaville-botox-next-step">
+      <section className="bg-rose py-20 text-center text-white" aria-labelledby="vacaville-botox-next-step">
         <div className="mx-auto max-w-[720px] px-6">
           <h2 id="vacaville-botox-next-step" className="mb-4 text-3xl font-medium tracking-[-0.035em] md:text-5xl">
             Ready for a clear Vacaville next step?
           </h2>
-          <p className="mb-8 text-lg font-light leading-relaxed text-ink">
+          <p className="mb-8 text-lg font-light leading-relaxed text-white">
             Open the live Vacaville injectable chooser, review the service details and booking terms, or call Rella before choosing a visit.
           </p>
           <div className="flex flex-col justify-center gap-3 sm:flex-row">
@@ -303,12 +303,12 @@ export default function VacavilleBotoxPage() {
               Call Rella
             </Button>
           </div>
-          <p className="mt-6 text-xs leading-6 text-ink">
+          <p className="mt-6 text-xs leading-6 text-white">
             Individual results vary. Treatment eligibility, product, dose, placement, and timing require an individualized assessment.
           </p>
-          <div className="mt-5 flex flex-wrap justify-center gap-x-5 gap-y-2 text-xs text-ink">
-            <Link href="/cancellation-policy" className="underline underline-offset-4 hover:text-ink">Cancellation policy</Link>
-            <Link href="/locations/vacaville" className="underline underline-offset-4 hover:text-ink">Vacaville clinic details</Link>
+          <div className="mt-5 flex flex-wrap justify-center gap-x-5 gap-y-2 text-xs text-white">
+            <Link href="/cancellation-policy" className="underline underline-offset-4 hover:text-white">Cancellation policy</Link>
+            <Link href="/locations/vacaville" className="underline underline-offset-4 hover:text-white">Vacaville clinic details</Link>
           </div>
         </div>
       </section>

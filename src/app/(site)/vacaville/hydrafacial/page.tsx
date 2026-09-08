@@ -235,14 +235,14 @@ export default function VacavilleHydraFacialPage() {
         </div>
       </section>
 
-      <section className="bg-rose py-20 text-ink md:py-28" aria-labelledby="vacaville-hydrafacial-visit">
+      <section className="bg-rose py-20 text-white md:py-28" aria-labelledby="vacaville-hydrafacial-visit">
         <div className="mx-auto max-w-[1120px] px-6 md:px-8">
           <div className="mb-12 max-w-[760px]">
-            <p className="mb-4 text-[0.6875rem] font-bold uppercase tracking-[0.2em] text-ink">Your visit</p>
+            <p className="mb-4 text-[0.6875rem] font-bold uppercase tracking-[0.2em] text-white">Your visit</p>
             <h2 id="vacaville-hydrafacial-visit" className="mb-5 text-3xl font-medium tracking-[-0.04em] md:text-5xl">
               Review, choose, treat, then plan.
             </h2>
-            <p className="text-lg font-light leading-relaxed text-ink">
+            <p className="text-lg font-light leading-relaxed text-white">
               The device sequence is only part of the visit. Current skin condition, recent procedures, sensitivities, and timing still need context.
             </p>
           </div>
@@ -251,7 +251,7 @@ export default function VacavilleHydraFacialPage() {
               <article key={step.title} className="border border-white/15 bg-white/[0.04] p-6">
                 <span className="mb-8 inline-flex h-9 w-9 items-center justify-center rounded-full bg-white text-xs font-bold text-rose-text">{index + 1}</span>
                 <h3 className="mb-3 text-xl font-medium">{step.title}</h3>
-                <p className="text-sm leading-7 text-ink">{step.body}</p>
+                <p className="text-sm leading-7 text-white">{step.body}</p>
               </article>
             ))}
           </div>
@@ -309,12 +309,12 @@ export default function VacavilleHydraFacialPage() {
         </div>
       </section>
 
-      <section className="bg-rose py-20 text-center text-ink" aria-labelledby="vacaville-hydrafacial-next-step">
+      <section className="bg-rose py-20 text-center text-white" aria-labelledby="vacaville-hydrafacial-next-step">
         <div className="mx-auto max-w-[720px] px-6">
           <h2 id="vacaville-hydrafacial-next-step" className="mb-4 text-3xl font-medium tracking-[-0.035em] md:text-5xl">
             Start with Signature in Vacaville.
           </h2>
-          <p className="mb-8 text-lg font-light leading-relaxed text-ink">
+          <p className="mb-8 text-lg font-light leading-relaxed text-white">
             Open the live Vacaville facial chooser to review Signature and its booking terms, or call Rella if you want help comparing other options.
           </p>
           <div className="flex flex-col justify-center gap-3 sm:flex-row">
@@ -325,12 +325,12 @@ export default function VacavilleHydraFacialPage() {
               Call Rella
             </Button>
           </div>
-          <p className="mt-6 text-xs leading-6 text-ink">
+          <p className="mt-6 text-xs leading-6 text-white">
             Individual results and skin response vary. Service tier, customization, and suitability should be reviewed with the treating provider, particularly after recent procedures or with active skin concerns.
           </p>
-          <div className="mt-5 flex flex-wrap justify-center gap-x-5 gap-y-2 text-xs text-ink">
-            <Link href="/cancellation-policy" className="underline underline-offset-4 hover:text-ink">Cancellation policy</Link>
-            <Link href="/locations/vacaville" className="underline underline-offset-4 hover:text-ink">Vacaville clinic details</Link>
+          <div className="mt-5 flex flex-wrap justify-center gap-x-5 gap-y-2 text-xs text-white">
+            <Link href="/cancellation-policy" className="underline underline-offset-4 hover:text-white">Cancellation policy</Link>
+            <Link href="/locations/vacaville" className="underline underline-offset-4 hover:text-white">Vacaville clinic details</Link>
           </div>
         </div>
       </section>

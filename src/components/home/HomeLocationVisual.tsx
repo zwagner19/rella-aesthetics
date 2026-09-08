@@ -39,7 +39,7 @@ export function HomeLocationVisual({
     HOME_LOCATION_VISUALS[0];
 
   return (
-    <div className="flex h-full min-h-0 flex-col bg-white text-ink md:min-h-[420px]">
+    <div className="flex h-full min-h-0 flex-col bg-white text-rose md:min-h-[420px]">
       <div
         className={`relative w-full flex-none overflow-hidden md:min-h-[520px] md:flex-1 md:aspect-auto ${activeVisual.frameAspect}`}
       >
@@ -56,15 +56,15 @@ export function HomeLocationVisual({
           className="absolute inset-x-0 bottom-0 bg-white/90 px-5 py-4 md:px-7"
           aria-live="polite"
         >
-          <p className="text-xs font-bold uppercase tracking-[0.18em] text-ink">
+          <p className="text-xs font-bold uppercase tracking-[0.18em] text-rose">
             {activeVisual.name}
           </p>
-          <p className="mt-1 text-sm text-ink">{activeVisual.address}</p>
+          <p className="mt-1 text-sm text-rose">{activeVisual.address}</p>
         </div>
       </div>
 
       <div className="flex flex-col gap-3 border-t border-rose/25 bg-white/90 px-5 py-4 sm:flex-row sm:items-center sm:justify-between md:px-7">
-        <p className="text-xs font-medium uppercase tracking-[0.16em] text-ink">
+        <p className="text-xs font-medium uppercase tracking-[0.16em] text-rose">
           Choose a clinic view
         </p>
         <div className="flex gap-2" role="group" aria-label="Choose a Rella clinic view">
@@ -76,10 +76,10 @@ export function HomeLocationVisual({
                 type="button"
                 aria-pressed={isActive}
                 onClick={() => setActiveLocation(location.slug)}
-                className={`min-h-11 rounded-full border px-5 py-2 text-[0.6875rem] font-bold uppercase tracking-[0.16em] text-ink transition-colors ${
+                className={`min-h-11 rounded-full border px-5 py-2 text-[0.6875rem] font-bold uppercase tracking-[0.16em] transition-colors ${
                   isActive
-                    ? "border-rose bg-rose"
-                    : "border-rose bg-white hover:bg-rose/30"
+                    ? "border-rose bg-rose text-white"
+                    : "border-rose bg-white text-rose hover:bg-rose hover:text-white"
                 }`}
               >
                 {location.name}

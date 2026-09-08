@@ -220,14 +220,14 @@ export default function VacavilleChemicalPeelsPage() {
         </div>
       </section>
 
-      <section className="bg-rose py-20 text-ink md:py-28" aria-labelledby="vacaville-peel-visit">
+      <section className="bg-rose py-20 text-white md:py-28" aria-labelledby="vacaville-peel-visit">
         <div className="mx-auto max-w-[1120px] px-6 md:px-8">
           <div className="mb-12 max-w-[780px]">
-            <p className="mb-4 text-[0.6875rem] font-bold uppercase tracking-[0.2em] text-ink">Your visit</p>
+            <p className="mb-4 text-[0.6875rem] font-bold uppercase tracking-[0.2em] text-white">Your visit</p>
             <h2 id="vacaville-peel-visit" className="mb-5 text-3xl font-medium tracking-[-0.04em] md:text-5xl">
               Match the peel to your skin—and your calendar.
             </h2>
-            <p className="text-lg font-light leading-relaxed text-ink">
+            <p className="text-lg font-light leading-relaxed text-white">
               Product choice, preparation, response, and recovery vary. Important events and recent procedures belong in the planning conversation.
             </p>
           </div>
@@ -236,7 +236,7 @@ export default function VacavilleChemicalPeelsPage() {
               <article key={step.title} className="border border-white/15 bg-white/[0.04] p-6">
                 <span className="mb-8 inline-flex h-9 w-9 items-center justify-center rounded-full bg-white text-xs font-bold text-rose-text">{index + 1}</span>
                 <h3 className="mb-3 text-xl font-medium">{step.title}</h3>
-                <p className="text-sm leading-7 text-ink">{step.body}</p>
+                <p className="text-sm leading-7 text-white">{step.body}</p>
               </article>
             ))}
           </div>
@@ -294,12 +294,12 @@ export default function VacavilleChemicalPeelsPage() {
         </div>
       </section>
 
-      <section className="bg-rose py-20 text-center text-ink" aria-labelledby="vacaville-peel-next-step">
+      <section className="bg-rose py-20 text-center text-white" aria-labelledby="vacaville-peel-next-step">
         <div className="mx-auto max-w-[740px] px-6">
           <h2 id="vacaville-peel-next-step" className="mb-4 text-3xl font-medium tracking-[-0.035em] md:text-5xl">
             Choose your Vacaville peel with context.
           </h2>
-          <p className="mb-8 text-lg font-light leading-relaxed text-ink">
+          <p className="mb-8 text-lg font-light leading-relaxed text-white">
             Review Universal Peel in the current menu, call with a question, or read the general guide before choosing.
           </p>
           <div className="flex flex-col justify-center gap-3 sm:flex-row">
@@ -310,12 +310,12 @@ export default function VacavilleChemicalPeelsPage() {
               Call Rella
             </Button>
           </div>
-          <p className="mt-6 text-xs leading-6 text-ink">
+          <p className="mt-6 text-xs leading-6 text-white">
             Individual response and recovery vary. Suitability, formulation, preparation, and aftercare should be reviewed for the exact peel being considered.
           </p>
-          <div className="mt-5 flex flex-wrap justify-center gap-x-5 gap-y-2 text-xs text-ink">
-            <Link href="/cancellation-policy" className="underline underline-offset-4 hover:text-ink">Cancellation policy</Link>
-            <Link href="/locations/vacaville" className="underline underline-offset-4 hover:text-ink">Vacaville clinic details</Link>
+          <div className="mt-5 flex flex-wrap justify-center gap-x-5 gap-y-2 text-xs text-white">
+            <Link href="/cancellation-policy" className="underline underline-offset-4 hover:text-white">Cancellation policy</Link>
+            <Link href="/locations/vacaville" className="underline underline-offset-4 hover:text-white">Vacaville clinic details</Link>
           </div>
         </div>
       </section>

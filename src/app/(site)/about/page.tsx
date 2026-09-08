@@ -59,38 +59,38 @@ export default function AboutPage() {
       <section className="overflow-hidden bg-rose">
         <div className="mx-auto grid max-w-[1200px] gap-14 px-6 py-20 md:px-8 md:py-28 lg:grid-cols-[1.05fr_0.95fr] lg:items-center lg:gap-24 lg:px-12">
           <div>
-            <p className="mb-5 text-[0.75rem] font-medium capitalize italic tracking-[0.08em] text-ink">
+            <p className="mb-5 text-[0.75rem] font-medium capitalize italic tracking-[0.08em] text-white">
               Locally owned · Vacaville + Napa
             </p>
-            <h1 className="mb-7 max-w-[720px] text-4xl font-bold uppercase leading-[1.04] tracking-[0.06em] text-ink md:text-6xl">
+            <h1 className="mb-7 max-w-[720px] text-4xl font-bold uppercase leading-[1.04] tracking-[0.06em] text-white md:text-6xl">
               Care built on judgment, honesty, and the right next step.
             </h1>
-            <p className="mb-7 max-w-[650px] text-lg font-light leading-relaxed text-ink md:text-xl">
+            <p className="mb-7 max-w-[650px] text-lg font-light leading-relaxed text-white md:text-xl">
               Rella Aesthetics brings aesthetic care and medical weight management together under
               founder and owner Dr. Zachary Wagner. Dr. Wagner is Rella&apos;s medical weight-loss
               physician; Rella&apos;s aesthetics services are delivered by the aesthetics team.
             </p>
-            <div className="mb-8 border-l-2 border-ink/35 pl-5">
-              <p className="font-medium text-ink">Dr. Zachary Wagner, DO</p>
-              <p className="mt-1 text-sm leading-relaxed text-ink">
+            <div className="mb-8 border-l-2 border-white/50 pl-5">
+              <p className="font-medium text-white">Dr. Zachary Wagner, DO</p>
+              <p className="mt-1 text-sm leading-relaxed text-white">
                 Founder &amp; Owner · Medical Weight-Loss Physician
               </p>
-              <p className="mt-3 text-sm leading-relaxed text-ink">
+              <p className="mt-3 text-sm leading-relaxed text-white">
                 Dr. Wagner does not perform aesthetic treatments or injections.
               </p>
             </div>
             <div className="flex flex-col gap-3 sm:flex-row">
-              <Button href={resolveBookingHref({})} variant="light" disableHover>
+              <Button href={resolveBookingHref({})} disableHover className="!border-white !bg-rose !text-white">
                 Book a Consultation
               </Button>
-              <Button href="tel:+17073582928" variant="light" disableHover>
+              <Button href="tel:+17073582928" variant="ghost" disableHover className="!border-rose !bg-white !text-rose">
                 Call 707.358.2928
               </Button>
             </div>
           </div>
 
           <div className="relative mx-auto w-full max-w-[500px] lg:mx-0">
-            <div className="absolute -inset-5 border border-ink/35" aria-hidden="true" />
+            <div className="absolute -inset-5 border border-white/55" aria-hidden="true" />
             <div className="relative aspect-[4/5] overflow-hidden bg-white">
               <Image
                 src="/images/dr-zachary-wagner.jpg"
@@ -149,40 +149,40 @@ export default function AboutPage() {
       <section className="border-y border-rose/25 bg-rose py-16 md:py-20">
         <div className="mx-auto flex max-w-[1120px] flex-col gap-8 px-6 md:px-8 lg:flex-row lg:items-center lg:justify-between lg:px-12">
           <div className="max-w-[700px]">
-            <p className="mb-3 text-[0.75rem] font-medium capitalize italic tracking-[0.08em] text-ink">
+            <p className="mb-3 text-[0.75rem] font-medium capitalize italic tracking-[0.08em] text-white">
               The people behind Rella
             </p>
-            <h2 className="text-3xl font-bold uppercase tracking-[0.06em] text-ink md:text-4xl">
+            <h2 className="text-3xl font-bold uppercase tracking-[0.06em] text-white md:text-4xl">
               Meet the people behind Rella.
             </h2>
-            <p className="mt-4 leading-relaxed text-ink">
+            <p className="mt-4 leading-relaxed text-white">
               Get to know Rella&apos;s leadership and care team serving Vacaville and Napa.
             </p>
           </div>
-          <Button href="/team" variant="light" disableHover className="shrink-0">
+          <Button href="/team" variant="ghost" disableHover className="shrink-0 !border-rose !bg-white !text-rose">
             Meet the Team
           </Button>
         </div>
       </section>
 
-      <section className="bg-rose py-20 md:py-28">
+      <section className="bg-rose py-20 text-white md:py-28">
         <div className="mx-auto max-w-[1200px] px-6 md:px-8 lg:px-12">
           <div className="mb-12 max-w-[720px]">
-            <p className="mb-4 text-[0.75rem] font-medium capitalize italic tracking-[0.08em] text-ink">
+            <p className="mb-4 text-[0.75rem] font-medium capitalize italic tracking-[0.08em] text-white">
               How Rella approaches care
             </p>
-            <h2 className="text-3xl font-bold uppercase tracking-[0.06em] text-ink md:text-5xl">
+            <h2 className="text-3xl font-bold uppercase tracking-[0.06em] text-white md:text-5xl">
               Four principles behind every patient experience.
             </h2>
           </div>
-          <div className="grid gap-px bg-ink/25 md:grid-cols-2">
+          <div className="grid gap-px bg-white/45 md:grid-cols-2">
             {values.map((value) => (
-              <article key={value.number} className="border-l-2 border-l-ink/35 bg-rose p-7 md:p-9">
-                <p className="mb-8 text-xs font-bold tracking-[0.18em] text-ink">{value.number}</p>
-                <h3 className="mb-3 text-xl font-bold uppercase tracking-[0.06em] text-ink">
+              <article key={value.number} className="border-l-2 border-l-white/45 bg-rose p-7 md:p-9">
+                <p className="mb-8 text-xs font-bold tracking-[0.18em] text-white">{value.number}</p>
+                <h3 className="mb-3 text-xl font-bold uppercase tracking-[0.06em] text-white">
                   {value.title}
                 </h3>
-                <p className="leading-relaxed text-ink">{value.description}</p>
+                <p className="leading-relaxed text-white">{value.description}</p>
               </article>
             ))}
           </div>
@@ -204,16 +204,16 @@ export default function AboutPage() {
         </div>
       </section>
 
-      <section className="bg-rose py-16 md:py-20">
+      <section className="bg-rose py-16 text-white md:py-20">
         <div className="mx-auto flex max-w-[900px] flex-col items-center px-6 text-center">
-          <p className="mb-4 text-[0.75rem] font-medium capitalize italic tracking-[0.08em] text-ink">Start with clarity</p>
-          <h2 className="mb-5 text-3xl font-bold uppercase tracking-[0.06em] text-ink md:text-5xl">Tell us what you want to work on.</h2>
-          <p className="mb-8 max-w-[650px] font-light leading-relaxed text-ink md:text-lg">
+          <p className="mb-4 text-[0.75rem] font-medium capitalize italic tracking-[0.08em] text-white">Start with clarity</p>
+          <h2 className="mb-5 text-3xl font-bold uppercase tracking-[0.06em] text-white md:text-5xl">Tell us what you want to work on.</h2>
+          <p className="mb-8 max-w-[650px] font-light leading-relaxed text-white md:text-lg">
             Choose a live booking time or contact the team with a question. We&apos;ll help you find the most appropriate next step.
           </p>
           <div className="flex flex-col gap-3 sm:flex-row">
-            <Button href={resolveBookingHref({})} variant="light" disableHover>Book a Consultation</Button>
-            <Button href="tel:+17073582928" variant="light" disableHover>Call Rella</Button>
+            <Button href={resolveBookingHref({})} disableHover className="!border-white !bg-transparent !text-white">Book a Consultation</Button>
+            <Button href="tel:+17073582928" disableHover className="!border-white !bg-white !text-rose">Call Rella</Button>
           </div>
         </div>
       </section>

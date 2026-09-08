@@ -213,30 +213,30 @@ export default function VacavilleFacialsPage() {
             {facialOptions.map((option, index) => (
               <article
                 key={option.name}
-                className={`border border-ink/12 p-7 md:p-8 ${index === 0 ? "bg-rose text-ink" : "bg-white"}`}
+                className={`border border-ink/12 p-7 md:p-8 ${index === 0 ? "bg-rose text-white" : "bg-white"}`}
               >
                 <div className="mb-7 flex items-center justify-between gap-4">
-                  <span className={`text-xs font-bold tracking-[0.18em] ${index === 0 ? "text-ink" : "text-rose-text"}`}>
+                  <span className={`text-xs font-bold tracking-[0.18em] ${index === 0 ? "text-white" : "text-rose"}`}>
                     0{index + 1}
                   </span>
                   <span className={`h-px flex-1 ${index === 0 ? "bg-white/20" : "bg-rose-light/70"}`} aria-hidden="true" />
                 </div>
                 <h3 className="mb-3 text-2xl font-medium tracking-[-0.025em]">{option.name}</h3>
-                <p className={`text-sm leading-7 ${index === 0 ? "text-ink" : "text-ink/70"}`}>{option.body}</p>
+                <p className={`text-sm leading-7 ${index === 0 ? "text-white" : "text-ink/70"}`}>{option.body}</p>
               </article>
             ))}
           </div>
         </div>
       </section>
 
-      <section className="bg-rose py-20 text-ink md:py-28" aria-labelledby="vacaville-facial-visit">
+      <section className="bg-rose py-20 text-white md:py-28" aria-labelledby="vacaville-facial-visit">
         <div className="mx-auto max-w-[1120px] px-6 md:px-8">
           <div className="mb-12 max-w-[780px]">
-            <p className="mb-4 text-[0.6875rem] font-bold uppercase tracking-[0.2em] text-ink">Your visit</p>
+            <p className="mb-4 text-[0.6875rem] font-bold uppercase tracking-[0.2em] text-white">Your visit</p>
             <h2 id="vacaville-facial-visit" className="mb-5 text-3xl font-medium tracking-[-0.04em] md:text-5xl">
               A polished experience built on specifics.
             </h2>
-            <p className="text-lg font-light leading-relaxed text-ink">
+            <p className="text-lg font-light leading-relaxed text-white">
               Facial protocols vary. A useful plan accounts for what is happening with your skin today and what else has been used or scheduled around it.
             </p>
           </div>
@@ -245,7 +245,7 @@ export default function VacavilleFacialsPage() {
               <article key={step.title} className="border border-white/15 bg-white/[0.04] p-6">
                 <span className="mb-8 inline-flex h-9 w-9 items-center justify-center rounded-full bg-white text-xs font-bold text-rose-text">{index + 1}</span>
                 <h3 className="mb-3 text-xl font-medium">{step.title}</h3>
-                <p className="text-sm leading-7 text-ink">{step.body}</p>
+                <p className="text-sm leading-7 text-white">{step.body}</p>
               </article>
             ))}
           </div>
@@ -307,12 +307,12 @@ export default function VacavilleFacialsPage() {
         </div>
       </section>
 
-      <section className="bg-rose py-20 text-center text-ink" aria-labelledby="vacaville-facial-next-step">
+      <section className="bg-rose py-20 text-center text-white" aria-labelledby="vacaville-facial-next-step">
         <div className="mx-auto max-w-[740px] px-6">
           <h2 id="vacaville-facial-next-step" className="mb-4 text-3xl font-medium tracking-[-0.035em] md:text-5xl">
             Put your skin—not a trend—at the center.
           </h2>
-          <p className="mb-8 text-lg font-light leading-relaxed text-ink">
+          <p className="mb-8 text-lg font-light leading-relaxed text-white">
             Start with the verified Vacaville consult or call Rella with a question before choosing a service.
           </p>
           <div className="flex flex-col justify-center gap-3 sm:flex-row">
@@ -323,12 +323,12 @@ export default function VacavilleFacialsPage() {
               Call Rella
             </Button>
           </div>
-          <p className="mt-6 text-xs leading-6 text-ink">
+          <p className="mt-6 text-xs leading-6 text-white">
             Individual response varies. Suitability, products, treatment steps, possible temporary effects, preparation, and aftercare depend on the exact service and your skin.
           </p>
-          <div className="mt-5 flex flex-wrap justify-center gap-x-5 gap-y-2 text-xs text-ink">
-            <Link href="/cancellation-policy" className="underline underline-offset-4 hover:text-ink">Cancellation policy</Link>
-            <Link href="/locations/vacaville" className="underline underline-offset-4 hover:text-ink">Vacaville clinic details</Link>
+          <div className="mt-5 flex flex-wrap justify-center gap-x-5 gap-y-2 text-xs text-white">
+            <Link href="/cancellation-policy" className="underline underline-offset-4 hover:text-white">Cancellation policy</Link>
+            <Link href="/locations/vacaville" className="underline underline-offset-4 hover:text-white">Vacaville clinic details</Link>
           </div>
         </div>
       </section>

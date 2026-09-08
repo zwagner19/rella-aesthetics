@@ -9,14 +9,14 @@ export function PatientResultImageGallery({
   if (results.length === 0) return null;
 
   return (
-    <section className="bg-rose py-20 text-ink md:py-24" aria-labelledby="patient-results-heading">
+    <section className="bg-rose py-20 text-white md:py-24" aria-labelledby="patient-results-heading">
       <div className="mx-auto max-w-[1200px] px-6 md:px-8 lg:px-12">
         <div className="mb-10 max-w-[760px]">
-          <p className="mb-4 text-sm font-normal italic text-ink">Patient results</p>
-          <h2 id="patient-results-heading" className="mb-4 text-3xl font-bold uppercase leading-tight tracking-[0.08em] text-ink md:text-5xl">
+          <p className="mb-4 text-sm font-normal italic text-white">Patient results</p>
+          <h2 id="patient-results-heading" className="mb-4 text-3xl font-bold uppercase leading-tight tracking-[0.08em] text-white md:text-5xl">
             Real examples. Shared with permission.
           </h2>
-          <p className="text-base font-light leading-relaxed text-ink md:text-lg">
+          <p className="text-base font-light leading-relaxed text-white md:text-lg">
             Each image is labeled with the treatment information supplied by Rella. Images are shown as shared, and individual results vary.
           </p>
         </div>
@@ -35,7 +35,7 @@ export function PatientResultImageGallery({
             </figure>
           ))}
         </div>
-        <p className="mt-7 text-sm leading-relaxed text-ink">Individual results vary. Images are not a promise or guarantee of outcome.</p>
+        <p className="mt-7 text-sm leading-relaxed text-white">Individual results vary. Images are not a promise or guarantee of outcome.</p>
       </div>
     </section>
   );

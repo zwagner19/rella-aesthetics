@@ -81,11 +81,11 @@ export default function NapaPage() {
       <section className="bg-rose py-16 md:py-20">
         <div className="mx-auto grid max-w-[1000px] gap-10 px-6 md:grid-cols-2 md:items-start md:px-8">
           <div>
-            <p className="mb-3 text-sm font-medium italic text-ink">Visit us</p>
-            <h2 className="mb-5 text-3xl font-bold uppercase tracking-[0.06em] text-ink md:text-4xl">
+            <p className="mb-3 text-sm font-medium italic text-white">Visit us</p>
+            <h2 className="mb-5 text-3xl font-bold uppercase tracking-[0.06em] text-white md:text-4xl">
               Rella Napa
             </h2>
-            <address className="not-italic text-ink">
+            <address className="not-italic text-white">
               <p className="text-xl font-semibold">{loc.address}</p>
               <p className="mt-2">{loc.city}, {loc.state} {loc.zip}</p>
               <a
@@ -96,10 +96,10 @@ export default function NapaPage() {
               </a>
             </address>
           </div>
-          <div className="border-t border-ink/30 pt-6 md:border-l md:border-t-0 md:pl-10 md:pt-0">
-            <h3 className="mb-4 text-xl font-bold uppercase tracking-[0.06em] text-ink">Hours</h3>
+          <div className="border-t border-white/35 pt-6 md:border-l md:border-t-0 md:pl-10 md:pt-0">
+            <h3 className="mb-4 text-xl font-bold uppercase tracking-[0.06em] text-white">Hours</h3>
             {loc.hours.map((line) => (
-              <p key={line} className="text-sm leading-7 text-ink">{line}</p>
+              <p key={line} className="text-sm leading-7 text-white">{line}</p>
             ))}
             <a
               href={loc.googleReviewUrl}
@@ -133,14 +133,14 @@ export default function NapaPage() {
                 href={localServiceHrefs[service.slug] ?? `/services/${service.slug}`}
                 className="group border-t border-rose bg-white p-6 transition-colors hover:bg-rose focus-visible:bg-rose md:p-8"
               >
-                <div className="mb-8 flex items-start justify-between gap-4 text-ink">
+                <div className="mb-8 flex items-start justify-between gap-4 text-rose group-hover:text-white group-focus-visible:text-white">
                   <span className="text-xs font-bold tracking-[0.18em]">0{index + 1}</span>
                   <span aria-hidden="true" className="text-2xl font-light">→</span>
                 </div>
-                <h3 className="mb-3 text-xl font-bold uppercase leading-tight tracking-[0.06em] text-rose-text group-hover:text-ink group-focus-visible:text-ink md:text-2xl">
+                <h3 className="mb-3 text-xl font-bold uppercase leading-tight tracking-[0.06em] text-rose group-hover:text-white group-focus-visible:text-white md:text-2xl">
                   {service.title}
                 </h3>
-                <p className="text-sm leading-relaxed text-ink/70 group-hover:text-ink group-focus-visible:text-ink">
+                <p className="text-sm leading-relaxed text-ink/70 group-hover:text-white group-focus-visible:text-white">
                   {service.description}
                 </p>
               </Link>
@@ -155,11 +155,11 @@ export default function NapaPage() {
       <section className="bg-rose py-16 md:py-20">
         <div className="mx-auto grid max-w-[1000px] gap-8 px-6 md:grid-cols-[1fr_auto] md:items-center md:px-8">
           <div>
-            <p className="mb-3 text-sm font-medium italic text-ink">Plan your visit</p>
-            <h2 className="mb-3 text-3xl font-bold uppercase leading-tight tracking-[0.06em] text-ink">
+            <p className="mb-3 text-sm font-medium italic text-white">Plan your visit</p>
+            <h2 className="mb-3 text-3xl font-bold uppercase leading-tight tracking-[0.06em] text-white">
               {fullAddress}
             </h2>
-            <p className="text-ink">Choose a time online, call the team, or open directions before you leave.</p>
+            <p className="text-white">Choose a time online, call the team, or open directions before you leave.</p>
           </div>
           <div className="flex flex-col gap-3 sm:flex-row md:flex-col">
             <Button href={bookingHref} variant="light" disableHover>See Available Times</Button>

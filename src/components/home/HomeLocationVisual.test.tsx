@@ -65,10 +65,10 @@ describe("homepage location visual", () => {
     );
   });
 
-  it("uses Ink labels on Rose controls", () => {
+  it("uses the approved translucent-white Rose location controls", () => {
     expect(source).toContain("bg-white/90");
-    expect(source).toContain("border-rose bg-rose");
-    expect(source).toContain("text-ink");
-    expect(source).not.toContain("bg-rose text-white");
+    expect(source).toContain("text-rose");
+    expect(source).toContain("bg-rose text-white");
+    expect(source).not.toContain("bg-ink");
   });
 });

@@ -1,16 +1,16 @@
 @import "tailwindcss";
 
 @theme inline {
-  /* Rella's approved Rose, Silver, Ink, and Paper visual system. */
+  /* Rella's owner-approved Rose, Silver, Ink, and Paper visual system. */
   --color-rose: #F7A19A;
   --color-rose-dark: #1A1A1A;
   --color-rose-light: #F7A19A70;
   --color-rose-blush: rgba(247, 161, 154, 0.28);
-  /* Dark companion colors keep Rose recognizable without using it as low-contrast text. */
-  --color-rose-text: #8C3F3A;
-  --color-rose-cta: #8C3F3A;
+  --color-rose-text: #F7A19A;
+  --color-rose-cta: #F7A19A;
   --color-rose-on-ink: #F7A19A;
 
+  /* Keep body-sized Silver copy readable; the lighter Silver remains available for decoration. */
   --color-silver: #64696E;
   --color-silver-dark: #1A1A1A;
   --color-silver-light: #83888D66;
@@ -63,6 +63,35 @@ li::marker {
 
 .details-summary::-webkit-details-marker {
   display: none;
+}
+
+@keyframes rella-section-enter {
+  from {
+    opacity: 0.15;
+    transform: translate3d(0, 1.25rem, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    main[data-site-motion="true"] .rella-site-reveal {
+      animation: rella-section-enter linear both;
+      animation-timeline: view();
+      animation-range: entry 5% cover 28%;
+    }
+  }
+}
+
+/* Keep the optional chat launcher clear of mobile navigation and booking actions. */
+@media (max-width: 1279px) {
+  chat-widget,
+  div[data-chat-widget] {
+    display: none !important;
+  }
 }
 
 /* Preserve keyboard and motion comfort across the visual refresh. */

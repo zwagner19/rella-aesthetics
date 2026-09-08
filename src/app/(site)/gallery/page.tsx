@@ -37,16 +37,16 @@ const patientResultImages = approvedPatientResultImages("main-gallery");
 export default function GalleryPage() {
   return (
     <>
-      <section className="bg-rose py-20 text-ink md:py-28">
+      <section className="bg-rose py-20 text-white md:py-28">
         <div className="mx-auto max-w-[1000px] px-6 text-center md:px-8">
-          <p className="mb-5 text-[0.75rem] font-medium capitalize italic tracking-[0.08em] text-ink">Our approach to results</p>
-          <h1 className="mb-6 text-[clamp(2.75rem,7vw,5rem)] font-bold uppercase leading-[0.98] tracking-[0.06em] text-ink">
+          <p className="mb-5 text-[0.75rem] font-medium capitalize italic tracking-[0.08em] text-white">Our approach to results</p>
+          <h1 className="mb-6 text-[clamp(2.75rem,7vw,5rem)] font-bold uppercase leading-[0.98] tracking-[0.06em] text-white">
             Results that still look like you.
           </h1>
-          <p className="mx-auto mb-8 max-w-[700px] text-lg font-light leading-relaxed text-ink md:text-xl">
+          <p className="mx-auto mb-8 max-w-[700px] text-lg font-light leading-relaxed text-white md:text-xl">
             Rella&apos;s work begins with honest guidance, thoughtful consultation, and a treatment plan designed around your features and goals.
           </p>
-          <Button href={resolveBookingHref({})} disableHover className="rounded-full !border-white !text-ink">Book a Consultation</Button>
+          <Button href={resolveBookingHref({})} disableHover className="rounded-full !border-white !text-white">Book a Consultation</Button>
         </div>
       </section>
 
@@ -75,11 +75,11 @@ export default function GalleryPage() {
         </div>
       </section>
 
-      <section className="bg-rose py-20 text-ink md:py-24">
+      <section className="bg-rose py-20 text-white md:py-24">
         <div className="mx-auto max-w-[1200px] px-6 md:px-8 lg:px-12">
           <div className="mb-10 max-w-[720px]">
-            <p className="mb-4 text-[0.75rem] font-medium capitalize italic tracking-[0.08em] text-ink">Patient perspective</p>
-            <h2 className="text-3xl font-bold uppercase tracking-[0.06em] text-ink md:text-5xl">What patients say about the experience.</h2>
+            <p className="mb-4 text-[0.75rem] font-medium capitalize italic tracking-[0.08em] text-white">Patient perspective</p>
+            <h2 className="text-3xl font-bold uppercase tracking-[0.06em] text-white md:text-5xl">What patients say about the experience.</h2>
           </div>
           <div className="grid gap-10 md:grid-cols-3">
             {testimonials.map((item) => (
@@ -91,9 +91,9 @@ export default function GalleryPage() {
         </div>
       </section>
 
-      <section className="bg-rose py-16 text-center text-ink md:py-20">
+      <section className="bg-rose py-16 text-center text-white md:py-20">
         <div className="mx-auto max-w-[640px] px-6">
-          <h2 className="mb-4 text-3xl font-bold uppercase tracking-[0.06em] text-ink md:text-4xl">Start with the right conversation.</h2>
+          <h2 className="mb-4 text-3xl font-bold uppercase tracking-[0.06em] text-white md:text-4xl">Start with the right conversation.</h2>
           <p className="mx-auto mb-7 w-fit bg-white px-5 py-2 text-base font-light text-rose-text md:text-lg">
             Share your goal, ask questions, and understand the appropriate next step before you decide.
           </p>
@@ -102,7 +102,7 @@ export default function GalleryPage() {
             data-cta="gallery-booking"
             variant="ghost"
             disableHover
-            className="!border-white !bg-transparent !text-ink"
+            className="!border-white !bg-transparent !text-white"
           >
             Book Consultation
           </Button>
