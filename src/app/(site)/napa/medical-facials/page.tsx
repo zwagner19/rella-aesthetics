@@ -209,7 +209,7 @@ export default function NapaMedicalFacialsPreviewPage() {
                 Rella Aesthetics - Napa
               </p>
               <p className="text-lg font-medium leading-snug text-ink">
-                1541 3rd St - Monday-Friday, 9am-5pm - Saturday, 9am-1pm
+                1541 3rd St - Wednesday-Saturday, 9am-5pm
               </p>
             </div>
           </div>

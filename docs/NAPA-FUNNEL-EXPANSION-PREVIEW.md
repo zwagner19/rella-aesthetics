@@ -7,7 +7,8 @@
 
 ## Decision
 
-The two pages are ready for owner visual review, but they are not approved for
+The owner approved the visual direction on September 7, 2026 and corrected the
+Napa schedule and laser-consult duration. The pages are not approved for
 publication or paid traffic. They remain `noindex, nofollow`, are excluded from
 the sitemap, and are intentionally outside the exact Napa Botox attribution
 pilot.
@@ -16,10 +17,14 @@ pilot.
 
 A read-only inspection of `book.experiencerella.com` on September 7, 2026 found:
 
-- The Napa laser category currently exposes only `Initial Laser Consult`, a
-  complimentary 15-minute appointment. The landing page therefore sends every
-  CTA to the Napa laser chooser and does not preselect a treatment, provider,
-  or date.
+- The Napa laser category currently exposes only `Initial Laser Consult`. A
+  fresh public read on September 7 still described it as 15 minutes, while the
+  owner confirmed the intended duration is 30 minutes. The preview now uses the
+  owner-directed 30-minute duration, but publication and paid traffic remain
+  blocked until the Boulevard service duration is changed to 30 minutes and a
+  fresh uncached production cart/availability readback confirms 30 minutes.
+  Every CTA goes to the Napa laser chooser and does not preselect a treatment,
+  provider, or date.
 - The Napa facial category currently exposes `Initial Skin Health Consult`
   (complimentary, 15 minutes), `Signature HydraFacial` (45 minutes), and
   `Deluxe HydraFacial` (45 minutes). The landing page sends every CTA to that

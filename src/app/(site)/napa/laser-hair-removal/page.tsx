@@ -18,7 +18,7 @@ const clinic = locations.napa;
 export const metadata: Metadata = {
   title: "Laser Hair Removal in Napa | Consultation First",
   description:
-    "Start with Rella Napa's complimentary 15-minute laser consultation to review treatment area, suitability, timing, and current pricing.",
+    "Start with Rella Napa's complimentary 30-minute laser consultation to review treatment area, suitability, timing, and current pricing.",
   alternates: { canonical: CANONICAL },
   robots: { index: false, follow: false },
   openGraph: {
@@ -74,7 +74,7 @@ const faqs = [
   {
     question: "What can I book online for laser hair removal in Napa?",
     answer:
-      "Start with a complimentary 15-minute Initial Laser Consult at Rella Napa. You will choose your appointment time, then meet with the team to discuss your goals and the treatment area you have in mind.",
+      "Start with a complimentary 30-minute Initial Laser Consult at Rella Napa. You will choose your appointment time, then meet with the team to discuss your goals and the treatment area you have in mind.",
   },
   {
     question: "How much does laser hair removal cost at Rella Napa?",
@@ -99,7 +99,7 @@ const faqs = [
   {
     question: "Where is Rella Aesthetics in Napa?",
     answer:
-      "Rella Aesthetics is at 1541 3rd St in downtown Napa, CA 94559. Current published clinic hours are Monday through Friday, 9am-5pm, and Saturday, 9am-1pm.",
+      "Rella Aesthetics is at 1541 3rd St in downtown Napa, CA 94559. Clinic hours are Wednesday through Saturday, 9am-5pm.",
   },
 ] as const;
 
@@ -163,7 +163,7 @@ export default function NapaLaserHairRemovalPreviewPage() {
               Laser hair removal starts with the right plan.
             </h1>
             <p className="mb-8 max-w-[650px] text-lg font-light leading-relaxed text-silver-dark md:text-xl">
-              Begin with Rella Napa&apos;s complimentary 15-minute laser
+              Begin with Rella Napa&apos;s complimentary 30-minute laser
               consultation. Talk through the area you want to treat, your
               schedule, and the plan that fits you before moving forward.
             </p>
@@ -206,7 +206,7 @@ export default function NapaLaserHairRemovalPreviewPage() {
                 Rella Aesthetics - Napa
               </p>
               <p className="text-lg font-medium leading-snug text-ink">
-                1541 3rd St - Monday-Friday, 9am-5pm - Saturday, 9am-1pm
+                1541 3rd St - Wednesday-Saturday, 9am-5pm
               </p>
             </div>
           </div>
@@ -216,7 +216,7 @@ export default function NapaLaserHairRemovalPreviewPage() {
       <TrustStrip
         ariaLabel="Rella Napa laser hair removal visit facts"
         items={[
-          "Complimentary 15-minute consult",
+          "Complimentary 30-minute consult",
           "Small, medium, and large areas",
           "Pricing reviewed before treatment",
           "Downtown Napa",
@@ -342,7 +342,7 @@ export default function NapaLaserHairRemovalPreviewPage() {
               <ol className="mb-7 space-y-4 text-silver-dark">
                 <li>
                   <strong className="text-rose-text">1. Pick a time.</strong>{" "}
-                  Book your complimentary 15-minute consultation.
+                  Book your complimentary 30-minute consultation.
                 </li>
                 <li>
                   <strong className="text-rose-text">2. Meet the team.</strong>{" "}
@@ -390,7 +390,7 @@ export default function NapaLaserHairRemovalPreviewPage() {
               1541 3rd St - Napa, CA 94559
             </h2>
             <p className="text-ink/70">
-              Monday-Friday: 9am-5pm - Saturday: 9am-1pm
+              Wednesday-Saturday: 9am-5pm
             </p>
           </div>
           <Button

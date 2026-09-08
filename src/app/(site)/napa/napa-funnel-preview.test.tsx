@@ -10,6 +10,7 @@ import {
   AESTHETICS_PILOT_PATH,
   isApprovedAestheticsPilotPage,
 } from "@/lib/aesthetics-attribution";
+import { locations } from "@/lib/data";
 
 const NAPA_LASER_CHOOSER =
   "https://book.experiencerella.com/book?location=napa&amp;category=laser";
@@ -54,6 +55,11 @@ describe("preview-only Napa service funnels", () => {
     expect(links).toHaveLength(3);
     expect(new Set(links)).toEqual(new Set([NAPA_LASER_CHOOSER]));
     expect(html).toContain("Initial Laser Consult");
+    expect(html).toContain("complimentary 30-minute laser");
+    expect(html).toContain("Wednesday-Saturday, 9am-5pm");
+    expect(html).not.toContain("15-minute laser");
+    expect(html).not.toContain("Monday-Friday");
+    expect(html).not.toContain("9am-1pm");
     expect(html).toContain("Small, medium, and large areas");
     expect(html).toContain("%2Fimages%2Ftreatments%2Flaser-treatment.webp");
     expect(html).not.toContain("%2Fimages%2Fclinic%2Fnapa-reception.webp");
@@ -76,6 +82,9 @@ describe("preview-only Napa service funnels", () => {
     expect(html).toContain("Initial Skin Health Consult");
     expect(html).toContain("Signature HydraFacial");
     expect(html).toContain("Deluxe HydraFacial");
+    expect(html).toContain("Wednesday-Saturday, 9am-5pm");
+    expect(html).not.toContain("Monday-Friday");
+    expect(html).not.toContain("9am-1pm");
     expect(html).toContain("%2Fimages%2Ftreatments%2Fhydrafacial.webp");
     expect(html).toContain("%2Fimages%2Ftreatments%2Ffacial.webp");
     expect(html).not.toContain("napa-exterior.webp");
@@ -88,5 +97,19 @@ describe("preview-only Napa service funnels", () => {
     expect(html).not.toMatch(
       /approved booking site|verified booking path|this preview|currently exposed|does not preselect|without an invented offer/i,
     );
+  });
+
+  it("uses the owner-confirmed Napa schedule in shared display and schema data", () => {
+    expect(locations.napa.hours).toEqual([
+      "Wednesday–Saturday: 9am–5pm",
+      "Sunday–Tuesday: Closed",
+    ]);
+    expect(locations.napa.openingHours).toEqual([
+      {
+        dayOfWeek: ["Wednesday", "Thursday", "Friday", "Saturday"],
+        opens: "09:00",
+        closes: "17:00",
+      },
+    ]);
   });
 });
