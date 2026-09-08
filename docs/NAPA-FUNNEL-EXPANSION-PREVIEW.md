@@ -79,13 +79,31 @@ The pages reuse the approved site layout, header, footer, typography, colors,
 buttons, trust strip, FAQ, and reveal behavior. They use existing Rella-owned
 assets already present in the approved repository:
 
-- `public/images/clinic/napa-reception.webp`
 - `public/images/treatments/laser-treatment.webp`
 - `public/images/treatments/hydrafacial.webp`
 - `public/images/treatments/facial.webp`
 
-The rejected Napa house exterior and generic service-card stock imagery are not
-used. Shared visual components and global styles are unchanged.
+The laser hero uses the real in-treatment Rella laser asset. The rejected Napa
+house/reception aesthetic, house exterior, generic service-card stock imagery,
+and unverified patient-result imagery are not used. Shared visual components and
+global styles are unchanged.
+
+## Hydrated Browser Proof
+
+The optimized production build was served locally and checked in Chromium at a
+390-by-844 viewport after `networkidle` plus a post-hydration wait. Both routes
+contained exactly one `Quick booking actions` navigation and exactly one was
+visible:
+
+| Route | DOM bars | Visible bars | Booking destination |
+|---|---:|---:|---|
+| `/napa/laser-hair-removal` | 1 | 1 | Napa laser category chooser |
+| `/napa/medical-facials` | 1 | 1 | Napa facial category chooser |
+
+The evidence screenshots were taken only after that assertion passed. Full-page
+desktop captures used a browser-only style injection to make the sticky header
+static and disable reveal transforms during screenshot stitching. That capture
+style is not present in application source or production CSS.
 
 ## Attribution Boundary
 

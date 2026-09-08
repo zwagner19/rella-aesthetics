@@ -45,12 +45,12 @@ const facialOptions = [
   {
     name: "Signature HydraFacial",
     duration: "45 min.",
-    body: "The current Signature appointment is described as a deep-cleanse, exfoliate, and hydrate treatment. Review the exact steps and preparation before booking.",
+    body: "A 45-minute appointment described as a deep-cleanse, exfoliate, and hydrate treatment. Review the service details, then choose the time that works for you.",
   },
   {
     name: "Deluxe HydraFacial",
     duration: "45 min.",
-    body: "A separate Deluxe HydraFacial visit with Rella's esthetics team. Compare its current details with Signature before selecting a date.",
+    body: "A separate 45-minute HydraFacial appointment with Rella's esthetics team. Compare it with Signature and choose the best starting point for your skin.",
   },
 ] as const;
 
@@ -61,11 +61,11 @@ const visitSteps = [
   },
   {
     title: "Compare",
-    body: "Choose between the skin-health consult and the two HydraFacial appointments currently listed online for Napa.",
+    body: "Choose between the skin-health consult and Rella Napa's two HydraFacial appointments.",
   },
   {
     title: "Confirm",
-    body: "Review the exact service steps, any relevant preparation or temporary response, and the current total before proceeding.",
+    body: "Review your service, preparation, what to expect afterward, and the total before your appointment.",
   },
   {
     title: "Continue",
@@ -77,7 +77,7 @@ const faqs = [
   {
     question: "Which facial appointments can I book online at Rella Napa?",
     answer:
-      "Rella's approved Napa booking site currently lists the complimentary Initial Skin Health Consult, Signature HydraFacial, and Deluxe HydraFacial. You choose the service and date in the secure booking flow.",
+      "Choose from a complimentary Initial Skin Health Consult, Signature HydraFacial, or Deluxe HydraFacial, then select the appointment time that works for you.",
   },
   {
     question: "Should I choose a skin consult or a HydraFacial?",
@@ -87,17 +87,17 @@ const faqs = [
   {
     question: "How much is a HydraFacial at Rella Napa?",
     answer:
-      "Review the current service total in Rella's booking or consultation flow before you commit. This preview does not repeat legacy promotions or publish a price that has not been re-confirmed for the exact service.",
+      "Open Rella's booking menu to review the service details and total for the appointment you are considering. If you are unsure which option fits, start with the complimentary skin consultation.",
   },
   {
     question: "How is HydraFacial different from another facial?",
     answer:
-      "HydraFacial is a branded multi-step service. Other facials can use different products, devices, and manual techniques. The Napa booking site currently exposes Signature and Deluxe HydraFacial plus the Initial Skin Health Consult; ask the team to compare the exact options.",
+      "HydraFacial is a branded multi-step service. Other facials can use different products, devices, and manual techniques. Ask the Rella Napa team to compare the options based on your skin and goals.",
   },
   {
     question: "Can I book a facial before an event?",
     answer:
-      "Discuss your date, recent procedures, active products, and individual skin response before choosing timing. This page does not promise same-week availability or zero downtime.",
+      "Share your event date, recent procedures, active products, and skin sensitivities when choosing your timing. The team can help you plan around your individual skin response.",
   },
   {
     question: "Can a cosmetic facial replace medical care for a skin problem?",
@@ -190,8 +190,8 @@ export default function NapaMedicalFacialsPreviewPage() {
               </Button>
             </div>
             <p className="mt-5 text-xs leading-6 text-ink/70">
-              Opens Rella Napa&apos;s live facial category. You choose the exact
-              service and date in the secure booking flow.
+              Choose a consultation, Signature HydraFacial, or Deluxe
+              HydraFacial, then find a time that works for you.
             </p>
           </div>
 
@@ -219,7 +219,7 @@ export default function NapaMedicalFacialsPreviewPage() {
       <TrustStrip
         ariaLabel="Rella Napa facial visit facts"
         items={[
-          "Three current online choices",
+          "Three ways to get started",
           "15-minute skin consult",
           "Two 45-minute HydraFacials",
           "Downtown Napa",
@@ -233,18 +233,17 @@ export default function NapaMedicalFacialsPreviewPage() {
         <div className="mx-auto max-w-[1120px] px-6 md:px-8">
           <div className="mb-12 max-w-[810px]">
             <p className="mb-4 text-[0.6875rem] font-bold uppercase tracking-[0.2em] text-rose-text">
-              Current Napa booking menu
+              Choose your starting point
             </p>
             <h2
               id="napa-medical-facial-options"
               className="mb-5 text-3xl font-medium tracking-[-0.04em] text-rose-text md:text-5xl"
             >
-              Three choices, without an invented offer.
+              Three thoughtful ways to care for your skin.
             </h2>
             <p className="text-lg font-light leading-relaxed text-ink/70">
-              These are the three facial appointments currently exposed on
-              Rella&apos;s approved Napa booking site. Review the live details and
-              current total before confirming.
+              Start with a complimentary skin consultation or choose between two
+              45-minute HydraFacial appointments at Rella Napa.
             </p>
           </div>
           <div className="grid gap-5 md:grid-cols-3">
@@ -302,7 +301,7 @@ export default function NapaMedicalFacialsPreviewPage() {
               id="napa-medical-facial-visit"
               className="mb-5 text-3xl font-medium tracking-[-0.04em] md:text-5xl"
             >
-              A polished experience built on specifics.
+              A thoughtful visit built around your skin.
             </h2>
             <p className="text-lg font-light leading-relaxed text-white">
               Facial protocols vary. A useful plan accounts for what is
@@ -343,26 +342,26 @@ export default function NapaMedicalFacialsPreviewPage() {
           </div>
           <div>
             <p className="mb-4 text-[0.6875rem] font-bold uppercase tracking-[0.2em] text-rose-text">
-              A clear booking chooser
+              Find your appointment
             </p>
             <h2
               id="napa-medical-facial-booking"
               className="mb-5 text-3xl font-medium tracking-[-0.04em] text-rose-text md:text-5xl"
             >
-              Choose the service in Rella&apos;s booking flow.
+              Choose your facial and find a time.
             </h2>
             <p className="mb-7 text-lg font-light leading-relaxed text-ink/70">
-              The verified booking path opens Napa&apos;s facial category with the
-              clinic selected. You choose the service and date; this page does
-              not preselect an appointment for you.
+              Compare the skin consultation, Signature HydraFacial, and Deluxe
+              HydraFacial, then choose your service and appointment time.
             </p>
             <div className="border-l-4 border-rose bg-rose-blush p-7 md:p-9">
               <p className="mb-3 text-[0.6875rem] font-bold uppercase tracking-[0.18em] text-rose-text">
-                Clear before treatment
+                Before your visit
               </p>
               <p className="mb-6 leading-7 text-silver-dark">
-                Review the exact service, included steps, relevant preparation
-                or aftercare, and current total before proceeding.
+                Review the service details, preparation, aftercare, and total.
+                If you need help choosing, the complimentary skin consultation
+                is an easy place to begin.
               </p>
               <Button
                 disableHover
@@ -396,7 +395,8 @@ export default function NapaMedicalFacialsPreviewPage() {
               id="napa-medical-facial-compare"
               className="mb-3 text-3xl font-medium tracking-[-0.035em] text-rose-text"
             >
-              A facial, HydraFacial, and laser procedure are not interchangeable.
+              A facial, HydraFacial, and laser procedure are not
+              interchangeable.
             </h2>
             <p className="max-w-[760px] text-ink/70">
               Products, devices, intensity, candidacy, and recovery differ. Ask
@@ -445,8 +445,8 @@ export default function NapaMedicalFacialsPreviewPage() {
             Put your skin, not a trend, at the center.
           </h2>
           <p className="mb-8 text-lg font-light leading-relaxed text-white">
-            Browse the verified Napa choices or call Rella before selecting a
-            service.
+            Choose your appointment online or call Rella Napa for help finding
+            the right place to start.
           </p>
           <div className="flex flex-col justify-center gap-3 sm:flex-row">
             <Button
