@@ -42,10 +42,12 @@ describe("canonical public booking routing", () => {
     ["botox", "injectables"],
     ["dermal-fillers", "injectables"],
     ["hyperhidrosis", "injectables"],
+    ["laser-hair-removal", "laser"],
     ["laser-treatments", "laser"],
     ["microneedling", "microneedling"],
     ["facials", "facials"],
     ["hydrafacial", "facials"],
+    ["medical-facials", "facials"],
     ["chemical-peels", "peels"],
   ] as const)(
     "maps broad %s intent to the %s chooser without selecting an appointment",
@@ -81,6 +83,15 @@ describe("canonical public booking routing", () => {
   });
 
   it("keeps Napa broad non-Tox services on category chooser routes", () => {
+    expect(
+      resolveBookingHref({
+        location: "napa",
+        service: "laser-hair-removal",
+      }),
+    ).toBe(`${BOOKING_LOCATION_CHOOSER}?location=napa&category=laser`);
+    expect(
+      resolveBookingHref({ location: "napa", service: "medical-facials" }),
+    ).toBe(`${BOOKING_LOCATION_CHOOSER}?location=napa&category=facials`);
     expect(
       resolveBookingHref({ location: "napa", service: "hydrafacial" }),
     ).toBe(`${BOOKING_LOCATION_CHOOSER}?location=napa&category=facials`);

@@ -49,6 +49,8 @@ describe("generated sitemap contract", () => {
       "/giveaway-terms-and-conditions",
       "/wpbc-booking-received",
       "/locations.kml",
+      "/napa/laser-hair-removal",
+      "/napa/medical-facials",
       "/services/weight-loss",
       "/studio",
       "/studio/**",

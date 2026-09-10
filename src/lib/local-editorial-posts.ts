@@ -57,7 +57,7 @@ export const LOCAL_EDITORIAL_POSTS: readonly LocalEditorialPost[] = [
       "A transparent guide to Rella Napa's Botox, Dysport, membership, and booking-deposit pricing—plus the questions that determine your actual treatment total.",
     category: "Injectables",
     publishedAt: "2026-08-03T12:00:00-07:00",
-    modifiedAt: "2026-09-04T12:00:00-07:00",
+    modifiedAt: "2026-09-07T12:00:00-07:00",
     authorName: "Rella Aesthetics",
     readingTime: "7 minute read",
     coverImage: "/images/treatments/botox-dysport.webp",
@@ -70,7 +70,7 @@ export const LOCAL_EDITORIAL_POSTS: readonly LocalEditorialPost[] = [
       "Rella's current published Napa price is $18 per unit for Botox® and $6 per unit for Dysport. The 2026 Tox Membership is $30 per month with a one-year commitment; members pay $13 per unit for Botox and $4.40 per unit for Dysport. A $50 booking deposit is charged when a new-patient tox appointment is confirmed, and it is separate from treatment pricing.",
     keyFacts: [
       "Downtown Napa: 1541 3rd St, Napa, CA 94559",
-      "Clinic hours: Monday–Friday, 9am–5pm; Saturday, 9am–1pm",
+      "Clinic hours: Wednesday–Saturday, 9am–5pm",
       "New-patient tox visit: 30 minutes",
       "Free in-person consultation with the first visit",
       "Botox® and Dysport rewards programs accepted",
@@ -175,7 +175,7 @@ export const LOCAL_EDITORIAL_POSTS: readonly LocalEditorialPost[] = [
         id: "visit-napa",
         heading: "Booking Botox in downtown Napa",
         paragraphs: [
-          "Rella Aesthetics Napa is at 1541 3rd St, Napa, CA 94559, with street and garage parking within one block. Current clinic hours are Monday through Friday, 9am to 5pm, and Saturday, 9am to 1pm. Online booking is available at any time, even when the clinic is closed.",
+          "Rella Aesthetics Napa is at 1541 3rd St, Napa, CA 94559, with street and garage parking within one block. Current clinic hours are Wednesday through Saturday, 9am to 5pm. Online booking is available at any time, even when the clinic is closed.",
           "If you already know you want a new-patient tox visit, use the Napa-specific booking path. If you still have a pricing or membership question, call Rella at (707) 358-2928 before confirming.",
         ],
       },
