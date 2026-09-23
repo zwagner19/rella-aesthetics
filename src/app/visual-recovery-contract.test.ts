@@ -45,16 +45,39 @@ describe("PR14 visual recovery contract", () => {
     );
   });
 
-  it("restores the approved Rose hierarchy, motion, and mobile action treatment", () => {
+  it("keeps Rose hierarchy, motion, and mobile action treatment for the editorial homepage", () => {
     const globals = source("app/globals.css");
     const homepage = source("app/(site)/page.tsx");
     const button = source("components/ui/Button.tsx");
     const mobileBar = source("components/layout/MobileConversionBar.tsx");
+    const homeSections = [
+      "components/home/HomeApproach.tsx",
+      "components/home/TreatmentDiscovery.tsx",
+      "components/home/TransformHouse.tsx",
+      "components/home/HomeLocations.tsx",
+      "components/home/RellaStandard.tsx",
+      "components/home/HomeProviders.tsx",
+      "components/home/HomeMembership.tsx",
+      "components/home/PatientWords.tsx",
+      "components/home/FinalCta.tsx",
+    ].map((path) => source(path));
 
     expect(globals).toContain("--color-rose-text: #F7A19A");
     expect(globals).toContain("--color-rose-cta: #F7A19A");
+    expect(globals).toContain("--color-ivory:");
     expect(globals).toContain("@keyframes rella-section-enter");
-    expect(homepage.match(/rella-site-reveal/g)).toHaveLength(6);
+    expect(globals).toContain(".rella-cta-rect");
+    const revealCount = homeSections.reduce(
+      (count, section) => count + (section.match(/rella-site-reveal/g) ?? []).length,
+      0,
+    );
+    expect(revealCount).toBeGreaterThanOrEqual(6);
+    expect(homepage).toContain("HomeHero");
+    expect(homepage).toContain("TreatmentDiscovery");
+    expect(homepage).toContain("TransformHouse");
+    expect(homepage).toContain("FinalCta");
+    expect(homepage).not.toContain("Ageless Beauty");
+    expect(homepage).not.toMatch(/Cormorant|font-serif/);
     expect(button).toContain("border-rose bg-rose text-white");
     expect(mobileBar).toContain("bg-rose");
     expect(mobileBar).toContain("text-white");
@@ -65,9 +88,11 @@ describe("PR14 visual recovery contract", () => {
   it("keeps the approved Napa reception image instead of restoring the rejected house photo", () => {
     const homeVisual = source("components/home/HomeLocationVisual.tsx");
     const napaLocation = source("app/(site)/locations/napa/page.tsx");
+    const homeLocations = source("components/home/HomeLocations.tsx");
 
     expect(homeVisual).toContain("/images/clinic/napa-reception.webp");
     expect(napaLocation).toContain("/images/clinic/napa-reception.webp");
+    expect(homeLocations).toContain("HOME_LOCATION_VISUALS");
     expect(homeVisual).not.toContain("napa-exterior.webp");
     expect(napaLocation).not.toContain("napa-exterior.webp");
   });
