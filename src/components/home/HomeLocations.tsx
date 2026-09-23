@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { locations } from "@/lib/data";
-import { HOME_LOCATION_VISUALS } from "./HomeLocationVisual";
+import { HOME_LOCATION_VISUALS } from "./home-location-visuals";
 
 export function HomeLocations() {
   const vacaville = HOME_LOCATION_VISUALS.find((l) => l.slug === "vacaville")!;

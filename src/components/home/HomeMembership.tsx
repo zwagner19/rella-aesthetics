@@ -32,8 +32,8 @@ export function HomeMembership() {
             A little more Rella.
           </h2>
           <p className="mt-6 max-w-[32rem] text-base font-light leading-relaxed text-silver md:text-lg">
-            Membership is built for patients who want thoughtful care on a rhythm that fits their
-            year — clear benefits, no SaaS-style plan cards here.
+            Membership is for patients who want thoughtful care on a rhythm that fits their year —
+            with clear benefits and room to ask questions before enrolling.
           </p>
           <ul className="mt-8 max-w-[28rem] space-y-0 border-t border-rule">
             {benefits.map((benefit) => (
