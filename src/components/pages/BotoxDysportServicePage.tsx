@@ -321,8 +321,7 @@ export function BotoxDysportServicePage() {
             {service.pricing.note}
           </p>
           <p className="mt-4 max-w-[40rem] text-sm font-light leading-relaxed text-silver">
-            Units are product-specific and not interchangeable. Your provider maps the recommended
-            units and total before treatment.
+            Units are product-specific and not interchangeable.
           </p>
           <Link href="/membership" className="rella-cta-rect rella-cta-rect--ghost mt-10">
             Explore membership
