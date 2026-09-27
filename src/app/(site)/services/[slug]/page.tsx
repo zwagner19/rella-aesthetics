@@ -5,6 +5,7 @@ import { servicePages } from "@/lib/service-data";
 import { FaqAccordion, FaqSchema } from "@/components/blocks/FaqAccordion";
 import { Button } from "@/components/ui/Button";
 import { resolveBookingHref, type BookingLocation } from "@/lib/booking-routes";
+import { BotoxDysportServicePage } from "@/components/pages/BotoxDysportServicePage";
 import { WeightLossServicePage } from "@/components/pages/WeightLossServicePage";
 import { getServiceMetadata } from "@/lib/service-metadata";
 
@@ -34,6 +35,10 @@ export default async function ServicePage({ params }: ServicePageProps) {
 
   if (service.slug === "weight-loss") {
     return <WeightLossServicePage />;
+  }
+
+  if (service.slug === "botox") {
+    return <BotoxDysportServicePage />;
   }
 
   const availableLocations: readonly BookingLocation[] =

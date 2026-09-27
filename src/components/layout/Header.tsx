@@ -35,8 +35,10 @@ const linkClass =
 export function Header() {
   const pathname = usePathname();
   const isHome = pathname === "/";
+  /** Full-bleed editorial heroes that share the homepage over-nav treatment. */
+  const isEditorialHeroRoute = isHome || pathname === "/services/botox";
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [scrolled, setScrolled] = useState(!isHome);
+  const [scrolled, setScrolled] = useState(!isEditorialHeroRoute);
   const mobileMenuButtonRef = useRef<HTMLButtonElement>(null);
   const closeMobileNav = useCallback(() => {
     setMobileOpen(false);
@@ -45,7 +47,7 @@ export function Header() {
   const bookingHref = resolveBookingHref({});
 
   useEffect(() => {
-    if (!isHome) {
+    if (!isEditorialHeroRoute) {
       setScrolled(true);
       return;
     }
@@ -56,9 +58,9 @@ export function Header() {
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
-  }, [isHome]);
+  }, [isEditorialHeroRoute]);
 
-  const overHero = isHome && !scrolled;
+  const overHero = isEditorialHeroRoute && !scrolled;
   const shellClass = overHero
     ? "border-transparent bg-transparent"
     : "border-rule/50 bg-ivory/95 backdrop-blur-sm";
