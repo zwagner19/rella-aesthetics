@@ -6,8 +6,10 @@ import { FaqAccordion, FaqSchema } from "@/components/blocks/FaqAccordion";
 import { Button } from "@/components/ui/Button";
 import { resolveBookingHref, type BookingLocation } from "@/lib/booking-routes";
 import { BotoxDysportServicePage } from "@/components/pages/BotoxDysportServicePage";
+import { EditorialTreatmentPage } from "@/components/pages/EditorialTreatmentPage";
 import { WeightLossServicePage } from "@/components/pages/WeightLossServicePage";
 import { getServiceMetadata } from "@/lib/service-metadata";
+import { getTreatmentEditorial } from "@/lib/treatment-editorial";
 
 interface ServicePageProps {
   params: Promise<{ slug: string }>;
@@ -39,6 +41,11 @@ export default async function ServicePage({ params }: ServicePageProps) {
 
   if (service.slug === "botox") {
     return <BotoxDysportServicePage />;
+  }
+
+  const editorial = getTreatmentEditorial(service.slug);
+  if (editorial) {
+    return <EditorialTreatmentPage service={service} editorial={editorial} />;
   }
 
   const availableLocations: readonly BookingLocation[] =
