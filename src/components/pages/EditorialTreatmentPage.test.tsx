@@ -17,7 +17,7 @@ function renderSlug(slug: string) {
 
 describe("EditorialTreatmentPage propagation", () => {
   it("covers every non-locked individual treatment slug", () => {
-    expect(EDITORIAL_TREATMENT_SLUGS.sort()).toEqual(
+    expect([...EDITORIAL_TREATMENT_SLUGS].sort()).toEqual(
       [
         "chemical-peels",
         "dermal-fillers",
