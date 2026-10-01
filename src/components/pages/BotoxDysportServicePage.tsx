@@ -3,7 +3,6 @@ import Link from "next/link";
 import { FaqAccordion, FaqSchema } from "@/components/blocks/FaqAccordion";
 import { HOME_LOCATION_VISUALS } from "@/components/home/home-location-visuals";
 import { approvedPatientResultImages } from "@/content/results";
-import { leadershipMember } from "@/content/team";
 import { resolveBookingHref } from "@/lib/booking-routes";
 import { locations } from "@/lib/data";
 import { PRICING, RESULTS, VISIT } from "@/lib/napa-botox-facts";
@@ -187,13 +186,13 @@ export function BotoxDysportServicePage() {
         </div>
       </section>
 
-      {/* 05 The Rella Approach */}
+      {/* 05 The Rella Approach — treatment-specific copy only (no founder portrait) */}
       <section
         className="rella-site-reveal bg-oat/35 py-24 md:py-32"
         aria-labelledby="botox-approach-heading"
       >
-        <div className="mx-auto grid max-w-[1440px] items-center gap-14 px-6 md:px-8 lg:grid-cols-[1.05fr_0.95fr] lg:gap-20 lg:px-12">
-          <div>
+        <div className="mx-auto max-w-[1440px] px-6 md:px-8 lg:px-12">
+          <div className="max-w-[40rem]">
             <p className="rella-editorial-eyebrow mb-6">The Rella approach</p>
             <h2
               id="botox-approach-heading"
@@ -209,15 +208,6 @@ export function BotoxDysportServicePage() {
               provider listens first, explains product and placement plainly, and chooses restraint
               when that is the better plan.
             </p>
-          </div>
-          <div className="relative aspect-[4/5] overflow-hidden bg-oat">
-            <Image
-              src={leadershipMember.image}
-              alt={`${leadershipMember.name}, ${leadershipMember.role}`}
-              fill
-              className="object-cover object-top"
-              sizes="(min-width: 1024px) 40vw, 100vw"
-            />
           </div>
         </div>
       </section>
