@@ -1,36 +1,42 @@
 import Image from "next/image";
 import Link from "next/link";
 import { FaqAccordion, FaqSchema } from "@/components/blocks/FaqAccordion";
-import { LasersConcernExplorer } from "@/components/lasers/LasersConcernExplorer";
+import { SkinConcernExplorer } from "@/components/skin/SkinConcernExplorer";
 import { TreatmentResults } from "@/components/treatments/TreatmentResults";
 import { approvedPatientResultImages } from "@/content/results";
 import { resolveBookingHref } from "@/lib/booking-routes";
 import {
-  LASERS_DETAIL_HREF,
-  LASERS_DOWNTIME,
-  LASERS_FAQ,
-  LASERS_TOOLS,
-} from "@/lib/lasers-category";
+  FACIALS_HREF,
+  HYDRAFACIAL_HREF,
+  LASERS_CATEGORY_HREF,
+  SKIN_FAQ,
+  SKIN_MAINTENANCE_VS_CORRECTION,
+  SKIN_PATHS,
+} from "@/lib/skin-category";
 
-function laserResultImages() {
+function skinResultImages() {
+  // Match attributed skin treatments only — avoid bare CoolPeel / laser-only labels
+  // that contain the substring "peel".
   return approvedPatientResultImages("main-gallery").filter((result) =>
-    /coolpeel|laser|ipl/i.test(result.treatment),
+    /hydrafacial|microneedling/i.test(result.treatment),
   );
 }
 
-export function LasersCategoryPage() {
-  const bookingHref = resolveBookingHref({ category: "laser" });
-  const results = laserResultImages();
+export function SkinCategoryPage() {
+  // Skin spans facials, peels, and microneedling choosers — open the booking
+  // chooser without forcing a single subcategory.
+  const bookingHref = resolveBookingHref({});
+  const results = skinResultImages();
 
   return (
     <>
-      <FaqSchema items={LASERS_FAQ} />
+      <FaqSchema items={SKIN_FAQ} />
 
       {/* 01 Image-led hero */}
       <section className="relative -mt-[72px] flex min-h-[92svh] items-end overflow-hidden bg-charcoal text-white lg:-mt-[84px]">
         <Image
-          src="/images/treatments/laser-treatment.webp"
-          alt="A Rella provider performing a device-based skin treatment"
+          src="/images/treatments/hydrafacial.webp"
+          alt="A Rella provider using a facial-treatment handpiece on a patient's cheek"
           fill
           priority
           className="object-cover object-center"
@@ -42,13 +48,14 @@ export function LasersCategoryPage() {
         />
         <div className="relative z-10 mx-auto w-full max-w-[1440px] px-6 pb-20 pt-40 md:px-8 md:pb-28 lg:px-12 lg:pb-32">
           <p className="mb-6 text-[0.6875rem] font-medium uppercase tracking-[0.28em] text-rose">
-            Lasers
+            Skin
           </p>
-          <h1 className="max-w-[12ch] text-[clamp(2.6rem,7vw,5rem)] font-medium leading-[1.02] tracking-[-0.025em] text-white">
-            Your skin tells us where to start.
+          <h1 className="max-w-[14ch] text-[clamp(2.6rem,7vw,5rem)] font-medium leading-[1.02] tracking-[-0.025em] text-white">
+            Good skin isn&apos;t one treatment.
           </h1>
           <p className="mt-8 max-w-[28rem] text-[1.05rem] font-light leading-[1.55] text-white/88 md:text-xl">
-            Light and energy matched to your concern — after we meet the skin, not before.
+            Face the concern first. Choose the visit that matches it — maintenance or a deeper
+            reset.
           </p>
           <div className="mt-12 flex flex-wrap gap-3 sm:gap-4">
             <Link
@@ -71,61 +78,60 @@ export function LasersCategoryPage() {
       {/* 02 Quiet intro */}
       <section
         className="rella-site-reveal bg-ivory py-28 md:py-36"
-        aria-labelledby="lasers-intro-heading"
+        aria-labelledby="skin-intro-heading"
       >
         <div className="mx-auto max-w-[720px] px-6 text-center md:px-8">
           <h2
-            id="lasers-intro-heading"
+            id="skin-intro-heading"
             className="text-[clamp(1.85rem,4.2vw,3.1rem)] font-medium leading-[1.15] tracking-[-0.02em] text-ink"
           >
-            The machine isn&apos;t the treatment plan. Your skin is.
+            Your skin doesn&apos;t need everything.
           </h2>
           <div className="rella-editorial-rule mx-auto mt-12 mb-12 max-w-[4rem]" />
           <p className="text-base font-light leading-relaxed text-silver md:text-lg">
-            IPL, hair removal, vein care, Erbium, and CO2 CoolPeel are different tools. The right
-            one depends on what we see — skin type, history, medications, recent sun, and the
-            recovery you can plan for.
+            It needs the right next step for the concern in front of you — hydration, congestion,
+            pigment, texture, or simply a maintenance visit that respects timing and recovery.
           </p>
         </div>
       </section>
 
       {/* 03 Explore by concern */}
-      <LasersConcernExplorer />
+      <SkinConcernExplorer />
 
-      {/* 04 Different tools / different jobs */}
+      {/* 04 Treatment paths */}
       <section
         className="rella-site-reveal border-t border-rule/50 bg-ivory py-24 md:py-32"
-        aria-labelledby="lasers-tools-heading"
+        aria-labelledby="skin-paths-heading"
       >
         <div className="mx-auto max-w-[960px] px-6 md:px-8">
-          <p className="rella-editorial-eyebrow mb-6">Modalities</p>
+          <p className="rella-editorial-eyebrow mb-6">Treatment paths</p>
           <h2
-            id="lasers-tools-heading"
-            className="max-w-[16ch] text-[clamp(1.85rem,4.2vw,3.25rem)] font-medium leading-[1.12] tracking-[-0.02em] text-ink"
+            id="skin-paths-heading"
+            className="max-w-[18ch] text-[clamp(1.85rem,4.2vw,3.25rem)] font-medium leading-[1.12] tracking-[-0.02em] text-ink"
           >
-            Different tools. Different jobs.
+            Maintenance visits. Deeper resets. Light when needed.
           </h2>
           <p className="mt-6 max-w-[36rem] text-base font-light leading-relaxed text-silver md:text-lg">
-            Each option links to Rella&apos;s laser treatment details so you can read more before
-            your consult.
+            Each path links to real treatment details — or to Lasers when pigment and texture
+            overlap with light-based care.
           </p>
           <ul className="mt-16 space-y-0 border-t border-rule">
-            {LASERS_TOOLS.map((tool) => (
+            {SKIN_PATHS.map((path) => (
               <li
-                key={tool.id}
+                key={path.id}
                 className="grid gap-3 border-b border-rule py-10 md:grid-cols-[12rem_1fr_auto] md:items-baseline md:gap-10"
               >
                 <Link
-                  href={tool.href}
+                  href={path.href}
                   className="text-lg font-medium tracking-[-0.015em] text-ink underline decoration-transparent underline-offset-4 transition-colors hover:decoration-rule"
                 >
-                  {tool.name}
+                  {path.name}
                 </Link>
                 <p className="text-base font-light leading-relaxed text-silver md:text-lg">
-                  {tool.job}
+                  {path.job}
                 </p>
                 <Link
-                  href={tool.href}
+                  href={path.href}
                   className="text-[0.6875rem] font-bold uppercase tracking-[0.18em] text-ink"
                 >
                   Details
@@ -136,81 +142,90 @@ export function LasersCategoryPage() {
         </div>
       </section>
 
-      {/* 05 Downtime education */}
+      {/* 05 Maintenance vs correction */}
       <section
         className="rella-site-reveal bg-oat/35 py-24 md:py-32"
-        aria-labelledby="lasers-downtime-heading"
+        aria-labelledby="skin-framing-heading"
       >
         <div className="mx-auto max-w-[720px] px-6 md:px-8">
-          <p className="rella-editorial-eyebrow mb-6">{LASERS_DOWNTIME.eyebrow}</p>
+          <p className="rella-editorial-eyebrow mb-6">
+            {SKIN_MAINTENANCE_VS_CORRECTION.eyebrow}
+          </p>
           <h2
-            id="lasers-downtime-heading"
+            id="skin-framing-heading"
             className="max-w-[18ch] text-[clamp(1.85rem,4.2vw,3.1rem)] font-medium leading-[1.12] tracking-[-0.02em] text-ink"
           >
-            {LASERS_DOWNTIME.headline}
+            {SKIN_MAINTENANCE_VS_CORRECTION.headline}
           </h2>
           <p className="mt-8 text-base font-light leading-relaxed text-silver md:text-lg">
-            {LASERS_DOWNTIME.body}
+            {SKIN_MAINTENANCE_VS_CORRECTION.body}
           </p>
         </div>
       </section>
 
-      {/* 06 Rella Approach — category level */}
+      {/* 06 Approach */}
       <section
         className="rella-site-reveal bg-ivory py-24 md:py-32"
-        aria-labelledby="lasers-approach-heading"
+        aria-labelledby="skin-approach-heading"
       >
         <div className="mx-auto max-w-[1440px] px-6 md:px-8 lg:px-12">
           <div className="max-w-[40rem]">
             <p className="rella-editorial-eyebrow mb-6">The Rella approach</p>
             <h2
-              id="lasers-approach-heading"
+              id="skin-approach-heading"
               className="max-w-[16ch] text-[clamp(2rem,4.4vw,3.4rem)] font-medium leading-[1.1] tracking-[-0.025em] text-ink"
             >
-              We choose the treatment after we meet the skin.
+              Treat the skin you have today.
             </h2>
             <p className="mt-8 max-w-[34rem] text-[1.15rem] font-medium leading-snug tracking-[-0.015em] text-ink md:text-xl">
-              Settings follow assessment — not the other way around.
+              Protocol follows assessment — not a stacked menu.
             </p>
             <p className="mt-6 max-w-[34rem] text-base font-light leading-relaxed text-silver md:text-lg">
-              Skin type, medications, recent sun, event timing, and the recovery you can support
-              shape the recommendation. Restraint is part of the plan when a laser is not the right
-              next step.
+              Sensitivities, recent procedures, home care, medications, sun, and event timing shape
+              what is appropriate that day. We explain the visit plainly before anything begins.
             </p>
-            <Link
-              href={LASERS_DETAIL_HREF}
-              className="mt-10 inline-block text-[0.6875rem] font-bold uppercase tracking-[0.18em] text-ink underline decoration-rule underline-offset-4"
-            >
-              Read laser treatment details
-            </Link>
+            <div className="mt-10 flex flex-wrap gap-x-8 gap-y-3">
+              <Link
+                href={HYDRAFACIAL_HREF}
+                className="text-[0.6875rem] font-bold uppercase tracking-[0.18em] text-ink underline decoration-rule underline-offset-4"
+              >
+                HydraFacial details
+              </Link>
+              <Link
+                href={LASERS_CATEGORY_HREF}
+                className="text-[0.6875rem] font-bold uppercase tracking-[0.18em] text-ink underline decoration-rule underline-offset-4"
+              >
+                Explore lasers
+              </Link>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* 07 Transform House — real laser B/A only */}
+      {/* 07 Transform House */}
       <TreatmentResults
-        id="lasers-results-heading"
-        heading="Real laser results. Shared with permission."
-        body="Approved CoolPeel and related laser before-and-after photography from Rella patients. Individual results vary — your plan is built in consult."
+        id="skin-results-heading"
+        heading="Real skin results. Shared with permission."
+        body="Approved HydraFacial and microneedling photography from Rella patients — including combined plans where attributed. Individual results vary."
         results={results}
-        assetNeededNote="ASSET NEEDED — approved laser before-and-after photography is required before this gallery can publish."
+        assetNeededNote="ASSET NEEDED — approved skin before-and-after photography is required before this gallery can publish."
       />
 
-      {/* 08 You don't need to know */}
+      {/* 08 Start with the concern */}
       <section
         className="rella-site-reveal bg-ivory py-24 md:py-32"
-        aria-labelledby="lasers-reassure-heading"
+        aria-labelledby="skin-reassure-heading"
       >
         <div className="mx-auto max-w-[720px] px-6 text-center md:px-8">
           <h2
-            id="lasers-reassure-heading"
+            id="skin-reassure-heading"
             className="text-[clamp(1.85rem,4.2vw,3.1rem)] font-medium leading-[1.15] tracking-[-0.02em] text-ink"
           >
-            You don&apos;t need to know the device name.
+            Start with the concern — not the product name.
           </h2>
           <p className="mx-auto mt-8 max-w-[34rem] text-base font-light leading-relaxed text-silver md:text-lg">
-            Bring the concern. We&apos;ll explain the options in plain language — including
-            recovery — and only recommend what fits.
+            Bring dullness, congestion, pigment, texture, scarring, or a maintenance question. We
+            map options in plain language, including when lasers belong in the plan.
           </p>
           <Link
             href={bookingHref}
@@ -225,24 +240,24 @@ export function LasersCategoryPage() {
       {/* 09 Category FAQ */}
       <section
         className="rella-site-reveal border-t border-rule/50 bg-ivory py-24 md:py-28"
-        aria-labelledby="lasers-faq-heading"
+        aria-labelledby="skin-faq-heading"
       >
         <div className="mx-auto max-w-[860px] px-6 md:px-8">
           <p className="rella-editorial-eyebrow mb-6">Questions</p>
           <h2
-            id="lasers-faq-heading"
-            className="mb-10 max-w-[14ch] text-[clamp(1.85rem,4.2vw,3.1rem)] font-medium leading-[1.12] tracking-[-0.02em] text-ink"
+            id="skin-faq-heading"
+            className="mb-10 max-w-[12ch] text-[clamp(1.85rem,4.2vw,3.1rem)] font-medium leading-[1.12] tracking-[-0.02em] text-ink"
           >
-            Lasers FAQ
+            Skin FAQ
           </h2>
-          <FaqAccordion items={LASERS_FAQ} />
+          <FaqAccordion items={SKIN_FAQ} />
         </div>
       </section>
 
-      {/* 10 Final CTA */}
+      {/* Final CTA */}
       <section
         className="rella-site-reveal relative overflow-hidden bg-charcoal py-32 text-white md:py-40"
-        aria-labelledby="lasers-final-cta-heading"
+        aria-labelledby="skin-final-cta-heading"
       >
         <Image
           src="/images/clinic/napa-reception.webp"
@@ -254,14 +269,14 @@ export function LasersCategoryPage() {
         <div className="absolute inset-0 bg-charcoal/60" aria-hidden="true" />
         <div className="relative z-10 mx-auto max-w-[720px] px-6 text-center md:px-8">
           <h2
-            id="lasers-final-cta-heading"
+            id="skin-final-cta-heading"
             className="text-[clamp(2rem,4.8vw,3.5rem)] font-medium leading-[1.1] tracking-[-0.025em]"
           >
-            Start with your skin. We&apos;ll figure out the rest.
+            Better skin starts with a plan.
           </h2>
           <p className="mx-auto mt-7 max-w-[30rem] text-base font-light leading-relaxed text-white/80 md:text-lg">
-            Book a laser consultation in Vacaville or Napa — or explore treatment details when you
-            already know which modality you want to discuss.
+            Book in Vacaville or Napa — or open a treatment path when you already know which visit
+            type to discuss.
           </p>
           <div className="mt-12 flex flex-wrap items-center justify-center gap-3 sm:gap-4">
             <Link
@@ -271,11 +286,14 @@ export function LasersCategoryPage() {
             >
               Book a consultation
             </Link>
+            <Link href={FACIALS_HREF} className="rella-cta-rect rella-cta-rect--ghost-light">
+              Facials
+            </Link>
             <Link
-              href={LASERS_DETAIL_HREF}
+              href={LASERS_CATEGORY_HREF}
               className="rella-cta-rect rella-cta-rect--ghost-light"
             >
-              Laser treatment details
+              Lasers
             </Link>
           </div>
         </div>

@@ -1,36 +1,36 @@
 import Image from "next/image";
 import Link from "next/link";
 import { FaqAccordion, FaqSchema } from "@/components/blocks/FaqAccordion";
-import { LasersConcernExplorer } from "@/components/lasers/LasersConcernExplorer";
+import { InjectablesGoalExplorer } from "@/components/injectables/InjectablesGoalExplorer";
 import { TreatmentResults } from "@/components/treatments/TreatmentResults";
 import { approvedPatientResultImages } from "@/content/results";
 import { resolveBookingHref } from "@/lib/booking-routes";
 import {
-  LASERS_DETAIL_HREF,
-  LASERS_DOWNTIME,
-  LASERS_FAQ,
-  LASERS_TOOLS,
-} from "@/lib/lasers-category";
+  BOTOX_HREF,
+  FILLERS_HREF,
+  INJECTABLES_FAQ,
+  INJECTABLES_TOOLS,
+} from "@/lib/injectables-category";
 
-function laserResultImages() {
+function injectableResultImages() {
   return approvedPatientResultImages("main-gallery").filter((result) =>
-    /coolpeel|laser|ipl/i.test(result.treatment),
+    /botox|filler|lips|lip|under.?eye/i.test(result.treatment),
   );
 }
 
-export function LasersCategoryPage() {
-  const bookingHref = resolveBookingHref({ category: "laser" });
-  const results = laserResultImages();
+export function InjectablesCategoryPage() {
+  const bookingHref = resolveBookingHref({ category: "injectables" });
+  const results = injectableResultImages();
 
   return (
     <>
-      <FaqSchema items={LASERS_FAQ} />
+      <FaqSchema items={INJECTABLES_FAQ} />
 
       {/* 01 Image-led hero */}
       <section className="relative -mt-[72px] flex min-h-[92svh] items-end overflow-hidden bg-charcoal text-white lg:-mt-[84px]">
         <Image
-          src="/images/treatments/laser-treatment.webp"
-          alt="A Rella provider performing a device-based skin treatment"
+          src="/images/treatments/botox-dysport.webp"
+          alt="A Rella Aesthetics team member holding Botox and Dysport vials"
           fill
           priority
           className="object-cover object-center"
@@ -42,13 +42,13 @@ export function LasersCategoryPage() {
         />
         <div className="relative z-10 mx-auto w-full max-w-[1440px] px-6 pb-20 pt-40 md:px-8 md:pb-28 lg:px-12 lg:pb-32">
           <p className="mb-6 text-[0.6875rem] font-medium uppercase tracking-[0.28em] text-rose">
-            Lasers
+            Injectables
           </p>
-          <h1 className="max-w-[12ch] text-[clamp(2.6rem,7vw,5rem)] font-medium leading-[1.02] tracking-[-0.025em] text-white">
-            Your skin tells us where to start.
+          <h1 className="max-w-[14ch] text-[clamp(2.6rem,7vw,5rem)] font-medium leading-[1.02] tracking-[-0.025em] text-white">
+            Start with the face. Not the syringe.
           </h1>
           <p className="mt-8 max-w-[28rem] text-[1.05rem] font-light leading-[1.55] text-white/88 md:text-xl">
-            Light and energy matched to your concern — after we meet the skin, not before.
+            Soften what moves. Support what needs volume. Leave the rest alone.
           </p>
           <div className="mt-12 flex flex-wrap gap-3 sm:gap-4">
             <Link
@@ -59,10 +59,10 @@ export function LasersCategoryPage() {
               Book a consultation
             </Link>
             <a
-              href="#explore-by-concern"
+              href="#explore-by-goal"
               className="rella-cta-rect rella-cta-rect--ghost-light"
             >
-              Explore by concern
+              Explore by goal
             </a>
           </div>
         </div>
@@ -71,49 +71,49 @@ export function LasersCategoryPage() {
       {/* 02 Quiet intro */}
       <section
         className="rella-site-reveal bg-ivory py-28 md:py-36"
-        aria-labelledby="lasers-intro-heading"
+        aria-labelledby="injectables-intro-heading"
       >
         <div className="mx-auto max-w-[720px] px-6 text-center md:px-8">
           <h2
-            id="lasers-intro-heading"
+            id="injectables-intro-heading"
             className="text-[clamp(1.85rem,4.2vw,3.1rem)] font-medium leading-[1.15] tracking-[-0.02em] text-ink"
           >
-            The machine isn&apos;t the treatment plan. Your skin is.
+            Not every line needs treating.
           </h2>
           <div className="rella-editorial-rule mx-auto mt-12 mb-12 max-w-[4rem]" />
           <p className="text-base font-light leading-relaxed text-silver md:text-lg">
-            IPL, hair removal, vein care, Erbium, and CO2 CoolPeel are different tools. The right
-            one depends on what we see — skin type, history, medications, recent sun, and the
-            recovery you can plan for.
+            Some lines are expression. Some volume tells your story. Injectables at Rella start
+            with what you want to keep — then name the options that fit your anatomy, history, and
+            goals.
           </p>
         </div>
       </section>
 
-      {/* 03 Explore by concern */}
-      <LasersConcernExplorer />
+      {/* 03 Explore by goal */}
+      <InjectablesGoalExplorer />
 
-      {/* 04 Different tools / different jobs */}
+      {/* 04 Different tools / intentions */}
       <section
         className="rella-site-reveal border-t border-rule/50 bg-ivory py-24 md:py-32"
-        aria-labelledby="lasers-tools-heading"
+        aria-labelledby="injectables-tools-heading"
       >
         <div className="mx-auto max-w-[960px] px-6 md:px-8">
-          <p className="rella-editorial-eyebrow mb-6">Modalities</p>
+          <p className="rella-editorial-eyebrow mb-6">Different tools</p>
           <h2
-            id="lasers-tools-heading"
-            className="max-w-[16ch] text-[clamp(1.85rem,4.2vw,3.25rem)] font-medium leading-[1.12] tracking-[-0.02em] text-ink"
+            id="injectables-tools-heading"
+            className="max-w-[18ch] text-[clamp(1.85rem,4.2vw,3.25rem)] font-medium leading-[1.12] tracking-[-0.02em] text-ink"
           >
-            Different tools. Different jobs.
+            Different intentions. Different products.
           </h2>
           <p className="mt-6 max-w-[36rem] text-base font-light leading-relaxed text-silver md:text-lg">
-            Each option links to Rella&apos;s laser treatment details so you can read more before
-            your consult.
+            Neuromodulators and fillers solve different problems. Read the details — then decide in
+            consult.
           </p>
           <ul className="mt-16 space-y-0 border-t border-rule">
-            {LASERS_TOOLS.map((tool) => (
+            {INJECTABLES_TOOLS.map((tool) => (
               <li
                 key={tool.id}
-                className="grid gap-3 border-b border-rule py-10 md:grid-cols-[12rem_1fr_auto] md:items-baseline md:gap-10"
+                className="grid gap-3 border-b border-rule py-10 md:grid-cols-[14rem_1fr_auto] md:items-baseline md:gap-10"
               >
                 <Link
                   href={tool.href}
@@ -136,81 +136,70 @@ export function LasersCategoryPage() {
         </div>
       </section>
 
-      {/* 05 Downtime education */}
-      <section
-        className="rella-site-reveal bg-oat/35 py-24 md:py-32"
-        aria-labelledby="lasers-downtime-heading"
-      >
-        <div className="mx-auto max-w-[720px] px-6 md:px-8">
-          <p className="rella-editorial-eyebrow mb-6">{LASERS_DOWNTIME.eyebrow}</p>
-          <h2
-            id="lasers-downtime-heading"
-            className="max-w-[18ch] text-[clamp(1.85rem,4.2vw,3.1rem)] font-medium leading-[1.12] tracking-[-0.02em] text-ink"
-          >
-            {LASERS_DOWNTIME.headline}
-          </h2>
-          <p className="mt-8 text-base font-light leading-relaxed text-silver md:text-lg">
-            {LASERS_DOWNTIME.body}
-          </p>
-        </div>
-      </section>
-
-      {/* 06 Rella Approach — category level */}
+      {/* 05 Approach */}
       <section
         className="rella-site-reveal bg-ivory py-24 md:py-32"
-        aria-labelledby="lasers-approach-heading"
+        aria-labelledby="injectables-approach-heading"
       >
         <div className="mx-auto max-w-[1440px] px-6 md:px-8 lg:px-12">
           <div className="max-w-[40rem]">
             <p className="rella-editorial-eyebrow mb-6">The Rella approach</p>
             <h2
-              id="lasers-approach-heading"
-              className="max-w-[16ch] text-[clamp(2rem,4.4vw,3.4rem)] font-medium leading-[1.1] tracking-[-0.025em] text-ink"
+              id="injectables-approach-heading"
+              className="max-w-[14ch] text-[clamp(2rem,4.4vw,3.4rem)] font-medium leading-[1.1] tracking-[-0.025em] text-ink"
             >
-              We choose the treatment after we meet the skin.
+              Your face isn&apos;t a formula.
             </h2>
             <p className="mt-8 max-w-[34rem] text-[1.15rem] font-medium leading-snug tracking-[-0.015em] text-ink md:text-xl">
-              Settings follow assessment — not the other way around.
+              Restraint is part of the plan.
             </p>
             <p className="mt-6 max-w-[34rem] text-base font-light leading-relaxed text-silver md:text-lg">
-              Skin type, medications, recent sun, event timing, and the recovery you can support
-              shape the recommendation. Restraint is part of the plan when a laser is not the right
-              next step.
+              Anatomy, movement, history, and the look you want to keep shape the recommendation —
+              not a syringe count. We explain product, area, and amount plainly, and choose less
+              when that is the better next step.
             </p>
-            <Link
-              href={LASERS_DETAIL_HREF}
-              className="mt-10 inline-block text-[0.6875rem] font-bold uppercase tracking-[0.18em] text-ink underline decoration-rule underline-offset-4"
-            >
-              Read laser treatment details
-            </Link>
+            <div className="mt-10 flex flex-wrap gap-x-8 gap-y-3">
+              <Link
+                href={BOTOX_HREF}
+                className="text-[0.6875rem] font-bold uppercase tracking-[0.18em] text-ink underline decoration-rule underline-offset-4"
+              >
+                Botox &amp; Dysport details
+              </Link>
+              <Link
+                href={FILLERS_HREF}
+                className="text-[0.6875rem] font-bold uppercase tracking-[0.18em] text-ink underline decoration-rule underline-offset-4"
+              >
+                Filler details
+              </Link>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* 07 Transform House — real laser B/A only */}
+      {/* 06 Transform House */}
       <TreatmentResults
-        id="lasers-results-heading"
-        heading="Real laser results. Shared with permission."
-        body="Approved CoolPeel and related laser before-and-after photography from Rella patients. Individual results vary — your plan is built in consult."
+        id="injectables-results-heading"
+        heading="Real injectable results. Shared with permission."
+        body="Approved Botox and filler before-and-after photography from Rella patients. Individual results vary — your plan is built in consult."
         results={results}
-        assetNeededNote="ASSET NEEDED — approved laser before-and-after photography is required before this gallery can publish."
+        assetNeededNote="ASSET NEEDED — approved injectable before-and-after photography is required before this gallery can publish."
       />
 
-      {/* 08 You don't need to know */}
+      {/* 07 You don't need to choose the syringe */}
       <section
         className="rella-site-reveal bg-ivory py-24 md:py-32"
-        aria-labelledby="lasers-reassure-heading"
+        aria-labelledby="injectables-reassure-heading"
       >
         <div className="mx-auto max-w-[720px] px-6 text-center md:px-8">
           <h2
-            id="lasers-reassure-heading"
+            id="injectables-reassure-heading"
             className="text-[clamp(1.85rem,4.2vw,3.1rem)] font-medium leading-[1.15] tracking-[-0.02em] text-ink"
           >
-            You don&apos;t need to know the device name.
+            You don&apos;t need to choose the syringe.
           </h2>
           <p className="mx-auto mt-8 max-w-[34rem] text-base font-light leading-relaxed text-silver md:text-lg">
-            Bring the concern. We&apos;ll explain the options in plain language — including
-            recovery — and only recommend what fits.
+            Bring the goal — softer movement, more support, lips, contour, or simply clarity. We
+            translate that into options in plain language.
           </p>
           <Link
             href={bookingHref}
@@ -222,27 +211,27 @@ export function LasersCategoryPage() {
         </div>
       </section>
 
-      {/* 09 Category FAQ */}
+      {/* 08 Category FAQ */}
       <section
         className="rella-site-reveal border-t border-rule/50 bg-ivory py-24 md:py-28"
-        aria-labelledby="lasers-faq-heading"
+        aria-labelledby="injectables-faq-heading"
       >
         <div className="mx-auto max-w-[860px] px-6 md:px-8">
           <p className="rella-editorial-eyebrow mb-6">Questions</p>
           <h2
-            id="lasers-faq-heading"
-            className="mb-10 max-w-[14ch] text-[clamp(1.85rem,4.2vw,3.1rem)] font-medium leading-[1.12] tracking-[-0.02em] text-ink"
+            id="injectables-faq-heading"
+            className="mb-10 max-w-[16ch] text-[clamp(1.85rem,4.2vw,3.1rem)] font-medium leading-[1.12] tracking-[-0.02em] text-ink"
           >
-            Lasers FAQ
+            Injectables FAQ
           </h2>
-          <FaqAccordion items={LASERS_FAQ} />
+          <FaqAccordion items={INJECTABLES_FAQ} />
         </div>
       </section>
 
-      {/* 10 Final CTA */}
+      {/* Final CTA */}
       <section
         className="rella-site-reveal relative overflow-hidden bg-charcoal py-32 text-white md:py-40"
-        aria-labelledby="lasers-final-cta-heading"
+        aria-labelledby="injectables-final-cta-heading"
       >
         <Image
           src="/images/clinic/napa-reception.webp"
@@ -254,14 +243,14 @@ export function LasersCategoryPage() {
         <div className="absolute inset-0 bg-charcoal/60" aria-hidden="true" />
         <div className="relative z-10 mx-auto max-w-[720px] px-6 text-center md:px-8">
           <h2
-            id="lasers-final-cta-heading"
+            id="injectables-final-cta-heading"
             className="text-[clamp(2rem,4.8vw,3.5rem)] font-medium leading-[1.1] tracking-[-0.025em]"
           >
-            Start with your skin. We&apos;ll figure out the rest.
+            Start with what you want to keep.
           </h2>
           <p className="mx-auto mt-7 max-w-[30rem] text-base font-light leading-relaxed text-white/80 md:text-lg">
-            Book a laser consultation in Vacaville or Napa — or explore treatment details when you
-            already know which modality you want to discuss.
+            Book an injectables consultation in Vacaville or Napa — or open treatment details when
+            you already know which conversation you want.
           </p>
           <div className="mt-12 flex flex-wrap items-center justify-center gap-3 sm:gap-4">
             <Link
@@ -271,11 +260,11 @@ export function LasersCategoryPage() {
             >
               Book a consultation
             </Link>
-            <Link
-              href={LASERS_DETAIL_HREF}
-              className="rella-cta-rect rella-cta-rect--ghost-light"
-            >
-              Laser treatment details
+            <Link href={BOTOX_HREF} className="rella-cta-rect rella-cta-rect--ghost-light">
+              Botox &amp; Dysport
+            </Link>
+            <Link href={FILLERS_HREF} className="rella-cta-rect rella-cta-rect--ghost-light">
+              Fillers
             </Link>
           </div>
         </div>
