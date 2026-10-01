@@ -144,12 +144,12 @@ export const LASERS_FAQ: readonly LasersFaqItem[] = [
   {
     question: "Do I need a consultation before laser treatment?",
     answer:
-      "Yes for light- and laser-based care. Vacaville's online laser menu currently lists an Initial Laser Consult before IPL; the consult reviews suitability, concerns, and the available treatment path before a procedure is selected.",
+      "Yes. Light- and laser-based care starts with a consultation so we can review your skin, history, and goals — and confirm whether a laser option is appropriate before anything is scheduled.",
   },
   {
     question: "How many sessions will I need?",
     answer:
-      "The number and spacing of procedures depend on the modality, indication, treatment area, settings, individual response, and goals. IPL often involves a short series; resurfacing is often planned as a single treatment. Your provider explains the proposed plan without promising a fixed series or result.",
+      "It depends on the treatment being considered, the area, how your skin responds, and your goals. Some plans involve a short series; others are scoped visit by visit. Your provider explains the recommended plan without promising a fixed number of sessions or a guaranteed result.",
   },
   {
     question: "What downtime should I expect?",

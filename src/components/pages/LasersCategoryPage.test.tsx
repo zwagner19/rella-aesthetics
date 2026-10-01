@@ -44,6 +44,17 @@ describe("LasersCategoryPage discovery prototype", () => {
     expect(html).toContain(`href="${LASERS_DETAIL_HREF}"`);
   });
 
+  it("keeps public Lasers copy free of developer and booking-menu language", () => {
+    expect(html).not.toContain("modality-specific");
+    expect(html).not.toContain("not separate yet");
+    expect(html).not.toContain("online laser menu");
+    expect(html).not.toContain("Initial Laser Consult");
+    expect(html).toContain(
+      "Yes. Light- and laser-based care starts with a consultation",
+    );
+    expect(html).not.toContain("resurfacing is often planned as a single treatment");
+  });
+
   it("shows only verified CoolPeel/laser Transform House assets", () => {
     expect(html).toContain("The Transform House");
     expect(html).toContain("CoolPeel");
