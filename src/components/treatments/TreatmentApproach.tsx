@@ -1,6 +1,3 @@
-import Image from "next/image";
-import { leadershipMember } from "@/content/team";
-
 interface TreatmentApproachProps {
   id: string;
   headline: string;
@@ -19,8 +16,8 @@ export function TreatmentApproach({
       className="rella-site-reveal bg-oat/35 py-24 md:py-32"
       aria-labelledby={id}
     >
-      <div className="mx-auto grid max-w-[1440px] items-center gap-14 px-6 md:px-8 lg:grid-cols-[1.05fr_0.95fr] lg:gap-20 lg:px-12">
-        <div>
+      <div className="mx-auto max-w-[1440px] px-6 md:px-8 lg:px-12">
+        <div className="max-w-[40rem]">
           <p className="rella-editorial-eyebrow mb-6">Why at Rella?</p>
           <h2
             id={id}
@@ -34,15 +31,6 @@ export function TreatmentApproach({
           <p className="mt-6 max-w-[34rem] text-base font-light leading-relaxed text-silver md:text-lg">
             {body}
           </p>
-        </div>
-        <div className="relative aspect-[4/5] overflow-hidden bg-oat">
-          <Image
-            src={leadershipMember.image}
-            alt={`${leadershipMember.name}, ${leadershipMember.role}`}
-            fill
-            className="object-cover object-top"
-            sizes="(min-width: 1024px) 40vw, 100vw"
-          />
         </div>
       </div>
     </section>
