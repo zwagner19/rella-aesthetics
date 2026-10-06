@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Poppins } from "next/font/google";
 import "./globals.css";
+import { BookingExperienceProvider } from "@/components/guided-booking/BookingExperienceProvider";
 
 const poppins = Poppins({
   variable: "--font-poppins",
@@ -48,7 +49,7 @@ export default function RootLayout({
         Both groups keep their URLs unchanged — route groups are path-invisible.
       */}
       <body className="min-h-screen flex flex-col font-sans text-silver-dark bg-white">
-        {children}
+        <BookingExperienceProvider>{children}</BookingExperienceProvider>
       </body>
     </html>
   );

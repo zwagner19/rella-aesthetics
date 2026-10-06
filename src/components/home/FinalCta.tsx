@@ -1,6 +1,8 @@
+"use client";
+
 import Image from "next/image";
-import Link from "next/link";
 import { resolveBookingHref } from "@/lib/booking-routes";
+import { BookTrigger } from "@/components/guided-booking/BookTrigger";
 
 export function FinalCta() {
   const bookingHref = resolveBookingHref({});
@@ -29,9 +31,9 @@ export function FinalCta() {
           Not sure what treatment is right for you? Book a consultation and we&apos;ll help you
           find a clear next step.
         </p>
-        <Link href={bookingHref} className="rella-cta-rect rella-cta-rect--filled mt-10">
+        <BookTrigger intent={{}} className="rella-cta-rect rella-cta-rect--filled mt-10">
           Book a consultation
-        </Link>
+        </BookTrigger>
       </div>
     </section>
   );

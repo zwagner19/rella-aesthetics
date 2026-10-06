@@ -1,6 +1,9 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
 import { resolveBookingHref } from "@/lib/booking-routes";
+import { BookTrigger } from "@/components/guided-booking/BookTrigger";
 
 export function HomeHero() {
   const bookingHref = resolveBookingHref({});
@@ -33,9 +36,9 @@ export function HomeHero() {
           <Link href="/services" className="rella-cta-rect rella-cta-rect--ghost-light">
             Explore treatments
           </Link>
-          <Link href={bookingHref} className="rella-cta-rect rella-cta-rect--filled">
+          <BookTrigger intent={{}} className="rella-cta-rect rella-cta-rect--filled">
             Book a consultation
-          </Link>
+          </BookTrigger>
         </div>
       </div>
     </section>

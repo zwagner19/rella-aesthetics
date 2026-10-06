@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useSyncExternalStore } from "react";
 import {
@@ -8,6 +7,7 @@ import {
   type BookingIntent,
   type BookingLocation,
 } from "@/lib/booking-routes";
+import { BookTrigger } from "@/components/guided-booking/BookTrigger";
 import { WEIGHT_LOSS_HOST } from "@/lib/site-hosts";
 
 const EXCLUDED_PATHS = new Set([
@@ -84,13 +84,14 @@ export function MobileConversionBar() {
       >
         Call Rella
       </a>
-      <Link
-        href={bookingHref}
+      <BookTrigger
+        intent={bookingIntentForPath(pathname)}
+        data-booking-fallback={bookingHref}
         data-cta="site-booking"
         className="inline-flex min-h-12 items-center justify-center rounded-full border-[1.5px] border-rose bg-rose px-3 text-center text-[0.6875rem] font-bold uppercase tracking-[0.14em] text-white"
       >
         Book Consultation
-      </Link>
+      </BookTrigger>
     </nav>
   );
 }
