@@ -40,10 +40,14 @@ export interface GuidedTreatment {
   image?: string;
   imageAlt?: string;
   durationCopy?: string;
+  /** Boulevard default/list price in cents (Admin-read). */
+  listPriceCents?: number;
   /** Verified deposit amount in cents from rella-booking catalog probes. */
   depositCents?: number;
   paymentRule: PaymentRuleCopy;
   isConsultation: boolean;
+  /** True when exact rella-booking /book/{loc}/{slug} handoff is verified. */
+  onlineHandoff?: boolean;
   /** Editorial prep/downtime from approved Rella site copy only. */
   prepCopy?: string;
   downtimeCopy?: string;

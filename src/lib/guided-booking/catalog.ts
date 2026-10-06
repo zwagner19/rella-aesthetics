@@ -1,15 +1,19 @@
 /**
  * Fail-closed public catalog for the in-site guided booking shell.
  *
- * Source: verified enabled aesthetics entries in `rella-booking`
- * `src/lib/booking-v2/catalog.ts` (NONPAID_PUBLIC / owner-approved). This module
- * NEVER embeds Boulevard URNs, invents service IDs, or invents prices. Deposit
- * cents and durations appear only when already verified in that catalog.
- *
- * Unknown location/service mappings refuse — there is no fall-through menu.
+ * Menu contents come from Boulevard Admin-read inventory (2026-07-22), filtered
+ * to active Injectables / Laser / Microneedling / Facials / Peels. Exact online
+ * handoff to `book.experiencerella.com/book/{location}/{service}` is only
+ * enabled for verified rella-booking aesthetics routes — everything else shows
+ * in the menu but completes via the location+category chooser (never invents
+ * Boulevard mutation IDs or fake availability).
  */
 
 import type { BookingCategory, BookingLocation } from "@/lib/booking-routes";
+import {
+  BOULEVARD_MENU_SEEDS,
+  type BoulevardMenuSeed,
+} from "./boulevard-menu-data";
 import type {
   GuidedLocation,
   GuidedTreatment,
@@ -35,257 +39,6 @@ export const GUIDED_LOCATIONS: readonly GuidedLocation[] = [
   },
 ] as const;
 
-type CatalogSeed = {
-  locationSlug: BookingLocation;
-  serviceSlug: string;
-  displayName: string;
-  category: "Injectables" | "Laser" | "Microneedling" | "Facials" | "Peels";
-  shortDescription: string;
-  durationCopy?: string;
-  depositCents?: number;
-  paymentRule: PaymentRuleCopy;
-  isConsultation: boolean;
-  image?: string;
-  imageAlt?: string;
-  prepCopy?: string;
-  downtimeCopy?: string;
-};
-
-/**
- * Public bookable aesthetics rows only. Weight-loss stays on its dedicated host.
- * IV hydration is intentionally absent (call-assisted).
- */
-const SEEDS: readonly CatalogSeed[] = [
-  {
-    locationSlug: "napa",
-    serviceSlug: "botox",
-    displayName: "New Patient Tox",
-    category: "Injectables",
-    shortDescription:
-      "Your first tox visit includes a consultation to tailor neuromodulator treatment.",
-    durationCopy: "30 min.",
-    depositCents: 5000,
-    paymentRule: "deposit",
-    isConsultation: false,
-    image: "/images/treatments/botox-dysport.webp",
-    imageAlt: "Botox and Dysport vials",
-    prepCopy:
-      "Arrive with a clean face when possible. Share medications, allergies, and prior injectable history during your consultation.",
-    downtimeCopy:
-      "Most people return to normal activities the same day. Temporary redness or small marks can occur at injection sites.",
-  },
-  {
-    locationSlug: "napa",
-    serviceSlug: "tox-established",
-    displayName: "Established Patient Tox",
-    category: "Injectables",
-    shortDescription: "A focused tox visit for established Rella patients.",
-    durationCopy: "20–30 min.",
-    depositCents: 5000,
-    paymentRule: "deposit",
-    isConsultation: false,
-    image: "/images/treatments/botox-dysport.webp",
-    imageAlt: "Botox and Dysport vials",
-  },
-  {
-    locationSlug: "napa",
-    serviceSlug: "dermal-fillers",
-    displayName: "Dermal Fillers",
-    category: "Injectables",
-    shortDescription:
-      "A personalized filler appointment focused on balanced, natural-looking results.",
-    durationCopy: "65 min.",
-    depositCents: 12012,
-    paymentRule: "deposit",
-    isConsultation: false,
-    image: "/images/treatments/dermal-fillers.webp",
-    imageAlt: "Injectable treatment near the lips",
-    prepCopy:
-      "Avoid blood-thinning supplements only when your provider has advised it. Bring a list of prior fillers and medical history.",
-    downtimeCopy:
-      "Swelling or bruising can appear for several days depending on the area and product.",
-  },
-  {
-    locationSlug: "napa",
-    serviceSlug: "hyperhidrosis-consult",
-    displayName: "Excessive Sweating Consult",
-    category: "Injectables",
-    shortDescription:
-      "A complimentary consultation to discuss excessive sweating and the appropriate next step.",
-    durationCopy: "15 min.",
-    paymentRule: "no_card",
-    isConsultation: true,
-  },
-  {
-    locationSlug: "napa",
-    serviceSlug: "hydrafacial",
-    displayName: "Signature HydraFacial",
-    category: "Facials",
-    shortDescription: "Deep-cleanse, exfoliate, and hydrate in one treatment.",
-    durationCopy: "45 min.",
-    paymentRule: "card_on_file",
-    isConsultation: false,
-    image: "/images/treatments/hydrafacial.webp",
-    imageAlt: "Facial treatment handpiece",
-  },
-  {
-    locationSlug: "napa",
-    serviceSlug: "hydrafacial-deluxe",
-    displayName: "Deluxe HydraFacial",
-    category: "Facials",
-    shortDescription: "A deluxe HydraFacial visit with Rella’s esthetics team.",
-    durationCopy: "45 min.",
-    depositCents: 6000,
-    paymentRule: "deposit",
-    isConsultation: false,
-    image: "/images/treatments/hydrafacial.webp",
-    imageAlt: "Facial treatment handpiece",
-  },
-  {
-    locationSlug: "napa",
-    serviceSlug: "skin-health-consult",
-    displayName: "Initial Skin Health Consult",
-    category: "Facials",
-    shortDescription:
-      "Start with a complimentary skin consultation to choose the right facial or skin-health plan.",
-    durationCopy: "15 min.",
-    paymentRule: "no_card",
-    isConsultation: true,
-  },
-  {
-    locationSlug: "napa",
-    serviceSlug: "laser-consult",
-    displayName: "Initial Laser Consult",
-    category: "Laser",
-    shortDescription:
-      "A complimentary consultation to match your goals with the appropriate laser treatment.",
-    durationCopy: "15 min.",
-    paymentRule: "no_card",
-    isConsultation: true,
-    image: "/images/treatments/laser-treatment.webp",
-    imageAlt: "Device-based skin treatment",
-  },
-  {
-    locationSlug: "vacaville",
-    serviceSlug: "botox",
-    displayName: "New Patient Tox",
-    category: "Injectables",
-    shortDescription:
-      "Your first tox visit includes a consultation to tailor neuromodulator treatment.",
-    durationCopy: "30 min.",
-    depositCents: 5000,
-    paymentRule: "deposit",
-    isConsultation: false,
-    image: "/images/treatments/botox-dysport.webp",
-    imageAlt: "Botox and Dysport vials",
-    prepCopy:
-      "Arrive with a clean face when possible. Share medications, allergies, and prior injectable history during your consultation.",
-    downtimeCopy:
-      "Most people return to normal activities the same day. Temporary redness or small marks can occur at injection sites.",
-  },
-  {
-    locationSlug: "vacaville",
-    serviceSlug: "dermal-fillers",
-    displayName: "Dermal Fillers",
-    category: "Injectables",
-    shortDescription:
-      "A personalized filler appointment focused on balanced, natural-looking results.",
-    durationCopy: "65 min.",
-    depositCents: 12012,
-    paymentRule: "deposit",
-    isConsultation: false,
-    image: "/images/treatments/dermal-fillers.webp",
-    imageAlt: "Injectable treatment near the lips",
-  },
-  {
-    locationSlug: "vacaville",
-    serviceSlug: "hydrafacial",
-    displayName: "Signature HydraFacial",
-    category: "Facials",
-    shortDescription: "Deep-cleanse, exfoliate, and hydrate in one treatment.",
-    durationCopy: "45 min.",
-    depositCents: 6000,
-    paymentRule: "deposit",
-    isConsultation: false,
-    image: "/images/treatments/hydrafacial.webp",
-    imageAlt: "Facial treatment handpiece",
-  },
-  {
-    locationSlug: "vacaville",
-    serviceSlug: "skin-health-consult",
-    displayName: "Initial Skin Health Consult",
-    category: "Facials",
-    shortDescription:
-      "Start with a complimentary skin consultation to choose the right facial or skin-health plan.",
-    durationCopy: "30 min.",
-    paymentRule: "no_card",
-    isConsultation: true,
-  },
-  {
-    locationSlug: "vacaville",
-    serviceSlug: "laser-consult",
-    displayName: "Initial Laser Consult",
-    category: "Laser",
-    shortDescription:
-      "A complimentary consultation to match your goals with the appropriate laser treatment.",
-    durationCopy: "30 min.",
-    paymentRule: "no_card",
-    isConsultation: true,
-    image: "/images/treatments/laser-treatment.webp",
-    imageAlt: "Device-based skin treatment",
-  },
-  {
-    locationSlug: "vacaville",
-    serviceSlug: "microneedling-consult",
-    displayName: "Initial Microneedling Consult",
-    category: "Microneedling",
-    shortDescription:
-      "A complimentary consultation to confirm the right microneedling plan for your skin goals.",
-    durationCopy: "30 min.",
-    paymentRule: "no_card",
-    isConsultation: true,
-    image: "/images/treatments/microneedling-aftercare.webp",
-    imageAlt: "Patient checking skin after treatment",
-  },
-  {
-    locationSlug: "vacaville",
-    serviceSlug: "universal-peel",
-    displayName: "Universal Peel",
-    category: "Peels",
-    shortDescription:
-      "A professional chemical peel appointment customized for your skin and treatment goals.",
-    durationCopy: "90 min.",
-    depositCents: 5060,
-    paymentRule: "deposit",
-    isConsultation: false,
-    image: "/images/treatments/chemical-peel.webp",
-    imageAlt: "In-clinic facial treatment",
-  },
-] as const;
-
-function toTreatment(seed: CatalogSeed): GuidedTreatment {
-  return {
-    key: `${seed.locationSlug}/${seed.serviceSlug}`,
-    locationSlug: seed.locationSlug,
-    serviceSlug: seed.serviceSlug,
-    displayName: seed.displayName,
-    category: seed.category,
-    shortDescription: seed.shortDescription,
-    image: seed.image,
-    imageAlt: seed.imageAlt,
-    durationCopy: seed.durationCopy,
-    depositCents: seed.depositCents,
-    paymentRule: seed.paymentRule,
-    isConsultation: seed.isConsultation,
-    prepCopy: seed.prepCopy,
-    downtimeCopy: seed.downtimeCopy,
-  };
-}
-
-const TREATMENTS: readonly GuidedTreatment[] = SEEDS.map(toTreatment);
-
-const BY_KEY = new Map(TREATMENTS.map((t) => [t.key, t]));
-
 /**
  * Boulevard Client API / rella-booking menu categories (aesthetics only).
  * Source: `BOOKING_CATEGORY_ORDER` in rella-booking catalog — Weight Loss stays
@@ -310,11 +63,123 @@ export const CATEGORY_LABELS: Record<BoulevardBookingCategory, string> = {
   Peels: "Peels",
 };
 
-/** @deprecated Prefer BOULEVARD_CATEGORY_ORDER — kept as alias for callers. */
 export const CATEGORY_ORDER = BOULEVARD_CATEGORY_ORDER;
 
 /** Boulevard combination scheduling is not verified for this shell — one treatment only. */
 export const ALLOWS_MULTI_TREATMENT = false;
+
+/** Verified deposit amounts from rella-booking cart probes (cents). */
+const VERIFIED_DEPOSITS: Record<string, { depositCents?: number; paymentRule: PaymentRuleCopy }> = {
+  botox: { depositCents: 5000, paymentRule: "deposit" },
+  "tox-established": { depositCents: 5000, paymentRule: "deposit" },
+  "dermal-fillers": { depositCents: 12012, paymentRule: "deposit" },
+  "hyperhidrosis-consult": { paymentRule: "no_card" },
+  hydrafacial: { paymentRule: "card_on_file" }, // Napa CARD_ON_FILE_ZERO; Vacaville has deposit — location resolved below
+  "hydrafacial-deluxe": { depositCents: 6000, paymentRule: "deposit" },
+  "skin-health-consult": { paymentRule: "no_card" },
+  "laser-consult": { paymentRule: "no_card" },
+  "microneedling-consult": { paymentRule: "no_card" },
+  "universal-peel": { depositCents: 5060, paymentRule: "deposit" },
+};
+
+const VERIFIED_HYDRAFACIAL_BY_LOCATION: Record<
+  string,
+  { depositCents?: number; paymentRule: PaymentRuleCopy }
+> = {
+  napa: { paymentRule: "card_on_file" },
+  vacaville: { depositCents: 6000, paymentRule: "deposit" },
+};
+
+const IMAGE_BY_SLUG: Record<string, { image: string; imageAlt: string }> = {
+  botox: {
+    image: "/images/treatments/botox-dysport.webp",
+    imageAlt: "Botox and Dysport vials",
+  },
+  "tox-established": {
+    image: "/images/treatments/botox-dysport.webp",
+    imageAlt: "Botox and Dysport vials",
+  },
+  "dermal-fillers": {
+    image: "/images/treatments/dermal-fillers.webp",
+    imageAlt: "Injectable treatment near the lips",
+  },
+  hydrafacial: {
+    image: "/images/treatments/hydrafacial.webp",
+    imageAlt: "Facial treatment handpiece",
+  },
+  "hydrafacial-deluxe": {
+    image: "/images/treatments/hydrafacial.webp",
+    imageAlt: "Facial treatment handpiece",
+  },
+  "laser-consult": {
+    image: "/images/treatments/laser-treatment.webp",
+    imageAlt: "Device-based skin treatment",
+  },
+  "microneedling-consult": {
+    image: "/images/treatments/microneedling-aftercare.webp",
+    imageAlt: "Patient checking skin after treatment",
+  },
+  "universal-peel": {
+    image: "/images/treatments/chemical-peel.webp",
+    imageAlt: "In-clinic facial treatment",
+  },
+};
+
+function durationCopy(minutes?: number): string | undefined {
+  if (minutes == null || !Number.isFinite(minutes) || minutes <= 0) return undefined;
+  return `${minutes} min.`;
+}
+
+function paymentFor(
+  seed: BoulevardMenuSeed,
+  locationSlug: BookingLocation,
+): { depositCents?: number; paymentRule: PaymentRuleCopy } {
+  if (seed.serviceSlug === "hydrafacial") {
+    return VERIFIED_HYDRAFACIAL_BY_LOCATION[locationSlug] ?? {
+      paymentRule: "deposit",
+    };
+  }
+  const verified = VERIFIED_DEPOSITS[seed.serviceSlug];
+  if (verified) return verified;
+  if (seed.isConsultation) return { paymentRule: "no_card" };
+  // Unverified online path — do not invent deposit amounts.
+  return { paymentRule: "deposit" };
+}
+
+function toTreatment(
+  seed: BoulevardMenuSeed,
+  locationSlug: BookingLocation,
+): GuidedTreatment {
+  const pay = paymentFor(seed, locationSlug);
+  const media = IMAGE_BY_SLUG[seed.serviceSlug];
+  return {
+    key: `${locationSlug}/${seed.serviceSlug}`,
+    locationSlug,
+    serviceSlug: seed.serviceSlug,
+    displayName: seed.displayName,
+    category: seed.category,
+    shortDescription:
+      seed.shortDescription ??
+      "Boulevard menu service — availability and pricing confirmed during booking.",
+    image: media?.image,
+    imageAlt: media?.imageAlt,
+    durationCopy: durationCopy(seed.durationMinutes),
+    listPriceCents:
+      seed.listPriceCents && seed.listPriceCents > 0
+        ? seed.listPriceCents
+        : undefined,
+    depositCents: pay.depositCents,
+    paymentRule: pay.paymentRule,
+    isConsultation: seed.isConsultation,
+    onlineHandoff: seed.onlineHandoff,
+  };
+}
+
+const TREATMENTS: readonly GuidedTreatment[] = BOULEVARD_MENU_SEEDS.flatMap(
+  (seed) => seed.locations.map((location) => toTreatment(seed, location)),
+);
+
+const BY_KEY = new Map(TREATMENTS.map((t) => [t.key, t]));
 
 export function getGuidedLocation(
   slug: BookingLocation | null | undefined,
@@ -402,15 +267,14 @@ export function mapIntentToTreatmentKey(input: {
       facials: "skin-health-consult",
     };
 
-    const mapped = aliases[service];
-    if (!mapped) return null;
+    const mapped = aliases[service] ?? service;
     const treatment = resolveGuidedTreatment(location, mapped);
     return treatment?.key ?? null;
   }
 
   if (input.category) {
     const consultByCategory: Partial<Record<BookingCategory, string>> = {
-      injectables: location === "napa" ? "botox" : "botox",
+      injectables: "botox",
       laser: "laser-consult",
       microneedling: "microneedling-consult",
       facials: "skin-health-consult",
@@ -432,15 +296,26 @@ export function formatDeposit(cents: number | undefined): string | null {
   }).format(cents / 100);
 }
 
-export function paymentRuleLabel(
-  treatment: GuidedTreatment,
-): string {
+export function formatListPrice(cents: number | undefined): string | null {
+  if (cents == null || !Number.isFinite(cents) || cents <= 0) return null;
+  return new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: "USD",
+    maximumFractionDigits: 0,
+  }).format(cents / 100);
+}
+
+export function paymentRuleLabel(treatment: GuidedTreatment): string {
   switch (treatment.paymentRule) {
     case "deposit": {
       const amount = formatDeposit(treatment.depositCents);
-      return amount
-        ? `${amount} booking deposit (charged when confirmed)`
-        : "Booking deposit required at confirmation";
+      if (amount) {
+        return `${amount} booking deposit (charged when confirmed)`;
+      }
+      if (treatment.onlineHandoff) {
+        return "Booking deposit required at confirmation";
+      }
+      return "Deposit/payment confirmed in booking app";
     }
     case "card_on_file":
       return "Card on file required · $0 charged at booking";
@@ -453,11 +328,22 @@ export function paymentRuleLabel(
   }
 }
 
+/**
+ * Exact service route when verified; otherwise location+category chooser.
+ * Never invents an unmapped `/book/{location}/{unknown}` path.
+ */
 export function buildHandoffUrl(
   locationSlug: BookingLocation,
   serviceSlug: string,
 ): string | null {
   const treatment = resolveGuidedTreatment(locationSlug, serviceSlug);
   if (!treatment) return null;
-  return `https://book.experiencerella.com/book/${locationSlug}/${serviceSlug}`;
+  if (treatment.onlineHandoff) {
+    return `https://book.experiencerella.com/book/${locationSlug}/${serviceSlug}`;
+  }
+  const categoryParam = treatment.category.toLowerCase();
+  const url = new URL("https://book.experiencerella.com/book");
+  url.searchParams.set("location", locationSlug);
+  url.searchParams.set("category", categoryParam);
+  return url.toString();
 }

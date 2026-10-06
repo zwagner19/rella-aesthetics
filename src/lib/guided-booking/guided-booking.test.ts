@@ -161,14 +161,41 @@ describe("guided booking Boulevard categories", () => {
     expect(groups.map((g) => g.category)).toEqual([
       "Injectables",
       "Laser",
+      "Microneedling",
       "Facials",
+      "Peels",
     ]);
     expect(groups.every((g) => g.category !== "Weight Loss")).toBe(true);
+    const total = groups.reduce((n, g) => n + g.treatments.length, 0);
+    expect(total).toBeGreaterThan(40);
+    expect(
+      groups
+        .find((g) => g.category === "Injectables")
+        ?.treatments.some((x) => x.displayName === "Sculptra"),
+    ).toBe(true);
+    expect(
+      groups
+        .find((g) => g.category === "Laser")
+        ?.treatments.some((x) => x.displayName === "IPL - Full Face"),
+    ).toBe(true);
   });
 
   it("starts with no expanded categories after location selection", () => {
     const state = selectLocation(bootstrapFromIntent({}), "vacaville");
     expect(state.step).toBe("treatments");
     expect(state.expandedCategories).toEqual([]);
+  });
+});
+
+
+describe("guided booking handoff for full Boulevard menu", () => {
+  it("uses exact routes for verified services and chooser for the rest", () => {
+    expect(buildHandoffUrl("napa", "botox")).toBe(
+      "https://book.experiencerella.com/book/napa/botox",
+    );
+    const sculptra = buildHandoffUrl("napa", "sculptra");
+    expect(sculptra).toContain("https://book.experiencerella.com/book?");
+    expect(sculptra).toContain("location=napa");
+    expect(sculptra).toContain("category=injectables");
   });
 });

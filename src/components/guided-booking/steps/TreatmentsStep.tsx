@@ -3,6 +3,7 @@
 import Image from "next/image";
 import {
   formatDeposit,
+  formatListPrice,
   paymentRuleLabel,
   treatmentsByCategory,
 } from "@/lib/guided-booking";
@@ -108,7 +109,13 @@ export function TreatmentsStep({
                             {treatment.shortDescription}
                           </p>
                           <p className="mt-2 text-xs text-silver">
-                            {[treatment.durationCopy, paymentRuleLabel(treatment)]
+                            {[
+                              treatment.durationCopy,
+                              formatListPrice(treatment.listPriceCents)
+                                ? `from ${formatListPrice(treatment.listPriceCents)}`
+                                : null,
+                              paymentRuleLabel(treatment),
+                            ]
                               .filter(Boolean)
                               .join(" · ")}
                           </p>

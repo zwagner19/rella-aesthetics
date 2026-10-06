@@ -100,7 +100,7 @@ export function CompleteStep({
             }`}
             aria-disabled={!ready}
           >
-            Continue to confirm on booking app
+            Continue on booking app
           </a>
         ) : (
           <p className="text-sm text-rose" role="alert">
