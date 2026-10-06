@@ -39,7 +39,7 @@ type CatalogSeed = {
   locationSlug: BookingLocation;
   serviceSlug: string;
   displayName: string;
-  category: BookingCategory | "consults";
+  category: "Injectables" | "Laser" | "Microneedling" | "Facials" | "Peels";
   shortDescription: string;
   durationCopy?: string;
   depositCents?: number;
@@ -60,7 +60,7 @@ const SEEDS: readonly CatalogSeed[] = [
     locationSlug: "napa",
     serviceSlug: "botox",
     displayName: "New Patient Tox",
-    category: "injectables",
+    category: "Injectables",
     shortDescription:
       "Your first tox visit includes a consultation to tailor neuromodulator treatment.",
     durationCopy: "30 min.",
@@ -78,7 +78,7 @@ const SEEDS: readonly CatalogSeed[] = [
     locationSlug: "napa",
     serviceSlug: "tox-established",
     displayName: "Established Patient Tox",
-    category: "injectables",
+    category: "Injectables",
     shortDescription: "A focused tox visit for established Rella patients.",
     durationCopy: "20–30 min.",
     depositCents: 5000,
@@ -91,7 +91,7 @@ const SEEDS: readonly CatalogSeed[] = [
     locationSlug: "napa",
     serviceSlug: "dermal-fillers",
     displayName: "Dermal Fillers",
-    category: "injectables",
+    category: "Injectables",
     shortDescription:
       "A personalized filler appointment focused on balanced, natural-looking results.",
     durationCopy: "65 min.",
@@ -109,7 +109,7 @@ const SEEDS: readonly CatalogSeed[] = [
     locationSlug: "napa",
     serviceSlug: "hyperhidrosis-consult",
     displayName: "Excessive Sweating Consult",
-    category: "injectables",
+    category: "Injectables",
     shortDescription:
       "A complimentary consultation to discuss excessive sweating and the appropriate next step.",
     durationCopy: "15 min.",
@@ -120,7 +120,7 @@ const SEEDS: readonly CatalogSeed[] = [
     locationSlug: "napa",
     serviceSlug: "hydrafacial",
     displayName: "Signature HydraFacial",
-    category: "facials",
+    category: "Facials",
     shortDescription: "Deep-cleanse, exfoliate, and hydrate in one treatment.",
     durationCopy: "45 min.",
     paymentRule: "card_on_file",
@@ -132,7 +132,7 @@ const SEEDS: readonly CatalogSeed[] = [
     locationSlug: "napa",
     serviceSlug: "hydrafacial-deluxe",
     displayName: "Deluxe HydraFacial",
-    category: "facials",
+    category: "Facials",
     shortDescription: "A deluxe HydraFacial visit with Rella’s esthetics team.",
     durationCopy: "45 min.",
     depositCents: 6000,
@@ -145,7 +145,7 @@ const SEEDS: readonly CatalogSeed[] = [
     locationSlug: "napa",
     serviceSlug: "skin-health-consult",
     displayName: "Initial Skin Health Consult",
-    category: "facials",
+    category: "Facials",
     shortDescription:
       "Start with a complimentary skin consultation to choose the right facial or skin-health plan.",
     durationCopy: "15 min.",
@@ -156,7 +156,7 @@ const SEEDS: readonly CatalogSeed[] = [
     locationSlug: "napa",
     serviceSlug: "laser-consult",
     displayName: "Initial Laser Consult",
-    category: "laser",
+    category: "Laser",
     shortDescription:
       "A complimentary consultation to match your goals with the appropriate laser treatment.",
     durationCopy: "15 min.",
@@ -169,7 +169,7 @@ const SEEDS: readonly CatalogSeed[] = [
     locationSlug: "vacaville",
     serviceSlug: "botox",
     displayName: "New Patient Tox",
-    category: "injectables",
+    category: "Injectables",
     shortDescription:
       "Your first tox visit includes a consultation to tailor neuromodulator treatment.",
     durationCopy: "30 min.",
@@ -187,7 +187,7 @@ const SEEDS: readonly CatalogSeed[] = [
     locationSlug: "vacaville",
     serviceSlug: "dermal-fillers",
     displayName: "Dermal Fillers",
-    category: "injectables",
+    category: "Injectables",
     shortDescription:
       "A personalized filler appointment focused on balanced, natural-looking results.",
     durationCopy: "65 min.",
@@ -201,7 +201,7 @@ const SEEDS: readonly CatalogSeed[] = [
     locationSlug: "vacaville",
     serviceSlug: "hydrafacial",
     displayName: "Signature HydraFacial",
-    category: "facials",
+    category: "Facials",
     shortDescription: "Deep-cleanse, exfoliate, and hydrate in one treatment.",
     durationCopy: "45 min.",
     depositCents: 6000,
@@ -214,7 +214,7 @@ const SEEDS: readonly CatalogSeed[] = [
     locationSlug: "vacaville",
     serviceSlug: "skin-health-consult",
     displayName: "Initial Skin Health Consult",
-    category: "facials",
+    category: "Facials",
     shortDescription:
       "Start with a complimentary skin consultation to choose the right facial or skin-health plan.",
     durationCopy: "30 min.",
@@ -225,7 +225,7 @@ const SEEDS: readonly CatalogSeed[] = [
     locationSlug: "vacaville",
     serviceSlug: "laser-consult",
     displayName: "Initial Laser Consult",
-    category: "laser",
+    category: "Laser",
     shortDescription:
       "A complimentary consultation to match your goals with the appropriate laser treatment.",
     durationCopy: "30 min.",
@@ -238,7 +238,7 @@ const SEEDS: readonly CatalogSeed[] = [
     locationSlug: "vacaville",
     serviceSlug: "microneedling-consult",
     displayName: "Initial Microneedling Consult",
-    category: "microneedling",
+    category: "Microneedling",
     shortDescription:
       "A complimentary consultation to confirm the right microneedling plan for your skin goals.",
     durationCopy: "30 min.",
@@ -251,7 +251,7 @@ const SEEDS: readonly CatalogSeed[] = [
     locationSlug: "vacaville",
     serviceSlug: "universal-peel",
     displayName: "Universal Peel",
-    category: "peels",
+    category: "Peels",
     shortDescription:
       "A professional chemical peel appointment customized for your skin and treatment goals.",
     durationCopy: "90 min.",
@@ -286,22 +286,32 @@ const TREATMENTS: readonly GuidedTreatment[] = SEEDS.map(toTreatment);
 
 const BY_KEY = new Map(TREATMENTS.map((t) => [t.key, t]));
 
-export const CATEGORY_LABELS: Record<string, string> = {
-  injectables: "Injectables",
-  facials: "Facials & Skin",
-  laser: "Laser",
-  microneedling: "Microneedling",
-  peels: "Peels",
-  consults: "Consultations",
+/**
+ * Boulevard Client API / rella-booking menu categories (aesthetics only).
+ * Source: `BOOKING_CATEGORY_ORDER` in rella-booking catalog — Weight Loss stays
+ * on the dedicated weight-loss host and is intentionally excluded here.
+ */
+export const BOULEVARD_CATEGORY_ORDER = [
+  "Injectables",
+  "Laser",
+  "Microneedling",
+  "Facials",
+  "Peels",
+] as const;
+
+export type BoulevardBookingCategory =
+  (typeof BOULEVARD_CATEGORY_ORDER)[number];
+
+export const CATEGORY_LABELS: Record<BoulevardBookingCategory, string> = {
+  Injectables: "Injectables",
+  Laser: "Laser",
+  Microneedling: "Microneedling",
+  Facials: "Facials",
+  Peels: "Peels",
 };
 
-export const CATEGORY_ORDER = [
-  "injectables",
-  "facials",
-  "laser",
-  "microneedling",
-  "peels",
-] as const;
+/** @deprecated Prefer BOULEVARD_CATEGORY_ORDER — kept as alias for callers. */
+export const CATEGORY_ORDER = BOULEVARD_CATEGORY_ORDER;
 
 /** Boulevard combination scheduling is not verified for this shell — one treatment only. */
 export const ALLOWS_MULTI_TREATMENT = false;
@@ -340,9 +350,9 @@ export function treatmentsByCategory(
     );
   });
 
-  return CATEGORY_ORDER.map((category) => ({
+  return BOULEVARD_CATEGORY_ORDER.map((category) => ({
     category,
-    label: CATEGORY_LABELS[category] ?? category,
+    label: CATEGORY_LABELS[category],
     treatments: treatments.filter((t) => t.category === category),
   })).filter((group) => group.treatments.length > 0);
 }

@@ -1,6 +1,7 @@
 import { describe, expect, it, vi } from "vitest";
 import {
   ALLOWS_MULTI_TREATMENT,
+  BOULEVARD_CATEGORY_ORDER,
   bootstrapFromIntent,
   buildHandoffUrl,
   createMockBackend,
@@ -11,6 +12,7 @@ import {
   resolveGuidedTreatment,
   selectLocation,
   toggleTreatment,
+  treatmentsByCategory,
   clientLooksComplete,
 } from "./index";
 
@@ -142,5 +144,31 @@ describe("guided booking analytics", () => {
     expect(sink).toHaveBeenCalledTimes(2);
     expect(sink.mock.calls[0][0].type).toBe("booking_open");
     expect(JSON.stringify(sink.mock.calls)).not.toMatch(/@|phone|ssn/i);
+  });
+});
+
+
+describe("guided booking Boulevard categories", () => {
+  it("uses Boulevard menu category names and order", () => {
+    expect([...BOULEVARD_CATEGORY_ORDER]).toEqual([
+      "Injectables",
+      "Laser",
+      "Microneedling",
+      "Facials",
+      "Peels",
+    ]);
+    const groups = treatmentsByCategory("napa");
+    expect(groups.map((g) => g.category)).toEqual([
+      "Injectables",
+      "Laser",
+      "Facials",
+    ]);
+    expect(groups.every((g) => g.category !== "Weight Loss")).toBe(true);
+  });
+
+  it("starts with no expanded categories after location selection", () => {
+    const state = selectLocation(bootstrapFromIntent({}), "vacaville");
+    expect(state.step).toBe("treatments");
+    expect(state.expandedCategories).toEqual([]);
   });
 });

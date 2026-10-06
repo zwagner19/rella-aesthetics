@@ -34,7 +34,8 @@ export interface GuidedTreatment {
   locationSlug: BookingLocation;
   serviceSlug: string;
   displayName: string;
-  category: BookingCategory | "consults";
+  /** Boulevard menu category (rella-booking / Client API). */
+  category: "Injectables" | "Laser" | "Microneedling" | "Facials" | "Peels";
   shortDescription: string;
   image?: string;
   imageAlt?: string;

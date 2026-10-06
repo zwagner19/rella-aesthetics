@@ -23,10 +23,8 @@ export function TreatmentsStep({
   onToggleTreatment: (key: string) => void;
 }) {
   const groups = treatmentsByCategory(locationSlug, state.search);
-  const expanded =
-    state.expandedCategories.length > 0
-      ? new Set(state.expandedCategories)
-      : new Set(groups.map((g) => g.category));
+  // Default: all Boulevard categories collapsed after location — expand on tap.
+  const expanded = new Set(state.expandedCategories);
 
   return (
     <div className="space-y-5">
@@ -35,7 +33,7 @@ export function TreatmentsStep({
           Choose a treatment
         </h3>
         <p className="mt-2 text-sm font-light text-silver">
-          Search or browse categories. Consultations are listed first when you are unsure.
+          Browse Boulevard treatment categories, or search. Open a category to see options — consultations are listed first in each group.
         </p>
       </div>
 
