@@ -5,6 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { resolveBookingHref } from "@/lib/booking-routes";
+import { BookTrigger } from "@/components/guided-booking/BookTrigger";
 import { MobileNav } from "./MobileNav";
 
 /** Primary editorial navigation — lean left rail for homepage architecture. */
@@ -96,9 +97,9 @@ export function Header() {
             <Link href="/membership" className={linkClass}>
               Membership
             </Link>
-            <Link href={bookingHref} className="rella-cta-rect rella-cta-rect--filled">
+            <BookTrigger intent={{}} data-booking-fallback={bookingHref} className="rella-cta-rect rella-cta-rect--filled">
               Book
-            </Link>
+            </BookTrigger>
           </div>
         </div>
 
@@ -115,12 +116,12 @@ export function Header() {
             />
           </Link>
           <div className="flex items-center gap-2 sm:gap-3">
-            <Link
-              href={bookingHref}
+            <BookTrigger
+              intent={{}}
               className="rella-cta-rect rella-cta-rect--filled px-4 py-3 text-[0.625rem] tracking-[0.12em]"
             >
               Book
-            </Link>
+            </BookTrigger>
             <button
               ref={mobileMenuButtonRef}
               type="button"

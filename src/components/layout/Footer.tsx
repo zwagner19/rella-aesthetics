@@ -1,6 +1,9 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
 import { resolveBookingHref } from "@/lib/booking-routes";
+import { BookTrigger } from "@/components/guided-booking/BookTrigger";
 import { locations } from "@/lib/data";
 
 const linkClass =
@@ -100,7 +103,7 @@ export function Footer() {
             </p>
             <ul className="space-y-1">
               <li><Link href="/contact" className={linkClass}>Contact</Link></li>
-              <li><Link href={resolveBookingHref({})} className={linkClass}>Book Online</Link></li>
+              <li><BookTrigger intent={{}} className={linkClass}>Book Online</BookTrigger></li>
               <li><Link href="/payment-plans" className={linkClass}>Payment Plans</Link></li>
               <li><Link href="/private-parties" className={linkClass}>Private Parties</Link></li>
             </ul>

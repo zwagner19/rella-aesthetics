@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef } from "react";
 import { resolveBookingHref } from "@/lib/booking-routes";
+import { BookTrigger } from "@/components/guided-booking/BookTrigger";
 
 interface MobileNavProps {
   links: readonly { href: string; label: string }[];
@@ -117,13 +118,12 @@ export function MobileNav({ links, isOpen, onClose }: MobileNavProps) {
         ))}
       </nav>
 
-      <Link
-        href={bookingHref}
+      <BookTrigger intent={{}}
         onClick={onClose}
         className="rella-cta-rect rella-cta-rect--filled mt-7 min-h-14 shrink-0"
       >
-        Book Consultation
-      </Link>
+          Book Consultation
+        </BookTrigger>
     </div>
   );
 }
