@@ -126,17 +126,12 @@ export const locations = {
     state: "CA",
     zip: "94559",
     phone: "707.358.2928",
-    hours: ["Monday–Friday: 9am–5pm", "Saturday: 9am–1pm", "Sunday: Closed"],
+    hours: ["Wednesday–Saturday: 9am–5pm", "Sunday–Tuesday: Closed"],
     openingHours: [
       {
-        dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+        dayOfWeek: ["Wednesday", "Thursday", "Friday", "Saturday"],
         opens: "09:00",
         closes: "17:00",
-      },
-      {
-        dayOfWeek: ["Saturday"],
-        opens: "09:00",
-        closes: "13:00",
       },
     ],
     mapUrl: "https://maps.google.com/?q=1541+3rd+St+Napa+CA+94559",

@@ -187,11 +187,18 @@ describe("ordinary marketing routes keep the global site chrome", () => {
     const groups = readdirSync(APP, { withFileTypes: true })
       .filter((e) => e.isDirectory() && e.name.startsWith("("))
       .map((e) => e.name);
-    expect(groups.sort()).toEqual(["(campaign)", "(site)"]);
+    expect(groups.sort()).toEqual(["(ad-landing)", "(campaign)", "(site)"]);
     const campaignRoutes = readdirSync(join(APP, "(campaign)"), { withFileTypes: true })
       .filter((e) => e.isDirectory())
       .map((e) => e.name);
     expect(campaignRoutes).toEqual(["napa"]); // nothing else opted out
+    // (ad-landing) keeps the site chrome but drops third-party trackers; it
+    // holds only clinic location and clinic-specific treatment pages.
+    const adLandingRoutes = readdirSync(join(APP, "(ad-landing)"), { withFileTypes: true })
+      .filter((e) => e.isDirectory())
+      .map((e) => e.name)
+      .sort();
+    expect(adLandingRoutes).toEqual(["locations", "napa", "vacaville"]);
   });
 
   it("the root layout owns the document and font — analytics moved to (site)", () => {

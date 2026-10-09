@@ -164,7 +164,7 @@ export function AestheticsAttributionConsent() {
         aria-expanded="false"
         onClick={() => controllerRef.current?.openSettings()}
       >
-        Cookie settings
+        Ad measurement settings
       </button>
     );
   }
@@ -182,11 +182,12 @@ export function AestheticsAttributionConsent() {
       }}
     >
       <h2 id="rella-aesthetics-cookie-title" className={styles.title}>
-        Cookies
+        Help us measure our ads?
       </h2>
       <p id="rella-aesthetics-cookie-copy" className={styles.copy}>
-        Accept cookies to help us understand whether a Google ad leads to a
-        booked appointment. Booking and care are unchanged. {" "}
+        Allow us to note that you came from our Google ad, so we can see
+        whether it led to a booking? We never share your treatment or health
+        details, and booking works the same either way.{" "}
         <a href="/privacy-policy">
           Privacy policy
         </a>
@@ -199,7 +200,7 @@ export function AestheticsAttributionConsent() {
           disabled={busy}
           onClick={() => void controllerRef.current?.accept()}
         >
-          Accept cookies
+          Allow
         </button>
         <button
           type="button"
@@ -207,7 +208,7 @@ export function AestheticsAttributionConsent() {
           disabled={view.phase === "denying"}
           onClick={() => void controllerRef.current?.deny()}
         >
-          {view.choice === "granted" ? "Turn off" : "Decline"}
+          {view.choice === "granted" ? "Turn off" : "No thanks"}
         </button>
       </div>
       {view.status ? (

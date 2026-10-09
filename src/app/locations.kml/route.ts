@@ -9,7 +9,7 @@ const LOCATIONS_KML = `<?xml version="1.0" encoding="UTF-8"?>
     </Placemark>
     <Placemark>
       <name>Rella Aesthetics — Napa</name>
-      <description>1541 3rd St, Napa, CA 94559 · 707.358.2928 · Monday–Friday, 9am–5pm · Saturday, 9am–1pm</description>
+      <description>1541 3rd St, Napa, CA 94559 · 707.358.2928 · Wednesday–Saturday, 9am–5pm</description>
       <address>1541 3rd St, Napa, CA 94559</address>
     </Placemark>
   </Document>

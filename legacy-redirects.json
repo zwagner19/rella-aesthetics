@@ -20,10 +20,6 @@
   { "source": "/terms-and-conditions", "destination": "/terms" },
   { "source": "/thank-you", "destination": "/contact" },
   { "source": "/napa", "destination": "/locations/napa" },
-  { "source": "/napa/hyperhidrosis", "destination": "/services/botox" },
-  { "source": "/napa/hydrafacial", "destination": "/services/hydrafacial" },
-  { "source": "/napa/filler", "destination": "/services/dermal-fillers" },
-  { "source": "/napa/laser", "destination": "/services/laser-treatments" },
   { "source": "/sitemap_index.xml", "destination": "/sitemap.xml" },
   { "source": "/wp-sitemap.xml", "destination": "/sitemap.xml" },
   { "source": "/index.php/botox", "destination": "/services/botox" },
@@ -37,5 +33,7 @@
   { "source": "/microneedling-for-acne-scar-treatment-vacaville-ca/how-does-microneedling-address-different-types-of-acne-scars", "destination": "/services/microneedling" },
   { "source": "/facial-laser-treatment/choosing-the-right-facial-laser-treatment-for-your-skin-type", "destination": "/services/laser-treatments" },
   { "source": "/weight-loss-treatment/the-role-of-massage-therapy-in-spa-weight-loss-treatment", "destination": "/services/weight-loss" },
-  { "source": "/facial-laser-treatment/why-should-derma-facial-treatments-be-part-of-your-skincare-routine", "destination": "/services/facials" }
+  { "source": "/facial-laser-treatment/why-should-derma-facial-treatments-be-part-of-your-skincare-routine", "destination": "/services/facials" },
+  { "source": "/laser-hair-removal", "destination": "/services/laser-treatments" },
+  { "source": "/vacaville", "destination": "/locations/vacaville" }
 ]

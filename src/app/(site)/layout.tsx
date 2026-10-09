@@ -5,6 +5,7 @@ import { GhlChatWidget } from "@/components/integrations/GhlChatWidget";
 import { GoogleAnalytics } from "@/components/integrations/GoogleAnalytics";
 import { MetaPixel } from "@/components/integrations/MetaPixel";
 import { MobileConversionBar } from "@/components/layout/MobileConversionBar";
+import { AdLandingHardNavigation } from "@/components/integrations/AdLandingHardNavigation";
 
 /**
  * Global site chrome for every ordinary marketing route.
@@ -22,6 +23,8 @@ export default function SiteLayout({ children }: Readonly<{ children: React.Reac
           from the root layout so the campaign group cannot inherit them. */}
       <GoogleAnalytics />
       <MetaPixel />
+      {/* Ad landing pages must start without the trackers above. */}
+      <AdLandingHardNavigation />
       <SkipNav />
       <Header />
       <main
