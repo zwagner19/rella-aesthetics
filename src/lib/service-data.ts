@@ -102,7 +102,7 @@ export const servicePages: ServicePageData[] = [
     pricing: {
       heading: "Your plan comes first.",
       body: "Filler product, area, and amount are chosen during consultation — not from a public menu. Your provider reviews the recommendation and expected total before treatment.",
-      note: "Any booking deposit is separate from treatment totals discussed in consult.",
+      note: "Your provider will review the recommendation and expected total before treatment.",
     },
     faq: [
       { question: "How long do fillers last?", answer: "Expected duration varies by product, treatment area, amount, and individual response. Your provider will review the labeling and expectations for the exact product being considered." },
