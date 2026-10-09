@@ -72,8 +72,8 @@ export const servicePages: ServicePageData[] = [
     metaTitle: "Dermal Fillers in Vacaville & Napa CA",
     metaDescription: "Explore consultation-led dermal filler treatments for facial volume, contour, and lips at Rella Aesthetics in Vacaville and Napa.",
     heroEyebrow: "Injectables",
-    heroTitle: "Dermal Fillers",
-    heroDescription: "Plan subtle, anatomy-aware volume and contour enhancements with filler options selected during a consultation.",
+    heroTitle: "A little volume. A lot of intention.",
+    heroDescription: "Volume and contour planned around the features you want to keep.",
     whatItIs: {
       heading: "What Are Dermal Fillers?",
       body: "Dermal fillers are injectable gels that may be used to add volume or support a facial-contouring plan. Rella carries multiple products, including hyaluronic acid fillers, for areas such as the cheeks, lips, and facial folds. The appropriate area, product, amount, and expected duration depend on your anatomy and treatment plan.",
@@ -100,9 +100,9 @@ export const servicePages: ServicePageData[] = [
       ],
     },
     pricing: {
-      heading: "Pricing",
-      body: "The current dermal-filler base service amount is $840. Active product prices range from $540 to $960, and the appropriate product and total depend on the treatment plan.",
-      note: "Your provider will review the recommendation and expected total before treatment.",
+      heading: "Your plan comes first.",
+      body: "Filler product, area, and amount are chosen during consultation — not from a public menu. Your provider reviews the recommendation and expected total before treatment.",
+      note: "Any booking deposit is separate from treatment totals discussed in consult.",
     },
     faq: [
       { question: "How long do fillers last?", answer: "Expected duration varies by product, treatment area, amount, and individual response. Your provider will review the labeling and expectations for the exact product being considered." },
@@ -110,7 +110,7 @@ export const servicePages: ServicePageData[] = [
       { question: "Can fillers be reversed?", answer: "Some hyaluronic acid filler may be reduced or dissolved with hyaluronidase when clinically indicated. Removal is not risk-free and may be difficult or impossible for some filler materials, so it requires an individual evaluation." },
       { question: "How much filler will I need?", answer: "This depends on your goals and the areas being treated. During your consultation, your provider will create a personalized treatment plan." },
     ],
-    image: "/images/treatments/dermal-fillers.webp",
+    image: "/images/service-fillers.jpg",
     imageAlt: "A provider performing an injectable treatment near a patient's lips",
   },
   {

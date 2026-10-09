@@ -36,7 +36,8 @@ export function Header() {
   const pathname = usePathname();
   const isHome = pathname === "/";
   /** Full-bleed editorial heroes that share the homepage over-nav treatment. */
-  const isEditorialHeroRoute = isHome || pathname === "/services/botox";
+  const isEditorialHeroRoute =
+    isHome || pathname === "/services/botox" || pathname === "/services/dermal-fillers";
   const [mobileOpen, setMobileOpen] = useState(false);
   const [scrolled, setScrolled] = useState(!isEditorialHeroRoute);
   const mobileMenuButtonRef = useRef<HTMLButtonElement>(null);

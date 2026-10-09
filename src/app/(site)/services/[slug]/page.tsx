@@ -6,6 +6,7 @@ import { FaqAccordion, FaqSchema } from "@/components/blocks/FaqAccordion";
 import { Button } from "@/components/ui/Button";
 import { resolveBookingHref, type BookingLocation } from "@/lib/booking-routes";
 import { BotoxDysportServicePage } from "@/components/pages/BotoxDysportServicePage";
+import { DermalFillersServicePage } from "@/components/pages/DermalFillersServicePage";
 import { EditorialTreatmentPage } from "@/components/pages/EditorialTreatmentPage";
 import { WeightLossServicePage } from "@/components/pages/WeightLossServicePage";
 import { getServiceMetadata } from "@/lib/service-metadata";
@@ -41,6 +42,10 @@ export default async function ServicePage({ params }: ServicePageProps) {
 
   if (service.slug === "botox") {
     return <BotoxDysportServicePage />;
+  }
+
+  if (service.slug === "dermal-fillers") {
+    return <DermalFillersServicePage />;
   }
 
   const editorial = getTreatmentEditorial(service.slug);
