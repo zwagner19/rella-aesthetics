@@ -6,7 +6,8 @@ import {
 } from "@/components/pages/NapaLocalServicePage";
 
 // Preserves the live WordPress /napa/laser/ page: title, description, facts,
-// prices, and questions as published there on 2026-10-08.
+// and questions as published there on 2026-10-08. Prices follow the
+// Rella pricing canon used on the Vacaville pages (decided 2026-10-09).
 const content: NapaLocalServiceContent = {
   slug: "laser",
   service: "laser",
@@ -34,7 +35,7 @@ const content: NapaLocalServiceContent = {
     },
   ],
   price: {
-    headline: "CoolPeel from $700 · CO2 from $800",
+    headline: "IPL Full Face $420 · CO2 CoolPeel Full Face $1,440",
     detail: "Exact plan and pricing confirmed at your free skin consultation.",
   },
   faqs: [
@@ -56,7 +57,7 @@ const content: NapaLocalServiceContent = {
     {
       question: "What does it cost?",
       answer:
-        "CoolPeel from ~$700 and CO2 resurfacing from ~$800; your exact quote comes with your free consult.",
+        "IPL Full Face is $420 and CO2 CoolPeel Full Face is $1,440. Other areas and packages depend on your plan; your exact quote comes with your free consult.",
     },
   ],
   closing: {

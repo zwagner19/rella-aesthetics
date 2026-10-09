@@ -48,4 +48,18 @@ describe("ad landing privacy boundary", () => {
       expect(location, path).toBe(expected);
     }
   });
+
+  it("prices Napa treatment pages on the same canon as Vacaville", () => {
+    const read = (path: string) => readFileSync(join(GROUP, path, "page.tsx"), "utf8");
+    expect(read("napa/filler")).toContain("$840");
+    expect(read("vacaville/filler")).toContain("$840");
+    expect(read("napa/laser")).toContain("$1,440");
+    expect(read("vacaville/laser")).toContain("$1,440");
+    expect(read("napa/hydrafacial")).toContain("Deluxe $300");
+    for (const page of ["napa/filler", "napa/hydrafacial", "napa/hyperhidrosis", "napa/laser"]) {
+      for (const retired of ["$700", "$800", "~$1,000", "$50 off"]) {
+        expect(read(page), `${page} still shows ${retired}`).not.toContain(retired);
+      }
+    }
+  });
 });

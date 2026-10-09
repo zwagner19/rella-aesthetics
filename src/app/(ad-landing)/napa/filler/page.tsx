@@ -6,7 +6,8 @@ import {
 } from "@/components/pages/NapaLocalServicePage";
 
 // Preserves the live WordPress /napa/filler/ page: title, description, facts,
-// prices, and questions as published there on 2026-10-08.
+// and questions as published there on 2026-10-08. Prices follow the
+// Rella pricing canon used on the Vacaville pages (decided 2026-10-09).
 const content: NapaLocalServiceContent = {
   slug: "filler",
   service: "dermal-fillers",
@@ -34,8 +35,8 @@ const content: NapaLocalServiceContent = {
     },
   ],
   price: {
-    headline: "Fillers from $700/syringe",
-    detail: "Half syringe from $600 · Members from $500.",
+    headline: "Dermal filler: $840 base service",
+    detail: "Filler products range from $540 to $960 · 2026 Filler Membership $40/month with product-specific member rates.",
   },
   faqs: [
     {

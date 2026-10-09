@@ -6,7 +6,8 @@ import {
 } from "@/components/pages/NapaLocalServicePage";
 
 // Preserves the live WordPress /napa/hyperhidrosis/ page: title, description, facts,
-// prices, and questions as published there on 2026-10-08.
+// and questions as published there on 2026-10-08. Prices follow the
+// Rella pricing canon used on the Vacaville pages (decided 2026-10-09).
 const content: NapaLocalServiceContent = {
   slug: "hyperhidrosis",
   service: "hyperhidrosis",
@@ -34,7 +35,7 @@ const content: NapaLocalServiceContent = {
     },
   ],
   price: {
-    headline: "Full treatment ~$1,000 (100 units)",
+    headline: "Botox $18/unit · Members $13/unit",
     detail: "Free private consultation first — always.",
   },
   faqs: [

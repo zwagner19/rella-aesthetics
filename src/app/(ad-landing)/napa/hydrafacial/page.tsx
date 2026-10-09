@@ -6,7 +6,8 @@ import {
 } from "@/components/pages/NapaLocalServicePage";
 
 // Preserves the live WordPress /napa/hydrafacial/ page: title, description, facts,
-// prices, and questions as published there on 2026-10-08.
+// and questions as published there on 2026-10-08. Prices follow the
+// Rella pricing canon used on the Vacaville pages (decided 2026-10-09).
 const content: NapaLocalServiceContent = {
   slug: "hydrafacial",
   service: "hydrafacial",
@@ -34,8 +35,8 @@ const content: NapaLocalServiceContent = {
     },
   ],
   price: {
-    headline: "New patients: $50 off the Deluxe HydraFacial",
-    detail: "Book online and mention the new-patient offer at check-in.",
+    headline: "Signature $240 · Deluxe $300 · Platinum $390",
+    detail: "Your provider confirms the right HydraFacial level at your visit.",
   },
   faqs: [
     {
