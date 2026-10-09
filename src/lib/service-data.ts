@@ -101,7 +101,7 @@ export const servicePages: ServicePageData[] = [
     },
     pricing: {
       heading: "Your plan comes first.",
-      body: "Filler product, area, and amount are chosen during consultation — not from a public menu. Your provider reviews the recommendation and expected total before treatment.",
+      body: "Filler product, area, and amount are chosen during consultation — not from a public menu.",
       note: "Your provider will review the recommendation and expected total before treatment.",
     },
     faq: [
