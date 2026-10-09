@@ -7,6 +7,7 @@ import {
   AestheticsAttributionController,
   cleanAestheticsBookingHref,
   hasEligibleAestheticsPaidClick,
+  aestheticsLandingLocation,
   isApprovedAestheticsPilotPage,
   stripAestheticsAttribution,
   type AestheticsAttributionRuntime,
@@ -200,15 +201,16 @@ describe("consent-safe aesthetics capture", () => {
 
   it.each([
     ["experiencerella.com", "/"],
-    ["experiencerella.com", "/napa/facials"],
+    ["experiencerella.com", "/services/botox"],
     ["experiencerella.com", "/napa/botox/extra"],
-    ["experiencerella.com", "/locations/napa"],
-    ["experiencerella.com", "/vacaville/botox"],
+    ["experiencerella.com", "/locations"],
+    ["experiencerella.com", "/vacaville/unknown"],
     ["experiencerella.com", "/napa/botoxx"],
+    ["www.experiencerella.com", "/vacaville/botox"],
     ["www.experiencerella.com", "/napa/botox"],
     ["rella-napa-botox-release.vercel.app", "/napa/botox"],
   ])(
-    "keeps a paid click inert outside the exact pilot: %s%s",
+    "keeps a paid click inert outside the approved ad landing pages: %s%s",
     (host, path) => {
       const runtime = new FakeRuntime();
       runtime.host = host;
@@ -226,6 +228,57 @@ describe("consent-safe aesthetics capture", () => {
       expect(runtime.publications).toHaveLength(0);
     },
   );
+
+  it.each([
+    ["/locations/vacaville", "vacaville"],
+    ["/vacaville/botox", "vacaville"],
+    ["/vacaville/hydrafacial", "vacaville"],
+    ["/locations/napa", "napa"],
+    ["/napa/filler", "napa"],
+    ["/napa/laser", "napa"],
+    ["/napa/botox", "napa"],
+  ])(
+    "maps the ad landing page %s to the %s clinic",
+    (path, location) => {
+      expect(aestheticsLandingLocation("experiencerella.com", path)).toBe(location);
+      expect(aestheticsLandingLocation("experiencerella.com", `${path}/`)).toBe(location);
+      expect(aestheticsLandingLocation("www.experiencerella.com", path)).toBeNull();
+    },
+  );
+
+  it("sends the Vacaville clinic for a consented click on a Vacaville landing page", async () => {
+    const runtime = new FakeRuntime();
+    runtime.setChoice("granted");
+    runtime.href =
+      "https://experiencerella.com/vacaville/botox?gclid=vacaville-click&campaignid=21094335050";
+    runtime.responses.push(GRANT_RESPONSE);
+    const controller = new AestheticsAttributionController(runtime);
+    controller.start();
+    await settle();
+    expect(runtime.requests).toHaveLength(1);
+    expect(runtime.requests[0].body).toMatchObject({
+      location: "vacaville",
+      consentAdUserData: "granted",
+      gclid: "vacaville-click",
+      campaignid: "21094335050",
+    });
+    expect(runtime.href).not.toContain("gclid");
+    controller.destroy();
+  });
+
+  it("never sends a Napa clinic for a Vacaville landing page", async () => {
+    const runtime = new FakeRuntime();
+    runtime.setChoice("granted");
+    runtime.href = "https://experiencerella.com/locations/vacaville?gbraid=v-click";
+    runtime.responses.push(GRANT_RESPONSE);
+    const controller = new AestheticsAttributionController(runtime);
+    controller.start();
+    await settle();
+    expect(runtime.requests.map((request) => request.body.location)).toEqual([
+      "vacaville",
+    ]);
+    controller.destroy();
+  });
 
   it("shows a compact choice without any pre-consent POST", () => {
     const runtime = new FakeRuntime();
@@ -346,7 +399,7 @@ describe("consent-safe aesthetics capture", () => {
     const writesBeforeLeavingPilot = runtime.cookieWrites.length;
 
     runtime.href =
-      "https://experiencerella.com/vacaville/facials/?gbraid=must-stay-inert&gad_campaignid=999";
+      "https://experiencerella.com/services/facials/?gbraid=must-stay-inert&gad_campaignid=999";
     first.reconcileNavigation();
     await settle();
     expect(runtime.requests).toHaveLength(1);

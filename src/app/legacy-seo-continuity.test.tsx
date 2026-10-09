@@ -7,10 +7,10 @@ import { GET as getEvents } from "./(site)/events/route";
 import GiveawayTermsPage, {
   metadata as giveawayMetadata,
 } from "./(site)/giveaway-terms-and-conditions/page";
-import NapaLocationPage from "./(site)/locations/napa/page";
+import NapaLocationPage from "./(ad-landing)/locations/napa/page";
 import VacavilleLocationPage, {
   metadata as vacavilleMetadata,
-} from "./(site)/locations/vacaville/page";
+} from "./(ad-landing)/locations/vacaville/page";
 import PaymentPlansPage, {
   metadata as paymentMetadata,
 } from "./(site)/payment-plans/page";

@@ -26,7 +26,10 @@ const featuredSlugs = new Set([
 const featuredServices = services.filter((service) => featuredSlugs.has(service.slug));
 const localServiceHrefs: Readonly<Record<string, string>> = {
   botox: "/napa/botox",
+  "dermal-fillers": "/napa/filler",
   facials: "/napa/facials",
+  hydrafacial: "/napa/hydrafacial",
+  "laser-treatments": "/napa/laser",
 };
 
 export default function NapaPage() {

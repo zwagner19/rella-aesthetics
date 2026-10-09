@@ -57,10 +57,14 @@ const retainedIndexedRoutes = new Map<string, string>([
   ["/cancellation-policy", "src/app/(site)/cancellation-policy/page.tsx"],
   ["/contact", "src/app/(site)/contact/page.tsx"],
   ["/giveaway-terms-and-conditions", "src/app/(site)/giveaway-terms-and-conditions/page.tsx"],
-  ["/locations/napa", "src/app/(site)/locations/napa/page.tsx"],
-  ["/locations/vacaville", "src/app/(site)/locations/vacaville/page.tsx"],
+  ["/locations/napa", "src/app/(ad-landing)/locations/napa/page.tsx"],
+  ["/locations/vacaville", "src/app/(ad-landing)/locations/vacaville/page.tsx"],
   ["/membership", "src/app/(site)/membership/page.tsx"],
   ["/napa/botox", "src/app/(campaign)/napa/botox/page.tsx"],
+  ["/napa/filler", "src/app/(ad-landing)/napa/filler/page.tsx"],
+  ["/napa/hydrafacial", "src/app/(ad-landing)/napa/hydrafacial/page.tsx"],
+  ["/napa/hyperhidrosis", "src/app/(ad-landing)/napa/hyperhidrosis/page.tsx"],
+  ["/napa/laser", "src/app/(ad-landing)/napa/laser/page.tsx"],
   ["/payment-plans", "src/app/(site)/payment-plans/page.tsx"],
   ["/privacy-policy", "src/app/(site)/privacy-policy/page.tsx"],
   ["/private-parties", "src/app/(site)/private-parties/page.tsx"],
@@ -86,7 +90,7 @@ describe("legacy WordPress URL continuity", () => {
   it("keeps a unique internal redirect inventory without self redirects", () => {
     const sources = legacyRedirects.map(({ source }) => source);
 
-    expect(legacyRedirects).toHaveLength(39);
+    expect(legacyRedirects).toHaveLength(37);
     expect(new Set(sources).size).toBe(sources.length);
     for (const { source, destination } of legacyRedirects) {
       expect(source).toMatch(/^\/(?:[^/].*[^/]|[^/])$/);
@@ -100,10 +104,13 @@ describe("legacy WordPress URL continuity", () => {
     const map = new Map(legacyRedirects.map(({ source, destination }) => [source, destination]));
 
     expect(map.get("/napa")).toBe("/locations/napa");
-    expect(map.get("/napa/hyperhidrosis")).toBe("/services/botox");
-    expect(map.get("/napa/hydrafacial")).toBe("/services/hydrafacial");
-    expect(map.get("/napa/filler")).toBe("/services/dermal-fillers");
-    expect(map.get("/napa/laser")).toBe("/services/laser-treatments");
+    // Ranking Napa treatment pages are retained as Napa pages, not redirected.
+    expect(map.has("/napa/hyperhidrosis")).toBe(false);
+    expect(map.has("/napa/hydrafacial")).toBe(false);
+    expect(map.has("/napa/filler")).toBe(false);
+    expect(map.has("/napa/laser")).toBe(false);
+    expect(map.get("/laser-hair-removal")).toBe("/services/laser-treatments");
+    expect(map.get("/vacaville")).toBe("/locations/vacaville");
     expect(map.get("/terms-and-conditions")).toBe("/terms");
     expect(map.get("/thank-you")).toBe("/contact");
     expect(map.get("/sitemap_index.xml")).toBe("/sitemap.xml");

@@ -1,12 +1,12 @@
 import { describe, expect, it } from "vitest";
 import { renderToStaticMarkup } from "react-dom/server";
 import ServicePage from "@/app/(site)/services/[slug]/page";
-import NapaFacialsPage from "@/app/(site)/napa/facials/page";
-import VacavilleChemicalPeelsPage from "@/app/(site)/vacaville/chemical-peels/page";
-import VacavilleFacialsPage from "@/app/(site)/vacaville/facials/page";
-import VacavilleHydrafacialPage from "@/app/(site)/vacaville/hydrafacial/page";
-import VacavilleLaserPage from "@/app/(site)/vacaville/laser/page";
-import VacavilleMicroneedlingPage from "@/app/(site)/vacaville/microneedling/page";
+import NapaFacialsPage from "@/app/(ad-landing)/napa/facials/page";
+import VacavilleChemicalPeelsPage from "@/app/(ad-landing)/vacaville/chemical-peels/page";
+import VacavilleFacialsPage from "@/app/(ad-landing)/vacaville/facials/page";
+import VacavilleHydrafacialPage from "@/app/(ad-landing)/vacaville/hydrafacial/page";
+import VacavilleLaserPage from "@/app/(ad-landing)/vacaville/laser/page";
+import VacavilleMicroneedlingPage from "@/app/(ad-landing)/vacaville/microneedling/page";
 
 async function renderService(slug: string): Promise<string> {
   const page = await ServicePage({ params: Promise.resolve({ slug }) });

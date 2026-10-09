@@ -40,10 +40,11 @@ describe("aesthetics attribution integration boundaries", () => {
     );
   });
 
-  it("uses plain cookie language and a compact isolated stylesheet", () => {
-    expect(component).toContain("Cookies");
-    expect(component).toContain("Accept cookies");
-    expect(component).toContain("Decline");
+  it("uses the approved plain-language ad-measurement copy and a compact isolated stylesheet", () => {
+    expect(component).toContain("Help us measure our ads?");
+    expect(component).toContain("We never share your treatment or health");
+    expect(component).toContain("Allow");
+    expect(component).toContain("No thanks");
     expect(component).not.toContain("Allow measurement");
     expect(component).toContain("AestheticsAttributionConsent.module.css");
   });

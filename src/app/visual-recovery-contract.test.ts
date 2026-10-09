@@ -88,7 +88,7 @@ describe("PR14 visual recovery contract", () => {
   it("keeps the approved Napa reception image instead of restoring the rejected house photo", () => {
     const homeVisual = source("components/home/HomeLocationVisual.tsx");
     const homeVisualData = source("components/home/home-location-visuals.ts");
-    const napaLocation = source("app/(site)/locations/napa/page.tsx");
+    const napaLocation = source("app/(ad-landing)/locations/napa/page.tsx");
     const homeLocations = source("components/home/HomeLocations.tsx");
 
     expect(homeVisualData).toContain("/images/clinic/napa-reception.webp");

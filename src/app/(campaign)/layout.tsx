@@ -1,4 +1,5 @@
 import { AestheticsAttributionConsent } from "@/components/integrations/AestheticsAttributionConsent";
+import { AdLandingTrackerGuard } from "@/components/integrations/AdLandingTrackerGuard";
 
 /**
  * Campaign routes — policy layout.
@@ -29,6 +30,7 @@ export default function CampaignLayout({ children }: Readonly<{ children: React.
   return (
     <>
       {children}
+      <AdLandingTrackerGuard />
       <AestheticsAttributionConsent />
     </>
   );

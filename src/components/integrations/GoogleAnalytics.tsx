@@ -1,7 +1,8 @@
 import Script from "next/script";
 
-/** Reject malformed values before embedding an environment variable in JS. */
-export const GA_MEASUREMENT_ID_PATTERN = /^G-[A-Z0-9]{6,}$/;
+import { GA_MEASUREMENT_ID_PATTERN } from "@/lib/analytics-ids";
+
+export { GA_MEASUREMENT_ID_PATTERN };
 
 const RAW_GA_ID = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID;
 const GA_ID =

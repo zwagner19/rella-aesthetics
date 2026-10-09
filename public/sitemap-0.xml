@@ -10,6 +10,10 @@
 <url><loc>https://experiencerella.com/membership</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
 <url><loc>https://experiencerella.com/napa/botox</loc><changefreq>weekly</changefreq><priority>0.9</priority></url>
 <url><loc>https://experiencerella.com/napa/facials</loc><changefreq>weekly</changefreq><priority>0.9</priority></url>
+<url><loc>https://experiencerella.com/napa/filler</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+<url><loc>https://experiencerella.com/napa/hydrafacial</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+<url><loc>https://experiencerella.com/napa/hyperhidrosis</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+<url><loc>https://experiencerella.com/napa/laser</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
 <url><loc>https://experiencerella.com/payment-plans</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
 <url><loc>https://experiencerella.com/privacy-policy</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
 <url><loc>https://experiencerella.com/private-parties</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
@@ -19,9 +23,12 @@
 <url><loc>https://experiencerella.com/services/dermal-fillers</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
 <url><loc>https://experiencerella.com/services/facials</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
 <url><loc>https://experiencerella.com/services/hydrafacial</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
+<url><loc>https://experiencerella.com/services/injectables</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
 <url><loc>https://experiencerella.com/services/iv-hydration</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
 <url><loc>https://experiencerella.com/services/laser-treatments</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
+<url><loc>https://experiencerella.com/services/lasers</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
 <url><loc>https://experiencerella.com/services/microneedling</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
+<url><loc>https://experiencerella.com/services/skin</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
 <url><loc>https://experiencerella.com/team</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
 <url><loc>https://experiencerella.com/terms</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
 <url><loc>https://experiencerella.com/vacaville/botox</loc><changefreq>weekly</changefreq><priority>0.9</priority></url>

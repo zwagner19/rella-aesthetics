@@ -3,6 +3,35 @@ export const AESTHETICS_ATTRIBUTION_ENDPOINT =
 export const AESTHETICS_BOOKING_ORIGIN = "https://book.experiencerella.com";
 export const AESTHETICS_PILOT_PATH = "/napa/botox";
 
+export type AestheticsLandingLocation = "napa" | "vacaville";
+
+/**
+ * Every page an aesthetics ad may land on, mapped to the clinic it serves.
+ * These pages carry the consent panel and load no third-party analytics,
+ * advertising, or chat scripts (see the `(ad-landing)` and `(campaign)`
+ * route groups). The panel appears only for a visitor who arrived with a
+ * single Google click identifier or has an existing ad-measurement choice.
+ */
+export const AESTHETICS_AD_LANDING_PAGES: Readonly<
+  Record<string, AestheticsLandingLocation>
+> = {
+  [AESTHETICS_PILOT_PATH]: "napa",
+  "/locations/napa": "napa",
+  "/napa/facials": "napa",
+  "/napa/filler": "napa",
+  "/napa/hydrafacial": "napa",
+  "/napa/hyperhidrosis": "napa",
+  "/napa/laser": "napa",
+  "/locations/vacaville": "vacaville",
+  "/vacaville/botox": "vacaville",
+  "/vacaville/chemical-peels": "vacaville",
+  "/vacaville/facials": "vacaville",
+  "/vacaville/filler": "vacaville",
+  "/vacaville/hydrafacial": "vacaville",
+  "/vacaville/laser": "vacaville",
+  "/vacaville/microneedling": "vacaville",
+};
+
 export const AESTHETICS_CONSENT_COOKIE =
   "__Host-rella_napa_aesthetics_consent_v1";
 export const AD_ATTRIBUTION_REVOCATION_COOKIE =
@@ -137,14 +166,22 @@ function normalizedPath(pathname: string): string {
   return path.length > 1 ? path.replace(/\/+$/, "") : path;
 }
 
+export function aestheticsLandingLocation(
+  hostname: string,
+  pathname: string,
+): AestheticsLandingLocation | null {
+  if (hostname !== "experiencerella.com") return null;
+  const path = normalizedPath(pathname);
+  return Object.hasOwn(AESTHETICS_AD_LANDING_PAGES, path)
+    ? AESTHETICS_AD_LANDING_PAGES[path]
+    : null;
+}
+
 export function isApprovedAestheticsPilotPage(
   hostname: string,
   pathname: string,
 ): boolean {
-  return (
-    hostname === "experiencerella.com" &&
-    normalizedPath(pathname) === AESTHETICS_PILOT_PATH
-  );
+  return aestheticsLandingLocation(hostname, pathname) !== null;
 }
 
 function approvedPaidClick(search: string): ApprovedPaidClick | null {
@@ -285,7 +322,7 @@ function isDeniedAcknowledgement(value: unknown): boolean {
 }
 
 /**
- * Consent state machine for the exact Napa campaign pilot. Raw click IDs exist
+ * Consent state machine for Rella's approved aesthetics ad landing pages. Raw click IDs exist
  * only in a short-lived grant payload and are never written to browser storage,
  * analytics globals, logs, or booking URLs.
  */
@@ -540,12 +577,19 @@ export class AestheticsAttributionController {
     this.pendingBookingHref = cleanAestheticsBookingHref(href);
     const status =
       this.phase === "choice"
-        ? "Choose whether to accept cookies, then booking will continue."
+        ? "Choose Allow or No thanks, then booking will continue."
         : this.phase === "error"
-          ? "Decline cookies to continue booking without ad measurement."
+          ? "Choose No thanks to continue booking without ad measurement."
           : "Finishing your cookie choice before booking...";
     this.setView("panel", this.phase, this.choice, status);
     return true;
+  }
+
+  private currentLocation(): AestheticsLandingLocation | null {
+    const url = safeUrl(this.runtime.currentHref());
+    return url
+      ? aestheticsLandingLocation(this.runtime.hostname(), url.pathname)
+      : null;
   }
 
   private setView(
@@ -657,7 +701,7 @@ export class AestheticsAttributionController {
     if (this.denialPromise) return this.denialPromise;
     const attemptedHandle = readRevocationHandle(this.runtime.cookieHeader());
     const payload: DeniedPayload = {
-      location: "napa",
+      location: this.currentLocation() ?? "napa",
       consentAdUserData: "denied",
       ...(attemptedHandle ? { revocationHandle: attemptedHandle } : {}),
     };
@@ -712,8 +756,14 @@ export class AestheticsAttributionController {
         return;
       }
 
+      const location = this.currentLocation();
+      if (!location) {
+        this.phase = "granted";
+        this.setView("reopen", "granted", "granted", "");
+        return;
+      }
       const payload: GrantedPayload = {
-        location: "napa",
+        location,
         consentAdUserData: "granted",
         revocationHandle: handle,
         ...(predecessor ? { revocationPredecessorHandle: predecessor } : {}),
@@ -750,7 +800,7 @@ export class AestheticsAttributionController {
           "panel",
           "error",
           "granted",
-          "We could not save ad measurement. Try again or decline cookies to continue booking.",
+          "We could not save ad measurement. Try again, or choose No thanks to continue booking.",
         );
         return;
       }
