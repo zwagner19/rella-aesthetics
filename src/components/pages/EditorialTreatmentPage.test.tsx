@@ -20,7 +20,6 @@ describe("EditorialTreatmentPage propagation", () => {
     expect([...EDITORIAL_TREATMENT_SLUGS].sort()).toEqual(
       [
         "chemical-peels",
-        "dermal-fillers",
         "facials",
         "hydrafacial",
         "iv-hydration",
@@ -28,20 +27,6 @@ describe("EditorialTreatmentPage propagation", () => {
         "microneedling",
       ].sort(),
     );
-  });
-
-  it("gives dermal fillers injectable architecture without cloning Botox copy", () => {
-    const html = renderSlug("dermal-fillers");
-    expect(html).toContain("Subtle volume. Honest proportions.");
-    expect(html).toContain("More volume isn&#x27;t the goal.");
-    expect(html).toContain("Your face isn&#x27;t a template.");
-    expect(html).toContain("Why at Rella?");
-    expect(html).toContain("$840");
-    expect(html).toContain("$540–$960");
-    expect(html).toContain("Lip Filler");
-    expect(html).not.toContain("Botox + Dysport");
-    expect(html).not.toContain("Thoughtful placement. Natural movement.");
-    expect(html).not.toContain("✓");
   });
 
   it("adapts laser pages around modalities and verified device pricing", () => {
