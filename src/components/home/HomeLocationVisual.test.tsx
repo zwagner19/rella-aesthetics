@@ -2,12 +2,11 @@ import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it } from "vitest";
-import {
-  HOME_LOCATION_VISUALS,
-  HomeLocationVisual,
-} from "./HomeLocationVisual";
+import { HOME_LOCATION_VISUALS } from "./home-location-visuals";
+import { HomeLocationVisual } from "./HomeLocationVisual";
 
 const source = readFileSync(join(__dirname, "HomeLocationVisual.tsx"), "utf8");
+const dataSource = readFileSync(join(__dirname, "home-location-visuals.ts"), "utf8");
 
 describe("homepage location visual", () => {
   it("uses the canonical Napa reception and approved Vacaville storefront", () => {
@@ -37,7 +36,7 @@ describe("homepage location visual", () => {
       expect(existsSync(join(process.cwd(), "public", location.image))).toBe(true);
     }
 
-    expect(source).not.toContain("napa-exterior");
+    expect(dataSource).not.toContain("napa-exterior");
     expect(source).not.toMatch(/<video|\.mp4|autoplay/i);
   });
 
@@ -56,7 +55,7 @@ describe("homepage location visual", () => {
   });
 
   it("keeps the visual flat and booking-system neutral", () => {
-    expect(source).toContain('frameAspect: "aspect-[4/5]"');
+    expect(dataSource).toContain('frameAspect: "aspect-[4/5]"');
     expect(source).toContain("priority");
     expect(source).not.toContain("quality={90}");
     expect(source).not.toMatch(/gradient|shadow-/i);

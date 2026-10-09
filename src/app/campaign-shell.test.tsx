@@ -176,8 +176,8 @@ describe("the mobile header-phone hide rule actually wins the cascade", () => {
 
 describe("ordinary marketing routes keep the global site chrome", () => {
   it("still renders the site header, nav, footer, and chat widget", () => {
-    expect(siteDoc).toMatch(/aria-label="Main navigation"/);
-    expect(siteDoc).toContain("Book Consultation"); // the site's own generic CTA, unchanged
+    expect(siteDoc).toMatch(/aria-label="Primary navigation"/);
+    expect(siteDoc).toContain(">Book<"); // rectangular Book CTA in editorial header
     expect(siteDoc).toContain("Book Online");
     expect(siteDoc).toMatch(/<footer/);
   });
