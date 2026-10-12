@@ -52,6 +52,20 @@ describe("DermalFillersServicePage refinement", () => {
     expect(html).not.toContain("Deluxe HydraFacial");
   });
 
+  it("removes decorative numbering, areas image, and oversizes B/A display", () => {
+    expect(html).not.toContain(">01<");
+    expect(html).not.toContain(">02<");
+    expect(html).not.toContain(">03<");
+    expect(html).not.toContain(">04<");
+    expect(html).not.toContain("dermal-fillers.webp");
+    expect(html).toContain('width="1024"');
+    expect(html).toContain('height="1280"');
+    expect(html).toContain("/images/results/patient-submissions/result-01.jpg");
+    expect(html).not.toContain("/_next/image?url=%2Fimages%2Fresults%2Fpatient-submissions");
+    expect(html).toContain("object-contain");
+    expect(html).toContain("max-w-[32rem]");
+  });
+
   it("keeps FAQ free of price ranges", () => {
     expect(html).toContain("How long do fillers last?");
     expect(html).toContain("How much filler will I need?");

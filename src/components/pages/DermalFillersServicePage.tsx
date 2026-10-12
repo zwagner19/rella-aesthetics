@@ -42,26 +42,25 @@ const supportingAreas = [
 
 const visitSteps = [
   {
-    number: "01",
     title: "Consult",
     body: "Anatomy, history, goals, and product options — before anything is injected.",
   },
   {
-    number: "02",
     title: "Plan",
     body: "Comfort measures, product, and technique chosen for the proposed area.",
   },
   {
-    number: "03",
     title: "Treat",
     body: "Injection technique selected for the plan. Sensation varies by person and area.",
   },
   {
-    number: "04",
     title: "Settle",
     body: "Aftercare for swelling and tenderness, plus product-specific follow-up timing.",
   },
 ] as const;
+
+/** Native pixel size of approved filler B/A JPEGs in /public (no larger source on disk). */
+const FILLER_RESULT_NATIVE = { width: 1024, height: 1280 } as const;
 
 function fillerResultImages() {
   return approvedPatientResultImages("main-gallery").filter((result) =>
@@ -140,35 +139,24 @@ export function DermalFillersServicePage() {
         </div>
       </section>
 
-      {/* 03 Treatment areas — asymmetric editorial moment */}
+      {/* Treatment areas — typography-led editorial (no image, no numbering) */}
       <section
         id="filler-areas"
         className="rella-site-reveal scroll-mt-28 bg-ivory pb-24 md:pb-32"
         aria-labelledby="filler-areas-heading"
       >
         <div className="mx-auto max-w-[1440px] px-6 md:px-8 lg:px-12">
-          <div className="grid items-end gap-10 border-t border-rule pt-16 lg:grid-cols-[1.05fr_0.95fr] lg:gap-16 lg:pt-20">
-            <div>
-              <p className="rella-editorial-eyebrow mb-6">Areas of focus</p>
-              <h2
-                id="filler-areas-heading"
-                className="max-w-[12ch] text-[clamp(2.1rem,5vw,3.75rem)] font-medium leading-[1.05] tracking-[-0.03em] text-ink"
-              >
-                Lips. Cheeks. Balance.
-              </h2>
-              <p className="mt-8 max-w-[30rem] text-base font-light leading-relaxed text-silver md:text-lg">
-                {service.whoItsFor.body}
-              </p>
-            </div>
-            <div className="relative aspect-[4/5] overflow-hidden bg-oat lg:translate-y-6">
-              <Image
-                src="/images/treatments/dermal-fillers.webp"
-                alt="Close-up of a careful lip filler treatment at Rella"
-                fill
-                className="object-cover object-[50%_35%]"
-                sizes="(min-width: 1024px) 40vw, 100vw"
-              />
-            </div>
+          <div className="max-w-[40rem] border-t border-rule pt-16 lg:pt-20">
+            <p className="rella-editorial-eyebrow mb-6">Areas of focus</p>
+            <h2
+              id="filler-areas-heading"
+              className="max-w-[12ch] text-[clamp(2.1rem,5vw,3.75rem)] font-medium leading-[1.05] tracking-[-0.03em] text-ink"
+            >
+              Lips. Cheeks. Balance.
+            </h2>
+            <p className="mt-8 max-w-[30rem] text-base font-light leading-relaxed text-silver md:text-lg">
+              {service.whoItsFor.body}
+            </p>
           </div>
 
           <div className="mt-16 grid gap-0 border-t border-rule lg:mt-24 lg:grid-cols-12">
@@ -183,9 +171,6 @@ export function DermalFillersServicePage() {
                       : "lg:col-span-3 lg:border-r-0 lg:pl-10 lg:pt-20"
                 }`}
               >
-                <p className="mb-4 text-[0.6875rem] font-medium uppercase tracking-[0.22em] text-silver">
-                  {String(index + 1).padStart(2, "0")}
-                </p>
                 <h3
                   className={`font-medium tracking-[-0.02em] text-ink ${
                     index === 0
@@ -284,17 +269,19 @@ export function DermalFillersServicePage() {
           </div>
 
           {results.length > 0 ? (
-            <div className="grid gap-5 lg:grid-cols-12 lg:gap-6">
+            <div className="grid items-start gap-8 lg:grid-cols-12 lg:gap-10">
               {primaryResult ? (
-                <figure className="relative aspect-[4/5] overflow-hidden bg-ink lg:col-span-7 lg:aspect-[5/6]">
+                <figure className="relative w-full max-w-[32rem] overflow-hidden bg-ink lg:col-span-7 lg:max-w-none lg:pr-4">
                   <Image
                     src={primaryResult.src}
                     alt={primaryResult.alt}
-                    fill
-                    className="object-cover object-center"
-                    sizes="(min-width: 1024px) 55vw, 100vw"
+                    width={FILLER_RESULT_NATIVE.width}
+                    height={FILLER_RESULT_NATIVE.height}
+                    unoptimized
+                    className="h-auto w-full max-w-[32rem] object-contain"
+                    sizes="(min-width: 1024px) 512px, min(100vw, 512px)"
                   />
-                  <figcaption className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-charcoal/90 to-transparent p-7 text-sm text-white/90 md:p-9">
+                  <figcaption className="mt-5 text-sm text-white/90 md:mt-6">
                     <span className="text-base font-medium md:text-lg">
                       {primaryResult.treatment}
                     </span>
@@ -305,20 +292,19 @@ export function DermalFillersServicePage() {
                 </figure>
               ) : null}
               {secondaryResults.length > 0 ? (
-                <div className="grid gap-5 sm:grid-cols-2 lg:col-span-5 lg:grid-cols-1 lg:gap-6">
+                <div className="grid gap-8 sm:grid-cols-2 lg:col-span-5 lg:grid-cols-1 lg:gap-10">
                   {secondaryResults.map((result) => (
-                    <figure
-                      key={result.id}
-                      className="relative aspect-[4/5] overflow-hidden bg-ink lg:aspect-auto lg:min-h-[280px]"
-                    >
+                    <figure key={result.id} className="relative w-full max-w-[20rem] overflow-hidden bg-ink sm:max-w-none">
                       <Image
                         src={result.src}
                         alt={result.alt}
-                        fill
-                        className="object-cover object-center"
-                        sizes="(min-width: 1024px) 35vw, (min-width: 640px) 45vw, 100vw"
+                        width={FILLER_RESULT_NATIVE.width}
+                        height={FILLER_RESULT_NATIVE.height}
+                        unoptimized
+                        className="h-auto w-full max-w-[20rem] object-contain lg:max-w-[18rem]"
+                        sizes="(min-width: 1024px) 288px, (min-width: 640px) 320px, min(100vw, 320px)"
                       />
-                      <figcaption className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-charcoal/85 to-transparent p-6 text-sm text-white/90">
+                      <figcaption className="mt-4 text-sm text-white/90">
                         <span className="font-medium">{result.treatment}</span>
                         <span className="mt-1 block text-xs font-light text-white/65">
                           {result.caption}
@@ -362,12 +348,9 @@ export function DermalFillersServicePage() {
           <ol className="mt-14 space-y-0 border-t border-rule">
             {visitSteps.map((step) => (
               <li
-                key={step.number}
-                className="grid gap-2 border-b border-rule py-8 md:grid-cols-[4.5rem_9rem_1fr] md:items-baseline md:gap-8"
+                key={step.title}
+                className="grid gap-2 border-b border-rule py-8 md:grid-cols-[9rem_1fr] md:items-baseline md:gap-10"
               >
-                <span className="text-[0.6875rem] font-medium uppercase tracking-[0.22em] text-silver">
-                  {step.number}
-                </span>
                 <span className="text-base font-medium uppercase tracking-[0.14em] text-ink">
                   {step.title}
                 </span>
