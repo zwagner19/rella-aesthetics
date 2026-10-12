@@ -68,60 +68,6 @@ function requireService(slug: string): ServicePageData {
 export const treatmentEditorialBySlug: Readonly<
   Record<string, TreatmentEditorialConfig>
 > = {
-  "dermal-fillers": {
-    slug: "dermal-fillers",
-    architecture: "injectable",
-    heroFeelLine:
-      "Subtle volume. Honest proportions. A plan shaped to your face.",
-    introHeadline: "More volume isn't the goal. Better balance is.",
-    focusEyebrow: "Areas of focus",
-    focusHeading: "What we can address",
-    approachHeadline: "Your face isn't a template.",
-    approachLead: RELLA_APPROACH_LEAD,
-    approachBody:
-      "Filler decisions start with anatomy, history, and the look you want to keep — not a syringe count. Your provider explains product, area, and amount plainly, and chooses restraint when that is the better plan.",
-    experienceHeading: "How the experience unfolds",
-    experienceSteps: [
-      {
-        number: "01",
-        title: "Consult",
-        body: "A review of facial anatomy, health history, goals, and product options before anything is injected.",
-      },
-      {
-        number: "02",
-        title: "Plan",
-        body: "Comfort measures, product selection, and technique chosen for the proposed area and your individual needs.",
-      },
-      {
-        number: "03",
-        title: "Treat",
-        body: "Injection technique selected for the plan. Sensation varies by person, product, and area.",
-      },
-      {
-        number: "04",
-        title: "Settle",
-        body: "Aftercare for possible swelling, bruising, and tenderness — plus product-specific expectations for follow-up and duration.",
-      },
-    ],
-    glance: [
-      { label: "Treatment", value: "Consultation-led injectables" },
-      { label: "Focus", value: "Volume, contour, and lips" },
-      { label: "Settling", value: "Product- and area-specific" },
-      { label: "Duration", value: "Varies by product and plan" },
-    ],
-    focusImage: "/images/treatments/dermal-fillers.webp",
-    focusImageAlt: "A provider performing an injectable treatment near a patient's lips",
-    pricingRows: [
-      { label: "Base service", amount: "$840" },
-      { label: "Product range", amount: "$540–$960" },
-    ],
-    resultsHeading: "Real results, honest proportions.",
-    resultsBody:
-      "Approved before-and-after photography for filler treatments, shared with permission. Individual results vary.",
-    resultMatch: /filler|lips|lip|under.?eye/i,
-    finalCtaBody:
-      "Book a consultation to learn whether dermal filler is appropriate for your goals — and leave with a clear next step.",
-  },
   "chemical-peels": {
     slug: "chemical-peels",
     architecture: "skin",
