@@ -30,124 +30,66 @@ export const napaHousePractical = {
 } as const;
 
 /**
- * Categories / services available at Napa House.
- * Excludes `chemical-peels` and `microneedling` (repo: Vacaville-only).
- * Links point to education pages — not Napa campaign LPs.
+ * Category education links for Napa-available care.
+ * Peels + microneedling remain Vacaville-only in service-data — not claimed here as Napa exclusives.
  */
-/** Titles only — education copy lives on treatment pages. */
-export const napaHouseOfferings = [
-  {
-    slug: "botox",
-    title: "Botox & Dysport",
-    category: "Injectables",
-    href: "/services/botox",
-  },
-  {
-    slug: "dermal-fillers",
-    title: "Dermal Fillers",
-    category: "Injectables",
-    href: "/services/dermal-fillers",
-  },
-  {
-    slug: "facials",
-    title: "Facials",
-    category: "Skin",
-    href: "/services/facials",
-  },
-  {
-    slug: "hydrafacial",
-    title: "HydraFacial",
-    category: "Skin",
-    href: "/services/hydrafacial",
-  },
-  {
-    slug: "laser-treatments",
-    title: "Laser Treatments",
-    category: "Devices",
-    href: "/services/laser-treatments",
-  },
-  {
-    slug: "iv-hydration",
-    title: "IV Hydration",
-    category: "Wellness",
-    href: "/services/iv-hydration",
-  },
-  {
-    slug: "weight-loss",
-    title: "Medical Weight Loss",
-    category: "Wellness",
-    href: "/services/weight-loss",
-  },
+export const napaHouseCategories = [
+  { label: "Injectables", href: "/services/injectables" },
+  { label: "Skin", href: "/services/skin" },
+  { label: "Lasers", href: "/services/lasers" },
+  { label: "Wellness", href: "/services/iv-hydration" },
+  { label: "Weight", href: "/services/weight-loss" },
 ] as const;
 
 /**
- * People who work at Napa House per `content/team` location fields.
- * Primary Napa roster mirrors the team page Napa directory.
+ * Provider preview — Wagner, Warda, Devyn only (Zach refinement).
+ * Equal visual weight; no staffing notes.
  */
 export const napaHousePeople = [
   {
     name: "Dr. Zachary Wagner",
     role: "Founder · Medical Weight Loss",
     image: "/images/dr-zachary-wagner.jpg",
-    presence: "both" as const,
+  },
+  {
+    name: "Warda Harchaoui",
+    role: "PA-C",
+    image: "/images/team/warda-harchaoui.jpg",
   },
   {
     name: "Devyn Pickett",
     role: "Aesthetic RN",
     image: "/images/team/devyn.jpg",
-    presence: "primary" as const,
-  },
-  {
-    name: "Marisa Avalos",
-    role: "Aesthetic RN",
-    image: "/images/team/marisa-avalos.jpg",
-    presence: "primary" as const,
-  },
-  {
-    name: "Natalie",
-    role: "Esthetician",
-    image: "/images/team/natalie.jpg",
-    presence: "primary" as const,
-  },
-  {
-    name: "Hailey Butler",
-    role: "Medical Assistant",
-    image: "/images/team/hailey-butler.jpg",
-    presence: "primary" as const,
-  },
-  {
-    name: "Ayano",
-    role: "Front Desk",
-    image: "/images/team/ayano.jpg",
-    presence: "primary" as const,
-  },
-  {
-    name: "Warda Harchaoui",
-    role: "PA-C · Also serves Napa",
-    image: "/images/team/warda-harchaoui.jpg",
-    presence: "also" as const,
   },
 ] as const;
 
+/**
+ * Photography for Napa House.
+ * New interiors are native 680×1020 — do not upscale; cap display for sharpness.
+ */
 export const napaHouseVisuals = {
-  reception: {
+  /** Hero / CTA — older reception lounge frame (still highest-res Napa interior on hand). */
+  lounge: {
     src: "/images/clinic/napa-reception.jpg",
-    alt: "The welcoming reception area inside Rella Aesthetics Napa House",
+    alt: "The lounge inside Rella Aesthetics Napa House",
     nativeWidth: 800,
     nativeHeight: 1200,
   },
-  teamStorefront: {
-    src: "/images/clinic/rella-team-storefront.webp",
-    alt: "Rella Aesthetics team gathered outside the Napa clinic",
-    nativeWidth: 1600,
-    nativeHeight: 900,
+  /**
+   * Arrival dominant — hospitality first (desk + fireplace).
+   * Equal native dims to treatment room; chosen for “Come in” atmosphere.
+   */
+  receptionInterior: {
+    src: "/images/clinic/napa-reception-interior.jpg",
+    alt: "Reception desk and stone fireplace inside Napa House",
+    nativeWidth: 680,
+    nativeHeight: 1020,
   },
-  sidewalkSign: {
-    src: "/images/clinic/rella-sidewalk-sign.webp",
-    alt: "A Rella Aesthetics sidewalk sign welcoming patients outside the clinic",
-    nativeWidth: 960,
-    nativeHeight: 1200,
-    /** Location of this frame is not labeled in-repo; use sparingly and flag. */
-    locationCertainty: "unverified" as const,
+  /** Arrival supporting — treatment room with chair and devices. */
+  treatmentRoom: {
+    src: "/images/clinic/napa-treatment-room.jpg",
+    alt: "Treatment room with chair and aesthetic devices at Napa House",
+    nativeWidth: 680,
+    nativeHeight: 1020,
   },
 } as const;
