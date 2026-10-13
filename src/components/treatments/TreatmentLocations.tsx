@@ -1,5 +1,5 @@
-import Image from "next/image";
 import Link from "next/link";
+import { ClinicLocationPhoto } from "@/components/home/ClinicLocationPhoto";
 import { HOME_LOCATION_VISUALS } from "@/components/home/home-location-visuals";
 import type { BookingLocation } from "@/lib/booking-routes";
 import { locations } from "@/lib/data";
@@ -68,15 +68,10 @@ export function TreatmentLocations({
                     : undefined
                 }
               >
-                <div className="relative mb-8 aspect-[4/5] overflow-hidden bg-oat">
-                  <Image
-                    src={visual.image}
-                    alt={visual.imageAlt}
-                    fill
-                    className="object-cover object-center"
-                    sizes={dual ? "(min-width: 1024px) 45vw, 100vw" : "100vw"}
-                  />
-                </div>
+                <ClinicLocationPhoto
+                  visual={visual}
+                  sizes={dual ? "(min-width: 1024px) 45vw, 100vw" : "100vw"}
+                />
                 <h3 className="text-2xl font-medium tracking-[-0.01em] text-ink">
                   {visual.slug === "napa" ? "Napa House" : "Vacaville"}
                 </h3>

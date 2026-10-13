@@ -20,20 +20,26 @@ describe("homepage location visual", () => {
       (location) => location.slug === "vacaville",
     );
 
-    expect(napa?.image).toBe("/images/clinic/napa-reception.webp");
+    expect(napa?.image).toBe("/images/clinic/napa-reception.jpg");
     expect(napa?.imageAlt).toBe(
       "The welcoming reception area inside the Rella Aesthetics Napa clinic",
     );
     expect(napa?.imagePosition).toBe("object-center");
     expect(napa?.frameAspect).toBe("aspect-[4/5]");
+    expect(napa?.nativeWidth).toBe(800);
+    expect(napa?.nativeHeight).toBe(1200);
     expect(vacaville?.image).toBe("/images/clinic/vacaville-exterior.webp");
     expect(vacaville?.imageAlt).toBe(
       "The Rella Aesthetics storefront and pink entrance at the Vacaville clinic",
     );
     expect(vacaville?.imagePosition).toBe("object-center");
     expect(vacaville?.frameAspect).toBe("aspect-[4/5]");
+    expect(vacaville?.nativeWidth).toBe(1200);
+    expect(vacaville?.nativeHeight).toBe(1500);
     for (const location of HOME_LOCATION_VISUALS) {
-      expect(existsSync(join(process.cwd(), "public", location.image))).toBe(true);
+      expect(
+        existsSync(join(process.cwd(), "public", location.image.replace(/^\//, ""))),
+      ).toBe(true);
     }
 
     expect(dataSource).not.toContain("napa-exterior");
@@ -57,11 +63,19 @@ describe("homepage location visual", () => {
   it("keeps the visual flat and booking-system neutral", () => {
     expect(dataSource).toContain('frameAspect: "aspect-[4/5]"');
     expect(source).toContain("priority");
+    expect(source).toContain("ClinicLocationPhoto");
     expect(source).not.toContain("quality={90}");
     expect(source).not.toMatch(/gradient|shadow-/i);
     expect(source).not.toMatch(
       /dashboard\.boulevard\.io|joinblvd\.com|book\.experiencerella\.com|rella-hq/i,
     );
+  });
+
+  it("serves clinic photos unoptimized at native resolution", () => {
+    const photoSource = readFileSync(join(__dirname, "ClinicLocationPhoto.tsx"), "utf8");
+    expect(photoSource).toContain("unoptimized");
+    expect(dataSource).toContain("nativeWidth");
+    expect(dataSource).toContain("nativeHeight");
   });
 
   it("uses the approved translucent-white Rose location controls", () => {

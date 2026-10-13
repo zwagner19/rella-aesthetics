@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { FaqAccordion, FaqSchema } from "@/components/blocks/FaqAccordion";
+import { ClinicLocationPhoto } from "@/components/home/ClinicLocationPhoto";
 import { HOME_LOCATION_VISUALS } from "@/components/home/home-location-visuals";
 import { approvedPatientResultImages } from "@/content/results";
 import { resolveBookingHref } from "@/lib/booking-routes";
@@ -381,15 +382,7 @@ export function BotoxDysportServicePage() {
 
           <div className="grid gap-16 lg:grid-cols-2 lg:gap-0">
             <article className="lg:border-r lg:border-rule lg:pr-12">
-              <div className="relative mb-8 aspect-[4/5] overflow-hidden bg-oat">
-                <Image
-                  src={vacavilleVisual.image}
-                  alt={vacavilleVisual.imageAlt}
-                  fill
-                  className="object-cover object-center"
-                  sizes="(min-width: 1024px) 45vw, 100vw"
-                />
-              </div>
+              <ClinicLocationPhoto visual={vacavilleVisual} />
               <h3 className="text-2xl font-medium tracking-[-0.01em] text-ink">Vacaville</h3>
               <p className="mt-3 text-sm font-light leading-relaxed text-silver">
                 {locations.vacaville.address}
@@ -407,15 +400,7 @@ export function BotoxDysportServicePage() {
             </article>
 
             <article className="lg:pl-12">
-              <div className="relative mb-8 aspect-[4/5] overflow-hidden bg-oat">
-                <Image
-                  src={napaVisual.image}
-                  alt={napaVisual.imageAlt}
-                  fill
-                  className="object-cover object-center"
-                  sizes="(min-width: 1024px) 45vw, 100vw"
-                />
-              </div>
+              <ClinicLocationPhoto visual={napaVisual} />
               <h3 className="text-2xl font-medium tracking-[-0.01em] text-ink">Napa House</h3>
               <p className="mt-3 text-sm font-light leading-relaxed text-silver">
                 {locations.napa.address}
@@ -458,9 +443,10 @@ export function BotoxDysportServicePage() {
         aria-labelledby="botox-final-cta-heading"
       >
         <Image
-          src="/images/clinic/napa-reception.webp"
+          src="/images/clinic/napa-reception.jpg"
           alt=""
           fill
+          unoptimized
           className="object-cover object-center opacity-30"
           sizes="100vw"
         />

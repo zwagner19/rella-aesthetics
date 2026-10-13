@@ -62,9 +62,10 @@ export default function NapaPage() {
           </div>
           <div className="relative aspect-[4/3] overflow-hidden bg-rose-blush">
             <Image
-              src="/images/clinic/napa-reception.webp"
+              src="/images/clinic/napa-reception.jpg"
               alt="The welcoming reception area inside the Rella Aesthetics Napa clinic"
               fill
+              unoptimized
               priority
               className="object-cover object-center"
               sizes="(min-width: 1024px) 46vw, 100vw"

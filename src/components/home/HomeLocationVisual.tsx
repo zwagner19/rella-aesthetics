@@ -1,7 +1,7 @@
 "use client";
 
-import Image from "next/image";
 import { useState } from "react";
+import { ClinicLocationPhoto } from "./ClinicLocationPhoto";
 import {
   HOME_LOCATION_VISUALS,
   type HomeLocationSlug,
@@ -27,13 +27,11 @@ export function HomeLocationVisual({
       <div
         className={`relative w-full flex-none overflow-hidden md:min-h-[520px] md:flex-1 md:aspect-auto ${activeVisual.frameAspect}`}
       >
-        <Image
+        <ClinicLocationPhoto
           key={activeVisual.slug}
-          src={activeVisual.image}
-          alt={activeVisual.imageAlt}
-          fill
+          visual={activeVisual}
           priority
-          className={`object-cover ${activeVisual.imagePosition}`}
+          className="absolute inset-0"
           sizes="(min-width: 768px) 50vw, 100vw"
         />
         <div
