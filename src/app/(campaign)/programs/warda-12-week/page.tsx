@@ -96,7 +96,7 @@ export default function WardaProgramPreviewPage() {
                   {([
                     ["Program", PROGRAM.duration.text],
                     ["Program price", PROGRAM.price.text.replace(" for 12 weeks", "")],
-                    ["Start with", `${ASSESSMENT.price.text} assessment with Warda`],
+                    ["First step", `${ASSESSMENT.price.text} assessment`],
                     ["Who's first", "Our first 10 participants"],
                   ] as const).map(([k, v]) => (
                     <div key={k} className="wp-row">
