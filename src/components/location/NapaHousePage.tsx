@@ -58,14 +58,14 @@ export function NapaHousePage() {
         </div>
       </section>
 
-      {/* 2. Arrival — asymmetrical; native 680×1020 capped (no upscale) */}
+      {/* 2. Arrival — clean two-portrait pair at native 2:3 (no forced crop/zoom) */}
       <section
         id="arrival"
         className="rella-site-reveal scroll-mt-28 bg-ivory py-20 md:py-28"
         aria-labelledby="napa-arrival-heading"
       >
         <div className="mx-auto max-w-[1440px] px-6 md:px-8 lg:px-12">
-          <div className="mb-12 max-w-[22rem] md:mb-16">
+          <div className="mb-12 max-w-[22rem] md:mb-14">
             <h2
               id="napa-arrival-heading"
               className="text-[clamp(1.85rem,4vw,3.1rem)] font-medium leading-[1.12] tracking-[-0.02em] text-ink"
@@ -79,37 +79,32 @@ export function NapaHousePage() {
           </div>
 
           {/*
-            Display capped near native width so 680px sources stay sharp.
-            Dominant = reception (hospitality); supporting = treatment room.
-            Mobile: dominant first, supporting offset — not an equal stack.
+            Both sources are 680×1020 (2:3). Show full frames at natural aspect —
+            no object-cover crop, no unequal stagger, no stretch. Pair width capped
+            so each column stays near ≤340 CSS px on desktop (sharp at 2×).
           */}
-          <div className="flex flex-col gap-8 md:flex-row md:items-end md:gap-10 lg:gap-14">
-            {/* Cap near ≤340 CSS px so 680 native stays ≥2× on retina */}
-            <figure className="w-full max-w-[340px]">
-              <div className="relative aspect-[2/3] overflow-hidden bg-oat">
-                <Image
-                  src={receptionInterior.src}
-                  alt={receptionInterior.alt}
-                  width={receptionInterior.nativeWidth}
-                  height={receptionInterior.nativeHeight}
-                  unoptimized
-                  className="h-full w-full object-cover object-[center_35%]"
-                  sizes="340px"
-                />
-              </div>
+          <div className="grid max-w-[720px] grid-cols-2 items-start gap-3 sm:gap-5 md:gap-6">
+            <figure className="m-0 bg-oat">
+              <Image
+                src={receptionInterior.src}
+                alt={receptionInterior.alt}
+                width={receptionInterior.nativeWidth}
+                height={receptionInterior.nativeHeight}
+                unoptimized
+                className="h-auto w-full"
+                sizes="(min-width: 768px) 340px, 45vw"
+              />
             </figure>
-            <figure className="w-[72%] max-w-[260px] self-end md:mb-10 md:w-full md:max-w-[260px] md:self-end lg:mb-16">
-              <div className="relative aspect-[2/3] overflow-hidden bg-oat">
-                <Image
-                  src={treatmentRoom.src}
-                  alt={treatmentRoom.alt}
-                  width={treatmentRoom.nativeWidth}
-                  height={treatmentRoom.nativeHeight}
-                  unoptimized
-                  className="h-full w-full object-cover object-center"
-                  sizes="260px"
-                />
-              </div>
+            <figure className="m-0 bg-oat">
+              <Image
+                src={treatmentRoom.src}
+                alt={treatmentRoom.alt}
+                width={treatmentRoom.nativeWidth}
+                height={treatmentRoom.nativeHeight}
+                unoptimized
+                className="h-auto w-full"
+                sizes="(min-width: 768px) 340px, 45vw"
+              />
             </figure>
           </div>
         </div>
@@ -226,31 +221,7 @@ export function NapaHousePage() {
         </div>
       </section>
 
-      {/* 6. Editorial — interior, no group photo; asymmetrical, capped */}
-      <section
-        className="rella-site-reveal bg-ivory py-12 md:py-20"
-        aria-label="Napa House treatment room"
-      >
-        <div className="mx-auto max-w-[1440px] px-6 md:px-8 lg:px-12">
-          <div className="flex justify-end md:pr-[8%]">
-            <figure className="w-full max-w-[340px]">
-              <div className="relative aspect-[2/3] overflow-hidden bg-oat">
-                <Image
-                  src={treatmentRoom.src}
-                  alt={treatmentRoom.alt}
-                  width={treatmentRoom.nativeWidth}
-                  height={treatmentRoom.nativeHeight}
-                  unoptimized
-                  className="h-full w-full object-cover object-[center_40%]"
-                  sizes="340px"
-                />
-              </div>
-            </figure>
-          </div>
-        </div>
-      </section>
-
-      {/* 7. Why Napa */}
+      {/* 6. Why Napa — follows people directly (duplicate treatment-room editorial removed) */}
       <section
         className="rella-site-reveal bg-ivory py-20 md:py-28"
         aria-labelledby="napa-why-heading"
