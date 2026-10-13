@@ -84,7 +84,8 @@ export function NapaHousePage() {
             Mobile: dominant first, supporting offset — not an equal stack.
           */}
           <div className="flex flex-col gap-8 md:flex-row md:items-end md:gap-10 lg:gap-14">
-            <figure className="w-full max-w-[420px] md:max-w-[480px]">
+            {/* Cap near ≤340 CSS px so 680 native stays ≥2× on retina */}
+            <figure className="w-full max-w-[340px]">
               <div className="relative aspect-[2/3] overflow-hidden bg-oat">
                 <Image
                   src={receptionInterior.src}
@@ -93,11 +94,11 @@ export function NapaHousePage() {
                   height={receptionInterior.nativeHeight}
                   unoptimized
                   className="h-full w-full object-cover object-[center_35%]"
-                  sizes="(min-width: 768px) 480px, 90vw"
+                  sizes="340px"
                 />
               </div>
             </figure>
-            <figure className="w-[78%] max-w-[280px] self-end md:mb-10 md:w-full md:max-w-[300px] md:self-end lg:mb-16">
+            <figure className="w-[72%] max-w-[260px] self-end md:mb-10 md:w-full md:max-w-[260px] md:self-end lg:mb-16">
               <div className="relative aspect-[2/3] overflow-hidden bg-oat">
                 <Image
                   src={treatmentRoom.src}
@@ -106,7 +107,7 @@ export function NapaHousePage() {
                   height={treatmentRoom.nativeHeight}
                   unoptimized
                   className="h-full w-full object-cover object-center"
-                  sizes="(min-width: 768px) 300px, 70vw"
+                  sizes="260px"
                 />
               </div>
             </figure>
@@ -232,7 +233,7 @@ export function NapaHousePage() {
       >
         <div className="mx-auto max-w-[1440px] px-6 md:px-8 lg:px-12">
           <div className="flex justify-end md:pr-[8%]">
-            <figure className="w-full max-w-[420px] md:max-w-[520px]">
+            <figure className="w-full max-w-[340px]">
               <div className="relative aspect-[2/3] overflow-hidden bg-oat">
                 <Image
                   src={treatmentRoom.src}
@@ -241,7 +242,7 @@ export function NapaHousePage() {
                   height={treatmentRoom.nativeHeight}
                   unoptimized
                   className="h-full w-full object-cover object-[center_40%]"
-                  sizes="(min-width: 768px) 520px, 90vw"
+                  sizes="340px"
                 />
               </div>
             </figure>
