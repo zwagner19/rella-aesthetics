@@ -91,8 +91,8 @@ describe("PR14 visual recovery contract", () => {
     const napaLocation = source("app/(site)/locations/napa/page.tsx");
     const homeLocations = source("components/home/HomeLocations.tsx");
 
-    expect(homeVisualData).toContain("/images/clinic/napa-reception.webp");
-    expect(napaLocation).toContain("/images/clinic/napa-reception.webp");
+    expect(homeVisualData).toContain("/images/clinic/napa-reception.jpg");
+    expect(napaLocation).toContain("/images/clinic/napa-reception.jpg");
     expect(homeLocations).toContain("HOME_LOCATION_VISUALS");
     expect(homeVisualData).not.toContain("napa-exterior.webp");
     expect(napaLocation).not.toContain("napa-exterior.webp");

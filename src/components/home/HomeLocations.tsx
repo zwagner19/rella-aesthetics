@@ -1,6 +1,6 @@
-import Image from "next/image";
 import Link from "next/link";
 import { locations } from "@/lib/data";
+import { ClinicLocationPhoto } from "./ClinicLocationPhoto";
 import { HOME_LOCATION_VISUALS } from "./home-location-visuals";
 
 export function HomeLocations() {
@@ -24,15 +24,7 @@ export function HomeLocations() {
 
         <div className="grid gap-12 lg:grid-cols-2 lg:gap-0">
           <article className="lg:pr-10 lg:border-r lg:border-rule">
-            <div className="relative mb-7 aspect-[4/5] overflow-hidden bg-oat">
-              <Image
-                src={vacaville.image}
-                alt={vacaville.imageAlt}
-                fill
-                className="object-cover object-center"
-                sizes="(min-width: 1024px) 45vw, 100vw"
-              />
-            </div>
+            <ClinicLocationPhoto visual={vacaville} className="relative mb-7 aspect-[4/5] overflow-hidden bg-oat" />
             <h3 className="text-2xl font-medium tracking-[-0.01em] text-ink">
               Vacaville
             </h3>
@@ -50,15 +42,7 @@ export function HomeLocations() {
           </article>
 
           <article className="lg:pl-10">
-            <div className="relative mb-7 aspect-[4/5] overflow-hidden bg-oat">
-              <Image
-                src={napa.image}
-                alt={napa.imageAlt}
-                fill
-                className="object-cover object-center"
-                sizes="(min-width: 1024px) 45vw, 100vw"
-              />
-            </div>
+            <ClinicLocationPhoto visual={napa} className="relative mb-7 aspect-[4/5] overflow-hidden bg-oat" />
             <h3 className="text-2xl font-medium tracking-[-0.01em] text-ink">Napa House</h3>
             <p className="mt-3 text-sm font-light leading-relaxed text-silver">
               {locations.napa.address}

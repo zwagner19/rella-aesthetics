@@ -245,9 +245,10 @@ export function LasersCategoryPage() {
         aria-labelledby="lasers-final-cta-heading"
       >
         <Image
-          src="/images/clinic/napa-reception.webp"
+          src="/images/clinic/napa-reception.jpg"
           alt=""
           fill
+          unoptimized
           className="object-cover object-center opacity-30"
           sizes="100vw"
         />

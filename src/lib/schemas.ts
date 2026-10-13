@@ -91,7 +91,7 @@ function localBusinessNode(location: LocalBusinessInput) {
     url: `https://experiencerella.com/locations/${slug}`,
     image:
       slug === "napa"
-        ? "https://experiencerella.com/images/clinic/napa-reception.webp"
+        ? "https://experiencerella.com/images/clinic/napa-reception.jpg"
         : "https://experiencerella.com/images/clinic/vacaville-exterior.webp",
     telephone: `+1${location.phone.replace(/\D/g, "")}`,
     priceRange: "$$",
