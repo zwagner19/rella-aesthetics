@@ -20,7 +20,7 @@ export function NapaHousePage() {
 
   return (
     <>
-      {/* 1. Hero — full-bleed place */}
+      {/* 1. Hero */}
       <section className="relative -mt-[72px] flex min-h-[100svh] items-end overflow-hidden bg-charcoal text-white lg:-mt-[84px]">
         <Image
           src={reception.src}
@@ -28,113 +28,129 @@ export function NapaHousePage() {
           fill
           priority
           unoptimized
-          className="object-cover object-[center_30%]"
+          className="object-cover object-[center_28%]"
           sizes="100vw"
         />
         <div
-          className="absolute inset-0 bg-gradient-to-t from-charcoal/90 via-charcoal/45 to-charcoal/25"
+          className="absolute inset-0 bg-gradient-to-t from-charcoal/90 via-charcoal/40 to-charcoal/20"
           aria-hidden="true"
         />
         <div className="relative z-10 mx-auto w-full max-w-[1440px] px-6 pb-16 pt-32 md:px-8 md:pb-24 lg:px-12 lg:pb-28">
           <p className="mb-4 text-[0.6875rem] font-medium uppercase tracking-[0.28em] text-rose">
             {napaHouseIdentity.brand}
           </p>
-          <h1 className="max-w-[12ch] text-[clamp(2.6rem,7vw,5.25rem)] font-medium leading-[1.02] tracking-[-0.03em] text-white">
-            {napaHouseIdentity.placeName}
+          <h1 className="max-w-[14ch] text-[clamp(2.4rem,6.5vw,4.75rem)] font-medium leading-[1.05] tracking-[-0.03em] text-white">
+            Welcome to Napa House.
           </h1>
           <p className="mt-6 max-w-[28rem] text-base font-light leading-relaxed text-white/85 md:text-lg">
             A calm downtown house for consultation-led aesthetics and wellness —
             hospitality first, treatment second.
           </p>
-          <div className="mt-10 flex flex-wrap gap-3 sm:gap-4">
+          <div className="mt-10 flex flex-wrap items-center gap-3 sm:gap-4">
             <NapaHouseBookCta className="rella-cta-rect rella-cta-rect--filled">
-              Book at Napa House
+              Book Napa
             </NapaHouseBookCta>
             <a
-              href={napaHousePractical.mapUrl}
-              target="_blank"
-              rel="noreferrer"
-              className="rella-cta-rect rella-cta-rect--ghost-light"
+              href="#arrival"
+              className="text-[0.6875rem] font-bold uppercase tracking-[0.18em] text-white/85 underline-offset-4 hover:text-white hover:underline"
             >
-              Get directions
-              <span className="sr-only"> (opens in a new tab)</span>
+              Explore the House ↓
             </a>
           </div>
         </div>
       </section>
 
-      {/* 2. Arrival */}
+      {/* 2. Arrival — large + small, not an equal gallery */}
       <section
-        className="rella-site-reveal bg-ivory py-20 md:py-28"
+        id="arrival"
+        className="rella-site-reveal scroll-mt-28 bg-ivory py-20 md:py-28"
         aria-labelledby="napa-arrival-heading"
       >
-        <div className="mx-auto grid max-w-[1440px] items-center gap-12 px-6 md:px-8 lg:grid-cols-[0.95fr_1.05fr] lg:gap-20 lg:px-12">
-          <div>
-            <p className="rella-editorial-eyebrow mb-4">Arrival</p>
+        <div className="mx-auto max-w-[1440px] px-6 md:px-8 lg:px-12">
+          <div className="mb-12 max-w-[22rem] md:mb-16">
             <h2
               id="napa-arrival-heading"
-              className="max-w-[14ch] text-[clamp(1.85rem,4vw,3.1rem)] font-medium leading-[1.12] tracking-[-0.02em] text-ink"
+              className="text-[clamp(1.85rem,4vw,3.1rem)] font-medium leading-[1.12] tracking-[-0.02em] text-ink"
             >
-              Step off Third Street into a quieter pace.
+              Come in. Stay awhile.
             </h2>
-            <p className="mt-6 max-w-[34rem] text-base font-light leading-relaxed text-silver md:text-lg">
-              Napa House sits in downtown Napa — close enough to walk from the
-              neighborhood, intentional enough to feel like a pause. You&apos;re
-              greeted by the same Rella standard: clear guidance, no rush, and a
-              plan built around you.
+            <p className="mt-5 text-base font-light leading-relaxed text-silver md:text-lg">
+              Soft light, unhurried greetings, and a pace that feels more like a
+              house visit than a clinic stop.
             </p>
           </div>
-          <div className="relative aspect-[4/5] overflow-hidden bg-oat">
-            <Image
-              src={reception.src}
-              alt={reception.alt}
-              fill
-              unoptimized
-              className="object-cover object-center"
-              sizes="(min-width: 1024px) 45vw, 100vw"
-            />
+
+          <div className="grid items-end gap-5 md:grid-cols-12 md:gap-8">
+            <div className="relative aspect-[4/5] overflow-hidden bg-oat md:col-span-7 md:aspect-[5/6]">
+              <Image
+                src={reception.src}
+                alt={reception.alt}
+                fill
+                unoptimized
+                className="object-cover object-center"
+                sizes="(min-width: 768px) 58vw, 100vw"
+              />
+            </div>
+            <div className="md:col-span-5 md:pb-16">
+              <div className="relative aspect-[3/4] overflow-hidden bg-oat md:max-w-[320px]">
+                <Image
+                  src={teamStorefront.src}
+                  alt={teamStorefront.alt}
+                  fill
+                  unoptimized
+                  className="object-cover object-center"
+                  sizes="(min-width: 768px) 22vw, 70vw"
+                />
+              </div>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* 3. Experience */}
+      {/* 3. Experience — relationship story, no numbering */}
       <section
         className="rella-site-reveal border-y border-rule/50 bg-ivory py-24 md:py-32"
         aria-labelledby="napa-experience-heading"
       >
-        <div className="mx-auto max-w-[880px] px-6 text-center md:px-8">
+        <div className="mx-auto max-w-[880px] px-6 md:px-8">
           <p className="rella-editorial-eyebrow mb-8">The experience</p>
           <h2
             id="napa-experience-heading"
-            className="text-[clamp(1.85rem,4.2vw,3.25rem)] font-medium leading-[1.15] tracking-[-0.02em] text-ink"
+            className="max-w-[20ch] text-[clamp(1.85rem,4.2vw,3.25rem)] font-medium leading-[1.15] tracking-[-0.02em] text-ink"
           >
-            Hospitality that makes the clinical work feel human.
+            A visit built around how you want to feel.
           </h2>
-          <p className="mx-auto mt-8 max-w-[38rem] text-base font-light leading-relaxed text-silver md:text-lg">
-            Care here starts with a conversation — not a menu push. The team
-            listens first, explains options plainly, and only recommends what
-            fits your face, your goals, and how you want to feel when you leave.
-          </p>
+          <div className="mt-8 max-w-[38rem] space-y-5 text-base font-light leading-relaxed text-silver md:text-lg">
+            <p>
+              You&apos;re met by a familiar front desk, then a real conversation
+              about your face, your goals, and what would actually help — not a
+              rushed menu of add-ons.
+            </p>
+            <p>
+              The clinical work happens inside that relationship: clear options,
+              honest guidance, and a plan you can return to over time.
+            </p>
+          </div>
         </div>
       </section>
 
-      {/* 4. What happens here */}
+      {/* 4. What happens here — links only, no service cards */}
       <section
         className="rella-site-reveal bg-ivory py-20 md:py-28"
         aria-labelledby="napa-offerings-heading"
       >
         <div className="mx-auto max-w-[1440px] px-6 md:px-8 lg:px-12">
-          <div className="mb-12 max-w-[36rem] md:mb-16">
+          <div className="mb-12 max-w-[32rem] md:mb-14">
             <p className="rella-editorial-eyebrow mb-4">What happens here</p>
             <h2
               id="napa-offerings-heading"
               className="text-[clamp(1.85rem,4vw,3.1rem)] font-medium leading-[1.12] tracking-[-0.02em] text-ink"
             >
-              Care offered at Napa House.
+              Care available at Napa House.
             </h2>
             <p className="mt-5 text-base font-light leading-relaxed text-silver md:text-lg">
-              Explore education pages for each category. Availability and the
-              right next step are confirmed in consultation.
+              Education pages for each category — availability and fit are
+              confirmed in consultation.
             </p>
           </div>
 
@@ -143,22 +159,19 @@ export function NapaHousePage() {
               <li key={offering.slug} className="border-b border-rule">
                 <Link
                   href={offering.href}
-                  className="group grid gap-3 py-7 transition-colors md:grid-cols-[8rem_1fr_auto] md:items-baseline md:gap-8 md:py-8"
+                  className="group flex items-baseline justify-between gap-6 py-6 transition-colors md:py-7"
                 >
-                  <span className="text-[0.6875rem] font-medium uppercase tracking-[0.18em] text-silver">
-                    {offering.category}
-                  </span>
-                  <span>
-                    <span className="block text-xl font-medium tracking-[-0.01em] text-ink group-hover:text-rose md:text-2xl">
-                      {offering.title}
+                  <span className="flex flex-col gap-1 sm:flex-row sm:items-baseline sm:gap-8">
+                    <span className="text-[0.6875rem] font-medium uppercase tracking-[0.18em] text-silver sm:w-28">
+                      {offering.category}
                     </span>
-                    <span className="mt-2 block max-w-[36rem] text-sm font-light leading-relaxed text-silver">
-                      {offering.note}
+                    <span className="text-xl font-medium tracking-[-0.01em] text-ink group-hover:text-rose md:text-2xl">
+                      {offering.title}
                     </span>
                   </span>
                   <span
                     aria-hidden="true"
-                    className="text-sm font-medium tracking-[0.08em] text-ink/40 transition-colors group-hover:text-rose"
+                    className="shrink-0 text-sm text-ink/35 transition-colors group-hover:text-rose"
                   >
                     →
                   </span>
@@ -169,45 +182,39 @@ export function NapaHousePage() {
         </div>
       </section>
 
-      {/* 5. People */}
+      {/* 5. People — concise, no bios */}
       <section
         className="rella-site-reveal bg-ivory py-20 md:py-28"
         aria-labelledby="napa-people-heading"
       >
         <div className="mx-auto max-w-[1440px] px-6 md:px-8 lg:px-12">
-          <div className="mb-12 grid gap-8 lg:grid-cols-[1.05fr_0.95fr] lg:items-end lg:gap-16">
-            <div>
-              <p className="rella-editorial-eyebrow mb-4">The people</p>
-              <h2
-                id="napa-people-heading"
-                className="max-w-[16ch] text-[clamp(1.85rem,4vw,3.1rem)] font-medium leading-[1.12] tracking-[-0.02em] text-ink"
-              >
-                Familiar faces at Napa House.
-              </h2>
-            </div>
-            <p className="max-w-[32rem] text-base font-light leading-relaxed text-silver md:text-lg">
-              Injectors, esthetics, medical assisting, and patient services who
-              actually work here — plus physician leadership for medical weight
-              loss.
-            </p>
+          <div className="mb-12 max-w-[28rem]">
+            <p className="rella-editorial-eyebrow mb-4">The people</p>
+            <h2
+              id="napa-people-heading"
+              className="text-[clamp(1.85rem,4vw,3.1rem)] font-medium leading-[1.12] tracking-[-0.02em] text-ink"
+            >
+              Who you&apos;ll meet here.
+            </h2>
           </div>
 
           <ul
-            className="grid gap-x-6 gap-y-12 sm:grid-cols-2 lg:grid-cols-3"
+            className="grid gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
             role="list"
           >
             {primaryPeople.map((person) => (
               <li key={person.name}>
-                <div className="relative mb-5 aspect-[3/4] overflow-hidden bg-oat">
+                <div className="relative mb-4 aspect-[3/4] overflow-hidden bg-oat">
                   <Image
                     src={person.image}
                     alt=""
                     fill
+                    unoptimized
                     className="object-cover object-top"
-                    sizes="(min-width: 1024px) 28vw, (min-width: 640px) 45vw, 100vw"
+                    sizes="(min-width: 1280px) 20vw, (min-width: 640px) 40vw, 100vw"
                   />
                 </div>
-                <p className="text-base font-medium text-ink">{person.name}</p>
+                <p className="text-sm font-medium text-ink">{person.name}</p>
                 <p className="mt-1 text-xs font-light uppercase tracking-[0.12em] text-silver">
                   {person.role}
                 </p>
@@ -216,35 +223,19 @@ export function NapaHousePage() {
           </ul>
 
           {alsoPeople.length > 0 ? (
-            <div className="mt-16 border-t border-rule pt-10">
-              <p className="mb-8 text-[0.6875rem] font-medium uppercase tracking-[0.18em] text-silver">
-                Also serves Napa House
-              </p>
-              <ul className="grid gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3" role="list">
-                {alsoPeople.map((person) => (
-                  <li key={person.name} className="flex gap-5">
-                    <div className="relative h-28 w-20 shrink-0 overflow-hidden bg-oat sm:h-32 sm:w-24">
-                      <Image
-                        src={person.image}
-                        alt=""
-                        fill
-                        className="object-cover object-top"
-                        sizes="96px"
-                      />
-                    </div>
-                    <div className="pt-1">
-                      <p className="text-base font-medium text-ink">{person.name}</p>
-                      <p className="mt-1 text-xs font-light uppercase tracking-[0.12em] text-silver">
-                        {person.role}
-                      </p>
-                    </div>
-                  </li>
-                ))}
-              </ul>
-            </div>
+            <ul className="mt-12 flex flex-wrap gap-x-10 gap-y-4 border-t border-rule pt-8" role="list">
+              {alsoPeople.map((person) => (
+                <li key={person.name}>
+                  <p className="text-sm font-medium text-ink">{person.name}</p>
+                  <p className="mt-1 text-xs font-light uppercase tracking-[0.12em] text-silver">
+                    {person.role}
+                  </p>
+                </li>
+              ))}
+            </ul>
           ) : null}
 
-          <div className="mt-12">
+          <div className="mt-10">
             <Link
               href="/team#team-location-napa"
               className="text-[0.6875rem] font-bold uppercase tracking-[0.18em] text-ink underline-offset-4 hover:text-rose hover:underline"
@@ -255,46 +246,48 @@ export function NapaHousePage() {
         </div>
       </section>
 
-      {/* 6. Editorial photo */}
+      {/* 6. Editorial photo — asymmetrical */}
       <section
-        className="rella-site-reveal bg-charcoal"
-        aria-label="Napa House team photograph"
+        className="rella-site-reveal bg-ivory py-10 md:py-16"
+        aria-label="Napa House editorial photograph"
       >
-        <div className="relative mx-auto aspect-[16/9] max-w-[1600px] overflow-hidden bg-oat">
-          <Image
-            src={teamStorefront.src}
-            alt={teamStorefront.alt}
-            fill
-            unoptimized
-            className="object-cover object-center"
-            sizes="100vw"
-          />
+        <div className="mx-auto max-w-[1440px] px-6 md:px-8 lg:px-12">
+          <div className="grid md:grid-cols-12">
+            <div className="relative aspect-[16/10] overflow-hidden bg-oat md:col-span-10 md:col-start-2 lg:col-span-9 lg:col-start-3">
+              <Image
+                src={teamStorefront.src}
+                alt={teamStorefront.alt}
+                fill
+                unoptimized
+                className="object-cover object-center"
+                sizes="(min-width: 1024px) 70vw, 100vw"
+              />
+            </div>
+          </div>
         </div>
       </section>
 
-      {/* 7. Why Napa */}
+      {/* 7. Why Napa — one restrained moment */}
       <section
-        className="rella-site-reveal bg-ivory py-24 md:py-32"
+        className="rella-site-reveal bg-ivory py-20 md:py-28"
         aria-labelledby="napa-why-heading"
       >
-        <div className="mx-auto max-w-[880px] px-6 md:px-8">
-          <p className="rella-editorial-eyebrow mb-8">Why Napa</p>
+        <div className="mx-auto max-w-[720px] px-6 md:px-8">
+          <p className="rella-editorial-eyebrow mb-6">Why Napa</p>
           <h2
             id="napa-why-heading"
-            className="text-[clamp(1.85rem,4.2vw,3.25rem)] font-medium leading-[1.15] tracking-[-0.02em] text-ink"
+            className="text-[clamp(1.75rem,3.8vw,2.75rem)] font-medium leading-[1.15] tracking-[-0.02em] text-ink"
           >
-            A second Rella house — same standard, local rhythm.
+            Downtown Napa, same Rella standard.
           </h2>
-          <p className="mt-8 max-w-[38rem] text-base font-light leading-relaxed text-silver md:text-lg">
-            Vacaville and Napa House share one brand and one clinical philosophy.
-            Napa House is the downtown address for guests who want that Rella
-            care closer to the valley — physician-owned, consultation-led, and
-            built around relationships that last longer than a single appointment.
+          <p className="mt-6 max-w-[34rem] text-base font-light leading-relaxed text-silver md:text-lg">
+            Napa House is our valley address — a quieter setting for the same
+            consultation-led care guests know from Rella.
           </p>
         </div>
       </section>
 
-      {/* 8. Practical info */}
+      {/* 8. Practical — verified only; no parking */}
       <section
         className="rella-site-reveal border-t border-rule/50 bg-ivory py-20 md:py-28"
         aria-labelledby="napa-practical-heading"
@@ -308,11 +301,6 @@ export function NapaHousePage() {
             >
               Practical details.
             </h2>
-            <p className="mt-5 max-w-[32rem] text-base font-light leading-relaxed text-silver md:text-lg">
-              Confirm your appointment time when you book. If anything looks
-              different online elsewhere, call the studio — we&apos;ll help you
-              get the right plan for your visit.
-            </p>
           </div>
 
           <div className="grid gap-10 sm:grid-cols-2">
@@ -347,24 +335,18 @@ export function NapaHousePage() {
               </ul>
             </div>
 
-            <div className="sm:col-span-2 flex flex-wrap gap-3 pt-2">
+            <div className="flex flex-wrap gap-3 sm:col-span-2">
+              <NapaHouseBookCta className="rella-cta-rect rella-cta-rect--filled">
+                Book Napa
+              </NapaHouseBookCta>
               <a
                 href={napaHousePractical.mapUrl}
                 target="_blank"
                 rel="noreferrer"
                 className="rella-cta-rect rella-cta-rect--ghost"
               >
-                Open in Maps
+                Get directions
                 <span className="sr-only"> (opens in a new tab)</span>
-              </a>
-              <a
-                href={napaHousePractical.googleReviewUrl}
-                target="_blank"
-                rel="noreferrer"
-                className="rella-cta-rect rella-cta-rect--ghost"
-              >
-                Leave a Google review
-                <span className="sr-only"> for Napa House (opens in a new tab)</span>
               </a>
             </div>
           </div>
@@ -381,24 +363,25 @@ export function NapaHousePage() {
           alt=""
           fill
           unoptimized
-          className="object-cover object-center opacity-35"
+          className="object-cover object-center opacity-30"
           sizes="100vw"
         />
-        <div className="absolute inset-0 bg-charcoal/55" aria-hidden="true" />
+        <div className="absolute inset-0 bg-charcoal/60" aria-hidden="true" />
         <div className="relative z-10 mx-auto max-w-[720px] px-6 text-center md:px-8">
           <h2
             id="napa-final-cta-heading"
             className="text-[clamp(1.95rem,4.5vw,3.35rem)] font-medium leading-[1.12] tracking-[-0.02em]"
           >
-            Begin at Napa House.
+            We&apos;ll see you at the House.
           </h2>
-          <p className="mx-auto mt-6 max-w-[32rem] text-base font-light leading-relaxed text-white/80 md:text-lg">
-            Book a consultation at our downtown Napa location. We&apos;ll help
-            you find a clear, comfortable next step.
-          </p>
-          <NapaHouseBookCta className="rella-cta-rect rella-cta-rect--filled mt-10">
-            Book a consultation
-          </NapaHouseBookCta>
+          <div className="mt-10 flex flex-wrap items-center justify-center gap-3 sm:gap-4">
+            <NapaHouseBookCta className="rella-cta-rect rella-cta-rect--filled">
+              Book Napa House
+            </NapaHouseBookCta>
+            <Link href="/services" className="rella-cta-rect rella-cta-rect--ghost-light">
+              Explore treatments
+            </Link>
+          </div>
         </div>
       </section>
     </>

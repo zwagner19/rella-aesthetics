@@ -34,55 +34,49 @@ export const napaHousePractical = {
  * Excludes `chemical-peels` and `microneedling` (repo: Vacaville-only).
  * Links point to education pages — not Napa campaign LPs.
  */
+/** Titles only — education copy lives on treatment pages. */
 export const napaHouseOfferings = [
   {
     slug: "botox",
     title: "Botox & Dysport",
     category: "Injectables",
     href: "/services/botox",
-    note: "Consultation-led neuromodulator care with Napa injectors.",
   },
   {
     slug: "dermal-fillers",
     title: "Dermal Fillers",
     category: "Injectables",
     href: "/services/dermal-fillers",
-    note: "Volume and contour work planned around your face — not a trend.",
   },
   {
     slug: "facials",
     title: "Facials",
     category: "Skin",
     href: "/services/facials",
-    note: "Personalized skin visits with the Napa esthetics team.",
   },
   {
     slug: "hydrafacial",
     title: "HydraFacial",
     category: "Skin",
     href: "/services/hydrafacial",
-    note: "Deep cleanse, exfoliation, and hydration in one session.",
   },
   {
     slug: "laser-treatments",
     title: "Laser Treatments",
     category: "Devices",
     href: "/services/laser-treatments",
-    note: "Device-based skin care — confirm the right modality in consultation.",
   },
   {
     slug: "iv-hydration",
     title: "IV Hydration",
     category: "Wellness",
     href: "/services/iv-hydration",
-    note: "Clinician-guided hydration with screening and monitored care.",
   },
   {
     slug: "weight-loss",
     title: "Medical Weight Loss",
     category: "Wellness",
     href: "/services/weight-loss",
-    note: "Physician-led weight management with a clear starting conversation.",
   },
 ] as const;
 
@@ -93,7 +87,7 @@ export const napaHouseOfferings = [
 export const napaHousePeople = [
   {
     name: "Dr. Zachary Wagner",
-    role: "Founder & Owner · Medical Weight-Loss Physician",
+    role: "Founder · Medical Weight Loss",
     image: "/images/dr-zachary-wagner.jpg",
     presence: "both" as const,
   },
@@ -123,7 +117,7 @@ export const napaHousePeople = [
   },
   {
     name: "Ayano",
-    role: "Front Desk / Patient Services",
+    role: "Front Desk",
     image: "/images/team/ayano.jpg",
     presence: "primary" as const,
   },
