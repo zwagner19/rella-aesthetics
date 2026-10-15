@@ -126,8 +126,8 @@ export default function VacavillePage() {
         className="rella-site-reveal scroll-mt-28 bg-ivory py-10 md:py-16"
         aria-labelledby="vacaville-space-heading"
       >
-        <div className="mx-auto max-w-[1440px] px-6 md:px-8 lg:px-12">
-          <div className="mb-6 max-w-[26rem] md:mb-8">
+        <div className="mx-auto grid max-w-[1440px] items-center gap-8 px-6 md:gap-10 md:px-8 lg:grid-cols-2 lg:gap-16 lg:px-12 xl:gap-20">
+          <div className="max-w-[28rem]">
             <h2
               id="vacaville-space-heading"
               className="text-[clamp(1.85rem,4vw,3.1rem)] font-medium leading-[1.12] tracking-[-0.02em] text-ink"
@@ -140,17 +140,16 @@ export default function VacavillePage() {
             </p>
           </div>
 
-          <div className="grid max-w-[600px] grid-cols-2 items-start gap-3 sm:gap-5 md:gap-6">
+          <div className="grid grid-cols-2 gap-3 sm:gap-4 md:gap-5">
             {gallery.map((photo) => (
-              <figure key={photo.src} className="m-0 bg-oat">
+              <figure key={photo.src} className="relative m-0 aspect-[2/3] overflow-hidden bg-oat">
                 <Image
                   src={photo.src}
                   alt={photo.alt}
-                  width={photo.width}
-                  height={photo.height}
+                  fill
                   unoptimized
-                  className="h-auto w-full"
-                  sizes="(min-width: 768px) 280px, 45vw"
+                  className="object-cover"
+                  sizes="(min-width: 1024px) 28vw, 45vw"
                 />
               </figure>
             ))}

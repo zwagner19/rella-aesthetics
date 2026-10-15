@@ -58,14 +58,14 @@ export function NapaHousePage() {
         </div>
       </section>
 
-      {/* 2. Arrival — clean two-portrait pair at native 2:3 (no forced crop/zoom) */}
+      {/* 2. Arrival — copy beside the two existing portraits */}
       <section
         id="arrival"
         className="rella-site-reveal scroll-mt-28 bg-ivory py-10 md:py-16"
         aria-labelledby="napa-arrival-heading"
       >
-        <div className="mx-auto max-w-[1440px] px-6 md:px-8 lg:px-12">
-          <div className="mb-6 max-w-[22rem] md:mb-8">
+        <div className="mx-auto grid max-w-[1440px] items-center gap-8 px-6 md:gap-10 md:px-8 lg:grid-cols-2 lg:gap-16 lg:px-12 xl:gap-20">
+          <div className="max-w-[28rem]">
             <h2
               id="napa-arrival-heading"
               className="text-[clamp(1.85rem,4vw,3.1rem)] font-medium leading-[1.12] tracking-[-0.02em] text-ink"
@@ -78,32 +78,25 @@ export function NapaHousePage() {
             </p>
           </div>
 
-          {/*
-            Both sources are 680×1020 (2:3). Show full frames at natural aspect —
-            no object-cover crop, no unequal stagger, no stretch. Pair width capped
-            so each column stays a little under 340 CSS px on desktop (sharp at 2×).
-          */}
-          <div className="grid max-w-[600px] grid-cols-2 items-start gap-3 sm:gap-5 md:gap-6">
-            <figure className="m-0 bg-oat">
+          <div className="grid grid-cols-2 gap-3 sm:gap-4 md:gap-5">
+            <figure className="relative m-0 aspect-[2/3] overflow-hidden bg-oat">
               <Image
                 src={receptionInterior.src}
                 alt={receptionInterior.alt}
-                width={receptionInterior.nativeWidth}
-                height={receptionInterior.nativeHeight}
+                fill
                 unoptimized
-                className="h-auto w-full"
-                sizes="(min-width: 768px) 280px, 45vw"
+                className="object-cover"
+                sizes="(min-width: 1024px) 28vw, 45vw"
               />
             </figure>
-            <figure className="m-0 bg-oat">
+            <figure className="relative m-0 aspect-[2/3] overflow-hidden bg-oat">
               <Image
                 src={treatmentRoom.src}
                 alt={treatmentRoom.alt}
-                width={treatmentRoom.nativeWidth}
-                height={treatmentRoom.nativeHeight}
+                fill
                 unoptimized
-                className="h-auto w-full"
-                sizes="(min-width: 768px) 280px, 45vw"
+                className="object-cover"
+                sizes="(min-width: 1024px) 28vw, 45vw"
               />
             </figure>
           </div>
