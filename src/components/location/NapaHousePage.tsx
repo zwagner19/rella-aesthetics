@@ -38,7 +38,7 @@ export function NapaHousePage() {
             {napaHouseIdentity.brand}
           </p>
           <h1 className="max-w-[14ch] text-[clamp(2.4rem,6.5vw,4.75rem)] font-medium leading-[1.05] tracking-[-0.03em] text-white">
-            Welcome to Napa House.
+            Welcome to Napa House
           </h1>
           <p className="mt-6 max-w-[26rem] text-base font-light leading-relaxed text-white/85 md:text-lg">
             Downtown Napa hospitality — consultation-led care in a house that
@@ -61,16 +61,16 @@ export function NapaHousePage() {
       {/* 2. Arrival — clean two-portrait pair at native 2:3 (no forced crop/zoom) */}
       <section
         id="arrival"
-        className="rella-site-reveal scroll-mt-28 bg-ivory py-20 md:py-28"
+        className="rella-site-reveal scroll-mt-28 bg-ivory py-10 md:py-16"
         aria-labelledby="napa-arrival-heading"
       >
         <div className="mx-auto max-w-[1440px] px-6 md:px-8 lg:px-12">
-          <div className="mb-12 max-w-[22rem] md:mb-14">
+          <div className="mb-6 max-w-[22rem] md:mb-8">
             <h2
               id="napa-arrival-heading"
               className="text-[clamp(1.85rem,4vw,3.1rem)] font-medium leading-[1.12] tracking-[-0.02em] text-ink"
             >
-              Come in. Stay awhile.
+              Come in. Stay awhile
             </h2>
             <p className="mt-5 text-base font-light leading-relaxed text-silver md:text-lg">
               Soft light, a familiar desk, and a pace that feels more like a
@@ -81,9 +81,9 @@ export function NapaHousePage() {
           {/*
             Both sources are 680×1020 (2:3). Show full frames at natural aspect —
             no object-cover crop, no unequal stagger, no stretch. Pair width capped
-            so each column stays near ≤340 CSS px on desktop (sharp at 2×).
+            so each column stays a little under 340 CSS px on desktop (sharp at 2×).
           */}
-          <div className="grid max-w-[720px] grid-cols-2 items-start gap-3 sm:gap-5 md:gap-6">
+          <div className="grid max-w-[600px] grid-cols-2 items-start gap-3 sm:gap-5 md:gap-6">
             <figure className="m-0 bg-oat">
               <Image
                 src={receptionInterior.src}
@@ -92,7 +92,7 @@ export function NapaHousePage() {
                 height={receptionInterior.nativeHeight}
                 unoptimized
                 className="h-auto w-full"
-                sizes="(min-width: 768px) 340px, 45vw"
+                sizes="(min-width: 768px) 280px, 45vw"
               />
             </figure>
             <figure className="m-0 bg-oat">
@@ -103,7 +103,7 @@ export function NapaHousePage() {
                 height={treatmentRoom.nativeHeight}
                 unoptimized
                 className="h-auto w-full"
-                sizes="(min-width: 768px) 340px, 45vw"
+                sizes="(min-width: 768px) 280px, 45vw"
               />
             </figure>
           </div>
@@ -112,16 +112,16 @@ export function NapaHousePage() {
 
       {/* 3. Experience */}
       <section
-        className="rella-site-reveal border-y border-rule/50 bg-ivory py-20 md:py-28"
+        className="rella-site-reveal border-y border-rule/50 bg-ivory py-10 md:py-16"
         aria-labelledby="napa-experience-heading"
       >
         <div className="mx-auto max-w-[720px] px-6 md:px-8">
-          <p className="rella-editorial-eyebrow mb-6">The experience</p>
+          <p className="rella-editorial-eyebrow mb-4">The experience</p>
           <h2
             id="napa-experience-heading"
             className="max-w-[18ch] text-[clamp(1.75rem,3.8vw,2.75rem)] font-medium leading-[1.15] tracking-[-0.02em] text-ink"
           >
-            Care that starts at the front desk — and stays personal.
+            Care that starts at the front desk — and stays personal
           </h2>
           <p className="mt-6 max-w-[36rem] text-base font-light leading-relaxed text-silver md:text-lg">
             At Napa House, the visit is a conversation first: what you want,
@@ -133,37 +133,27 @@ export function NapaHousePage() {
 
       {/* 4. What happens here — categories only */}
       <section
-        className="rella-site-reveal bg-ivory py-20 md:py-28"
+        className="rella-site-reveal bg-ivory py-10 md:py-16"
         aria-labelledby="napa-offerings-heading"
       >
         <div className="mx-auto max-w-[1440px] px-6 md:px-8 lg:px-12">
-          <div className="mb-10 max-w-[28rem] md:mb-12">
+          <div className="mb-6 max-w-[28rem] md:mb-8">
             <p className="rella-editorial-eyebrow mb-4">What happens here</p>
             <h2
               id="napa-offerings-heading"
               className="text-[clamp(1.75rem,3.8vw,2.75rem)] font-medium leading-[1.12] tracking-[-0.02em] text-ink"
             >
-              At the House.
+              At the House
             </h2>
           </div>
 
           <ul className="border-t border-rule" role="list">
             {napaHouseCategories.map((category) => (
-              <li key={category.label} className="border-b border-rule">
-                <Link
-                  href={category.href}
-                  className="group flex items-baseline justify-between gap-6 py-5 transition-colors md:py-6"
-                >
-                  <span className="text-xl font-medium tracking-[-0.01em] text-ink group-hover:text-rose md:text-2xl">
-                    {category.label}
-                  </span>
-                  <span
-                    aria-hidden="true"
-                    className="shrink-0 text-sm text-ink/35 transition-colors group-hover:text-rose"
-                  >
-                    →
-                  </span>
-                </Link>
+              <li
+                key={category.label}
+                className="border-b border-rule py-3.5 text-xl font-medium tracking-[-0.01em] text-ink md:py-4 md:text-2xl"
+              >
+                {category.label}
               </li>
             ))}
           </ul>
@@ -172,27 +162,27 @@ export function NapaHousePage() {
 
       {/* 5. People — Wagner, Warda, Devyn equal weight */}
       <section
-        className="rella-site-reveal bg-ivory py-20 md:py-28"
+        className="rella-site-reveal bg-ivory py-10 md:py-16"
         aria-labelledby="napa-people-heading"
       >
         <div className="mx-auto max-w-[1440px] px-6 md:px-8 lg:px-12">
-          <div className="mb-12 max-w-[24rem]">
+          <div className="mb-8 max-w-[24rem]">
             <p className="rella-editorial-eyebrow mb-4">The people</p>
             <h2
               id="napa-people-heading"
               className="text-[clamp(1.75rem,3.8vw,2.75rem)] font-medium leading-[1.12] tracking-[-0.02em] text-ink"
             >
-              Who you&apos;ll meet here.
+              Who you&apos;ll meet here
             </h2>
           </div>
 
           <ul
-            className="grid gap-x-8 gap-y-10 sm:grid-cols-3"
+            className="grid max-w-[960px] gap-x-8 gap-y-8 sm:grid-cols-3"
             role="list"
           >
             {napaHousePeople.map((person) => (
               <li key={person.name}>
-                <div className="relative mb-4 aspect-[3/4] overflow-hidden bg-oat">
+                <div className="relative mb-3 aspect-[3/4] overflow-hidden bg-oat">
                   <Image
                     src={person.image}
                     alt=""
@@ -210,7 +200,7 @@ export function NapaHousePage() {
             ))}
           </ul>
 
-          <div className="mt-10">
+          <div className="mt-6">
             <Link
               href="/team#team-location-napa"
               className="text-[0.6875rem] font-bold uppercase tracking-[0.18em] text-ink underline-offset-4 hover:text-rose hover:underline"
@@ -223,16 +213,16 @@ export function NapaHousePage() {
 
       {/* 6. Why Napa — follows people directly (duplicate treatment-room editorial removed) */}
       <section
-        className="rella-site-reveal bg-ivory py-20 md:py-28"
+        className="rella-site-reveal bg-ivory py-10 md:py-16"
         aria-labelledby="napa-why-heading"
       >
         <div className="mx-auto max-w-[640px] px-6 md:px-8">
-          <p className="rella-editorial-eyebrow mb-6">Why Napa</p>
+          <p className="rella-editorial-eyebrow mb-4">Why Napa</p>
           <h2
             id="napa-why-heading"
             className="text-[clamp(1.65rem,3.5vw,2.5rem)] font-medium leading-[1.15] tracking-[-0.02em] text-ink"
           >
-            Downtown Napa, same Rella standard.
+            Downtown Napa, same Rella standard
           </h2>
           <p className="mt-5 max-w-[32rem] text-base font-light leading-relaxed text-silver md:text-lg">
             A quieter valley address for the consultation-led care guests already
@@ -243,21 +233,21 @@ export function NapaHousePage() {
 
       {/* 8. Practical */}
       <section
-        className="rella-site-reveal border-t border-rule/50 bg-ivory py-20 md:py-28"
+        className="rella-site-reveal border-t border-rule/50 bg-ivory py-10 md:py-16"
         aria-labelledby="napa-practical-heading"
       >
-        <div className="mx-auto grid max-w-[1440px] gap-14 px-6 md:px-8 lg:grid-cols-2 lg:gap-20 lg:px-12">
+        <div className="mx-auto grid max-w-[1440px] gap-8 px-6 md:px-8 lg:grid-cols-2 lg:gap-16 lg:px-12">
           <div>
             <p className="rella-editorial-eyebrow mb-4">Visit</p>
             <h2
               id="napa-practical-heading"
               className="text-[clamp(1.75rem,3.8vw,2.75rem)] font-medium leading-[1.12] tracking-[-0.02em] text-ink"
             >
-              Practical details.
+              Practical details
             </h2>
           </div>
 
-          <div className="grid gap-10 sm:grid-cols-2">
+          <div className="grid gap-8 sm:grid-cols-2">
             <address className="not-italic">
               <p className="text-[0.6875rem] font-medium uppercase tracking-[0.18em] text-silver">
                 Address
@@ -326,7 +316,7 @@ export function NapaHousePage() {
             id="napa-final-cta-heading"
             className="text-[clamp(1.95rem,4.5vw,3.35rem)] font-medium leading-[1.12] tracking-[-0.02em]"
           >
-            We&apos;ll see you at the House.
+            We&apos;ll see you at the House
           </h2>
           <div className="mt-10 flex flex-wrap items-center justify-center gap-3 sm:gap-4">
             <NapaHouseBookCta className="rella-cta-rect rella-cta-rect--filled">

@@ -10,23 +10,16 @@ import { MobileNav } from "./MobileNav";
 
 /** Primary editorial navigation — lean left rail for homepage architecture. */
 export const primaryNavLinks = [
-  { href: "/services", label: "Treatments" },
-  { href: "/about", label: "About" },
+  { href: "/services", label: "Services" },
   { href: "/#locations", label: "Locations" },
 ] as const;
 
 /** Full site map for the mobile menu (interior pages stay reachable). */
 export const navLinks = [
-  { href: "/services", label: "Treatments" },
-  { href: "/about", label: "About" },
+  { href: "/services", label: "Services" },
   { href: "/team", label: "Team" },
   { href: "/locations/vacaville", label: "Vacaville" },
   { href: "/locations/napa", label: "Napa" },
-  { href: "/membership", label: "Membership" },
-  { href: "/gallery", label: "Results" },
-  { href: "/blog", label: "Education" },
-  { href: "/payment-plans", label: "Payment Plans" },
-  { href: "/private-parties", label: "Private Parties" },
   { href: "/contact", label: "Contact" },
 ] as const;
 
@@ -35,10 +28,9 @@ const linkClass =
 
 export function Header() {
   const pathname = usePathname();
-  const isHome = pathname === "/";
-  /** Full-bleed editorial heroes that share the homepage over-nav treatment. */
+  /** Dark full-bleed heroes that can carry light navigation. */
   const isEditorialHeroRoute =
-    isHome || pathname === "/services/botox" || pathname === "/services/dermal-fillers";
+    pathname === "/services/botox" || pathname === "/services/dermal-fillers";
   const [mobileOpen, setMobileOpen] = useState(false);
   const [scrolled, setScrolled] = useState(!isEditorialHeroRoute);
   const mobileMenuButtonRef = useRef<HTMLButtonElement>(null);
@@ -95,9 +87,6 @@ export function Header() {
           </Link>
 
           <div className={`flex items-center justify-end gap-6 ${navTone}`}>
-            <Link href="/membership" className={linkClass}>
-              Membership
-            </Link>
             <BookTrigger intent={{}} data-booking-fallback={bookingHref} className="rella-cta-rect rella-cta-rect--filled">
               Book
             </BookTrigger>

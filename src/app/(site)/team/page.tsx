@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { Button } from "@/components/ui/Button";
 import {
   additionalTeamMembers,
   leadershipMember,
@@ -29,15 +28,62 @@ export const metadata: Metadata = {
   },
 };
 
-type TeamProfileMember = (typeof teamRoleGroups)[number]["members"][number];
-type AdditionalTeamMember = (typeof additionalTeamMembers)[number];
 type DirectoryMember = {
   readonly name: string;
-  readonly image: string | null;
+  readonly image: string;
   readonly role: string;
-  readonly bio?: readonly string[];
-  readonly alsoServes?: "napa" | "vacaville" | null;
+  readonly bio: readonly string[];
+  readonly alsoServes: "napa" | "vacaville" | null;
+  readonly primaryLocation: "napa" | "vacaville" | "both";
 };
+
+const roster: readonly DirectoryMember[] = [
+  ...teamRoleGroups.flatMap(
+    (group) => group.members as readonly DirectoryMember[],
+  ),
+  ...(additionalTeamMembers as readonly DirectoryMember[]),
+];
+
+const directoryGridClass =
+  "grid grid-cols-2 gap-x-4 gap-y-8 md:grid-cols-3 md:gap-x-6 lg:grid-cols-4 lg:gap-y-10";
+
+function membersNamed(names: readonly string[]) {
+  return names.flatMap((name) => {
+    const member = roster.find((person) => person.name === name);
+    return member ? [member] : [];
+  });
+}
+
+function locationDirectory(locationId: "napa" | "vacaville") {
+  if (locationId === "napa") {
+    const featured = [
+      "Devyn Pickett",
+      "Marisa Avalos",
+      "Natalie",
+      "Hailey Butler",
+      "Ayano",
+    ] as const;
+    const featuredNames = new Set<string>(featured);
+    return [
+      ...membersNamed(featured),
+      ...roster.filter(
+        (member) =>
+          member.primaryLocation === "napa" && !featuredNames.has(member.name),
+      ),
+    ];
+  }
+
+  const featured = ["Anna Johnson", "Warda Harchaoui"] as const;
+  const featuredNames = new Set<string>(featured);
+  return [
+    ...membersNamed(featured),
+    ...roster.filter(
+      (member) =>
+        member.primaryLocation === "vacaville" &&
+        !featuredNames.has(member.name),
+    ),
+  ];
+}
 
 function locationName(locationId: "napa" | "vacaville") {
   return (
@@ -46,188 +92,67 @@ function locationName(locationId: "napa" | "vacaville") {
   );
 }
 
-function TeamProfile({ member }: { member: TeamProfileMember }) {
+function DirectoryCard({ member }: { member: DirectoryMember }) {
   return (
-    <article className="grid gap-6 border-t border-silver/30 pt-6 lg:grid-cols-[minmax(170px,0.85fr)_minmax(0,1.15fr)] lg:gap-8">
-      <div className="relative aspect-[4/5] overflow-hidden bg-rose-blush">
+    <article>
+      <div className="relative aspect-[3/4] overflow-hidden bg-rose-blush">
         <Image
           src={member.image}
           alt=""
           fill
           className="object-cover object-top"
-          sizes="(min-width: 1024px) 480px, (min-width: 768px) 45vw, 100vw"
+          sizes="(min-width: 1024px) 240px, (min-width: 768px) 30vw, 45vw"
         />
       </div>
-      <div className="pt-0 lg:pt-1">
-        <h4 className="text-2xl font-medium text-rose-text">{member.name}</h4>
-        <p className="mt-2 text-xs font-bold uppercase tracking-[0.12em] text-silver-dark">
-          {member.role}
+      <h3 className="mt-3 text-base font-medium leading-snug text-rose-text">
+        {member.name}
+      </h3>
+      <p className="mt-1 text-[0.6875rem] font-bold uppercase tracking-[0.12em] text-silver-dark">
+        {member.role}
+      </p>
+      {member.alsoServes ? (
+        <p className="mt-2 text-[0.6875rem] font-bold uppercase tracking-[0.12em] text-rose-dark">
+          Also serves {locationName(member.alsoServes)}
         </p>
-        {member.alsoServes ? (
-          <p className="mt-3 text-xs font-bold uppercase tracking-[0.12em] text-rose-dark">
-            Also serves {locationName(member.alsoServes)}
-          </p>
-        ) : null}
-        <div className="mt-5 space-y-4 text-[0.9375rem] leading-relaxed text-ink/75">
-          {member.bio.map((paragraph) => (
-            <p key={paragraph}>{paragraph}</p>
-          ))}
-        </div>
+      ) : null}
+      <div className="mt-3 space-y-3 text-sm leading-relaxed text-ink/75">
+        {member.bio.map((paragraph) => (
+          <p key={paragraph}>{paragraph}</p>
+        ))}
       </div>
     </article>
-  );
-}
-
-function AdditionalTeamGrid({
-  members,
-  label,
-}: {
-  members: readonly AdditionalTeamMember[];
-  label: string;
-}) {
-  if (members.length === 0) return null;
-
-  return (
-    <section
-      className="mt-16 border-t border-silver/25 pt-10"
-      aria-label={label}
-    >
-      <h3 className="mb-7 text-sm font-bold uppercase tracking-[0.16em] text-silver-dark">
-        {label}
-      </h3>
-      <ul className="grid gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3">
-        {members.map((member) => (
-          <li key={member.name}>
-            <div className="relative aspect-[4/5] overflow-hidden bg-rose-blush">
-              <Image
-                src={member.image}
-                alt=""
-                fill
-                className="object-cover object-top"
-                sizes="(min-width: 1024px) 320px, (min-width: 640px) 45vw, calc(100vw - 3rem)"
-              />
-            </div>
-            <p className="border-t border-silver/35 pb-2 pt-5 text-lg font-medium text-rose-text">
-              {member.name}
-            </p>
-            <p className="text-xs font-bold uppercase tracking-[0.12em] text-silver-dark">
-              {member.role}
-            </p>
-            {member.alsoServes ? (
-              <p className="mt-2 text-xs font-bold uppercase tracking-[0.12em] text-rose-dark">
-                Also serves {locationName(member.alsoServes)}
-              </p>
-            ) : null}
-            <div className="mt-4 space-y-4 text-[0.9375rem] leading-relaxed text-ink/75">
-              {member.bio.map((paragraph) => (
-                <p key={paragraph}>{paragraph}</p>
-              ))}
-            </div>
-          </li>
-        ))}
-      </ul>
-    </section>
-  );
-}
-
-function NapaRoleSection({
-  label,
-  names,
-  members,
-}: {
-  label: string;
-  names: readonly string[];
-  members: readonly DirectoryMember[];
-}) {
-  const selected = names
-    .map((name) => members.find((member) => member.name === name))
-    .filter((member): member is DirectoryMember => Boolean(member));
-
-  if (selected.length === 0) return null;
-
-  return (
-    <section className="mb-16" aria-label={`Napa ${label}`}>
-      <h3 className="mb-7 text-sm font-bold uppercase tracking-[0.16em] text-silver-dark">
-        {label}
-      </h3>
-      <div className="grid gap-x-8 gap-y-14 md:grid-cols-2">
-        {selected.map((member) => (
-          <article
-            key={member.name}
-            className={
-              member.image
-                ? "grid gap-6 border-t border-silver/30 pt-6 lg:grid-cols-[minmax(170px,0.85fr)_minmax(0,1.15fr)] lg:gap-8"
-                : "border-t border-silver/30 pt-6"
-            }
-          >
-            {member.image ? (
-              <div className="relative aspect-[4/5] overflow-hidden bg-rose-blush">
-                <Image
-                  src={member.image}
-                  alt=""
-                  fill
-                  className="object-cover object-top"
-                  sizes="(min-width: 1024px) 480px, (min-width: 768px) 45vw, 100vw"
-                />
-              </div>
-            ) : null}
-            <div className="pt-0 lg:pt-1">
-              <h4 className="text-2xl font-medium text-rose-text">{member.name}</h4>
-              <p className="mt-2 text-xs font-bold uppercase tracking-[0.12em] text-silver-dark">
-                {member.role}
-              </p>
-              {member.alsoServes ? (
-                <p className="mt-3 text-xs font-bold uppercase tracking-[0.12em] text-rose-dark">
-                  Also serves {locationName(member.alsoServes)}
-                </p>
-              ) : null}
-              {member.bio ? (
-                <div className="mt-5 space-y-4 text-[0.9375rem] leading-relaxed text-ink/75">
-                  {member.bio.map((paragraph) => (
-                    <p key={paragraph}>{paragraph}</p>
-                  ))}
-                </div>
-              ) : null}
-            </div>
-          </article>
-        ))}
-      </div>
-    </section>
   );
 }
 
 export default function TeamPage() {
   return (
     <>
-      <section className="border-b border-silver/25 bg-rose">
-        <div className="mx-auto max-w-[1050px] px-6 py-20 md:px-8 md:py-28 lg:px-12">
-          <p className="mb-5 text-[0.75rem] font-medium capitalize italic tracking-[0.08em] text-white">
+      <section className="relative -mt-[72px] flex min-h-[100svh] items-end overflow-hidden bg-charcoal text-white lg:-mt-[84px]">
+        <Image
+          src="/images/clinic/Warm%20Cozy%20Living%20Room%20Details.png"
+          alt="The Napa Transformation House and Rella Vacaville interiors"
+          fill
+          priority
+          unoptimized
+          className="object-cover object-center"
+          sizes="100vw"
+        />
+        <div
+          className="absolute inset-0 bg-gradient-to-t from-charcoal/90 via-charcoal/40 to-charcoal/20"
+          aria-hidden="true"
+        />
+        <div className="relative z-10 mx-auto w-full max-w-[1440px] px-6 pb-16 pt-32 md:px-8 md:pb-24 lg:px-12 lg:pb-28">
+          <p className="mb-4 text-[0.6875rem] font-medium uppercase tracking-[0.28em] text-rose">
             Vacaville + Napa
           </p>
-          <h1 className="max-w-[850px] text-4xl font-bold uppercase leading-[1.04] tracking-[0.06em] text-white md:text-6xl">
-            Meet the people behind Rella.
+          <h1 className="max-w-[14ch] text-[clamp(2.4rem,6.5vw,4.75rem)] font-medium leading-[1.05] tracking-[-0.03em] text-white">
+            Meet the people behind Rella
           </h1>
-          <p className="mt-7 max-w-[720px] text-lg font-light leading-relaxed text-white md:text-xl">
+          <p className="mt-6 max-w-[26rem] text-base font-light leading-relaxed text-white/85 md:text-lg">
             Rella brings together medical weight-loss care, nursing, advanced
             practice, esthetics, medical assisting, and patient services for our
             two local communities.
           </p>
-        </div>
-      </section>
-
-      <section
-        className="bg-white py-10 md:py-14"
-        aria-label="Rella Aesthetics team photo"
-      >
-        <div className="mx-auto max-w-[1120px] px-6 md:px-8 lg:px-12">
-          <Image
-            src="/images/clinic/rella-team-storefront.webp"
-            alt="Rella Aesthetics team outside the Napa clinic"
-            width={1600}
-            height={900}
-            className="h-auto w-full"
-            sizes="(min-width: 1120px) 1024px, calc(100vw - 3rem)"
-          />
         </div>
       </section>
 
@@ -238,7 +163,6 @@ export default function TeamPage() {
               src={leadershipMember.image}
               alt={`${leadershipMember.name}, ${leadershipMember.credentials}, founder and owner of Rella Aesthetics`}
               fill
-              priority
               className="object-cover object-top"
               sizes="(min-width: 1024px) 420px, 90vw"
             />
@@ -265,88 +189,37 @@ export default function TeamPage() {
                 <p key={paragraph}>{paragraph}</p>
               ))}
             </div>
-            <Link
-              href="/services/weight-loss"
-              className="mt-7 inline-flex border-b border-ink pb-1 text-xs font-bold uppercase tracking-[0.14em] text-ink"
-            >
-              Explore Medical Weight Loss <span aria-hidden="true">→</span>
-            </Link>
+            {/*
+              Temporarily hidden. Restore this link to /services/weight-loss
+              when medical weight loss should be featured on the team page again.
+            */}
           </div>
         </div>
       </section>
 
       <section
-        className="border-y border-silver/20 bg-paper py-20 md:py-28"
+        className="border-y border-silver/20 bg-paper py-12 md:py-16"
         aria-label="Rella team by location"
       >
         <div className="mx-auto max-w-[1120px] px-6 md:px-8 lg:px-12">
-          <div className="space-y-28">
+          <div className="space-y-16">
             {teamLocations.map((location) => {
-              const directoryMembers: readonly DirectoryMember[] = [
-                ...(teamRoleGroups.flatMap(
-                  (group) =>
-                    group.members as unknown as readonly DirectoryMember[],
-                ) as DirectoryMember[]),
-                ...(additionalTeamMembers as unknown as readonly DirectoryMember[]),
-              ];
-              const napaCustomNames = new Set([
-                "Devyn Pickett",
-                "Marisa Avalos",
-                "Natalie",
-                "Hailey Butler",
-                "Ayano",
-              ]);
-              const roleGroups = teamRoleGroups
-                .map((group) => ({
-                  ...group,
-                  members: group.members.filter(
-                    (member) =>
-                      member.primaryLocation === location.id &&
-                      !(
-                        location.id === "napa" &&
-                        napaCustomNames.has(member.name)
-                      ),
-                  ),
-                }))
-                .filter((group) => group.members.length > 0);
-              const additionalMembers = additionalTeamMembers.filter(
-                (member) =>
-                  member.primaryLocation === location.id &&
-                  !(location.id === "napa" && napaCustomNames.has(member.name)),
-              );
-              const featuredMembers: TeamProfileMember[] =
-                location.id === "vacaville"
-                  ? teamRoleGroups
-                      .reduce<TeamProfileMember[]>(
-                        (all, group) =>
-                          all.concat(
-                            group.members as unknown as TeamProfileMember[],
-                          ),
-                        [],
-                      )
-                      .filter(
-                        (member) =>
-                          member.name === "Anna Johnson" ||
-                          member.name === "Warda Harchaoui",
-                      )
-                  : [];
+              const members = locationDirectory(location.id);
 
               return (
                 <section
                   key={location.id}
                   id={`team-location-${location.id}`}
                   aria-labelledby={`team-location-${location.id}-heading`}
-                  className="scroll-mt-28 border-t border-silver/30 pt-12 first:border-t-0 first:pt-0"
+                  className="scroll-mt-28"
                 >
-                  <div className="mb-14 grid gap-6 md:grid-cols-[1fr_auto] md:items-end">
-                    <div>
-                      <h2
-                        id={`team-location-${location.id}-heading`}
-                        className="text-3xl font-bold uppercase tracking-[0.06em] text-ink md:text-5xl"
-                      >
-                        {location.name} team
-                      </h2>
-                    </div>
+                  <div className="mb-8 grid gap-4 md:grid-cols-[1fr_auto] md:items-end">
+                    <h2
+                      id={`team-location-${location.id}-heading`}
+                      className="text-3xl font-bold uppercase tracking-[0.06em] text-ink md:text-5xl"
+                    >
+                      {location.name} team
+                    </h2>
                     <Link
                       href={location.href}
                       className="w-fit border-b border-ink pb-1 text-xs font-bold uppercase tracking-[0.14em] text-ink transition-colors hover:border-rose"
@@ -354,90 +227,13 @@ export default function TeamPage() {
                       Explore {location.name} <span aria-hidden="true">→</span>
                     </Link>
                   </div>
-
-                  {location.id === "napa" ? (
-                    <>
-                      <NapaRoleSection
-                        label="Aesthetic Injectors"
-                        names={["Devyn Pickett", "Marisa Avalos"]}
-                        members={directoryMembers}
-                      />
-                      <NapaRoleSection
-                        label="Esthetician"
-                        names={["Natalie"]}
-                        members={directoryMembers}
-                      />
-                      <NapaRoleSection
-                        label="Medical Assistant"
-                        names={["Hailey Butler"]}
-                        members={directoryMembers}
-                      />
-                      <NapaRoleSection
-                        label="Front Desk / Patient Services"
-                        names={["Ayano"]}
-                        members={directoryMembers}
-                      />
-                    </>
-                  ) : null}
-
-                  {location.id === "napa" && additionalMembers.length > 0 ? (
-                    <AdditionalTeamGrid
-                      members={additionalMembers}
-                      label="Additional Napa team"
-                    />
-                  ) : null}
-
-                  {featuredMembers.length > 0 ? (
-                    <section
-                      className="mb-16"
-                      aria-label="Vacaville clinical team"
-                    >
-                      <div className="grid gap-x-8 gap-y-14 md:grid-cols-2">
-                        {featuredMembers.map((member) => (
-                          <TeamProfile key={member.name} member={member} />
-                        ))}
-                      </div>
-                    </section>
-                  ) : null}
-
-                  <div className="space-y-16">
-                    {roleGroups.map((group) => {
-                      const displayedMembers = group.members.filter(
-                        (member) =>
-                          !featuredMembers.some(
-                            (featured) => featured.name === member.name,
-                          ),
-                      );
-                      if (displayedMembers.length === 0) return null;
-                      const groupId = `team-${location.id}-${group.title
-                        .toLowerCase()
-                        .replaceAll(" ", "-")
-                        .replaceAll("&", "and")}`;
-
-                      return (
-                        <section key={group.title} aria-labelledby={groupId}>
-                          <h3
-                            id={groupId}
-                            className="mb-7 text-sm font-bold uppercase tracking-[0.16em] text-silver-dark"
-                          >
-                            {group.title}
-                          </h3>
-                          <div className="grid gap-x-8 gap-y-14 md:grid-cols-2">
-                            {displayedMembers.map((member) => (
-                              <TeamProfile key={member.name} member={member} />
-                            ))}
-                          </div>
-                        </section>
-                      );
-                    })}
-                  </div>
-
-                  {location.id !== "napa" ? (
-                    <AdditionalTeamGrid
-                      members={additionalMembers}
-                      label={`More of the ${location.name} team`}
-                    />
-                  ) : null}
+                  <ul className={directoryGridClass}>
+                    {members.map((member) => (
+                      <li key={member.name}>
+                        <DirectoryCard member={member} />
+                      </li>
+                    ))}
+                  </ul>
                 </section>
               );
             })}
@@ -446,87 +242,59 @@ export default function TeamPage() {
       </section>
 
       <section
-        className="bg-rose-blush py-20 md:py-24"
+        className="bg-rose-blush py-12 md:py-16"
         aria-labelledby="additional-team-heading"
       >
         <div className="mx-auto max-w-[1120px] px-6 md:px-8 lg:px-12">
-          <div className="grid gap-8 md:grid-cols-[0.8fr_1.2fr] md:gap-14">
-            <div>
-              <p className="mb-4 text-[0.75rem] font-medium capitalize italic tracking-[0.08em] text-ink">
-                Rella-wide team
-              </p>
-              <h2
-                id="additional-team-heading"
-                className="text-3xl font-bold uppercase tracking-[0.06em] text-ink md:text-4xl"
-              >
-                Across both locations.
-              </h2>
-            </div>
-            <ul className="grid gap-y-10">
-              {additionalTeamMembers
-                .filter((member) => member.primaryLocation === "both")
-                .map((member) => (
-                  <li
-                    key={member.name}
-                    className="grid gap-6 lg:grid-cols-[minmax(180px,0.8fr)_minmax(0,1.2fr)] lg:items-start lg:gap-8"
-                  >
-                    <div className="relative aspect-[4/5] overflow-hidden bg-paper">
-                      <Image
-                        src={member.image}
-                        alt=""
-                        fill
-                        className="object-cover object-top"
-                        sizes="(min-width: 1024px) 180px, (min-width: 768px) 28vw, (min-width: 640px) 45vw, calc(100vw - 3rem)"
-                      />
-                    </div>
-                    <div className="min-w-0 lg:pt-1">
-                      <p className="border-t border-silver/35 pb-2 pt-5 text-lg font-medium text-rose-text lg:pt-4">
-                        {member.name}
-                      </p>
-                      <p className="text-xs font-bold uppercase tracking-[0.12em] text-silver-dark">
-                        {member.role}
-                      </p>
-                      <div className="mt-4 space-y-4 text-[0.9375rem] leading-relaxed text-ink/75">
-                        {member.bio.map((paragraph) => (
-                          <p key={paragraph}>{paragraph}</p>
-                        ))}
-                      </div>
-                    </div>
-                  </li>
-                ))}
-            </ul>
-          </div>
+          <p className="mb-4 text-[0.75rem] font-medium capitalize italic tracking-[0.08em] text-ink">
+            Rella-wide team
+          </p>
+          <h2
+            id="additional-team-heading"
+            className="text-3xl font-bold uppercase tracking-[0.06em] text-ink md:text-4xl"
+          >
+            Across both locations
+          </h2>
+          <ul className={`mt-8 ${directoryGridClass}`}>
+            {roster
+              .filter((member) => member.primaryLocation === "both")
+              .map((member) => (
+                <li key={member.name}>
+                  <DirectoryCard member={member} />
+                </li>
+              ))}
+          </ul>
         </div>
       </section>
 
-      <section className="bg-rose py-16 text-white md:py-20">
-        <div className="mx-auto flex max-w-[900px] flex-col items-center px-6 text-center">
-          <p className="mb-4 text-[0.75rem] font-medium capitalize italic tracking-[0.08em] text-white">
+      <section
+        className="bg-charcoal py-28 text-white md:py-36"
+        aria-labelledby="team-close-heading"
+      >
+        <div className="mx-auto max-w-[720px] px-6 text-center md:px-8">
+          <p className="mb-4 text-[0.6875rem] font-medium uppercase tracking-[0.28em] text-rose">
             Start with a conversation
           </p>
-          <h2 className="text-3xl font-bold uppercase tracking-[0.06em] md:text-5xl">
-            Find the right next step.
+          <h2
+            id="team-close-heading"
+            className="text-[clamp(1.95rem,4.5vw,3.35rem)] font-medium leading-[1.12] tracking-[-0.02em]"
+          >
+            Find the right next step
           </h2>
-          <p className="mb-8 mt-5 max-w-[650px] font-light leading-relaxed text-white md:text-lg">
+          <p className="mx-auto mt-5 max-w-[34rem] text-base font-light leading-relaxed text-white/85 md:text-lg">
             Book a consultation or contact Rella with a question about care in
             Vacaville or Napa.
           </p>
-          <div className="flex flex-col gap-3 sm:flex-row">
-            <Button
+          <div className="mt-10 flex flex-wrap items-center justify-center gap-3 sm:gap-4">
+            <Link
               href={resolveBookingHref({})}
-              variant="light"
-              disableHover
-              className="!border-white !bg-white !text-rose"
+              className="rella-cta-rect rella-cta-rect--filled"
             >
               Book a Consultation
-            </Button>
-            <Button
-              href="/contact"
-              disableHover
-              className="!border-white !bg-transparent !text-white"
-            >
+            </Link>
+            <Link href="/contact" className="rella-cta-rect rella-cta-rect--ghost-light">
               Ask a Question
-            </Button>
+            </Link>
           </div>
         </div>
       </section>

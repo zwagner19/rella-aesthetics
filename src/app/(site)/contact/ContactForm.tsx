@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, type FormEvent } from "react";
-import { Button } from "@/components/ui/Button";
 import { EXTRA_CONTACT_INTERESTS } from "@/lib/contact-intents";
 import { services } from "@/lib/data";
 
@@ -57,12 +56,12 @@ export function ContactForm({
   if (status === "sent") {
     return (
       <div
-        className="border border-rose-light bg-rose-blush p-8 text-center"
+        className="border border-rule bg-white px-6 py-8 text-center"
         role="status"
         aria-live="polite"
       >
-        <p className="mb-2 text-lg font-medium text-rose-text">Thank you!</p>
-        <p className="text-ink/70">
+        <p className="mb-2 text-lg font-medium text-ink">Thank you</p>
+        <p className="text-sm font-light leading-relaxed text-silver">
           Your message reached Rella. A member of our team will follow up.
         </p>
       </div>
@@ -70,8 +69,8 @@ export function ContactForm({
   }
 
   const fieldClassName =
-    "w-full rounded border border-silver bg-white px-4 py-3 text-ink transition-colors focus:border-rose-text focus:ring-2 focus:ring-rose/30";
-  const labelClassName = "mb-1 block text-sm font-medium text-rose-text";
+    "w-full border border-rule bg-white px-4 py-3 text-base font-light text-ink transition-colors focus:border-ink focus:outline-none";
+  const labelClassName = "mb-1.5 block text-sm font-medium text-ink";
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
@@ -103,7 +102,7 @@ export function ContactForm({
 
       <fieldset>
         <legend className={labelClassName}>Best way to reach you</legend>
-        <p id="contact-method-help" className="mb-3 mt-1 text-xs text-ink/70">
+        <p id="contact-method-help" className="mb-3 mt-1 text-xs font-light text-silver">
           Enter at least one: email or phone.
         </p>
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
@@ -196,7 +195,7 @@ export function ContactForm({
           <option value="Napa">Napa (1541 3rd St)</option>
           <option value="No preference">No preference (help me choose)</option>
         </select>
-        <p className="mt-2 text-xs text-ink/70">
+        <p className="mt-2 text-xs font-light text-silver">
           This helps route your question to the right clinic. You can change
           locations later.
         </p>
@@ -210,10 +209,11 @@ export function ContactForm({
           id="message"
           name="message"
           rows={4}
+          required
           maxLength={2000}
           className={`${fieldClassName} resize-y`}
         />
-        <p className="mt-2 text-xs leading-relaxed text-ink/70">
+        <p className="mt-2 text-xs font-light leading-relaxed text-silver">
           Please do not include sensitive medical information. This form is for
           general questions and is not monitored for urgent or emergency care.
         </p>
@@ -242,9 +242,13 @@ export function ContactForm({
         </div>
       ) : null}
 
-      <Button type="submit" disabled={status === "sending"} disableHover>
+      <button
+        type="submit"
+        disabled={status === "sending"}
+        className="rella-cta-rect rella-cta-rect--filled disabled:cursor-not-allowed disabled:opacity-50"
+      >
         {status === "sending" ? "Sending..." : "Send Message"}
-      </Button>
+      </button>
     </form>
   );
 }

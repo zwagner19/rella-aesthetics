@@ -1,8 +1,6 @@
 const publicRoutes = [
   "/",
   "/about",
-  "/blog",
-  "/blog/botox-cost-napa",
   "/cancellation-policy",
   "/contact",
   "/gallery",
@@ -48,6 +46,8 @@ module.exports = {
   exclude: [
     "/studio",
     "/studio/**",
+    "/blog",
+    "/blog/**",
     "/booking",
     "/events",
     "/upcoming-events",

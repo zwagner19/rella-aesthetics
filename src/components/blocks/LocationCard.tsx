@@ -22,17 +22,14 @@ export function LocationCard({
   googleReviewUrl,
 }: LocationCardProps) {
   return (
-    <div className="border border-ink/10 border-t-2 border-t-rose bg-white p-8">
-      <h3 className="mb-5 text-xl font-bold uppercase tracking-[0.08em] text-rose md:text-2xl">
-        {name}
-      </h3>
-      <address className="mb-6 text-[0.9375rem] font-light not-italic leading-relaxed text-ink/70">
+    <div className="flex h-full flex-col border border-white/40 bg-white px-6 py-6">
+      <h3 className="text-2xl font-medium tracking-[-0.02em] text-ink">{name}</h3>
+      <address className="mt-3 mb-5 text-sm font-light not-italic leading-relaxed text-silver">
         {address}
         <br />
         {city}, {state} {zip}
         <br />
-        <br />
-        <strong className="text-xs font-bold uppercase tracking-[0.14em] text-ink/70">
+        <strong className="mt-3 inline-block text-[0.6875rem] font-medium uppercase tracking-[0.16em] text-silver">
           Hours
         </strong>
         <br />
@@ -43,7 +40,7 @@ export function LocationCard({
           </span>
         ))}
       </address>
-      <div className="flex flex-col items-start gap-5 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between">
+      <div className="mt-auto flex flex-col items-start gap-4 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between">
         <LinkArrow href={href}>{name} details</LinkArrow>
         {googleReviewUrl ? (
           <a

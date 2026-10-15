@@ -88,30 +88,81 @@ describe("retired event URLs", () => {
 });
 
 describe("internal SEO navigation", () => {
-  it("keeps Payment Plans reachable from mobile menu and footer under lean editorial nav", () => {
+  it("keeps launch navigation free of hidden About, Payment Plans, and Private Parties links", () => {
     const header = renderToStaticMarkup(<Header />);
     const mobile = renderToStaticMarkup(
       <MobileNav links={navLinks} isOpen onClose={() => undefined} />,
     );
     const footer = renderToStaticMarkup(<Footer />);
 
-    // Desktop primary nav stays lean (Treatments / About / Locations + Membership + Book)
+    // Desktop and mobile both use one Services link. Category pages stay off the chrome.
     expect(header).toContain('href="/services"');
-    expect(header).toContain('href="/about"');
-    expect(header).toContain('href="/membership"');
-    expect(mobile).toContain('href="/payment-plans"');
-    expect(footer).toContain('href="/payment-plans"');
+    expect(header).toContain(">Services<");
+    expect(header).not.toContain('href="/about"');
+    expect(header).not.toContain('href="/payment-plans"');
+    expect(header).not.toContain('href="/private-parties"');
+    expect(header).not.toContain('href="/membership"');
+    expect(header).not.toContain('href="/gallery"');
+    expect(header).not.toContain('href="/services/injectables"');
+    expect(mobile).toContain('href="/services"');
+    expect(mobile).toContain(">Services<");
+    expect(mobile).not.toContain('href="/about"');
+    expect(mobile).toContain('href="/team"');
+    expect(mobile).not.toContain('href="/services/injectables"');
+    expect(mobile).not.toContain('href="/services/skin"');
+    expect(mobile).not.toContain('href="/services/lasers"');
+    expect(mobile).not.toContain('href="/services/iv-hydration"');
+    expect(mobile).not.toContain('href="/services/weight-loss"');
+    expect(mobile).not.toContain('href="/membership"');
+    expect(mobile).not.toContain('href="/gallery"');
+    expect(footer).toContain('href="/contact"');
+    expect(footer).toContain("Book Online");
+    expect(footer).toContain("Flexible payment plans available for qualifying clients.");
+    expect(footer).not.toContain('href="/services"');
+    expect(footer).not.toContain('href="/about"');
+    expect(footer).not.toContain('href="/team"');
+    expect(footer).not.toContain('href="/gallery"');
+    expect(footer).not.toContain('href="/membership"');
+    expect(footer).not.toContain('href="/payment-plans"');
+    expect(footer).not.toContain('href="/private-parties"');
+    expect(footer).not.toContain('href="/services/injectables"');
+    expect(mobile).not.toContain('href="/payment-plans"');
+    expect(mobile).not.toContain('href="/private-parties"');
+    expect(header).not.toContain('href="/blog"');
+    expect(mobile).not.toContain('href="/blog"');
+    expect(footer).not.toContain('href="/blog"');
+    expect(mobile).not.toContain(">Education<");
+    expect(footer).not.toContain(">Education<");
   });
 
-  it("links Napa service cards to the available city-specific pages", () => {
+  it("lists Napa House offerings without linking to category or city-guide pages", () => {
     const html = renderToStaticMarkup(<NapaLocationPage />);
 
-    expect(html).toContain('href="/napa/botox"');
-    expect(html).toContain('href="/napa/facials"');
+    expect(html).toContain("Injectables");
+    expect(html).toContain("Skin");
+    expect(html).toContain("Lasers");
+    expect(html).toContain("Wellness");
+    expect(html).toContain(">Weight<");
+    expect(html).not.toContain('href="/services/injectables"');
+    expect(html).not.toContain('href="/services/skin"');
+    expect(html).not.toContain('href="/services/lasers"');
+    expect(html).not.toContain('href="/services/iv-hydration"');
+    expect(html).not.toContain('href="/services/weight-loss"');
+    expect(html).not.toContain('href="/napa/botox"');
+    expect(html).not.toContain('href="/napa/facials"');
   });
 
-  it("links every Vacaville local page from the clinic page", () => {
+  it("lists Vacaville care categories without linking to the older city guides", () => {
     const html = renderToStaticMarkup(<VacavilleLocationPage />);
+
+    expect(html).toContain("Injectables");
+    expect(html).toContain("Skin");
+    expect(html).toContain("Lasers");
+    expect(html).toContain("Wellness");
+    expect(html).toContain(">Weight<");
+    expect(html).toContain("542 Main St");
+    expect(html).toContain("https://maps.google.com/?q=542+Main+St+Vacaville+CA+95688");
+    expect(html).toContain("Book Vacaville");
 
     for (const slug of [
       "botox",
@@ -122,7 +173,7 @@ describe("internal SEO navigation", () => {
       "laser",
       "microneedling",
     ]) {
-      expect(html).toContain(`href="/vacaville/${slug}"`);
+      expect(html).not.toContain(`href="/vacaville/${slug}"`);
     }
   });
 

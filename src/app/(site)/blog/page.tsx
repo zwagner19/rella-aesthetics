@@ -13,6 +13,7 @@ export const metadata: Metadata = {
   description:
     "Transparent local guides to Botox pricing, fillers, skin care, laser treatments, and medical weight management from Rella Aesthetics in Napa and Vacaville.",
   alternates: { canonical: "/blog" },
+  robots: { index: false, follow: true },
 };
 
 interface SanityPost {

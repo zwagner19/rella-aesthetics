@@ -6,28 +6,30 @@ import { resolveBookingHref } from "@/lib/booking-routes";
 import { BookTrigger } from "@/components/guided-booking/BookTrigger";
 import { locations } from "@/lib/data";
 
-const linkClass =
-  "inline-flex min-h-11 items-center text-sm text-white/75 transition-colors hover:text-white";
+const textLinkClass =
+  "inline-flex min-h-11 items-center text-sm text-ink transition-opacity hover:opacity-70";
+
+const locationEntries = [locations.vacaville, locations.napa] as const;
 
 export function Footer() {
   return (
-    <footer className="bg-charcoal pb-28 pt-16 text-white xl:pb-10">
-      <div className="mx-auto max-w-[1280px] px-6 md:px-8 lg:px-12">
-        <div className="mb-14 grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-[1.2fr_0.9fr_0.9fr_0.9fr]">
-          <div className="max-w-[360px]">
-            <Link href="/" aria-label="Rella Aesthetics — Home" className="mb-5 inline-flex">
+    <footer className="border-t border-ink/10 bg-ivory pb-28 pt-12 text-ink xl:pb-10">
+      <div className="mx-auto max-w-[1120px] px-6 md:px-8">
+        <div className="grid gap-10 md:grid-cols-2 md:items-start lg:grid-cols-[minmax(0,1fr)_minmax(0,1.35fr)] lg:gap-14">
+          <div className="max-w-[22rem]">
+            <Link href="/" aria-label="Rella Aesthetics — Home" className="inline-flex">
               <Image
                 src="/brand/rella-logo-rose.svg"
                 alt=""
                 width={360}
                 height={176}
-                className="h-[64px] w-auto"
+                className="h-14 w-auto"
               />
             </Link>
-            <p className="text-sm leading-relaxed text-white/70">
+            <p className="mt-4 text-sm font-light leading-relaxed text-ink/70">
               Thoughtful aesthetics and wellness care in Vacaville and Napa.
             </p>
-            <div className="mt-5 flex flex-wrap gap-4">
+            <div className="mt-4 flex flex-wrap gap-4">
               <a
                 aria-label="Rella Aesthetics on Instagram, @experiencerella"
                 className="text-xs font-medium uppercase tracking-[0.14em] text-rose transition-opacity hover:opacity-80"
@@ -50,80 +52,62 @@ export function Footer() {
           </div>
 
           <div>
-            <p className="mb-5 text-[0.6875rem] font-bold uppercase tracking-[0.2em] text-white">
+            <p className="text-[0.6875rem] font-medium uppercase tracking-[0.22em] text-silver">
               Locations
             </p>
-            <ul className="space-y-5 text-sm text-white/75">
-              <li>
-                <Link href="/locations/vacaville" className="font-medium text-white hover:text-rose">
-                  {locations.vacaville.name}
-                </Link>
-                <p className="mt-1 leading-relaxed">
-                  {locations.vacaville.address}
-                  <br />
-                  {locations.vacaville.city}, {locations.vacaville.state}{" "}
-                  {locations.vacaville.zip}
-                </p>
-              </li>
-              <li>
-                <Link href="/locations/napa" className="font-medium text-white hover:text-rose">
-                  {locations.napa.name}
-                </Link>
-                <p className="mt-1 leading-relaxed">
-                  {locations.napa.address}
-                  <br />
-                  {locations.napa.city}, {locations.napa.state} {locations.napa.zip}
-                </p>
-              </li>
-              <li>
-                <a href="tel:+17073582928" className={linkClass}>
-                  707.358.2928
-                </a>
-              </li>
+            <ul className="mt-4 grid grid-cols-2 gap-x-6 gap-y-5">
+              {locationEntries.map((location) => (
+                <li key={location.name} className="min-w-0">
+                  <Link href={`/locations/${location.name.toLowerCase()}`} className="text-sm font-medium text-ink hover:opacity-70">
+                    {location.name}
+                  </Link>
+                  <p className="mt-1 text-sm font-light leading-relaxed text-ink/70">
+                    {location.address}
+                    <br />
+                    {location.city}, {location.state} {location.zip}
+                  </p>
+                  <a href={`tel:+1${location.phone.replace(/\D/g, "")}`} className="mt-1 inline-flex text-sm text-ink/70 hover:opacity-70">
+                    {location.phone}
+                  </a>
+                </li>
+              ))}
             </ul>
-          </div>
-
-          <div>
-            <p className="mb-5 text-[0.6875rem] font-bold uppercase tracking-[0.2em] text-white">
-              Explore
-            </p>
-            <ul className="space-y-1">
-              <li><Link href="/services" className={linkClass}>Treatments</Link></li>
-              <li><Link href="/about" className={linkClass}>About</Link></li>
-              <li><Link href="/team" className={linkClass}>Team</Link></li>
-              <li><Link href="/gallery" className={linkClass}>Results</Link></li>
-              <li><Link href="/membership" className={linkClass}>Membership</Link></li>
-              <li><Link href="/blog" className={linkClass}>Education</Link></li>
-            </ul>
-          </div>
-
-          <div>
-            <p className="mb-5 text-[0.6875rem] font-bold uppercase tracking-[0.2em] text-white">
-              Visit
-            </p>
-            <ul className="space-y-1">
-              <li><Link href="/contact" className={linkClass}>Contact</Link></li>
-              <li><BookTrigger intent={{}} className={linkClass}>Book Online</BookTrigger></li>
-              <li><Link href="/payment-plans" className={linkClass}>Payment Plans</Link></li>
-              <li><Link href="/private-parties" className={linkClass}>Private Parties</Link></li>
-            </ul>
+            <nav aria-label="Footer" className="mt-3">
+              <ul className="flex flex-col md:flex-row md:items-center md:gap-4">
+                <li>
+                  <Link href="/contact" className={textLinkClass}>
+                    Contact
+                  </Link>
+                </li>
+                <li aria-hidden="true" className="hidden h-3.5 w-px shrink-0 bg-ink/20 md:block" />
+                <li>
+                  <BookTrigger intent={{}} className={textLinkClass}>
+                    Book Online
+                  </BookTrigger>
+                </li>
+              </ul>
+            </nav>
           </div>
         </div>
 
-        <p className="border-t border-white/15 py-6 text-sm leading-relaxed text-white/55">
+        <p className="mt-8 max-w-xl text-sm font-light leading-relaxed text-ink/70">
+          Flexible payment plans available for qualifying clients.
+        </p>
+
+        <p className="mt-6 border-t border-ink/10 pt-5 text-sm font-light leading-relaxed text-ink/55">
           Reviews and results shared on this site span both Rella locations. Individual results vary.
         </p>
 
-        <div className="flex flex-col gap-4 border-t border-white/15 pt-6 text-[0.75rem] uppercase tracking-[0.08em] text-white/55 md:flex-row md:items-center md:justify-between">
+        <div className="mt-4 flex flex-col gap-3 text-[0.75rem] uppercase tracking-[0.08em] text-ink/55 md:flex-row md:items-center md:justify-between">
           <p>&copy; {new Date().getFullYear()} Rella Aesthetics. All rights reserved.</p>
-          <div className="flex flex-wrap gap-x-4 gap-y-2">
-            <Link href="/privacy-policy" className="inline-flex min-h-11 items-center transition-colors hover:text-white">
+          <div className="flex flex-wrap gap-x-4 gap-y-1">
+            <Link href="/privacy-policy" className="inline-flex min-h-11 items-center transition-opacity hover:opacity-70">
               Privacy Policy
             </Link>
-            <Link href="/terms" className="inline-flex min-h-11 items-center transition-colors hover:text-white">
+            <Link href="/terms" className="inline-flex min-h-11 items-center transition-opacity hover:opacity-70">
               Terms &amp; Conditions
             </Link>
-            <Link href="/cancellation-policy" className="inline-flex min-h-11 items-center transition-colors hover:text-white">
+            <Link href="/cancellation-policy" className="inline-flex min-h-11 items-center transition-opacity hover:opacity-70">
               Cancellation Policy
             </Link>
           </div>

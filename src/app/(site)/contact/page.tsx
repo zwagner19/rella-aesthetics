@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { SectionHeader } from "@/components/ui/SectionHeader";
 import { LocationCard } from "@/components/blocks/LocationCard";
 import { ContactForm } from "./ContactForm";
 import { resolveContactIntent } from "@/lib/contact-intents";
@@ -23,84 +22,68 @@ export default async function ContactPage({
 
   return (
     <>
-      {/* Hero */}
-      <section className="bg-rose py-24 text-white">
-        <div className="mx-auto max-w-[1200px] px-6 md:px-8 lg:px-12">
-          <p className="mb-4 text-[0.6875rem] font-bold uppercase tracking-[0.2em] text-white">
+      <section className="bg-rose py-12 text-white md:py-16">
+        <div className="mx-auto max-w-[1440px] px-6 md:px-8 lg:px-12">
+          <p className="mb-3 text-[0.6875rem] font-medium uppercase tracking-[0.22em] text-white/80">
             Contact
           </p>
-          <h1 className="mb-5 text-4xl font-bold uppercase leading-[1.08] tracking-[0.08em] text-white md:text-6xl">
-            Get in Touch
+          <h1 className="max-w-[14ch] text-[clamp(2rem,4.5vw,3.5rem)] font-medium leading-[1.08] tracking-[-0.03em] text-white">
+            Let&apos;s connect
           </h1>
-          <p className="max-w-[560px] text-lg font-light leading-relaxed text-white">
-            Questions about a treatment? Ready to schedule? We&apos;re here to
-            help.
+          <p className="mt-4 max-w-[34rem] text-base font-light leading-relaxed text-white/90 md:text-lg">
+            Have a question or ready to book? We&apos;re here to help you feel confident in your
+            next step.
           </p>
         </div>
       </section>
 
-      {/* Form + Info */}
-      <section className="py-20">
-        <div className="mx-auto max-w-[1200px] px-6 md:px-8 lg:px-12">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20">
-            <div>
-              <SectionHeader title="Send Us a Message" />
-              <ContactForm
-                key={initialServiceInterest || "general"}
-                initialServiceInterest={initialServiceInterest}
-              />
-            </div>
-            <div>
-              <SectionHeader title="Other Ways to Reach Us" />
-              <div className="space-y-4 mb-8">
-                <p className="text-ink/70">
-                  <strong className="text-rose-text">Phone: </strong>
-                  <a
-                    href="tel:+17073582928"
-                    className="text-rose-text transition-colors hover:text-ink"
-                  >
-                    707.358.2928
-                  </a>
-                </p>
-                <p className="text-ink/70">
-                  <strong className="text-rose-text">Email: </strong>
-                  <a
-                    href="mailto:info@experiencerella.com"
-                    className="text-rose-text transition-colors hover:text-ink"
-                  >
-                    info@experiencerella.com
-                  </a>
-                </p>
-              </div>
-              <h3 className="font-medium text-lg text-rose-text mb-4">
-                Clinic Hours
-              </h3>
-              <div className="space-y-2 text-sm text-ink/70">
-                {[locations.vacaville, locations.napa].map((location) => (
-                  <p key={location.name}>
-                    <strong className="text-rose-text">{location.name}: </strong>
-                    {location.hours.join(" · ")}
-                  </p>
-                ))}
-                <p className="pt-1">Online booking is available at any time.</p>
-              </div>
-            </div>
+      <section className="border-b border-rule/50 bg-ivory py-8 md:py-10">
+        <div className="mx-auto flex max-w-[1440px] flex-col gap-6 px-6 sm:flex-row sm:gap-16 md:px-8 lg:px-12">
+          <div>
+            <p className="text-[0.6875rem] font-medium uppercase tracking-[0.18em] text-silver">
+              Call us
+            </p>
+            <a
+              href="tel:+17073582928"
+              className="mt-1 inline-flex min-h-11 items-center text-lg font-medium text-ink underline-offset-4 hover:text-rose hover:underline"
+            >
+              707.358.2928
+            </a>
+          </div>
+          <div>
+            <p className="text-[0.6875rem] font-medium uppercase tracking-[0.18em] text-silver">
+              Email us
+            </p>
+            <a
+              href="mailto:info@experiencerella.com"
+              className="mt-1 inline-flex min-h-11 items-center break-all text-lg font-medium text-ink underline-offset-4 hover:text-rose hover:underline"
+            >
+              info@experiencerella.com
+            </a>
           </div>
         </div>
       </section>
 
-      {/* Locations */}
-      <section className="bg-rose py-20 text-white">
-        <div className="mx-auto max-w-[1200px] px-6 md:px-8 lg:px-12">
-          <div className="mb-12 max-w-[680px]">
-            <p className="mb-4 text-sm font-medium italic tracking-[0.04em] text-white">
-              Locations
-            </p>
-            <h2 className="mb-5 text-3xl font-medium uppercase leading-[1.08] tracking-[0.08em] text-white md:text-5xl">
-              Visit Us
-            </h2>
+      <section className="bg-ivory py-10 md:py-16">
+        <div className="mx-auto max-w-[720px] px-6 md:px-8">
+          <h2 className="text-[clamp(1.75rem,3.8vw,2.75rem)] font-medium leading-[1.12] tracking-[-0.02em] text-ink">
+            Send us a message
+          </h2>
+          <div className="mt-6">
+            <ContactForm
+              key={initialServiceInterest || "general"}
+              initialServiceInterest={initialServiceInterest}
+            />
           </div>
-          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 [&_a]:text-rose">
+        </div>
+      </section>
+
+      <section className="bg-rose py-12 text-white md:py-16">
+        <div className="mx-auto max-w-[1440px] px-6 md:px-8 lg:px-12">
+          <h2 className="mb-8 text-[clamp(1.75rem,3.8vw,2.75rem)] font-medium leading-[1.12] tracking-[-0.02em] text-white">
+            Visit us
+          </h2>
+          <div className="grid grid-cols-1 items-stretch gap-4 md:grid-cols-2 md:gap-6 [&_a]:text-rose">
             <LocationCard
               name={locations.vacaville.name}
               address={locations.vacaville.address}

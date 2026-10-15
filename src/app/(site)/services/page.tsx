@@ -1,53 +1,45 @@
 import type { Metadata } from "next";
-import { ServiceCard } from "@/components/blocks/ServiceCard";
-import { SectionHeader } from "@/components/ui/SectionHeader";
-import { services } from "@/lib/data";
+import { BookTrigger } from "@/components/guided-booking/BookTrigger";
+import { ServicesDirectory } from "@/components/services/ServicesDirectory";
 
 export const metadata: Metadata = {
-  title: "Our Services",
+  title: "Services",
   description:
-    "Explore Rella Aesthetics' full range of treatments: injectables, skin care, laser, IV hydration, and medical weight loss in Vacaville and Napa.",
+    "Explore personalized aesthetic treatments at Rella Aesthetics in Vacaville and Napa, including injectables, skin, lasers, wellness, and medical weight loss.",
   alternates: { canonical: "/services" },
 };
 
-const categories = ["Injectables", "Skin Care", "Body & Wellness"] as const;
-
 export default function ServicesPage() {
   return (
-    <section className="bg-white py-24 md:py-32">
-      <div className="mx-auto max-w-[1200px] px-6 md:px-8 lg:px-12">
-        <SectionHeader
-          eyebrow="Treatments"
-          eyebrowTone="rose"
-          title="Our Services"
-          headingLevel={1}
-          description="Explore consultation-led aesthetic, skin, wellness, and medical weight-management options available through Rella in Vacaville and Napa."
-        />
+    <div className="bg-ivory">
+      <section className="mx-auto max-w-[1120px] px-6 pb-8 pt-14 md:px-8 md:pb-10 md:pt-20 lg:pt-24">
+        <div className="max-w-[40rem]">
+          <h1 className="text-[clamp(2.75rem,6.2vw,4.75rem)] font-medium leading-[1.02] tracking-[-0.035em] text-ink">
+            Explore Our Services
+          </h1>
+          <p className="mt-6 max-w-[34rem] text-base font-light leading-relaxed text-silver md:text-lg">
+            Personalized aesthetic treatments in Vacaville and Napa. Choose a category, then meet
+            with the team to decide what is right for you.
+          </p>
+        </div>
 
-        {categories.map((category) => {
-          const categoryServices = services.filter((service) => service.category === category);
+        <ServicesDirectory />
 
-          return (
-            <section key={category} className="mb-20 border-t border-rose pt-6 last:mb-0">
-              <h2 className="mb-8 text-sm font-bold uppercase tracking-[0.16em] text-rose-text">
-                {category}
-              </h2>
-              <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                {categoryServices.map((service) => (
-                  <ServiceCard
-                    key={service.slug}
-                    href={`/services/${service.slug}`}
-                    title={service.title}
-                    description={service.description}
-                    image={service.image}
-                    imageAlt={service.imageAlt}
-                  />
-                ))}
-              </div>
-            </section>
-          );
-        })}
-      </div>
-    </section>
+        <section
+          className="mt-10 border-t border-ink/10 pt-8 text-center md:mt-12 md:pt-10"
+          aria-labelledby="services-consult-heading"
+        >
+          <h2
+            id="services-consult-heading"
+            className="text-[clamp(1.7rem,3vw,2.35rem)] font-medium leading-[1.15] tracking-[-0.03em] text-ink"
+          >
+            Not sure where to start?
+          </h2>
+          <BookTrigger intent={{}} className="rella-cta-rect rella-cta-rect--filled mt-7">
+            Book a consultation
+          </BookTrigger>
+        </section>
+      </section>
+    </div>
   );
 }

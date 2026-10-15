@@ -44,6 +44,7 @@ export async function generateMetadata({ params }: BlogPostPageProps): Promise<M
       title: localPost.seoTitle,
       description: localPost.seoDescription,
       alternates: { canonical: `/blog/${slug}` },
+      robots: { index: false, follow: true },
       openGraph: {
         title: localPost.title,
         description: localPost.seoDescription,
@@ -78,6 +79,7 @@ export async function generateMetadata({ params }: BlogPostPageProps): Promise<M
     title,
     description,
     alternates: { canonical: `/blog/${slug}` },
+    robots: { index: false, follow: true },
     openGraph: {
       title,
       description,

@@ -93,7 +93,9 @@ describe("PR14 visual recovery contract", () => {
 
     expect(homeVisualData).toContain("/images/clinic/napa-reception.jpg");
     expect(napaLocation).toContain("/images/clinic/napa-reception.jpg");
-    expect(homeLocations).toContain("HOME_LOCATION_VISUALS");
+    expect(homeLocations).not.toContain("ClinicLocationPhoto");
+    expect(homeLocations).toContain('"/locations/napa"');
+    expect(homeLocations).toContain('"/locations/vacaville"');
     expect(homeVisualData).not.toContain("napa-exterior.webp");
     expect(napaLocation).not.toContain("napa-exterior.webp");
     expect(homeVisual).toContain("home-location-visuals");

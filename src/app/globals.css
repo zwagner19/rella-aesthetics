@@ -154,6 +154,18 @@ li::marker {
   color: var(--color-ink);
 }
 
+.rella-rose-expanded {
+  background-color: #f7a19a;
+  color: #ffffff;
+}
+
+.rella-rose-expanded .rella-cta-rect,
+.rella-rose-expanded .rella-cta-rect:hover {
+  border-color: #ffffff;
+  background-color: transparent;
+  color: #ffffff;
+}
+
 .rella-provider-rail {
   display: flex;
   gap: 1.75rem;

@@ -72,15 +72,21 @@ describe("approved team content and placement", () => {
     );
   });
 
-  it("shows each roster card once and keeps Ryan's biography beside his photo on large screens", () => {
+  it("shows each roster card once and keeps each biography with its portrait", () => {
     for (const member of rosterMembers) {
+      const rendered = (value: string) =>
+        value.replaceAll("&", "&amp;").replaceAll("'", "&#x27;");
+
       expect(teamHtml.match(new RegExp(`>${member.name}<`, "g"))).toHaveLength(1);
+      expect(teamHtml).toContain(rendered(member.role));
+      expect(teamHtml).toContain(rendered(member.bio[0]));
       expect(existsSync(`public${member.image}`)).toBe(true);
     }
 
-    expect(teamSource).toContain(
-      "lg:grid-cols-[minmax(180px,0.8fr)_minmax(0,1.2fr)]",
-    );
+    expect(teamSource).toContain("grid-cols-2");
+    expect(teamSource).toContain("lg:grid-cols-4");
+    expect(teamSource).toContain("object-cover object-top");
+    expect(teamHtml).not.toContain("Explore Medical Weight Loss");
     expect(teamHtml).not.toMatch(
       /Director of Ops|Weight Loss &amp; Body Contouring|placeholder portrait/i,
     );
