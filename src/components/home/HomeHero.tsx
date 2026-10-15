@@ -7,16 +7,17 @@ import { BookTrigger } from "@/components/guided-booking/BookTrigger";
 export function HomeHero() {
   return (
     <section className="bg-ivory" aria-labelledby="home-hero-heading">
-      <Image
-        src="/images/clinic/rella_two_locations_with_text_4k.png"
-        alt="Napa Transformation House and Rella Vacaville, joined as Rella Aesthetics"
-        width={3840}
-        height={2160}
-        priority
-        unoptimized
-        className="mx-auto block h-auto w-full lg:w-[78%]"
-        sizes="(min-width: 1024px) 78vw, 100vw"
-      />
+      <div className="relative left-1/2 aspect-video w-screen max-w-[100vw] -translate-x-1/2 overflow-hidden">
+        <Image
+          src="/images/clinic/rella_two_locations_with_text_4k.png"
+          alt="Napa Transformation House and Rella Vacaville, joined as Rella Aesthetics"
+          fill
+          priority
+          unoptimized
+          className="object-cover"
+          sizes="100vw"
+        />
+      </div>
       <div className="mx-auto max-w-[1440px] px-6 pb-8 pt-6 text-center md:px-8 md:pb-10 md:pt-8">
         <h1
           id="home-hero-heading"

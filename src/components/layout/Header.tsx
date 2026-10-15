@@ -8,13 +8,7 @@ import { resolveBookingHref } from "@/lib/booking-routes";
 import { BookTrigger } from "@/components/guided-booking/BookTrigger";
 import { MobileNav } from "./MobileNav";
 
-/** Primary editorial navigation — lean left rail for homepage architecture. */
-export const primaryNavLinks = [
-  { href: "/services", label: "Services" },
-  { href: "/#locations", label: "Locations" },
-] as const;
-
-/** Full site map for the mobile menu (interior pages stay reachable). */
+/** Public navigation. About, Payment Plans, and Private Parties stay off the menu. */
 export const navLinks = [
   { href: "/services", label: "Services" },
   { href: "/team", label: "Team" },
@@ -65,11 +59,11 @@ export function Header() {
       <header
         className={`fixed inset-x-0 top-0 z-50 border-b transition-[background-color,border-color] duration-200 ${shellClass}`}
       >
-        {/* Desktop: L links · C logo · R membership + book */}
-        <div className="mx-auto hidden h-[84px] max-w-[1440px] grid-cols-[1fr_auto_1fr] items-center gap-4 px-8 lg:grid xl:px-12">
-          <nav className={`flex items-center gap-7 ${navTone}`} aria-label="Primary navigation">
-            {primaryNavLinks.map((link) => (
-              <Link key={link.href} href={link.href} className={linkClass}>
+        {/* Desktop: links · logo · book */}
+        <div className="mx-auto hidden h-[84px] w-full grid-cols-[1fr_auto_1fr] items-center gap-4 px-6 lg:grid xl:px-12">
+          <nav className={`flex items-center gap-4 xl:gap-6 ${navTone}`} aria-label="Primary navigation">
+            {navLinks.map((link) => (
+              <Link key={link.href} href={link.href} className={`${linkClass} whitespace-nowrap`}>
                 {link.label}
               </Link>
             ))}
