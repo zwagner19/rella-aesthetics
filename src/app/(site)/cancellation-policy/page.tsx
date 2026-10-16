@@ -1,6 +1,11 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { CANCELLATION_POLICY } from "@/lib/napa-botox-facts";
+import {
+  PREPAID_PACKAGE_POLICY,
+  PREPAID_PACKAGE_TIMING_POLICY,
+  UNIVERSAL_PEEL_POLICY,
+} from "./policy-copy";
 
 export const metadata: Metadata = {
   title: "Cancellation Policy",
@@ -36,6 +41,15 @@ export default function CancellationPolicyPage() {
               applicable booking deposit for cancellations within 48 hours. Emergencies are
               reviewed individually.
             </p>
+
+            <h2 className="font-medium text-xl text-ink mt-8">
+              Prepaid Packages
+            </h2>
+            <p>{PREPAID_PACKAGE_POLICY}</p>
+            <p>{PREPAID_PACKAGE_TIMING_POLICY}</p>
+
+            <h2 className="font-medium text-xl text-ink mt-8">Universal Peel</h2>
+            <p>{UNIVERSAL_PEEL_POLICY}</p>
 
             <h2 className="font-medium text-xl text-ink mt-8">
               Napa New-Patient Tox Appointments
