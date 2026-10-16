@@ -1,3 +1,5 @@
+import { readFileSync } from "node:fs";
+import { resolve } from "node:path";
 import { describe, expect, it } from "vitest";
 import { metadata } from "./page";
 import {
@@ -8,7 +10,15 @@ import {
 
 describe("cancellation policy", () => {
   it("publishes the prepaid-package and Universal Peel $50 reservation rules", () => {
+    const pageSource = readFileSync(
+      resolve(process.cwd(), "src/app/(site)/cancellation-policy/page.tsx"),
+      "utf8",
+    );
+
     expect(metadata.alternates?.canonical).toBe("/cancellation-policy");
+    expect(pageSource).toContain("<p>{PREPAID_PACKAGE_POLICY}</p>");
+    expect(pageSource).toContain("<p>{PREPAID_PACKAGE_TIMING_POLICY}</p>");
+    expect(pageSource).toContain("<p>{UNIVERSAL_PEEL_POLICY}</p>");
     expect(PREPAID_PACKAGE_POLICY).toContain(
       "prepaid treatment package require a $50 reservation deposit",
     );
