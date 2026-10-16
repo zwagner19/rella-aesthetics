@@ -56,7 +56,11 @@ describe("booking cart proxy", () => {
       service: "botox",
     });
     expect(response.status).toBe(200);
-    expect(await response.json()).toEqual({ ok: true, dates: ["2026-10-17"] });
+    expect(await response.json()).toEqual({
+      ok: true,
+      depositCents: 10000,
+      dates: ["2026-10-17"],
+    });
     expect(response.headers.get("set-cookie")).toContain("rella_cart_auth=");
     expect(response.headers.get("set-cookie")).not.toContain("Domain=");
   });

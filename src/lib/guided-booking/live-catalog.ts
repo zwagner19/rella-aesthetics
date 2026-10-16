@@ -1,4 +1,4 @@
-import type { BookingCategory, BookingLocation } from "@/lib/booking-routes";
+import type { BookingLocation } from "@/lib/booking-routes";
 
 export type BookingSiteScope = "aesthetics" | "weight-loss";
 
@@ -12,6 +12,8 @@ export interface LiveCatalogService {
   durationCopy?: string;
   bookingMode: string;
   paymentRule: string;
+  /** Present only when the catalog JSON includes a numeric depositCents. */
+  depositCents?: number;
   providerDisplayName?: string;
   /** Booking-app path. The overlay never navigates to it. */
   href: string;
@@ -59,38 +61,21 @@ export function parseBookingLocation(
   return null;
 }
 
-export function sanitizeCatalogDescriptions(body: unknown): unknown {
-  const stripped = stripBookingPayload(body);
-  if (!stripped || typeof stripped !== "object") return stripped;
-  const clinics = (stripped as { clinics?: unknown }).clinics;
-  if (!Array.isArray(clinics)) return stripped;
-  for (const clinic of clinics) {
-    if (!clinic || typeof clinic !== "object") continue;
-    const services = (clinic as { services?: unknown }).services;
-    if (!Array.isArray(services)) continue;
-    for (const service of services) {
-      if (!service || typeof service !== "object") continue;
-      const description = (service as { description?: unknown }).description;
-      if (typeof description === "string") {
-        (service as { description: string }).description =
-          visibleServiceDescription(description);
-      }
-    }
-  }
-  return stripped;
+export function visibleServiceDescription(description: string): string {
+  return description.trim();
 }
 
-export function visibleServiceDescription(description: string): string {
-  return description
-    .split(/(?<=[.!?])\s+/)
-    .map((sentence) => sentence.trim())
-    .filter(
-      (sentence) =>
-        sentence.length > 0 &&
-        !/\$\s*\d/.test(sentence) &&
-        !/\b\d+\s*dollars?\b/i.test(sentence),
-    )
-    .join(" ");
+export function bookingAmountLabel(service: {
+  depositCents?: number;
+}): string | null {
+  if (typeof service.depositCents !== "number" || !Number.isFinite(service.depositCents)) {
+    return null;
+  }
+  const formatted = new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: "USD",
+  }).format(service.depositCents / 100);
+  return `Required to book ${formatted}`;
 }
 
 export function groupServices(
@@ -123,43 +108,32 @@ function readString(value: unknown): string | null {
   return trimmed;
 }
 
+function readCents(value: unknown): number | undefined {
+  return typeof value === "number" && Number.isFinite(value) ? value : undefined;
+}
+
 function parseService(value: unknown): LiveCatalogService | null {
-  if (!value || typeof value !== "object") return null;
+  if (!value || typeof value !== "object" || Array.isArray(value)) return null;
   const record = value as Record<string, unknown>;
-  const category = readString(record.category);
-  const serviceSlug = readString(record.serviceSlug);
-  const displayName = readString(record.displayName);
-  const description = readString(record.description);
-  const bookingMode = readString(record.bookingMode);
-  const paymentRule = readString(record.paymentRule);
-  const href = readString(record.href);
-  if (
-    !category ||
-    !serviceSlug ||
-    !/^[a-z0-9-]{1,80}$/.test(serviceSlug) ||
-    !displayName ||
-    description == null ||
-    !bookingMode ||
-    !paymentRule ||
-    !href ||
-    href.startsWith("http")
-  ) {
-    return null;
-  }
+  const serviceSlug = readString(record.serviceSlug) ?? "";
+  const displayName = readString(record.displayName) ?? serviceSlug;
+  if (!displayName) return null;
 
   const durationCopy = readString(record.durationCopy) ?? undefined;
   const providerDisplayName = readString(record.providerDisplayName) ?? undefined;
+  const depositCents = readCents(record.depositCents);
 
   return {
-    category,
-    serviceSlug,
+    category: readString(record.category) ?? "Services",
+    serviceSlug: serviceSlug || displayName,
     displayName,
-    description,
+    description: typeof record.description === "string" ? record.description : "",
     ...(durationCopy ? { durationCopy } : {}),
-    bookingMode,
-    paymentRule,
+    bookingMode: readString(record.bookingMode) ?? "",
+    paymentRule: readString(record.paymentRule) ?? "",
+    ...(depositCents !== undefined ? { depositCents } : {}),
     ...(providerDisplayName ? { providerDisplayName } : {}),
-    href,
+    href: readString(record.href) ?? "",
   };
 }
 
@@ -309,11 +283,7 @@ export function rewriteCartSetCookie(
   return parts.join("; ");
 }
 
-const CLIENT_OMITTED_KEYS = new Set([
-  "cartId",
-  "depositCents",
-  "c",
-]);
+const CLIENT_OMITTED_KEYS = new Set(["cartId", "c"]);
 
 export function stripBookingPayload(value: unknown): unknown {
   if (typeof value === "string") {
@@ -371,18 +341,4 @@ export function parseTimes(
     if (id.includes("urn:blvd") || startTime.includes("urn:blvd")) return [];
     return [{ id, startTime, label: formatSlotLabel(startTime, timeZone) }];
   });
-}
-
-export function categoriesForIntent(
-  services: readonly LiveCatalogService[],
-  category: BookingCategory | null,
-): string[] {
-  if (!category) return [];
-  return [
-    ...new Set(
-      services
-        .filter((service) => service.category.toLowerCase().includes(category))
-        .map((service) => service.category),
-    ),
-  ];
 }

@@ -18,10 +18,9 @@ import {
   groupServices,
   parseCatalogClinic,
   selectLocation,
-  sanitizeCatalogDescriptions,
+  bookingAmountLabel,
   stripBookingPayload,
   toggleTreatment,
-  visibleServiceDescription,
   type LiveCatalogClinic,
   type LiveCatalogService,
 } from "./index";
@@ -37,6 +36,7 @@ const napaService: LiveCatalogService = {
   durationCopy: "30 min.",
   bookingMode: "DIRECT_BOOK",
   paymentRule: "DEPOSIT_CENTS",
+  depositCents: 10000,
   href: "/book/napa/botox",
 };
 
@@ -82,11 +82,7 @@ describe("live catalog", () => {
     ]);
   });
 
-  it("hides deposit dollar sentences and never invents a menu", () => {
-    expect(visibleServiceDescription(napaService.description)).toBe(
-      "A personalized Botox or Dysport treatment.",
-    );
-    expect(visibleServiceDescription(napaService.description)).not.toMatch(/\$\d/);
+  it("keeps every catalog row and shows only an amount the API sent", () => {
     const parsed = parseCatalogClinic(
       {
         ok: true,
@@ -95,11 +91,9 @@ describe("live catalog", () => {
           {
             ...clinic,
             services: [
-              {
-                ...napaService,
-                depositCents: 10000,
-                boulevardId: "urn:blvd:Service:secret",
-              },
+              { ...napaService, boulevardId: "urn:blvd:Service:secret" },
+              { ...facial, depositCents: undefined },
+              { displayName: "Extra row", serviceSlug: "extra-row", category: "Peels" },
             ],
           },
         ],
@@ -108,13 +102,18 @@ describe("live catalog", () => {
     );
     expect(parsed.ok).toBe(true);
     if (!parsed.ok) return;
-    expect(parsed.clinic.services).toHaveLength(1);
-    expect(JSON.stringify(parsed.clinic)).not.toMatch(/urn:blvd|depositCents|10000/);
-    const sanitized = sanitizeCatalogDescriptions({
-      ok: true,
-      clinics: [{ services: [{ description: napaService.description, depositCents: 10000 }] }],
-    });
-    expect(JSON.stringify(sanitized)).not.toMatch(/\$\d|depositCents/);
+    expect(parsed.clinic.services.map((service) => service.displayName)).toEqual([
+      "New Patient Tox",
+      "Signature Hydrafacial",
+      "Extra row",
+    ]);
+    expect(parsed.clinic.services[0]?.depositCents).toBe(10000);
+    expect(bookingAmountLabel(parsed.clinic.services[0]!)).toBe(
+      "Required to book $100.00",
+    );
+    expect(bookingAmountLabel(parsed.clinic.services[1]!)).toBeNull();
+    expect(bookingAmountLabel({ depositCents: 5060 })).toBe("Required to book $50.60");
+    expect(JSON.stringify(parsed.clinic)).not.toMatch(/urn:blvd/);
   });
 
   it("points each site scope at its booking host", () => {
@@ -221,7 +220,7 @@ describe("booking proxy contract", () => {
         depositCents: 10000,
         dates: ["2026-10-17"],
       }),
-    ).toEqual({ ok: true, dates: ["2026-10-17"] });
+    ).toEqual({ ok: true, depositCents: 10000, dates: ["2026-10-17"] });
   });
 });
 
@@ -261,7 +260,7 @@ describe("guided booking notice and phone consent", () => {
 });
 
 describe("treatments step", () => {
-  it("renders the live names and does not link to a booking host or show a deposit amount", () => {
+  it("renders every live name and the amount only when the API sent depositCents", () => {
     const state = applyCatalog(
       selectLocation(bootstrapFromIntent({}), "napa"),
       clinic,
@@ -278,9 +277,12 @@ describe("treatments step", () => {
     );
     expect(html).toContain("New Patient Tox");
     expect(html).toContain("New Patient Consult");
+    expect(html).toContain("Signature Hydrafacial");
+    expect(html).toContain("3 services from the live catalog");
+    expect(html).toContain("Required to book $100.00");
+    expect(html.match(/Required to book/g)?.length).toBe(1);
     expect(html).not.toContain("book.experiencerella.com");
     expect(html).not.toContain("book.rellaweightloss.com");
-    expect(html).not.toMatch(/\$\d/);
     expect(html).not.toMatch(/no card/i);
     expect(html).not.toContain("urn:blvd");
   });

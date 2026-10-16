@@ -6,7 +6,9 @@ import {
   GUIDED_CANCELLATION_SUMMARY,
   GUIDED_DEPOSIT_SUMMARY,
   MARKETING_CONSENT,
+  bookingAmountLabel,
   clientLooksComplete,
+  selectedService,
   type GuidedBookingState,
 } from "@/lib/guided-booking";
 
@@ -37,6 +39,8 @@ export function CompleteStep({
   const [zip, setZip] = useState("");
   const [cardError, setCardError] = useState<string | null>(null);
   const ready = clientLooksComplete(state.client);
+  const service = selectedService(state);
+  const amount = service ? bookingAmountLabel(service) : null;
 
   if (state.confirmation) {
     return (
@@ -92,6 +96,7 @@ export function CompleteStep({
       </div>
 
       <div className="space-y-2 rounded-sm border border-rule/60 bg-ivory/80 p-4 text-sm text-ink/80">
+        {amount ? <p className="font-medium text-ink">{amount}</p> : null}
         <p>{GUIDED_CANCELLATION_SUMMARY}</p>
         <p>{GUIDED_DEPOSIT_SUMMARY}</p>
       </div>

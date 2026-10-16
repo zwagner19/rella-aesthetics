@@ -3,6 +3,7 @@
 import {
   GUIDED_CANCELLATION_SUMMARY,
   GUIDED_DEPOSIT_SUMMARY,
+  bookingAmountLabel,
   selectedService,
   visibleServiceDescription,
 } from "@/lib/guided-booking";
@@ -19,6 +20,7 @@ export function ReviewStep({
   const description = service
     ? visibleServiceDescription(service.description)
     : "";
+  const amount = service ? bookingAmountLabel(service) : null;
 
   return (
     <div className="space-y-6">
@@ -47,6 +49,9 @@ export function ReviewStep({
           <div className="flex items-start justify-between gap-3">
             <div>
               <h4 className="font-medium text-ink">{service.displayName}</h4>
+              {amount ? (
+                <p className="mt-2 text-sm font-medium text-ink">{amount}</p>
+              ) : null}
               {description ? (
                 <p className="mt-1 text-sm font-light text-silver">{description}</p>
               ) : null}

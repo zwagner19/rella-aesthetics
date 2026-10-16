@@ -1,9 +1,8 @@
 import type { BookingLocation } from "@/lib/booking-routes";
-import {
-  categoriesForIntent,
-  type BookingSiteScope,
-  type LiveCatalogClinic,
-  type LiveCatalogService,
+import type {
+  BookingSiteScope,
+  LiveCatalogClinic,
+  LiveCatalogService,
 } from "./live-catalog";
 import { getGuidedLocation } from "./catalog";
 import type {
@@ -142,7 +141,9 @@ export function applyCatalog(
     services: clinic.services,
     catalogError: null,
     selectedServiceSlug: match?.serviceSlug ?? (selectedStillThere ? state.selectedServiceSlug : null),
-    expandedCategories: categoriesForIntent(clinic.services, state.pendingCategory),
+    expandedCategories: [
+      ...new Set(clinic.services.map((service) => service.category)),
+    ],
     error: null,
   };
 }

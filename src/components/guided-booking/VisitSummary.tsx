@@ -1,6 +1,6 @@
 "use client";
 
-import { selectedService } from "@/lib/guided-booking";
+import { bookingAmountLabel, selectedService } from "@/lib/guided-booking";
 import type { GuidedBookingState } from "@/lib/guided-booking";
 
 export function VisitSummary({
@@ -13,6 +13,7 @@ export function VisitSummary({
   editable?: boolean;
 }) {
   const service = selectedService(state);
+  const amount = service ? bookingAmountLabel(service) : null;
   const clinicName = state.clinic?.locationName;
   const street = state.clinic?.streetShort;
 
@@ -46,6 +47,9 @@ export function VisitSummary({
             <p className="text-sm font-medium text-ink">{service.displayName}</p>
             {service.durationCopy ? (
               <p className="text-xs text-silver">{service.durationCopy}</p>
+            ) : null}
+            {amount ? (
+              <p className="text-xs font-medium text-ink">{amount}</p>
             ) : null}
             {service.providerDisplayName ? (
               <p className="text-xs text-silver">{service.providerDisplayName}</p>

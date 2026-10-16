@@ -5,10 +5,7 @@ import {
   proxyResponse,
   siteScopeFromUrl,
 } from "@/lib/guided-booking/booking-proxy";
-import {
-  parseBookingLocation,
-  sanitizeCatalogDescriptions,
-} from "@/lib/guided-booking/live-catalog";
+import { parseBookingLocation } from "@/lib/guided-booking/live-catalog";
 
 export async function GET(request: NextRequest) {
   const url = request.nextUrl;
@@ -22,8 +19,5 @@ export async function GET(request: NextRequest) {
     path: `/api/booking-v2/catalog?location=${location}`,
     method: "GET",
   });
-  return proxyResponse(
-    { ...result, body: sanitizeCatalogDescriptions(result.body) },
-    request,
-  );
+  return proxyResponse(result, request);
 }

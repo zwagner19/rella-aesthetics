@@ -1,6 +1,10 @@
 "use client";
 
-import { groupServices, visibleServiceDescription } from "@/lib/guided-booking";
+import {
+  bookingAmountLabel,
+  groupServices,
+  visibleServiceDescription,
+} from "@/lib/guided-booking";
 import type { GuidedBookingState } from "@/lib/guided-booking";
 import type { LiveCatalogClinic } from "@/lib/guided-booking";
 
@@ -31,7 +35,7 @@ export function TreatmentsStep({
         </h3>
         <p className="mt-2 text-sm font-light text-silver">
           {clinic
-            ? `Services offered at ${clinic.locationName}. Open a group to choose one.`
+            ? `${clinic.services.length} ${clinic.services.length === 1 ? "service" : "services"} from the live catalog for ${clinic.locationName}.`
             : "Services load from the live booking catalog for this clinic."}
         </p>
       </div>
@@ -97,6 +101,7 @@ export function TreatmentsStep({
                   {group.services.map((service) => {
                     const added = state.selectedServiceSlug === service.serviceSlug;
                     const description = visibleServiceDescription(service.description);
+                    const amount = bookingAmountLabel(service);
                     return (
                       <li
                         key={service.serviceSlug}
@@ -115,6 +120,9 @@ export function TreatmentsStep({
                             <p className="mt-1 text-sm font-light text-silver">
                               {description}
                             </p>
+                          ) : null}
+                          {amount ? (
+                            <p className="mt-2 text-sm font-medium text-ink">{amount}</p>
                           ) : null}
                           {service.durationCopy ? (
                             <p className="mt-2 text-xs text-silver">{service.durationCopy}</p>
