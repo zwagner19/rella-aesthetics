@@ -1,10 +1,11 @@
 import type { BookingLocation } from "@/lib/booking-routes";
 import {
-  ALLOWS_MULTI_TREATMENT,
-  getGuidedLocation,
-  mapIntentToTreatmentKey,
-  resolveGuidedTreatment,
-} from "./catalog";
+  categoriesForIntent,
+  type BookingSiteScope,
+  type LiveCatalogClinic,
+  type LiveCatalogService,
+} from "./live-catalog";
+import { getGuidedLocation } from "./catalog";
 import type {
   GuidedBookingIntent,
   GuidedBookingState,
@@ -15,17 +16,25 @@ import { GUIDED_BOOKING_STEPS } from "./types";
 
 export const initialGuidedBookingState: GuidedBookingState = {
   step: "location",
+  siteScope: "aesthetics",
   locationSlug: null,
-  selectedTreatmentKeys: [],
-  providerId: null,
+  catalogNonce: 0,
+  clinic: null,
+  services: [],
+  catalogError: null,
+  selectedServiceSlug: null,
+  pendingServiceSlug: null,
+  pendingCategory: null,
   date: "",
+  dates: [],
   slot: null,
+  reservedSlotId: null,
   search: "",
   expandedCategories: [],
   busy: false,
   error: null,
-  availabilityUnverified: true,
-  confirmationId: null,
+  confirmation: null,
+  needsCard: false,
   client: {
     firstName: "",
     lastName: "",
@@ -40,8 +49,19 @@ function stepIndex(step: GuidedBookingStep): number {
   return GUIDED_BOOKING_STEPS.indexOf(step);
 }
 
+function normalizeSlug(value: string | undefined): string | null {
+  if (!value) return null;
+  const slug = value
+    .toLowerCase()
+    .trim()
+    .replace(/\s+/g, "-")
+    .replace(/[^a-z0-9-]/g, "")
+    .slice(0, 80);
+  return slug || null;
+}
+
 export function canGoBack(state: GuidedBookingState): boolean {
-  return stepIndex(state.step) > 0 && !state.confirmationId;
+  return stepIndex(state.step) > 0 && !state.confirmation;
 }
 
 export function previousStep(step: GuidedBookingStep): GuidedBookingStep {
@@ -49,44 +69,34 @@ export function previousStep(step: GuidedBookingStep): GuidedBookingStep {
   return GUIDED_BOOKING_STEPS[Math.max(0, idx - 1)] ?? "location";
 }
 
+export function selectedService(
+  state: GuidedBookingState,
+): LiveCatalogService | null {
+  return (
+    state.services.find(
+      (service) => service.serviceSlug === state.selectedServiceSlug,
+    ) ?? null
+  );
+}
+
 export function bootstrapFromIntent(
   intent: GuidedBookingIntent = {},
+  siteScope: BookingSiteScope = "aesthetics",
 ): GuidedBookingState {
   const location =
-    intent.location && getGuidedLocation(intent.location)
-      ? intent.location
-      : null;
-
-  const treatmentKey =
-    location != null
-      ? mapIntentToTreatmentKey({
-          location,
-          service: intent.service,
-          category: intent.category,
-        })
-      : null;
-
-  // Clinic and service are already chosen, so the overlay hands off.
-  // Unknown mappings fail closed and do not invent a selection.
-  if (location && treatmentKey) {
-    return {
-      ...initialGuidedBookingState,
-      step: "complete",
-      locationSlug: location,
-      selectedTreatmentKeys: [treatmentKey],
-      expandedCategories: [],
-    };
-  }
-
-  if (location) {
-    return {
-      ...initialGuidedBookingState,
-      step: "treatments",
-      locationSlug: location,
-    };
-  }
-
-  return { ...initialGuidedBookingState };
+    intent.location && getGuidedLocation(intent.location) ? intent.location : null;
+  const base: GuidedBookingState = {
+    ...initialGuidedBookingState,
+    siteScope,
+    pendingServiceSlug: normalizeSlug(intent.service),
+    pendingCategory: intent.category ?? null,
+  };
+  if (!location) return base;
+  return {
+    ...base,
+    step: "treatments",
+    locationSlug: location,
+  };
 }
 
 export function selectLocation(
@@ -96,74 +106,95 @@ export function selectLocation(
   if (!getGuidedLocation(locationSlug)) {
     return { ...state, error: "That location is not available for online booking." };
   }
-
-  const keepTreatments = state.selectedTreatmentKeys.filter((key) =>
-    key.startsWith(`${locationSlug}/`),
-  );
-
   return {
     ...state,
     locationSlug,
-    selectedTreatmentKeys: keepTreatments,
-    providerId: null,
+    catalogNonce: state.catalogNonce + 1,
+    clinic: null,
+    services: [],
+    catalogError: null,
+    selectedServiceSlug: null,
     date: "",
+    dates: [],
     slot: null,
+    reservedSlotId: null,
+    needsCard: false,
     error: null,
     step: "treatments",
   };
 }
 
-export function toggleTreatment(
+export function applyCatalog(
   state: GuidedBookingState,
-  treatmentKey: string,
+  clinic: LiveCatalogClinic,
 ): GuidedBookingState {
-  if (!state.locationSlug) {
-    return { ...state, error: "Choose a location first." };
-  }
-
-  const treatment = resolveGuidedTreatment(
-    state.locationSlug,
-    treatmentKey.split("/")[1] ?? "",
+  const match = state.pendingServiceSlug
+    ? clinic.services.find(
+        (service) => service.serviceSlug === state.pendingServiceSlug,
+      )
+    : undefined;
+  const selectedStillThere = clinic.services.some(
+    (service) => service.serviceSlug === state.selectedServiceSlug,
   );
-  if (!treatment || treatment.key !== treatmentKey) {
-    return {
-      ...state,
-      error: "That treatment is not available at this location.",
-    };
-  }
-
-  const selected = new Set(state.selectedTreatmentKeys);
-  if (selected.has(treatmentKey)) {
-    selected.delete(treatmentKey);
-  } else if (!ALLOWS_MULTI_TREATMENT) {
-    selected.clear();
-    selected.add(treatmentKey);
-  } else {
-    selected.add(treatmentKey);
-  }
-
   return {
     ...state,
-    selectedTreatmentKeys: [...selected],
-    providerId: null,
-    date: "",
-    slot: null,
+    clinic,
+    services: clinic.services,
+    catalogError: null,
+    selectedServiceSlug: match?.serviceSlug ?? (selectedStillThere ? state.selectedServiceSlug : null),
+    expandedCategories: categoriesForIntent(clinic.services, state.pendingCategory),
     error: null,
   };
 }
 
-export function removeTreatment(
+export function setCatalogError(
   state: GuidedBookingState,
-  treatmentKey: string,
+  message: string,
 ): GuidedBookingState {
   return {
     ...state,
-    selectedTreatmentKeys: state.selectedTreatmentKeys.filter(
-      (key) => key !== treatmentKey,
-    ),
-    providerId: null,
+    clinic: null,
+    services: [],
+    catalogError: message,
+    selectedServiceSlug: null,
+    error: message,
+  };
+}
+
+export function toggleTreatment(
+  state: GuidedBookingState,
+  serviceSlug: string,
+): GuidedBookingState {
+  if (!state.locationSlug) {
+    return { ...state, error: "Choose a location first." };
+  }
+  const service = state.services.find((item) => item.serviceSlug === serviceSlug);
+  if (!service) {
+    return { ...state, error: "That treatment is not on the live menu for this clinic." };
+  }
+  const selected =
+    state.selectedServiceSlug === serviceSlug ? null : serviceSlug;
+  return {
+    ...state,
+    selectedServiceSlug: selected,
     date: "",
+    dates: [],
     slot: null,
+    reservedSlotId: null,
+    needsCard: false,
+    error: null,
+  };
+}
+
+export function clearTreatment(state: GuidedBookingState): GuidedBookingState {
+  return {
+    ...state,
+    selectedServiceSlug: null,
+    date: "",
+    dates: [],
+    slot: null,
+    reservedSlotId: null,
+    needsCard: false,
     error: null,
   };
 }
@@ -189,18 +220,16 @@ export function goToStep(
   state: GuidedBookingState,
   step: GuidedBookingStep,
 ): GuidedBookingState {
-  if (state.confirmationId) return state;
-
+  if (state.confirmation) return state;
   if (step !== "location" && !state.locationSlug) {
     return { ...state, step: "location", error: "Choose a location to continue." };
   }
-
   if (
     (step === "review" ||
       step === "provider" ||
       step === "datetime" ||
       step === "complete") &&
-    state.selectedTreatmentKeys.length === 0
+    !state.selectedServiceSlug
   ) {
     return {
       ...state,
@@ -208,26 +237,12 @@ export function goToStep(
       error: "Add a treatment to continue.",
     };
   }
-
   return { ...state, step, error: null };
 }
 
 export function goBack(state: GuidedBookingState): GuidedBookingState {
   if (!canGoBack(state)) return state;
-  return { ...state, step: previousStep(state.step), error: null };
-}
-
-export function selectProvider(
-  state: GuidedBookingState,
-  providerId: string,
-): GuidedBookingState {
-  return {
-    ...state,
-    providerId,
-    date: "",
-    slot: null,
-    error: null,
-  };
+  return { ...state, step: previousStep(state.step), error: null, needsCard: false };
 }
 
 export function selectDate(
@@ -244,7 +259,19 @@ export function selectSlot(
   state: GuidedBookingState,
   slot: GuidedSlot,
 ): GuidedBookingState {
-  return { ...state, slot, error: null };
+  return {
+    ...state,
+    slot,
+    reservedSlotId: state.reservedSlotId === slot.id ? state.reservedSlotId : null,
+    error: null,
+  };
+}
+
+export function setDates(
+  state: GuidedBookingState,
+  dates: string[],
+): GuidedBookingState {
+  return { ...state, dates, error: null };
 }
 
 export function updateClient(
@@ -281,7 +308,7 @@ export function progressLabel(step: GuidedBookingStep): string {
     case "datetime":
       return "Date & time";
     case "complete":
-      return "Continue";
+      return "Complete";
     default: {
       const _exhaustive: never = step;
       return _exhaustive;

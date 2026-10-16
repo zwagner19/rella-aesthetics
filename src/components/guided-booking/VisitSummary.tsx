@@ -1,8 +1,7 @@
 "use client";
 
-import { resolveGuidedTreatment } from "@/lib/guided-booking";
+import { selectedService } from "@/lib/guided-booking";
 import type { GuidedBookingState } from "@/lib/guided-booking";
-import { getGuidedLocation } from "@/lib/guided-booking";
 
 export function VisitSummary({
   state,
@@ -10,19 +9,14 @@ export function VisitSummary({
   editable = true,
 }: {
   state: GuidedBookingState;
-  onRemove?: (key: string) => void;
+  onRemove?: () => void;
   editable?: boolean;
 }) {
-  const location = getGuidedLocation(state.locationSlug);
-  const treatments = state.selectedTreatmentKeys
-    .map((key) => {
-      const [, service] = key.split("/");
-      if (!state.locationSlug || !service) return null;
-      return resolveGuidedTreatment(state.locationSlug, service);
-    })
-    .filter(Boolean);
+  const service = selectedService(state);
+  const clinicName = state.clinic?.locationName;
+  const street = state.clinic?.streetShort;
 
-  if (!location && treatments.length === 0) {
+  if (!state.locationSlug && !service) {
     return (
       <aside className="rounded-sm border border-rule/60 bg-white/70 p-4 text-sm text-silver">
         Your visit details will appear here as you choose a location and treatment.
@@ -38,40 +32,36 @@ export function VisitSummary({
       <p className="text-[0.6875rem] font-bold uppercase tracking-[0.18em] text-ink/60">
         Your visit
       </p>
-      {location ? (
+      {clinicName ? (
         <p className="mt-3 text-sm font-medium text-ink">
-          {location.displayName}
-          <span className="mt-0.5 block font-light text-silver">
-            {location.streetShort}
-          </span>
+          {clinicName}
+          {street ? (
+            <span className="mt-0.5 block font-light text-silver">{street}</span>
+          ) : null}
         </p>
       ) : null}
-      <ul className="mt-4 space-y-3">
-        {treatments.map((treatment) =>
-          treatment ? (
-            <li
-              key={treatment.key}
-              className="flex items-start justify-between gap-3 border-t border-rule/40 pt-3 first:border-t-0 first:pt-0"
+      {service ? (
+        <div className="mt-4 flex items-start justify-between gap-3 border-t border-rule/40 pt-3">
+          <div>
+            <p className="text-sm font-medium text-ink">{service.displayName}</p>
+            {service.durationCopy ? (
+              <p className="text-xs text-silver">{service.durationCopy}</p>
+            ) : null}
+            {service.providerDisplayName ? (
+              <p className="text-xs text-silver">{service.providerDisplayName}</p>
+            ) : null}
+          </div>
+          {editable && onRemove ? (
+            <button
+              type="button"
+              className="shrink-0 text-[0.625rem] font-bold uppercase tracking-[0.14em] text-rose"
+              onClick={onRemove}
             >
-              <div>
-                <p className="text-sm font-medium text-ink">{treatment.displayName}</p>
-                {treatment.durationCopy ? (
-                  <p className="text-xs text-silver">{treatment.durationCopy}</p>
-                ) : null}
-              </div>
-              {editable && onRemove ? (
-                <button
-                  type="button"
-                  className="shrink-0 text-[0.625rem] font-bold uppercase tracking-[0.14em] text-rose"
-                  onClick={() => onRemove(treatment.key)}
-                >
-                  Remove
-                </button>
-              ) : null}
-            </li>
-          ) : null,
-        )}
-      </ul>
+              Remove
+            </button>
+          ) : null}
+        </div>
+      ) : null}
     </aside>
   );
 }

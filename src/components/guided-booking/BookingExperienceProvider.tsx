@@ -10,9 +10,8 @@ import {
 } from "react";
 import type { BookingIntent } from "@/lib/booking-routes";
 import {
-  createDefaultBackend,
   emitGuidedBookingEvent,
-  type GuidedBookingBackend,
+  type BookingSiteScope,
 } from "@/lib/guided-booking";
 import { BookingModal } from "./BookingModal";
 
@@ -20,7 +19,7 @@ interface GuidedBookingContextValue {
   open: (intent?: BookingIntent) => void;
   close: () => void;
   isOpen: boolean;
-  backend: GuidedBookingBackend;
+  siteScope: BookingSiteScope;
 }
 
 const GuidedBookingContext = createContext<GuidedBookingContextValue | null>(
@@ -33,17 +32,13 @@ export function useGuidedBooking(): GuidedBookingContextValue | null {
 
 export function BookingExperienceProvider({
   children,
-  backend,
+  siteScope = "aesthetics",
 }: {
   children: ReactNode;
-  backend?: GuidedBookingBackend;
+  siteScope?: BookingSiteScope;
 }) {
   const [isOpen, setIsOpen] = useState(false);
   const [intent, setIntent] = useState<BookingIntent>({});
-  const resolvedBackend = useMemo(
-    () => backend ?? createDefaultBackend(),
-    [backend],
-  );
 
   const open = useCallback((next: BookingIntent = {}) => {
     setIntent(next);
@@ -60,8 +55,8 @@ export function BookingExperienceProvider({
   }, []);
 
   const value = useMemo(
-    () => ({ open, close, isOpen, backend: resolvedBackend }),
-    [open, close, isOpen, resolvedBackend],
+    () => ({ open, close, isOpen, siteScope }),
+    [open, close, isOpen, siteScope],
   );
 
   return (
@@ -70,7 +65,7 @@ export function BookingExperienceProvider({
       {isOpen ? (
         <BookingModal
           intent={intent}
-          backend={resolvedBackend}
+          siteScope={siteScope}
           onClose={close}
         />
       ) : null}
