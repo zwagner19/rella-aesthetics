@@ -1,34 +1,38 @@
 "use client";
 
-import {
-  useCallback,
-  useEffect,
-  useId,
-  useRef,
-  useState,
-} from "react";
+import { useCallback, useEffect, useId, useRef, useState } from "react";
 import type { BookingIntent } from "@/lib/booking-routes";
 import {
+  applyCatalog,
   bootstrapFromIntent,
   canGoBack,
+  clearTreatment,
+  clientLooksComplete,
+  createCart,
   emitGuidedBookingEvent,
+  finishBooking,
   goBack,
   goToStep,
   GUIDED_BOOKING_STEPS,
+  loadCatalog,
+  loadTimes,
   progressLabel,
-  removeTreatment,
+  reserveTime,
   selectDate,
   selectLocation,
-  selectProvider,
   selectSlot,
+  selectedService,
+  setCatalogError,
+  setDates,
   setSearch,
+  submitCheckout,
+  submitPayment,
   toggleCategory,
   toggleTreatment,
+  tokenizeCard,
   updateClient,
-  type AvailabilityResult,
-  type GuidedBookingBackend,
+  type BookingSiteScope,
   type GuidedBookingState,
-  type GuidedProvider,
   type GuidedSlot,
 } from "@/lib/guided-booking";
 import { VisitSummary } from "./VisitSummary";
@@ -41,25 +45,23 @@ import { CompleteStep } from "./steps/CompleteStep";
 
 export function BookingModal({
   intent,
-  backend,
+  siteScope = "aesthetics",
   onClose,
 }: {
   intent: BookingIntent;
-  backend: GuidedBookingBackend;
+  siteScope?: BookingSiteScope;
   onClose: () => void;
 }) {
   const titleId = useId();
-  const dialogRef = useRef<HTMLDivElement>(null);
   const closeRef = useRef<HTMLButtonElement>(null);
   const [state, setState] = useState<GuidedBookingState>(() =>
-    bootstrapFromIntent(intent),
-  );
-  const [providers, setProviders] = useState<GuidedProvider[]>([]);
-  const [availability, setAvailability] = useState<AvailabilityResult | null>(
-    null,
+    bootstrapFromIntent(intent, siteScope),
   );
   const [times, setTimes] = useState<GuidedSlot[]>([]);
-  const [loadingMeta, setLoadingMeta] = useState(false);
+  const [loadingTimes, setLoadingTimes] = useState(false);
+  const loadingCatalog = Boolean(
+    state.locationSlug && !state.clinic && !state.catalogError,
+  );
 
   useEffect(() => {
     const previous = document.body.style.overflow;
@@ -79,100 +81,83 @@ export function BookingModal({
   }, [onClose]);
 
   useEffect(() => {
-    if (!state.locationSlug || state.selectedTreatmentKeys.length === 0) {
-      setProviders([]);
-      return;
-    }
-    if (state.step !== "provider" && state.step !== "datetime") return;
+    if (!state.locationSlug) return;
+    const location = state.locationSlug;
+    const scope = state.siteScope;
     let cancelled = false;
-    setLoadingMeta(true);
-    backend
-      .listProviders({
-        locationSlug: state.locationSlug,
-        treatmentKeys: state.selectedTreatmentKeys,
-      })
-      .then((list) => {
-        if (!cancelled) setProviders(list);
-      })
-      .finally(() => {
-        if (!cancelled) setLoadingMeta(false);
-      });
-    return () => {
-      cancelled = true;
-    };
-  }, [backend, state.locationSlug, state.selectedTreatmentKeys, state.step]);
-
-  useEffect(() => {
-    if (
-      state.step !== "datetime" ||
-      !state.locationSlug ||
-      state.selectedTreatmentKeys.length === 0
-    ) {
-      return;
-    }
-    let cancelled = false;
-    setLoadingMeta(true);
-    backend
-      .loadAvailability({
-        locationSlug: state.locationSlug,
-        treatmentKeys: state.selectedTreatmentKeys,
-        providerId: state.providerId,
-      })
-      .then((result) => {
-        if (!cancelled) {
-          setAvailability(result);
-          setState((prev) => ({
-            ...prev,
-            availabilityUnverified: !result.live,
-          }));
+    loadCatalog(location, scope).then((result) => {
+      if (cancelled) return;
+      setState((prev) => {
+        if (prev.locationSlug !== location || prev.catalogNonce !== state.catalogNonce) {
+          return prev;
         }
-      })
-      .finally(() => {
-        if (!cancelled) setLoadingMeta(false);
+        if (!result.ok) return setCatalogError(prev, result.message);
+        return applyCatalog(prev, result.clinic);
       });
+    });
     return () => {
       cancelled = true;
     };
-  }, [
-    backend,
-    state.step,
-    state.locationSlug,
-    state.selectedTreatmentKeys,
-    state.providerId,
-  ]);
-
-  useEffect(() => {
-    if (!state.date || !state.locationSlug) {
-      setTimes([]);
-      return;
-    }
-    let cancelled = false;
-    backend
-      .loadTimesForDate({
-        locationSlug: state.locationSlug,
-        treatmentKeys: state.selectedTreatmentKeys,
-        providerId: state.providerId,
-        date: state.date,
-      })
-      .then((slots) => {
-        if (!cancelled) setTimes(slots);
-      });
-    return () => {
-      cancelled = true;
-    };
-  }, [
-    backend,
-    state.date,
-    state.locationSlug,
-    state.selectedTreatmentKeys,
-    state.providerId,
-  ]);
+  }, [state.locationSlug, state.siteScope, state.catalogNonce]);
 
   const patch = useCallback((next: GuidedBookingState) => {
     setState(next);
   }, []);
 
   const stepNumber = GUIDED_BOOKING_STEPS.indexOf(state.step) + 1;
+  const service = selectedService(state);
+
+  async function continueFromProvider() {
+    if (!state.locationSlug || !service) {
+      patch(goToStep(state, "treatments"));
+      return;
+    }
+    const location = state.locationSlug;
+    const serviceSlug = service.serviceSlug;
+    const scope = state.siteScope;
+    setState({
+      ...goToStep(state, "datetime"),
+      busy: true,
+      dates: [],
+      date: "",
+      slot: null,
+      reservedSlotId: null,
+    });
+    setTimes([]);
+    const result = await createCart({
+      location,
+      service: serviceSlug,
+      siteScope: scope,
+    });
+    setState((prev) => {
+      if (!result.ok) {
+        return { ...prev, busy: false, error: result.message, dates: [] };
+      }
+      return { ...setDates(prev, result.dates), busy: false };
+    });
+  }
+
+  async function chooseDate(date: string) {
+    const zone = state.clinic?.timeZone;
+    if (!zone) {
+      patch({ ...state, error: "The live catalog did not include a time zone." });
+      return;
+    }
+    setState((prev) => selectDate(prev, date));
+    setTimes([]);
+    setLoadingTimes(true);
+    const result = await loadTimes({
+      date,
+      timeZone: zone,
+      siteScope: state.siteScope,
+    });
+    setLoadingTimes(false);
+    if (!result.ok) {
+      setState((prev) => ({ ...prev, error: result.message }));
+      return;
+    }
+    setTimes(result.times);
+  }
 
   function primaryAction() {
     switch (state.step) {
@@ -184,7 +169,7 @@ export function BookingModal({
         patch(goToStep(state, "treatments"));
         return;
       case "treatments":
-        if (state.selectedTreatmentKeys.length === 0) {
+        if (!state.selectedServiceSlug) {
           patch({ ...state, error: "Add a treatment to continue." });
           return;
         }
@@ -194,15 +179,10 @@ export function BookingModal({
         patch(goToStep(state, "provider"));
         return;
       case "provider":
-        if (!state.providerId) {
-          patch({ ...state, error: "Choose a provider to continue." });
-          return;
-        }
-        patch(goToStep(state, "datetime"));
+        void continueFromProvider();
         return;
       case "datetime":
-        // Handoff mode: allow continue without a live slot.
-        if (backend.mode === "mock" && !state.slot) {
+        if (!state.slot) {
           patch({ ...state, error: "Choose a time to continue." });
           return;
         }
@@ -217,51 +197,97 @@ export function BookingModal({
     }
   }
 
-  async function mockComplete() {
-    if (!backend.complete || !state.locationSlug || !state.slot) return;
-    patch({ ...state, busy: true, error: null });
-    const result = await backend.complete({
-      locationSlug: state.locationSlug,
-      treatmentKeys: state.selectedTreatmentKeys,
-      providerId: state.providerId,
-      slot: state.slot,
-      client: state.client,
+  async function checkout() {
+    if (!state.slot || !clientLooksComplete(state.client)) return;
+    const slotId = state.slot.id;
+    const scope = state.siteScope;
+    const client = state.client;
+    setState((prev) => ({ ...prev, busy: true, error: null }));
+    if (state.reservedSlotId !== slotId) {
+      const reserved = await reserveTime({
+        bookableTimeId: slotId,
+        siteScope: scope,
+      });
+      if (!reserved.ok) {
+        setState((prev) => ({ ...prev, busy: false, error: reserved.message }));
+        return;
+      }
+      setState((prev) => ({ ...prev, reservedSlotId: slotId }));
+    }
+    const result = await submitCheckout({
+      firstName: client.firstName.trim(),
+      lastName: client.lastName.trim(),
+      email: client.email.trim(),
+      phoneNumber: client.phone.trim(),
+      siteScope: scope,
     });
-    if (!result.ok) {
-      patch({ ...state, busy: false, error: result.reason });
+    if (result.status === 409 && result.reason === "payment_required") {
+      setState((prev) => ({ ...prev, busy: false, needsCard: true, error: null }));
       return;
     }
+    if (result.status === 409 && result.reason === "payment_rule_mismatch") {
+      setState((prev) => ({
+        ...prev,
+        busy: false,
+        error:
+          "The payment setup does not match this service, so booking stopped before a charge.",
+      }));
+      return;
+    }
+    if (!result.ok) {
+      setState((prev) => ({
+        ...prev,
+        busy: false,
+        error: result.reason
+          ? `Checkout could not finish (${result.reason}).`
+          : `Checkout could not finish (HTTP ${result.status}).`,
+      }));
+      return;
+    }
+    const finished = await finishBooking(scope);
+    const confirmation =
+      result.confirmation === "CONFIRMED" && finished.ok ? "confirmed" : "pending";
     emitGuidedBookingEvent({
       type: "booking_confirmed",
-      confirmationId: result.confirmationId,
+      confirmationId: confirmation,
       at: Date.now(),
     });
-    patch({
-      ...state,
+    setState((prev) => ({
+      ...prev,
       busy: false,
-      confirmationId: result.confirmationId,
+      confirmation,
+      needsCard: false,
       error: null,
-    });
+    }));
   }
 
-  function handleHandoff(url: string) {
-    const serviceSlug = state.selectedTreatmentKeys[0]?.split("/")[1];
-    if (!state.locationSlug || !serviceSlug) return;
-    emitGuidedBookingEvent({
-      type: "booking_handoff",
-      locationSlug: state.locationSlug,
-      serviceSlug,
-      at: Date.now(),
+  async function pay(card: {
+    name: string;
+    number: string;
+    cvv: string;
+    expMonth: number;
+    expYear: number;
+    zip: string;
+  }) {
+    setState((prev) => ({ ...prev, busy: true, error: null }));
+    const token = await tokenizeCard(card);
+    if (!token.ok) {
+      setState((prev) => ({ ...prev, busy: false, error: token.message }));
+      return;
+    }
+    const paid = await submitPayment({
+      token: token.token,
+      siteScope: state.siteScope,
     });
-    void url;
+    if (!paid.ok) {
+      setState((prev) => ({ ...prev, busy: false, error: paid.message }));
+      return;
+    }
+    setState((prev) => ({ ...prev, needsCard: false, busy: false }));
+    await checkout();
   }
 
-  const primaryLabel =
-    state.step === "complete"
-      ? null
-      : state.step === "datetime" && backend.mode === "handoff"
-        ? "Continue"
-        : "Continue";
+  const primaryLabel = state.step === "complete" ? null : "Continue";
 
   return (
     <div className="fixed inset-0 z-[80]" role="presentation">
@@ -272,7 +298,6 @@ export function BookingModal({
         onClick={onClose}
       />
       <div
-        ref={dialogRef}
         role="dialog"
         aria-modal="true"
         aria-labelledby={titleId}
@@ -310,54 +335,52 @@ export function BookingModal({
               ) : null}
               {state.step === "treatments" && state.locationSlug ? (
                 <TreatmentsStep
-                  locationSlug={state.locationSlug}
+                  clinic={state.clinic}
                   state={state}
+                  loading={loadingCatalog}
                   onSearch={(value) => patch(setSearch(state, value))}
                   onToggleCategory={(category) =>
                     patch(toggleCategory(state, category))
                   }
-                  onToggleTreatment={(key) =>
-                    patch(toggleTreatment(state, key))
+                  onToggleTreatment={(slug) =>
+                    patch(toggleTreatment(state, slug))
                   }
                 />
               ) : null}
               {state.step === "review" ? (
                 <ReviewStep
                   state={state}
-                  onChangeTreatments={() =>
-                    patch(goToStep(state, "treatments"))
-                  }
+                  onChangeTreatments={() => patch(goToStep(state, "treatments"))}
                 />
               ) : null}
               {state.step === "provider" ? (
-                <ProviderStep
-                  providers={providers}
-                  selectedId={state.providerId}
-                  loading={loadingMeta}
-                  onSelect={(id) => patch(selectProvider(state, id))}
-                />
+                <ProviderStep providerDisplayName={service?.providerDisplayName} />
               ) : null}
               {state.step === "datetime" ? (
                 <DateTimeStep
-                  availability={availability}
+                  dates={state.dates}
                   times={times}
+                  timeZone={state.clinic?.timeZone ?? ""}
                   selectedDate={state.date}
                   selectedSlotId={state.slot?.id ?? null}
-                  loading={loadingMeta}
-                  onSelectDate={(date) => patch(selectDate(state, date))}
+                  loading={state.busy || loadingTimes}
+                  onSelectDate={(date) => {
+                    void chooseDate(date);
+                  }}
                   onSelectSlot={(slot) => patch(selectSlot(state, slot))}
                 />
               ) : null}
               {state.step === "complete" ? (
                 <CompleteStep
                   state={state}
-                  mode={backend.mode}
                   submitting={state.busy}
-                  onChange={(clientPatch) =>
-                    patch(updateClient(state, clientPatch))
-                  }
-                  onMockComplete={mockComplete}
-                  onHandoff={handleHandoff}
+                  onChange={(clientPatch) => patch(updateClient(state, clientPatch))}
+                  onCheckout={() => {
+                    void checkout();
+                  }}
+                  onPay={(card) => {
+                    void pay(card);
+                  }}
                 />
               ) : null}
               {state.error ? (
@@ -370,7 +393,7 @@ export function BookingModal({
               <VisitSummary
                 state={state}
                 editable={state.step === "treatments" || state.step === "review"}
-                onRemove={(key) => patch(removeTreatment(state, key))}
+                onRemove={() => patch(clearTreatment(state))}
               />
             </div>
           </div>
@@ -389,9 +412,10 @@ export function BookingModal({
             <button
               type="button"
               onClick={primaryAction}
-              className="rella-cta-rect rella-cta-rect--filled"
+              disabled={state.busy}
+              className="rella-cta-rect rella-cta-rect--filled disabled:opacity-50"
             >
-              {primaryLabel}
+              {state.busy ? "Working…" : primaryLabel}
             </button>
           ) : (
             <span className="text-xs text-silver">Finish below</span>

@@ -1,17 +1,14 @@
-import type {
-  GuidedBookingAnalyticsEvent,
-} from "./types";
+import type { GuidedBookingAnalyticsEvent } from "./types";
 
 /**
  * Funnel analytics for the guided booking shell.
- * Opens and handoffs are tracked separately from verified confirmations.
+ * Opens and confirmed bookings are tracked separately.
  * Never include PII or treatment-sensitive details in payloads.
  */
 
 export type AnalyticsSink = (event: GuidedBookingAnalyticsEvent) => void;
 
 const SAFE_OPEN = "rella_guided_booking_open";
-const SAFE_HANDOFF = "rella_guided_booking_handoff";
 const SAFE_CONFIRMED = "rella_guided_booking_confirmed";
 
 export function emitGuidedBookingEvent(
@@ -24,26 +21,7 @@ export function emitGuidedBookingEvent(
 function defaultSink(event: GuidedBookingAnalyticsEvent): void {
   if (typeof window === "undefined") return;
 
-  const detail =
-    event.type === "booking_open"
-      ? {
-          event: SAFE_OPEN,
-          hasLocation: Boolean(event.intent.location),
-          hasService: Boolean(event.intent.service),
-          hasCategory: Boolean(event.intent.category),
-        }
-      : event.type === "booking_handoff"
-        ? {
-            event: SAFE_HANDOFF,
-            location: event.locationSlug,
-            // service slug is a public catalog key, not clinical notes
-            service: event.serviceSlug,
-          }
-        : {
-            event: SAFE_CONFIRMED,
-            // opaque id only — no patient fields
-            confirmationPresent: Boolean(event.confirmationId),
-          };
+  const detail = detailFor(event);
 
   window.dispatchEvent(
     new CustomEvent("rella:guided-booking", { detail }),
@@ -57,5 +35,32 @@ function defaultSink(event: GuidedBookingAnalyticsEvent): void {
   w.dataLayer?.push({ ...detail, at: event.at });
   if (typeof w.gtag === "function") {
     w.gtag("event", detail.event, detail);
+  }
+}
+
+function detailFor(event: GuidedBookingAnalyticsEvent): {
+  event: string;
+  hasLocation?: boolean;
+  hasService?: boolean;
+  hasCategory?: boolean;
+  confirmationPresent?: boolean;
+} {
+  switch (event.type) {
+    case "booking_open":
+      return {
+        event: SAFE_OPEN,
+        hasLocation: Boolean(event.intent.location),
+        hasService: Boolean(event.intent.service),
+        hasCategory: Boolean(event.intent.category),
+      };
+    case "booking_confirmed":
+      return {
+        event: SAFE_CONFIRMED,
+        confirmationPresent: Boolean(event.confirmationId),
+      };
+    default: {
+      const _exhaustive: never = event;
+      return _exhaustive;
+    }
   }
 }

@@ -1,31 +1,31 @@
 "use client";
 
-import Image from "next/image";
 import {
-  formatDeposit,
-  formatListPrice,
-  paymentRuleLabel,
-  treatmentsByCategory,
+  bookingAmountLabel,
+  groupServices,
+  visibleServiceDescription,
 } from "@/lib/guided-booking";
-import type { BookingLocation } from "@/lib/booking-routes";
 import type { GuidedBookingState } from "@/lib/guided-booking";
+import type { LiveCatalogClinic } from "@/lib/guided-booking";
 
 export function TreatmentsStep({
-  locationSlug,
+  clinic,
   state,
+  loading,
   onSearch,
   onToggleCategory,
   onToggleTreatment,
 }: {
-  locationSlug: BookingLocation;
+  clinic: LiveCatalogClinic | null;
   state: GuidedBookingState;
+  loading: boolean;
   onSearch: (value: string) => void;
   onToggleCategory: (category: string) => void;
-  onToggleTreatment: (key: string) => void;
+  onToggleTreatment: (serviceSlug: string) => void;
 }) {
-  const groups = treatmentsByCategory(locationSlug, state.search);
-  // Default: all Boulevard categories collapsed after location — expand on tap.
+  const groups = groupServices(state.services, state.search);
   const expanded = new Set(state.expandedCategories);
+  const searching = state.search.trim().length > 0;
 
   return (
     <div className="space-y-5">
@@ -34,28 +34,44 @@ export function TreatmentsStep({
           Choose a treatment
         </h3>
         <p className="mt-2 text-sm font-light text-silver">
-          Browse Boulevard treatment categories, or search. Open a category to see options — consultations are listed first in each group.
+          {clinic
+            ? `${clinic.services.length} ${clinic.services.length === 1 ? "service" : "services"} from the live catalog for ${clinic.locationName}.`
+            : "Services load from the live booking catalog for this clinic."}
         </p>
       </div>
 
-      <label className="block">
-        <span className="sr-only">Search treatments</span>
-        <input
-          type="search"
-          value={state.search}
-          onChange={(e) => onSearch(e.target.value)}
-          placeholder="Search treatments"
-          className="w-full rounded-sm border border-rule/70 bg-white px-4 py-3 text-sm text-ink outline-none focus:border-ink"
-        />
-      </label>
+      {loading ? (
+        <p className="text-sm text-silver" role="status">
+          Loading the live menu…
+        </p>
+      ) : null}
+
+      {state.catalogError ? (
+        <p className="text-sm text-rose" role="alert">
+          {state.catalogError}
+        </p>
+      ) : null}
+
+      {clinic && !loading && !state.catalogError ? (
+        <label className="block">
+          <span className="sr-only">Search treatments</span>
+          <input
+            type="search"
+            value={state.search}
+            onChange={(event) => onSearch(event.target.value)}
+            placeholder="Search treatments"
+            className="w-full rounded-sm border border-rule/70 bg-white px-4 py-3 text-sm text-ink outline-none focus:border-ink"
+          />
+        </label>
+      ) : null}
 
       <div className="space-y-3">
         {groups.map((group) => {
-          const isOpen = expanded.has(group.category);
-          const consults = group.treatments.filter((t) => t.isConsultation);
-          const rest = group.treatments.filter((t) => !t.isConsultation);
-          const ordered = [...consults, ...rest];
-
+          const isOpen = searching || expanded.has(group.category);
+          const countLabel =
+            group.services.length === 1
+              ? "1 service"
+              : `${group.services.length} services`;
           return (
             <section
               key={group.category}
@@ -63,71 +79,58 @@ export function TreatmentsStep({
             >
               <button
                 type="button"
-                className="flex w-full items-center justify-between bg-ivory px-4 py-3 text-left"
+                className="flex w-full items-center justify-between gap-3 bg-ivory px-4 py-3 text-left"
                 aria-expanded={isOpen}
-                onClick={() => onToggleCategory(group.category)}
+                onClick={() => {
+                  if (!searching) onToggleCategory(group.category);
+                }}
               >
                 <span className="text-[0.6875rem] font-bold uppercase tracking-[0.16em] text-ink">
-                  {group.label}
+                  {group.category}
                 </span>
-                <span className="text-xs text-silver">{isOpen ? "Hide" : "Show"}</span>
+                <span className="text-xs text-silver">
+                  {countLabel}
+                  <span className="px-1.5" aria-hidden="true">
+                    ·
+                  </span>
+                  {searching ? "Matches" : isOpen ? "Hide" : "Show"}
+                </span>
               </button>
               {isOpen ? (
                 <ul className="divide-y divide-rule/40 bg-white">
-                  {ordered.map((treatment) => {
-                    const added = state.selectedTreatmentKeys.includes(
-                      treatment.key,
-                    );
+                  {group.services.map((service) => {
+                    const added = state.selectedServiceSlug === service.serviceSlug;
+                    const description = visibleServiceDescription(service.description);
+                    const amount = bookingAmountLabel(service);
                     return (
                       <li
-                        key={treatment.key}
+                        key={service.serviceSlug}
                         className="flex flex-col gap-3 p-4 sm:flex-row sm:items-center"
                       >
-                        {treatment.image ? (
-                          <div className="relative h-20 w-full shrink-0 overflow-hidden rounded-sm sm:h-20 sm:w-28">
-                            <Image
-                              src={treatment.image}
-                              alt={treatment.imageAlt ?? ""}
-                              fill
-                              className="object-cover"
-                              sizes="112px"
-                            />
-                          </div>
-                        ) : null}
                         <div className="min-w-0 flex-1">
                           <div className="flex flex-wrap items-center gap-2">
-                            <p className="font-medium text-ink">
-                              {treatment.displayName}
-                            </p>
-                            {treatment.isConsultation ? (
+                            <p className="font-medium text-ink">{service.displayName}</p>
+                            {service.bookingMode === "CONSULT_FIRST" ? (
                               <span className="text-[0.625rem] font-bold uppercase tracking-[0.14em] text-rose">
                                 Consultation
                               </span>
                             ) : null}
                           </div>
-                          <p className="mt-1 text-sm font-light text-silver">
-                            {treatment.shortDescription}
-                          </p>
-                          <p className="mt-2 text-xs text-silver">
-                            {[
-                              treatment.durationCopy,
-                              formatListPrice(treatment.listPriceCents)
-                                ? `from ${formatListPrice(treatment.listPriceCents)}`
-                                : null,
-                              paymentRuleLabel(treatment),
-                            ]
-                              .filter(Boolean)
-                              .join(" · ")}
-                          </p>
-                          {treatment.depositCents != null ? (
-                            <p className="sr-only">
-                              {formatDeposit(treatment.depositCents)} deposit
+                          {description ? (
+                            <p className="mt-1 text-sm font-light text-silver">
+                              {description}
                             </p>
+                          ) : null}
+                          {amount ? (
+                            <p className="mt-2 text-sm font-medium text-ink">{amount}</p>
+                          ) : null}
+                          {service.durationCopy ? (
+                            <p className="mt-2 text-xs text-silver">{service.durationCopy}</p>
                           ) : null}
                         </div>
                         <button
                           type="button"
-                          onClick={() => onToggleTreatment(treatment.key)}
+                          onClick={() => onToggleTreatment(service.serviceSlug)}
                           className={`shrink-0 rounded-full border px-5 py-2.5 text-[0.625rem] font-bold uppercase tracking-[0.16em] ${
                             added
                               ? "border-ink bg-ink text-white"
@@ -144,8 +147,12 @@ export function TreatmentsStep({
             </section>
           );
         })}
-        {groups.length === 0 ? (
-          <p className="text-sm text-silver">No treatments match that search.</p>
+        {clinic && !loading && groups.length === 0 && !state.catalogError ? (
+          <p className="text-sm text-silver">
+            {state.search.trim()
+              ? "No treatments match that search."
+              : "No bookable services were returned for this clinic."}
+          </p>
         ) : null}
       </div>
     </div>

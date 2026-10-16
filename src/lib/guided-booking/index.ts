@@ -3,4 +3,5 @@ export * from "./catalog";
 export * from "./policies";
 export * from "./machine";
 export * from "./analytics";
-export * from "./backend";
+export * from "./live-catalog";
+export * from "./booking-client";
