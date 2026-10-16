@@ -10,7 +10,13 @@
 export type BoulevardMenuSeed = {
   serviceSlug: string;
   displayName: string;
-  category: "Injectables" | "Facials" | "Laser" | "Microneedling" | "Peels";
+  category:
+    | "Injectables"
+    | "Facials"
+    | "Laser"
+    | "Microneedling"
+    | "Peels"
+    | "Weight Loss";
   durationMinutes?: number;
   /** Boulevard defaultPrice in cents (list/starting). */
   listPriceCents?: number;

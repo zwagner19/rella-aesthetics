@@ -1,12 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import {
-  formatDeposit,
-  formatListPrice,
-  paymentRuleLabel,
-  treatmentsByCategory,
-} from "@/lib/guided-booking";
+import { getGuidedLocation, treatmentsByCategory } from "@/lib/guided-booking";
 import type { BookingLocation } from "@/lib/booking-routes";
 import type { GuidedBookingState } from "@/lib/guided-booking";
 
@@ -23,9 +18,10 @@ export function TreatmentsStep({
   onToggleCategory: (category: string) => void;
   onToggleTreatment: (key: string) => void;
 }) {
+  const location = getGuidedLocation(locationSlug);
   const groups = treatmentsByCategory(locationSlug, state.search);
-  // Default: all Boulevard categories collapsed after location — expand on tap.
   const expanded = new Set(state.expandedCategories);
+  const searching = state.search.trim().length > 0;
 
   return (
     <div className="space-y-5">
@@ -34,7 +30,9 @@ export function TreatmentsStep({
           Choose a treatment
         </h3>
         <p className="mt-2 text-sm font-light text-silver">
-          Browse Boulevard treatment categories, or search. Open a category to see options — consultations are listed first in each group.
+          {location
+            ? `Services offered at ${location.displayName}. Open a group to choose one.`
+            : "Open a group to choose a service."}
         </p>
       </div>
 
@@ -51,10 +49,14 @@ export function TreatmentsStep({
 
       <div className="space-y-3">
         {groups.map((group) => {
-          const isOpen = expanded.has(group.category);
+          const isOpen = searching || expanded.has(group.category);
           const consults = group.treatments.filter((t) => t.isConsultation);
           const rest = group.treatments.filter((t) => !t.isConsultation);
           const ordered = [...consults, ...rest];
+          const countLabel =
+            group.treatments.length === 1
+              ? "1 service"
+              : `${group.treatments.length} services`;
 
           return (
             <section
@@ -63,14 +65,22 @@ export function TreatmentsStep({
             >
               <button
                 type="button"
-                className="flex w-full items-center justify-between bg-ivory px-4 py-3 text-left"
+                className="flex w-full items-center justify-between gap-3 bg-ivory px-4 py-3 text-left"
                 aria-expanded={isOpen}
-                onClick={() => onToggleCategory(group.category)}
+                onClick={() => {
+                  if (!searching) onToggleCategory(group.category);
+                }}
               >
                 <span className="text-[0.6875rem] font-bold uppercase tracking-[0.16em] text-ink">
                   {group.label}
                 </span>
-                <span className="text-xs text-silver">{isOpen ? "Hide" : "Show"}</span>
+                <span className="text-xs text-silver">
+                  {countLabel}
+                  <span className="px-1.5" aria-hidden="true">
+                    ·
+                  </span>
+                  {searching ? "Matches" : isOpen ? "Hide" : "Show"}
+                </span>
               </button>
               {isOpen ? (
                 <ul className="divide-y divide-rule/40 bg-white">
@@ -108,20 +118,9 @@ export function TreatmentsStep({
                           <p className="mt-1 text-sm font-light text-silver">
                             {treatment.shortDescription}
                           </p>
-                          <p className="mt-2 text-xs text-silver">
-                            {[
-                              treatment.durationCopy,
-                              formatListPrice(treatment.listPriceCents)
-                                ? `from ${formatListPrice(treatment.listPriceCents)}`
-                                : null,
-                              paymentRuleLabel(treatment),
-                            ]
-                              .filter(Boolean)
-                              .join(" · ")}
-                          </p>
-                          {treatment.depositCents != null ? (
-                            <p className="sr-only">
-                              {formatDeposit(treatment.depositCents)} deposit
+                          {treatment.durationCopy ? (
+                            <p className="mt-2 text-xs text-silver">
+                              {treatment.durationCopy}
                             </p>
                           ) : null}
                         </div>

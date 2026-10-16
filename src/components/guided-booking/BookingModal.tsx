@@ -188,7 +188,7 @@ export function BookingModal({
           patch({ ...state, error: "Add a treatment to continue." });
           return;
         }
-        patch(goToStep(state, "review"));
+        patch(goToStep(state, "complete"));
         return;
       case "review":
         patch(goToStep(state, "provider"));

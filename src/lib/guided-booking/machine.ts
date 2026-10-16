@@ -31,6 +31,8 @@ export const initialGuidedBookingState: GuidedBookingState = {
     lastName: "",
     email: "",
     phone: "",
+    assessmentContactConsent: false,
+    marketingConsent: false,
   },
 };
 
@@ -64,12 +66,12 @@ export function bootstrapFromIntent(
         })
       : null;
 
-  // Unknown service/category mappings fail closed: open at treatments (or
-  // location) without inventing a selection.
+  // Clinic and service are already chosen, so the overlay hands off.
+  // Unknown mappings fail closed and do not invent a selection.
   if (location && treatmentKey) {
     return {
       ...initialGuidedBookingState,
-      step: "review",
+      step: "complete",
       locationSlug: location,
       selectedTreatmentKeys: [treatmentKey],
       expandedCategories: [],
@@ -261,7 +263,8 @@ export function clientLooksComplete(client: GuidedBookingState["client"]): boole
     client.firstName.trim().length >= 1 &&
     client.lastName.trim().length >= 1 &&
     /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(client.email.trim()) &&
-    client.phone.replace(/\D/g, "").length >= 10
+    client.phone.replace(/\D/g, "").length >= 10 &&
+    client.assessmentContactConsent === true
   );
 }
 
@@ -278,7 +281,7 @@ export function progressLabel(step: GuidedBookingStep): string {
     case "datetime":
       return "Date & time";
     case "complete":
-      return "Complete";
+      return "Continue";
     default: {
       const _exhaustive: never = step;
       return _exhaustive;

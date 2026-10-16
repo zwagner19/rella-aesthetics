@@ -1,6 +1,10 @@
 "use client";
 
 import {
+  ASSESSMENT_CONTACT_CONSENT,
+  GUIDED_CANCELLATION_SUMMARY,
+  GUIDED_DEPOSIT_SUMMARY,
+  MARKETING_CONSENT,
   buildHandoffUrl,
   clientLooksComplete,
   type GuidedBookingState,
@@ -47,13 +51,18 @@ export function CompleteStep({
     <div className="space-y-5">
       <div>
         <h3 className="text-xl font-medium tracking-[-0.02em] text-ink">
-          Complete your booking
+          Continue to booking
         </h3>
         <p className="mt-2 text-sm font-light text-silver">
           {mode === "handoff"
-            ? "Enter your details, then continue to Rella’s secure booking app to pick a live Boulevard time and pay any required deposit. Appointments are created only after that confirmation succeeds."
+            ? "Times, providers, and payment stay on Rella’s booking page. Continue there after your details."
             : "Mock mode can confirm without Boulevard. Production never creates carts from this marketing site session."}
         </p>
+      </div>
+
+      <div className="space-y-2 rounded-sm border border-rule/60 bg-ivory/80 p-4 text-sm text-ink/80">
+        <p>{GUIDED_CANCELLATION_SUMMARY}</p>
+        <p>{GUIDED_DEPOSIT_SUMMARY}</p>
       </div>
 
       <div className="grid gap-3 sm:grid-cols-2">
@@ -87,6 +96,32 @@ export function CompleteStep({
             />
           </label>
         ))}
+      </div>
+
+      <div className="space-y-3">
+        <label className="flex items-start gap-3 text-sm font-light leading-relaxed text-ink/80">
+          <input
+            type="checkbox"
+            className="mt-1 size-4 shrink-0 accent-rose"
+            checked={state.client.assessmentContactConsent}
+            onChange={(event) =>
+              onChange({ assessmentContactConsent: event.target.checked })
+            }
+            required
+          />
+          <span>{ASSESSMENT_CONTACT_CONSENT}</span>
+        </label>
+        <label className="flex items-start gap-3 text-sm font-light leading-relaxed text-ink/80">
+          <input
+            type="checkbox"
+            className="mt-1 size-4 shrink-0 accent-rose"
+            checked={state.client.marketingConsent}
+            onChange={(event) =>
+              onChange({ marketingConsent: event.target.checked })
+            }
+          />
+          <span>{MARKETING_CONSENT}</span>
+        </label>
       </div>
 
       {mode === "handoff" ? (

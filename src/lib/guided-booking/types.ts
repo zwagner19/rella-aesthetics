@@ -8,12 +8,10 @@ export type GuidedBookingStep =
   | "datetime"
   | "complete";
 
+/** Chooser, then handoff. Provider, time, and payment stay on the booking site. */
 export const GUIDED_BOOKING_STEPS: readonly GuidedBookingStep[] = [
   "location",
   "treatments",
-  "review",
-  "provider",
-  "datetime",
   "complete",
 ] as const;
 
@@ -34,8 +32,14 @@ export interface GuidedTreatment {
   locationSlug: BookingLocation;
   serviceSlug: string;
   displayName: string;
-  /** Boulevard menu category (rella-booking / Client API). */
-  category: "Injectables" | "Laser" | "Microneedling" | "Facials" | "Peels";
+  /** Boulevard menu category (rella-booking / Client API), plus Weight Loss. */
+  category:
+    | "Injectables"
+    | "Laser"
+    | "Microneedling"
+    | "Facials"
+    | "Peels"
+    | "Weight Loss";
   shortDescription: string;
   image?: string;
   imageAlt?: string;
@@ -97,6 +101,9 @@ export interface GuidedBookingState {
     lastName: string;
     email: string;
     phone: string;
+    /** Required assessment-contact consent. Marketing consent stays optional. */
+    assessmentContactConsent: boolean;
+    marketingConsent: boolean;
   };
 }
 

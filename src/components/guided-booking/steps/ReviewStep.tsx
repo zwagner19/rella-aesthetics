@@ -3,7 +3,6 @@
 import {
   GUIDED_CANCELLATION_SUMMARY,
   GUIDED_DEPOSIT_SUMMARY,
-  paymentRuleLabel,
   resolveGuidedTreatment,
 } from "@/lib/guided-booking";
 import type { GuidedBookingState } from "@/lib/guided-booking";
@@ -32,8 +31,8 @@ export function ReviewStep({
           Review your visit
         </h3>
         <p className="mt-2 text-sm font-light text-silver">
-          Prep notes and policies below are Rella’s. Live pricing and deposits
-          are confirmed in Boulevard when you reserve.
+          Prep notes and the cancellation notice below are Rella’s. Boulevard
+          confirms the appointment before it is reserved.
         </p>
       </div>
 
@@ -67,9 +66,6 @@ export function ReviewStep({
                   </p>
                 ) : null}
               </div>
-              <p className="mt-3 text-xs text-silver">
-                {paymentRuleLabel(treatment)}
-              </p>
               {treatment.prepCopy ? (
                 <p className="mt-3 text-sm text-ink/80">
                   <span className="font-medium">Prep: </span>

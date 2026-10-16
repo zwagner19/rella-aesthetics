@@ -1,15 +1,19 @@
 /**
  * Fail-closed public catalog for the in-site guided booking shell.
  *
- * Menu contents come from Boulevard Admin-read inventory (2026-07-22), filtered
- * to active Injectables / Laser / Microneedling / Facials / Peels. Exact online
- * handoff to `book.experiencerella.com/book/{location}/{service}` is only
- * enabled for verified rella-booking aesthetics routes — everything else shows
- * in the menu but completes via the location+category chooser (never invents
- * Boulevard mutation IDs or fake availability).
+ * The overlay menu is the prior Boulevard online catalog (location by location),
+ * limited to services this repo already names, plus the weight-loss consult
+ * route. Wider Admin-inventory rows stay out of the menu. Prices, deposit
+ * amounts, and staff are not shown. Exact handoff is used only for a verified
+ * route; unknown services fail closed.
  */
 
-import type { BookingCategory, BookingLocation } from "@/lib/booking-routes";
+import {
+  resolveWeightLossConsultHref,
+  WEIGHT_LOSS_CONSULT_SERVICE,
+  type BookingCategory,
+  type BookingLocation,
+} from "@/lib/booking-routes";
 import {
   BOULEVARD_MENU_SEEDS,
   type BoulevardMenuSeed,
@@ -40,9 +44,8 @@ export const GUIDED_LOCATIONS: readonly GuidedLocation[] = [
 ] as const;
 
 /**
- * Boulevard Client API / rella-booking menu categories (aesthetics only).
- * Source: `BOOKING_CATEGORY_ORDER` in rella-booking catalog — Weight Loss stays
- * on the dedicated weight-loss host and is intentionally excluded here.
+ * Menu groups for the overlay. Aesthetics order matches the booking catalog.
+ * Weight Loss is its own group, booked on book.rellaweightloss.com.
  */
 export const BOULEVARD_CATEGORY_ORDER = [
   "Injectables",
@@ -50,6 +53,7 @@ export const BOULEVARD_CATEGORY_ORDER = [
   "Microneedling",
   "Facials",
   "Peels",
+  "Weight Loss",
 ] as const;
 
 export type BoulevardBookingCategory =
@@ -61,6 +65,7 @@ export const CATEGORY_LABELS: Record<BoulevardBookingCategory, string> = {
   Microneedling: "Microneedling",
   Facials: "Facials",
   Peels: "Peels",
+  "Weight Loss": "Weight Loss",
 };
 
 export const CATEGORY_ORDER = BOULEVARD_CATEGORY_ORDER;
@@ -68,7 +73,10 @@ export const CATEGORY_ORDER = BOULEVARD_CATEGORY_ORDER;
 /** Boulevard combination scheduling is not verified for this shell — one treatment only. */
 export const ALLOWS_MULTI_TREATMENT = false;
 
-/** Verified deposit amounts from rella-booking cart probes (cents). */
+/**
+ * Probe amounts kept on the treatment record and never rendered.
+ * QC D1–D5: these figures are unverified. The overlay must not state them.
+ */
 const VERIFIED_DEPOSITS: Record<string, { depositCents?: number; paymentRule: PaymentRuleCopy }> = {
   botox: { depositCents: 5000, paymentRule: "deposit" },
   "tox-established": { depositCents: 5000, paymentRule: "deposit" },
@@ -123,6 +131,69 @@ const IMAGE_BY_SLUG: Record<string, { image: string; imageAlt: string }> = {
     image: "/images/treatments/chemical-peel.webp",
     imageAlt: "In-clinic facial treatment",
   },
+  "weight-loss-consult": {
+    image: "/images/treatments/medical-weight-loss.webp",
+    imageAlt:
+      "A gloved Rella team member holding three prepared syringes in the clinic",
+  },
+};
+
+/**
+ * Online rows from the prior Boulevard catalog snapshot, limited to services
+ * this repo already names. Location splits follow that QC: Napa has established
+ * tox, Deluxe HydraFacial, and the hyperhidrosis consult; Vacaville has the
+ * microneedling consult and Universal Peel. Platinum, IV, and the wider Admin
+ * inventory are not online at either clinic.
+ */
+const OFFERED_SERVICE_SLUGS: Record<BookingLocation, ReadonlySet<string>> = {
+  napa: new Set([
+    "botox",
+    "tox-established",
+    "dermal-fillers",
+    "hydrafacial",
+    "hydrafacial-deluxe",
+    "skin-health-consult",
+    "laser-consult",
+    "hyperhidrosis-consult",
+    WEIGHT_LOSS_CONSULT_SERVICE,
+  ]),
+  vacaville: new Set([
+    "botox",
+    "dermal-fillers",
+    "hydrafacial",
+    "skin-health-consult",
+    "laser-consult",
+    "microneedling-consult",
+    "universal-peel",
+    WEIGHT_LOSS_CONSULT_SERVICE,
+  ]),
+};
+
+/**
+ * Durations shown only where this repo does not disagree with itself.
+ * Omitted on purpose: skin-health consult (Napa page 15 min, seed and
+ * Vacaville page 30), Universal Peel (seed 45, Vacaville page 90),
+ * laser consult (seed 30; catalog 30 vs a 15-minute probe), hyperhidrosis
+ * consult (seed 15; catalog 30 vs a 15-minute probe), fillers (seed 5).
+ */
+const SHOWN_DURATION_MINUTES: Partial<Record<string, number>> = {
+  botox: 30,
+  "tox-established": 20,
+  hydrafacial: 45,
+  "hydrafacial-deluxe": 45,
+  "microneedling-consult": 30,
+  [WEIGHT_LOSS_CONSULT_SERVICE]: 30,
+};
+
+const WEIGHT_LOSS_SEED: BoulevardMenuSeed = {
+  serviceSlug: WEIGHT_LOSS_CONSULT_SERVICE,
+  displayName: "Weight Loss Consult",
+  category: "Weight Loss",
+  durationMinutes: 30,
+  isConsultation: true,
+  onlineHandoff: true,
+  locations: ["napa", "vacaville"],
+  shortDescription: "Medical weight-loss consultation.",
 };
 
 function durationCopy(minutes?: number): string | undefined {
@@ -134,6 +205,10 @@ function paymentFor(
   seed: BoulevardMenuSeed,
   locationSlug: BookingLocation,
 ): { depositCents?: number; paymentRule: PaymentRuleCopy } {
+  // Boulevard price and deposit for this consult are not in the repo.
+  if (seed.serviceSlug === WEIGHT_LOSS_CONSULT_SERVICE) {
+    return { paymentRule: "deposit" };
+  }
   if (seed.serviceSlug === "hydrafacial") {
     return VERIFIED_HYDRAFACIAL_BY_LOCATION[locationSlug] ?? {
       paymentRule: "deposit",
@@ -146,6 +221,34 @@ function paymentFor(
   return { paymentRule: "deposit" };
 }
 
+function publicDisplayName(seed: BoulevardMenuSeed): string {
+  switch (seed.serviceSlug) {
+    case "hyperhidrosis-consult":
+      return "Hyperhidrosis Consult";
+    case "hydrafacial":
+      return "Signature HydraFacial";
+    case "hydrafacial-deluxe":
+      return "Deluxe HydraFacial";
+    case WEIGHT_LOSS_CONSULT_SERVICE:
+      return "Weight Loss Consult";
+    default:
+      return seed.displayName;
+  }
+}
+
+function publicDescription(seed: BoulevardMenuSeed): string {
+  if (seed.serviceSlug === WEIGHT_LOSS_CONSULT_SERVICE) {
+    return "Medical weight-loss consultation.";
+  }
+  if (seed.shortDescription?.toLowerCase().includes("complimentary")) {
+    return "Consultation.";
+  }
+  return (
+    seed.shortDescription ??
+    "Boulevard menu service — availability confirmed during booking."
+  );
+}
+
 function toTreatment(
   seed: BoulevardMenuSeed,
   locationSlug: BookingLocation,
@@ -156,27 +259,29 @@ function toTreatment(
     key: `${locationSlug}/${seed.serviceSlug}`,
     locationSlug,
     serviceSlug: seed.serviceSlug,
-    displayName: seed.displayName,
+    displayName: publicDisplayName(seed),
     category: seed.category,
-    shortDescription:
-      seed.shortDescription ??
-      "Boulevard menu service — availability and pricing confirmed during booking.",
+    shortDescription: publicDescription(seed),
     image: media?.image,
     imageAlt: media?.imageAlt,
-    durationCopy: durationCopy(seed.durationMinutes),
-    listPriceCents:
-      seed.listPriceCents && seed.listPriceCents > 0
-        ? seed.listPriceCents
-        : undefined,
-    depositCents: pay.depositCents,
+    durationCopy: durationCopy(SHOWN_DURATION_MINUTES[seed.serviceSlug]),
+    listPriceCents: undefined,
+    depositCents: undefined,
     paymentRule: pay.paymentRule,
     isConsultation: seed.isConsultation,
     onlineHandoff: seed.onlineHandoff,
   };
 }
 
-const TREATMENTS: readonly GuidedTreatment[] = BOULEVARD_MENU_SEEDS.flatMap(
-  (seed) => seed.locations.map((location) => toTreatment(seed, location)),
+const MENU_SEEDS: readonly BoulevardMenuSeed[] = [
+  ...BOULEVARD_MENU_SEEDS,
+  WEIGHT_LOSS_SEED,
+];
+
+const TREATMENTS: readonly GuidedTreatment[] = MENU_SEEDS.flatMap((seed) =>
+  seed.locations
+    .filter((location) => OFFERED_SERVICE_SLUGS[location].has(seed.serviceSlug))
+    .map((location) => toTreatment(seed, location)),
 );
 
 const BY_KEY = new Map(TREATMENTS.map((t) => [t.key, t]));
@@ -265,6 +370,9 @@ export function mapIntentToTreatmentKey(input: {
       "hydrafacial-deluxe": "hydrafacial-deluxe",
       facial: "skin-health-consult",
       facials: "skin-health-consult",
+      "weight-loss": WEIGHT_LOSS_CONSULT_SERVICE,
+      "medical-weight-loss": WEIGHT_LOSS_CONSULT_SERVICE,
+      [WEIGHT_LOSS_CONSULT_SERVICE]: WEIGHT_LOSS_CONSULT_SERVICE,
     };
 
     const mapped = aliases[service] ?? service;
@@ -307,20 +415,10 @@ export function formatListPrice(cents: number | undefined): string | null {
 
 export function paymentRuleLabel(treatment: GuidedTreatment): string {
   switch (treatment.paymentRule) {
-    case "deposit": {
-      const amount = formatDeposit(treatment.depositCents);
-      if (amount) {
-        return `${amount} booking deposit (charged when confirmed)`;
-      }
-      if (treatment.onlineHandoff) {
-        return "Booking deposit required at confirmation";
-      }
-      return "Deposit/payment confirmed in booking app";
-    }
+    case "deposit":
     case "card_on_file":
-      return "Card on file required · $0 charged at booking";
     case "no_card":
-      return "No card required for this consult";
+      return "Payment is confirmed in Boulevard before you reserve.";
     default: {
       const _exhaustive: never = treatment.paymentRule;
       return _exhaustive;
@@ -329,8 +427,9 @@ export function paymentRuleLabel(treatment: GuidedTreatment): string {
 }
 
 /**
- * Exact service route when verified; otherwise location+category chooser.
- * Never invents an unmapped `/book/{location}/{unknown}` path.
+ * Existing booking-site route for this clinic and service.
+ * Weight loss uses its consult host. Unknown slugs fail closed.
+ * This overlay does not build a cart, calendar, or payment.
  */
 export function buildHandoffUrl(
   locationSlug: BookingLocation,
@@ -338,12 +437,9 @@ export function buildHandoffUrl(
 ): string | null {
   const treatment = resolveGuidedTreatment(locationSlug, serviceSlug);
   if (!treatment) return null;
-  if (treatment.onlineHandoff) {
-    return `https://book.experiencerella.com/book/${locationSlug}/${serviceSlug}`;
+  if (treatment.serviceSlug === WEIGHT_LOSS_CONSULT_SERVICE) {
+    return resolveWeightLossConsultHref(locationSlug);
   }
-  const categoryParam = treatment.category.toLowerCase();
-  const url = new URL("https://book.experiencerella.com/book");
-  url.searchParams.set("location", locationSlug);
-  url.searchParams.set("category", categoryParam);
-  return url.toString();
+  if (!treatment.onlineHandoff) return null;
+  return `https://book.experiencerella.com/book/${locationSlug}/${serviceSlug}`;
 }

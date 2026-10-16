@@ -1,10 +1,6 @@
 "use client";
 
-import {
-  formatDeposit,
-  paymentRuleLabel,
-  resolveGuidedTreatment,
-} from "@/lib/guided-booking";
+import { resolveGuidedTreatment } from "@/lib/guided-booking";
 import type { GuidedBookingState } from "@/lib/guided-booking";
 import { getGuidedLocation } from "@/lib/guided-booking";
 
@@ -61,14 +57,6 @@ export function VisitSummary({
                 <p className="text-sm font-medium text-ink">{treatment.displayName}</p>
                 {treatment.durationCopy ? (
                   <p className="text-xs text-silver">{treatment.durationCopy}</p>
-                ) : null}
-                <p className="mt-1 text-xs text-silver">
-                  {paymentRuleLabel(treatment)}
-                </p>
-                {treatment.depositCents != null ? (
-                  <p className="sr-only">
-                    Deposit {formatDeposit(treatment.depositCents)}
-                  </p>
                 ) : null}
               </div>
               {editable && onRemove ? (
