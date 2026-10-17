@@ -105,7 +105,7 @@ export function BookingModal({
       }
       const key = mapIntentToTreatmentKey({ ...intent, location, treatments });
       setState(prev => prev.locationSlug !== location ? prev : ({ ...prev, treatments,
-        selectedTreatmentKeys: key ? [key] : [], step: key ? "review" : "treatments", expandedCategories: [] }));
+        selectedTreatmentKeys: key ? [key] : [], step: key ? "review" : "treatments" }));
     }).catch(error => {
       if (!cancelled) setState(prev => ({ ...prev, error: error instanceof Error ? error.message : "The booking menu could not load. Please call Rella." }));
     }).finally(() => { if (!cancelled) setLoadingMeta(false); });
