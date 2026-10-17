@@ -8,6 +8,7 @@ import { ASSESSMENT_CONTACT_CONSENT, MARKETING_CONSENT } from "@/lib/guided-book
 import {
   formatPackageTotal,
   packageMenuLabel,
+  packageMenuDescription,
   type OwnedPackageWallet,
   type PackageContact,
   type PackageIntent,
@@ -66,7 +67,7 @@ function PackageReview({ review }: { review: PackagePurchaseReview }) {
   return (
     <div className="space-y-4 rounded-sm border border-rule/60 bg-ivory px-4 py-4">
       <h4 className="font-medium text-ink">{review.offering.displayName}</h4>
-      {review.offering.description ? <p className="text-sm font-light text-silver">{review.offering.description}</p> : null}
+      <p className="text-sm font-light text-silver">{packageMenuDescription(review.offering)}</p>
       <PackageBenefits offering={review.offering} />
       {total ? <p className="text-sm font-medium text-ink">Package purchase total: {total}</p>
         : <p role="alert" className="text-sm text-rose">The package total could not be verified. Please call Rella.</p>}
