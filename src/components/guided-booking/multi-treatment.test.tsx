@@ -43,7 +43,7 @@ describe("multi-treatment presentation", () => {
     expect(html.match(/aria-pressed="true"/g)).toHaveLength(2);
   });
   it("shows actual per-item clinic start times/providers rather than deriving a schedule from list durations", () => {
-    const html = renderToStaticMarkup(<VisitSummary state={state} editable={false} />);
+    const html = renderToStaticMarkup(<VisitSummary state={{ ...state, step: "complete" }} editable={false} />);
     expect(html).toContain("10:30 AM Pacific time");
     expect(html).toContain("11:15 AM Pacific time");
     expect(html).toContain("Provider One"); expect(html).toContain("Provider Two");

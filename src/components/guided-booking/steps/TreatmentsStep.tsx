@@ -1,7 +1,6 @@
 "use client";
 
 import {
-  formatListPrice,
   treatmentsByCategory,
 } from "@/lib/guided-booking";
 import type { BookingLocation } from "@/lib/booking-routes";
@@ -99,16 +98,11 @@ export function TreatmentsStep({
                           <p className="mt-1 text-sm font-light text-silver">
                             {treatment.shortDescription}
                           </p>
-                          <p className="mt-2 text-xs text-silver">
-                            {[
-                              treatment.durationCopy,
-                              formatListPrice(treatment.listPriceCents)
-                                ? `from ${formatListPrice(treatment.listPriceCents)}`
-                                : null,
-                            ]
-                              .filter(Boolean)
-                              .join(" · ")}
-                          </p>
+                          {treatment.durationCopy ? (
+                            <p className="mt-2 text-xs text-silver">
+                              {treatment.durationCopy}
+                            </p>
+                          ) : null}
                         </div>
                         <button
                           type="button"

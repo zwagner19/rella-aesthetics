@@ -69,10 +69,12 @@ export function VisitSummary({
                     {item.providerName ? <span className="block">{item.providerName}</span> : null}
                   </p>
                 ))}
-                <p className="mt-1 text-xs text-silver">
-                  {state.selectedTreatmentKeys.length > 1 ? "Amount confirmed for your complete visit before payment" : paymentRuleLabel(treatment)}
-                </p>
-                {state.selectedTreatmentKeys.length === 1 && treatment.depositCents != null ? (
+                {state.step !== "treatments" ? (
+                  <p className="mt-1 text-xs text-silver">
+                    {state.selectedTreatmentKeys.length > 1 ? "Amount confirmed for your complete visit before payment" : paymentRuleLabel(treatment)}
+                  </p>
+                ) : null}
+                {state.step !== "treatments" && state.selectedTreatmentKeys.length === 1 && treatment.depositCents != null ? (
                   <p className="sr-only">
                     Deposit {formatDeposit(treatment.depositCents)}
                   </p>
