@@ -33,6 +33,8 @@ export const initialGuidedBookingState: GuidedBookingState = {
     lastName: "",
     email: "",
     phone: "",
+    assessmentContactConsent: false,
+    marketingConsent: false,
   },
 };
 
@@ -301,13 +303,17 @@ export function updateClient(
   };
 }
 
-export function clientLooksComplete(client: GuidedBookingState["client"]): boolean {
+export function contactFieldsLookComplete(client: GuidedBookingState["client"]): boolean {
   return (
     client.firstName.trim().length >= 1 &&
     client.lastName.trim().length >= 1 &&
     /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(client.email.trim()) &&
     client.phone.replace(/\D/g, "").length >= 10
   );
+}
+
+export function clientLooksComplete(client: GuidedBookingState["client"]): boolean {
+  return contactFieldsLookComplete(client) && client.assessmentContactConsent === true;
 }
 
 export function progressLabel(step: GuidedBookingStep): string {

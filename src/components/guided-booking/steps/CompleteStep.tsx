@@ -1,7 +1,10 @@
 "use client";
 
 import {
+  ASSESSMENT_CONTACT_CONSENT,
+  MARKETING_CONSENT,
   clientLooksComplete,
+  contactFieldsLookComplete,
   type GuidedBookingState,
 } from "@/lib/guided-booking";
 
@@ -25,6 +28,7 @@ export function CompleteStep({
   submitting: boolean;
 }) {
   const ready = clientLooksComplete(state.client);
+  const contactReady = contactFieldsLookComplete(state.client);
 
   if (state.confirmationId) {
     return (
@@ -83,6 +87,30 @@ export function CompleteStep({
         ))}
       </div>
 
+      <div className="space-y-3">
+        <label className="flex items-start gap-3 text-sm font-light leading-relaxed text-ink/80">
+          <input
+            type="checkbox"
+            className="mt-1 size-4 shrink-0 accent-rose"
+            checked={state.client.assessmentContactConsent}
+            onChange={(event) =>
+              onChange({ assessmentContactConsent: event.target.checked })
+            }
+            required
+          />
+          <span>{ASSESSMENT_CONTACT_CONSENT}</span>
+        </label>
+        <label className="flex items-start gap-3 text-sm font-light leading-relaxed text-ink/80">
+          <input
+            type="checkbox"
+            className="mt-1 size-4 shrink-0 accent-rose"
+            checked={state.client.marketingConsent}
+            onChange={(event) => onChange({ marketingConsent: event.target.checked })}
+          />
+          <span>{MARKETING_CONSENT}</span>
+        </label>
+      </div>
+
       {mode === "live" ? (
         <div className="space-y-4">
           {state.quote ? (
@@ -99,7 +127,13 @@ export function CompleteStep({
             state.quote.needsCard ? (
               cardFrameOrigin ? <SecureCardFrame origin={cardFrameOrigin} busy={submitting} onToken={onLiveComplete} /> : <p role="alert">Secure payment is unavailable. Please call Rella.</p>
             ) : <button type="button" disabled={submitting} onClick={() => void onLiveComplete()} className="rounded-full border-[1.5px] border-rose bg-rose px-8 py-3.5 text-[0.6875rem] font-bold uppercase tracking-[0.18em] text-white disabled:opacity-50">{submitting ? "Confirming…" : "Confirm booking"}</button>
-          ) : <p className="text-sm text-silver">Complete your contact details to continue.</p>}
+          ) : (
+            <p className="text-sm text-silver">
+              {contactReady
+                ? "Confirm the required contact consent to continue."
+                : "Complete your contact details to continue."}
+            </p>
+          )}
         </div>
       ) : (
         <button type="button" disabled={!ready || submitting} onClick={onMockComplete} className="rounded-full border-[1.5px] border-rose bg-rose px-8 py-3.5 text-[0.6875rem] font-bold uppercase tracking-[0.18em] text-white disabled:opacity-50">{submitting ? "Confirming…" : "Confirm mock booking"}</button>
