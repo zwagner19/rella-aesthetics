@@ -41,11 +41,17 @@ Reviewed her website-related iMessages from October 15–16, including the detai
 
 ## Remaining launch evidence
 
-- Service/provider/date coverage at both locations and hold/payment/checkout/durable-confirmation behavior in an approved sandbox or supervised test. The Napa availability check above does not establish payment or appointment completion; earlier all-six-step browser completion used a fixture only.
+- An approved sandbox or supervised payment/checkout/durable-confirmation test, plus broader service/provider combinations. The real preview checks below establish multi-treatment availability and hold/release, without a payment or appointment; earlier all-six-step browser completion used a fixture only.
 - The deposit chat's live policy/amount/credit reconciliation, plus attribution and consent continuity.
 - Boulevard's master records may still expose categories that this preview excludes at the public API boundary; source cleanup can be performed separately.
 - Required options are rejected safely if later added; the original design does not collect optional extras.
 
 Tests, TypeScript, targeted booking ESLint and both production builds pass. Full-repository ESLint has a pre-existing unrelated Header.tsx:39 effect error; that design file is untouched.
+
+## Real paired-preview verification — 2026-10-17
+
+Established Patient Tox and Deluxe Hydrafacial were selected together at both clinics, with Any available for tox and a named eligible Hydrafacial provider. Both returned two provider groups and 31 joint available dates. The tested future date had four combined times in Napa and six in Vacaville. A temporary reservation returned the two actual providers and start times, hold expiry and refreshed native aggregate quote at each clinic. Each hold was successfully released through the new verified endpoint; direct native readback confirmed clearing before both test carts' selected items were removed. No client information, card, payment, checkout or appointment was submitted.
+
+The phone view retains both Add selections and presents provider choices separately per treatment, using Amie's existing colors, type, cards and six-step layout. Step navigation returns the content to the top so the prior treatment-list scroll does not hide the next step's heading. Source page files, global styles and image assets remain untouched.
 
 Paired drafts: website https://github.com/zwagner19/rella-aesthetics/pull/42 and backend https://github.com/zwagner19/rella-booking/pull/67. Both have public test previews; neither is merged or launched on the production website.

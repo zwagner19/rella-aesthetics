@@ -52,6 +52,7 @@ export function BookingModal({
 }) {
   const titleId = useId();
   const dialogRef = useRef<HTMLDivElement>(null);
+  const contentRef = useRef<HTMLDivElement>(null);
   const closeRef = useRef<HTMLButtonElement>(null);
   const [state, setState] = useState<GuidedBookingState>(() => ({
     ...bootstrapFromIntent(intent),
@@ -67,6 +68,10 @@ export function BookingModal({
   const [times, setTimes] = useState<GuidedSlot[]>([]);
   const [loadingMeta, setLoadingMeta] = useState(false);
   const allProvidersChosen = providersComplete(state);
+
+  useEffect(() => {
+    if (contentRef.current) contentRef.current.scrollTop = 0;
+  }, [state.step]);
 
   useEffect(() => {
     if (backend.verificationPending?.()) {
@@ -346,7 +351,7 @@ export function BookingModal({
           </button>
         </header>
 
-        <div className="min-h-0 flex-1 overflow-y-auto px-4 py-5 md:px-6">
+        <div ref={contentRef} className="min-h-0 flex-1 overflow-y-auto px-4 py-5 md:px-6">
           <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_240px]">
             <div>
               {state.step === "location" ? (
