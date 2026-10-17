@@ -14,6 +14,7 @@ import type {
 import { GUIDED_BOOKING_STEPS } from "./types";
 
 export const initialGuidedBookingState: GuidedBookingState = {
+  treatments: [],
   step: "location",
   locationSlug: null,
   selectedTreatmentKeys: [],
@@ -102,6 +103,8 @@ export function selectLocation(
   return {
     ...state,
     locationSlug,
+    treatments: [],
+    quote: undefined,
     selectedTreatmentKeys: keepTreatments,
     providerId: null,
     date: "",
@@ -122,6 +125,7 @@ export function toggleTreatment(
   const treatment = resolveGuidedTreatment(
     state.locationSlug,
     treatmentKey.split("/")[1] ?? "",
+    state.treatments,
   );
   if (!treatment || treatment.key !== treatmentKey) {
     return {

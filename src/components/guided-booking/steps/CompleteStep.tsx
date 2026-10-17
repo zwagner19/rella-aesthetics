@@ -1,43 +1,39 @@
 "use client";
 
 import {
-  buildHandoffUrl,
   clientLooksComplete,
   type GuidedBookingState,
 } from "@/lib/guided-booking";
+
+import { SecureCardFrame } from "../SecureCardFrame";
 
 export function CompleteStep({
   state,
   mode,
   onChange,
   onMockComplete,
-  onHandoff,
   submitting,
+  cardFrameOrigin,
+  onLiveComplete,
 }: {
   state: GuidedBookingState;
-  mode: "mock" | "handoff";
+  mode: "mock" | "live";
+  cardFrameOrigin?: string;
+  onLiveComplete: (token?: string) => Promise<void>;
   onChange: (patch: Partial<GuidedBookingState["client"]>) => void;
   onMockComplete?: () => void;
-  onHandoff: (url: string) => void;
   submitting: boolean;
 }) {
-  const treatmentKey = state.selectedTreatmentKeys[0];
-  const serviceSlug = treatmentKey?.split("/")[1];
-  const handoffUrl =
-    state.locationSlug && serviceSlug
-      ? buildHandoffUrl(state.locationSlug, serviceSlug)
-      : null;
   const ready = clientLooksComplete(state.client);
 
   if (state.confirmationId) {
     return (
       <div className="space-y-4" role="status">
         <h3 className="text-xl font-medium tracking-[-0.02em] text-ink">
-          Booking confirmed
+          {state.confirmationPending ? "Booking verification pending" : "Booking confirmed"}
         </h3>
         <p className="text-sm font-light text-silver">
-          Confirmation reference {state.confirmationId}. This was a mock
-          confirmation for tests — no Boulevard appointment was created.
+          {mode === "mock" ? "This was a test confirmation; no appointment was created." : state.confirmationPending ? "Please call Rella to verify your appointment before booking again." : "Your appointment has been confirmed by Rella’s booking system."}
         </p>
       </div>
     );
@@ -50,9 +46,7 @@ export function CompleteStep({
           Complete your booking
         </h3>
         <p className="mt-2 text-sm font-light text-silver">
-          {mode === "handoff"
-            ? "Enter your details, then continue to Rella’s secure booking app to pick a live Boulevard time and pay any required deposit. Appointments are created only after that confirmation succeeds."
-            : "Mock mode can confirm without Boulevard. Production never creates carts from this marketing site session."}
+          {mode === "live" ? "Enter your details to confirm your appointment securely with Boulevard." : "This is a test booking."}
         </p>
       </div>
 
@@ -89,33 +83,17 @@ export function CompleteStep({
         ))}
       </div>
 
-      {mode === "handoff" ? (
-        handoffUrl ? (
-          <a
-            href={handoffUrl}
-            data-guided-booking-handoff="true"
-            onClick={() => onHandoff(handoffUrl)}
-            className={`inline-flex items-center justify-center rounded-full border-[1.5px] border-rose bg-rose px-8 py-3.5 text-[0.6875rem] font-bold uppercase tracking-[0.18em] text-white ${
-              ready ? "" : "pointer-events-none opacity-50"
-            }`}
-            aria-disabled={!ready}
-          >
-            Continue on booking app
-          </a>
-        ) : (
-          <p className="text-sm text-rose" role="alert">
-            This treatment mapping is unknown — booking refused (fail closed).
-          </p>
-        )
+      {mode === "live" ? (
+        <div className="space-y-4">
+          {state.quote ? <p className="text-sm text-silver">Required to book: {new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(state.quote.depositCents / 100)}</p> : null}
+          {ready && state.quote ? (
+            state.quote.needsCard ? (
+              cardFrameOrigin ? <SecureCardFrame origin={cardFrameOrigin} busy={submitting} onToken={onLiveComplete} /> : <p role="alert">Secure payment is unavailable. Please call Rella.</p>
+            ) : <button type="button" disabled={submitting} onClick={() => void onLiveComplete()} className="rounded-full border-[1.5px] border-rose bg-rose px-8 py-3.5 text-[0.6875rem] font-bold uppercase tracking-[0.18em] text-white disabled:opacity-50">{submitting ? "Confirming…" : "Confirm booking"}</button>
+          ) : <p className="text-sm text-silver">Complete your contact details to continue.</p>}
+        </div>
       ) : (
-        <button
-          type="button"
-          disabled={!ready || submitting}
-          onClick={onMockComplete}
-          className="rounded-full border-[1.5px] border-rose bg-rose px-8 py-3.5 text-[0.6875rem] font-bold uppercase tracking-[0.18em] text-white disabled:opacity-50"
-        >
-          {submitting ? "Confirming…" : "Confirm mock booking"}
-        </button>
+        <button type="button" disabled={!ready || submitting} onClick={onMockComplete} className="rounded-full border-[1.5px] border-rose bg-rose px-8 py-3.5 text-[0.6875rem] font-bold uppercase tracking-[0.18em] text-white disabled:opacity-50">{submitting ? "Confirming…" : "Confirm mock booking"}</button>
       )}
     </div>
   );

@@ -17,7 +17,7 @@ export const GUIDED_BOOKING_STEPS: readonly GuidedBookingStep[] = [
   "complete",
 ] as const;
 
-export type PaymentRuleCopy = "deposit" | "card_on_file" | "no_card";
+export type PaymentRuleCopy = "deposit" | "card_on_file" | "no_card" | "pending";
 
 export interface GuidedLocation {
   slug: BookingLocation;
@@ -35,7 +35,7 @@ export interface GuidedTreatment {
   serviceSlug: string;
   displayName: string;
   /** Boulevard menu category (rella-booking / Client API). */
-  category: "Injectables" | "Laser" | "Microneedling" | "Facials" | "Peels";
+  category: string;
   shortDescription: string;
   image?: string;
   imageAlt?: string;
@@ -78,6 +78,9 @@ export interface GuidedVisitItem {
 }
 
 export interface GuidedBookingState {
+  treatments?: GuidedTreatment[];
+  quote?: { depositCents: number; totalCents: number; needsCard: boolean };
+  confirmationPending?: boolean;
   step: GuidedBookingStep;
   locationSlug: BookingLocation | null;
   selectedTreatmentKeys: string[];
@@ -129,13 +132,18 @@ export interface AvailabilityResult {
   dates: string[];
   /** Next available slots for quick pick. */
   nextAvailable: GuidedSlot[];
-  /** Honest flag: mock/sandbox only until Boulevard Client API is wired. */
+  /** True only for availability returned by the shared booking backend. */
   live: boolean;
   message?: string;
 }
 
 export interface GuidedBookingBackend {
-  readonly mode: "mock" | "handoff";
+  readonly mode: "mock" | "live";
+  listTreatments?(location: BookingLocation): Promise<GuidedTreatment[]>;
+  reserve?(slot: GuidedSlot): Promise<void>;
+  cardFrameOrigin?(): string | undefined;
+  attachPayment?(token: string): Promise<void>;
+  quote?(): { depositCents: number; totalCents: number; needsCard: boolean } | undefined;
   listProviders(input: {
     locationSlug: BookingLocation;
     treatmentKeys: string[];
@@ -153,8 +161,7 @@ export interface GuidedBookingBackend {
     date: string;
   }): Promise<GuidedSlot[]>;
   /**
-   * Mutations are intentionally unavailable on the marketing site until a
-   * sandbox Client API path exists. Mock backend may confirm; handoff never.
+   * Live completion delegates to the existing durable booking finalizer.
    */
   complete?(input: {
     locationSlug: BookingLocation;
@@ -162,5 +169,5 @@ export interface GuidedBookingBackend {
     providerId: string | null;
     slot: GuidedSlot;
     client: GuidedBookingState["client"];
-  }): Promise<{ ok: true; confirmationId: string } | { ok: false; reason: string }>;
+  }): Promise<{ ok: true; confirmationId: string; pending?: boolean } | { ok: false; reason: string }>;
 }

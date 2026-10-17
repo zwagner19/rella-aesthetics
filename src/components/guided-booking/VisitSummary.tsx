@@ -22,7 +22,7 @@ export function VisitSummary({
     .map((key) => {
       const [, service] = key.split("/");
       if (!state.locationSlug || !service) return null;
-      return resolveGuidedTreatment(state.locationSlug, service);
+      return resolveGuidedTreatment(state.locationSlug, service, state.treatments);
     })
     .filter(Boolean);
 

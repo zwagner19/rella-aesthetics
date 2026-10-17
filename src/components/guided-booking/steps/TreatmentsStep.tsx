@@ -23,7 +23,7 @@ export function TreatmentsStep({
   onToggleCategory: (category: string) => void;
   onToggleTreatment: (key: string) => void;
 }) {
-  const groups = treatmentsByCategory(locationSlug, state.search);
+  const groups = treatmentsByCategory(locationSlug, state.search, state.treatments);
   // Default: all Boulevard categories collapsed after location — expand on tap.
   const expanded = new Set(state.expandedCategories);
 

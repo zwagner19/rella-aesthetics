@@ -21,7 +21,7 @@ export function ReviewStep({
     .map((key) => {
       const service = key.split("/")[1];
       if (!state.locationSlug || !service) return null;
-      return resolveGuidedTreatment(state.locationSlug, service);
+      return resolveGuidedTreatment(state.locationSlug, service, state.treatments);
     })
     .filter(Boolean);
 

@@ -10,6 +10,7 @@ import {
 import type { BookingIntent } from "@/lib/booking-routes";
 import {
   bootstrapFromIntent,
+  mapIntentToTreatmentKey,
   canGoBack,
   emitGuidedBookingEvent,
   goBack,
@@ -54,12 +55,32 @@ export function BookingModal({
   const [state, setState] = useState<GuidedBookingState>(() =>
     bootstrapFromIntent(intent),
   );
+  const submittingRef = useRef(false);
+  const reservingRef = useRef(false);
+  const [reservationUncertain, setReservationUncertain] = useState(false);
   const [providers, setProviders] = useState<GuidedProvider[]>([]);
   const [availability, setAvailability] = useState<AvailabilityResult | null>(
     null,
   );
   const [times, setTimes] = useState<GuidedSlot[]>([]);
   const [loadingMeta, setLoadingMeta] = useState(false);
+
+  useEffect(() => {
+    if (!state.locationSlug || !backend.listTreatments) return;
+    const location = state.locationSlug;
+    let cancelled = false;
+    setLoadingMeta(true);
+    setState(prev => ({ ...prev, treatments: [], selectedTreatmentKeys: [], error: null }));
+    backend.listTreatments(location).then(treatments => {
+      if (cancelled) return;
+      const key = mapIntentToTreatmentKey({ ...intent, location, treatments });
+      setState(prev => prev.locationSlug !== location ? prev : ({ ...prev, treatments,
+        selectedTreatmentKeys: key ? [key] : [], step: key ? "review" : "treatments", expandedCategories: [] }));
+    }).catch(error => {
+      if (!cancelled) setState(prev => ({ ...prev, error: error instanceof Error ? error.message : "The booking menu could not load. Please call Rella." }));
+    }).finally(() => { if (!cancelled) setLoadingMeta(false); });
+    return () => { cancelled = true; };
+  }, [backend, state.locationSlug, intent]);
 
   useEffect(() => {
     const previous = document.body.style.overflow;
@@ -83,7 +104,7 @@ export function BookingModal({
       setProviders([]);
       return;
     }
-    if (state.step !== "provider" && state.step !== "datetime") return;
+    if (state.step !== "provider") return;
     let cancelled = false;
     setLoadingMeta(true);
     backend
@@ -92,8 +113,9 @@ export function BookingModal({
         treatmentKeys: state.selectedTreatmentKeys,
       })
       .then((list) => {
-        if (!cancelled) setProviders(list);
+        if (!cancelled) { setProviders(list); setState(prev => ({ ...prev, quote: backend.quote?.() })); }
       })
+      .catch(error => { if (!cancelled) setState(prev => ({ ...prev, error: error instanceof Error ? error.message : "Booking could not load. Please call Rella." })); })
       .finally(() => {
         if (!cancelled) setLoadingMeta(false);
       });
@@ -112,6 +134,10 @@ export function BookingModal({
     }
     let cancelled = false;
     setLoadingMeta(true);
+    setAvailability(null);
+    setTimes([]);
+    setReservationUncertain(false);
+    setState(prev => ({ ...prev, date: "", slot: null, quote: undefined, availabilityUnverified: true, error: null }));
     backend
       .loadAvailability({
         locationSlug: state.locationSlug,
@@ -124,9 +150,11 @@ export function BookingModal({
           setState((prev) => ({
             ...prev,
             availabilityUnverified: !result.live,
+            quote: backend.quote?.(),
           }));
         }
       })
+      .catch(error => { if (!cancelled) setState(prev => ({ ...prev, error: error instanceof Error ? error.message : "Booking could not load. Please call Rella." })); })
       .finally(() => {
         if (!cancelled) setLoadingMeta(false);
       });
@@ -147,6 +175,7 @@ export function BookingModal({
       return;
     }
     let cancelled = false;
+    setTimes([]);
     backend
       .loadTimesForDate({
         locationSlug: state.locationSlug,
@@ -156,7 +185,7 @@ export function BookingModal({
       })
       .then((slots) => {
         if (!cancelled) setTimes(slots);
-      });
+      }).catch(error => { if (!cancelled) setState(prev => ({ ...prev, error: error instanceof Error ? error.message : "Times could not load. Please call Rella." })); });
     return () => {
       cancelled = true;
     };
@@ -174,7 +203,8 @@ export function BookingModal({
 
   const stepNumber = GUIDED_BOOKING_STEPS.indexOf(state.step) + 1;
 
-  function primaryAction() {
+  async function primaryAction() {
+    if (loadingMeta || state.busy || reservingRef.current || (state.step === "datetime" && reservationUncertain)) return;
     switch (state.step) {
       case "location":
         if (!state.locationSlug) {
@@ -201,12 +231,19 @@ export function BookingModal({
         patch(goToStep(state, "datetime"));
         return;
       case "datetime":
-        // Handoff mode: allow continue without a live slot.
-        if (backend.mode === "mock" && !state.slot) {
+        // A verified slot must be reserved before collecting payment.
+        if (!state.slot || (backend.mode === "live" && state.availabilityUnverified)) {
           patch({ ...state, error: "Choose a time to continue." });
           return;
         }
-        patch(goToStep(state, "complete"));
+        if (backend.reserve && state.slot) {
+          reservingRef.current = true;
+          patch({ ...state, busy: true });
+          try { await backend.reserve(state.slot); }
+          catch { setReservationUncertain(true); patch({ ...state, busy: false, error: "We could not verify that time. Please call Rella before continuing." }); return; }
+          finally { reservingRef.current = false; }
+        }
+        patch({ ...goToStep(state, "complete"), busy: false });
         return;
       case "complete":
         return;
@@ -217,51 +254,24 @@ export function BookingModal({
     }
   }
 
-  async function mockComplete() {
-    if (!backend.complete || !state.locationSlug || !state.slot) return;
+  async function completeBooking(token?: string) {
+    if (submittingRef.current || !backend.complete || !state.locationSlug || !state.slot) return;
+    if (backend.mode === "live" && state.quote?.needsCard && !token) return;
+    submittingRef.current = true;
     patch({ ...state, busy: true, error: null });
-    const result = await backend.complete({
-      locationSlug: state.locationSlug,
-      treatmentKeys: state.selectedTreatmentKeys,
-      providerId: state.providerId,
-      slot: state.slot,
-      client: state.client,
-    });
-    if (!result.ok) {
-      patch({ ...state, busy: false, error: result.reason });
-      return;
-    }
-    emitGuidedBookingEvent({
-      type: "booking_confirmed",
-      confirmationId: result.confirmationId,
-      at: Date.now(),
-    });
-    patch({
-      ...state,
-      busy: false,
-      confirmationId: result.confirmationId,
-      error: null,
-    });
+    try {
+      if (token && backend.attachPayment) await backend.attachPayment(token);
+      const result = await backend.complete({ locationSlug: state.locationSlug,
+        treatmentKeys: state.selectedTreatmentKeys, providerId: state.providerId, slot: state.slot, client: state.client });
+      if (!result.ok) { patch({ ...state, busy: false, error: result.reason }); return; }
+      if (!result.pending) emitGuidedBookingEvent({ type: "booking_confirmed", confirmationId: result.confirmationId, at: Date.now() });
+      patch({ ...state, busy: false, confirmationId: result.confirmationId, confirmationPending: result.pending, error: null });
+    } catch {
+      patch({ ...state, busy: false, error: "We could not verify your booking. Please call Rella before trying again." });
+    } finally { submittingRef.current = false; }
   }
 
-  function handleHandoff(url: string) {
-    const serviceSlug = state.selectedTreatmentKeys[0]?.split("/")[1];
-    if (!state.locationSlug || !serviceSlug) return;
-    emitGuidedBookingEvent({
-      type: "booking_handoff",
-      locationSlug: state.locationSlug,
-      serviceSlug,
-      at: Date.now(),
-    });
-    void url;
-  }
-
-  const primaryLabel =
-    state.step === "complete"
-      ? null
-      : state.step === "datetime" && backend.mode === "handoff"
-        ? "Continue"
-        : "Continue";
+  const primaryLabel = state.step === "complete" ? null : "Continue";
 
   return (
     <div className="fixed inset-0 z-[80]" role="presentation">
@@ -356,8 +366,9 @@ export function BookingModal({
                   onChange={(clientPatch) =>
                     patch(updateClient(state, clientPatch))
                   }
-                  onMockComplete={mockComplete}
-                  onHandoff={handleHandoff}
+                  onMockComplete={completeBooking}
+                  cardFrameOrigin={backend.cardFrameOrigin?.()}
+                  onLiveComplete={completeBooking}
                 />
               ) : null}
               {state.error ? (
@@ -380,7 +391,7 @@ export function BookingModal({
           <button
             type="button"
             onClick={() => patch(goBack(state))}
-            disabled={!canGoBack(state)}
+            disabled={state.busy || !canGoBack(state)}
             className="min-h-11 px-3 text-[0.6875rem] font-bold uppercase tracking-[0.16em] text-ink disabled:opacity-35"
           >
             Back
@@ -389,6 +400,7 @@ export function BookingModal({
             <button
               type="button"
               onClick={primaryAction}
+              disabled={loadingMeta || state.busy || (state.step === "datetime" && reservationUncertain)}
               className="rella-cta-rect rella-cta-rect--filled"
             >
               {primaryLabel}

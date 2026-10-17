@@ -1,201 +1,62 @@
-import { describe, expect, it, vi } from "vitest";
-import {
-  ALLOWS_MULTI_TREATMENT,
-  BOULEVARD_CATEGORY_ORDER,
-  bootstrapFromIntent,
-  buildHandoffUrl,
-  createMockBackend,
-  createHandoffBackend,
-  emitGuidedBookingEvent,
-  goToStep,
-  mapIntentToTreatmentKey,
-  resolveGuidedTreatment,
-  selectLocation,
-  toggleTreatment,
-  treatmentsByCategory,
-  clientLooksComplete,
-} from "./index";
-
-describe("guided booking catalog", () => {
-  it("resolves verified location/service pairs and fails closed on unknown", () => {
-    expect(resolveGuidedTreatment("napa", "botox")?.displayName).toBe(
-      "New Patient Tox",
-    );
-    expect(resolveGuidedTreatment("napa", "iv-hydration")).toBeNull();
-    expect(resolveGuidedTreatment("vacaville", "universal-peel")?.key).toBe(
-      "vacaville/universal-peel",
-    );
-    expect(mapIntentToTreatmentKey({ location: "napa", service: "mystery" })).toBeNull();
-    expect(mapIntentToTreatmentKey({ location: "napa", service: "botox" })).toBe(
-      "napa/botox",
-    );
-    expect(buildHandoffUrl("napa", "botox")).toBe(
-      "https://book.experiencerella.com/book/napa/botox",
-    );
-    expect(buildHandoffUrl("napa", "unknown")).toBeNull();
+import { beforeEach, describe, expect, it, vi } from "vitest";
+import { backendTreatments, resolveGuidedTreatment, treatmentsByCategory, mapIntentToTreatmentKey, bootstrapFromIntent, selectLocation, toggleTreatment, goToStep, clientLooksComplete, createDefaultBackend } from "./index";
+const services = [{ serviceSlug: "botox", displayName: "New Patient Tox", category: "Injectables", description: "Consultation" }, { serviceSlug: "live-new-service", displayName: "New facial", category: "New category", description: "Live description" }];
+const catalog = backendTreatments("napa", services);
+beforeEach(() => { vi.restoreAllMocks(); });
+describe("shared booking menu and state", () => {
+  it("has no fallback catalog and reflects new backend services and category order", () => {
+    expect(resolveGuidedTreatment("napa", "botox")).toBeNull();
+    expect(resolveGuidedTreatment("napa", "live-new-service", catalog)?.displayName).toBe("New facial");
+    expect(resolveGuidedTreatment("vacaville", "botox", catalog)).toBeNull();
+    expect(treatmentsByCategory("napa", "", catalog).map(g => g.category)).toEqual(["Injectables", "New category"]);
+    expect(treatmentsByCategory("napa", "facial", catalog)).toHaveLength(1);
+    expect(mapIntentToTreatmentKey({ location: "napa", service: "tox", treatments: catalog })).toBe("napa/botox");
   });
-
-  it("disallows multi-treatment until Boulevard combination scheduling is verified", () => {
-    expect(ALLOWS_MULTI_TREATMENT).toBe(false);
-    let state = selectLocation(bootstrapFromIntent({}), "napa");
-    state = toggleTreatment(state, "napa/botox");
-    state = toggleTreatment(state, "napa/hydrafacial");
-    expect(state.selectedTreatmentKeys).toEqual(["napa/hydrafacial"]);
+  it("waits for the backend before selecting a CTA and clears location-dependent state", () => {
+    const initial = bootstrapFromIntent({ location: "napa", service: "botox" });
+    expect(initial.step).toBe("treatments"); expect(initial.selectedTreatmentKeys).toEqual([]);
+    let state: import("./types").GuidedBookingState = { ...initial, treatments: catalog };
+    state = toggleTreatment(state, "napa/botox"); state = toggleTreatment(state, "napa/live-new-service");
+    expect(state.selectedTreatmentKeys).toEqual(["napa/live-new-service"]);
+    const changed = selectLocation(state, "vacaville");
+    expect(changed.treatments).toEqual([]); expect(changed.selectedTreatmentKeys).toEqual([]); expect(changed.slot).toBeNull();
+    expect(goToStep(changed, "review").step).toBe("treatments");
+    expect(changed.expandedCategories).toEqual([]);
+  });
+  it("validates contact information", () => {
+    expect(clientLooksComplete({ firstName: "A", lastName: "B", email: "bad", phone: "707" })).toBe(false);
+    expect(clientLooksComplete({ firstName: "A", lastName: "B", email: "fixture@example.test", phone: "7073582928" })).toBe(true);
   });
 });
-
-describe("guided booking machine", () => {
-  it("bootstraps location and known treatment into review", () => {
-    const state = bootstrapFromIntent({ location: "napa", service: "botox" });
-    expect(state.step).toBe("review");
-    expect(state.selectedTreatmentKeys).toEqual(["napa/botox"]);
-  });
-
-  it("fails closed when advancing without a treatment", () => {
-    const state = goToStep(
-      selectLocation(bootstrapFromIntent({}), "vacaville"),
-      "review",
-    );
-    expect(state.step).toBe("treatments");
-    expect(state.error).toMatch(/Add a treatment/i);
-  });
-
-  it("validates client fields before complete", () => {
-    expect(
-      clientLooksComplete({
-        firstName: "A",
-        lastName: "B",
-        email: "bad",
-        phone: "707",
-      }),
-    ).toBe(false);
-    expect(
-      clientLooksComplete({
-        firstName: "Ada",
-        lastName: "Lovelace",
-        email: "ada@example.com",
-        phone: "7073582928",
-      }),
-    ).toBe(true);
-  });
-});
-
-describe("guided booking backends", () => {
-  it("mock backend labels availability as non-live and can confirm without Boulevard", async () => {
-    const backend = createMockBackend();
-    expect(backend.mode).toBe("mock");
-    const availability = await backend.loadAvailability({
-      locationSlug: "napa",
-      treatmentKeys: ["napa/botox"],
-      providerId: "any-available",
+describe("complete shared backend contract", () => {
+  it("uses live menu, selection, availability, reservation, token and durable confirmation", async () => {
+    const calls: Array<{operation: string; body: Record<string, unknown> | undefined}> = [];
+    const fetcher = vi.spyOn(globalThis, "fetch").mockImplementation(async (url, init) => {
+      const operation = String(url).split("/").pop()!.split("?")[0];
+      const body = init?.body ? JSON.parse(String(init.body)) : undefined; calls.push({ operation, body });
+      const data = operation === "menu" ? { services, cardFrameOrigin: "https://book.experiencerella.com" }
+        : operation === "selection" ? { providers: [{ id: "any-available", displayName: "Any available provider", anyAvailable: true }], dates: body?.provider ? ["2026-11-01"] : [], quote: body?.provider ? { depositCents: 5000, totalCents: 20000, needsCard: true } : undefined }
+        : operation === "times" ? { times: [{ id: "opaque-time", startTime: "2026-11-01T18:00:00Z" }] }
+        : operation === "checkout" ? { confirmation: "CONFIRMED" } : {};
+      return Response.json({ ok: true, ...data });
     });
-    expect(availability.live).toBe(false);
-    expect(availability.dates.length).toBeGreaterThan(0);
-    const complete = await backend.complete?.({
-      locationSlug: "napa",
-      treatmentKeys: ["napa/botox"],
-      providerId: "any-available",
-      slot: availability.nextAvailable[0],
-      client: {
-        firstName: "Test",
-        lastName: "User",
-        email: "test@example.com",
-        phone: "7073582928",
-      },
-    });
-    expect(complete?.ok).toBe(true);
+    const backend = createDefaultBackend(); expect(backend.mode).toBe("live");
+    expect(await backend.listTreatments!("napa")).toEqual(catalog);
+    const input = { locationSlug: "napa" as const, treatmentKeys: ["napa/botox"], providerId: "any-available" };
+    expect(await backend.listProviders(input)).toHaveLength(1);
+    expect((await backend.loadAvailability(input)).dates).toEqual(["2026-11-01"]);
+    const times = await backend.loadTimesForDate!({ ...input, date: "2026-11-01" });
+    await backend.reserve!(times[0]); await backend.attachPayment!("opaque-vault-token");
+    const result = await backend.complete!({ ...input, slot: times[0], client: { firstName: "Fixture", lastName: "User", email: "fixture@example.test", phone: "7073582928" } });
+    expect(result).toMatchObject({ ok: true, confirmationId: "confirmed" });
+    expect(calls.map(c => c.operation)).toEqual(["menu", "selection", "menu", "selection", "times", "reserve", "payment", "checkout"]);
+    expect(calls.find(c => c.operation === "payment")?.body).toEqual({ token: "opaque-vault-token" });
+    expect(backend.quote!()?.depositCents).toBe(5000);
+    expect(fetcher).toHaveBeenCalledTimes(8);
   });
-
-  it("handoff backend never invents live availability or complete mutations", async () => {
-    const backend = createHandoffBackend();
-    expect(backend.mode).toBe("handoff");
-    expect(backend.complete).toBeUndefined();
-    const availability = await backend.loadAvailability({
-      locationSlug: "napa",
-      treatmentKeys: ["napa/botox"],
-      providerId: "any-available",
-    });
-    expect(availability.live).toBe(false);
-    expect(availability.dates).toEqual([]);
-    expect(availability.nextAvailable).toEqual([]);
-  });
-});
-
-describe("guided booking analytics", () => {
-  it("emits open and handoff without PII", () => {
-    const sink = vi.fn();
-    emitGuidedBookingEvent(
-      {
-        type: "booking_open",
-        intent: { location: "napa", service: "botox" },
-        at: 1,
-      },
-      sink,
-    );
-    emitGuidedBookingEvent(
-      {
-        type: "booking_handoff",
-        locationSlug: "napa",
-        serviceSlug: "botox",
-        at: 2,
-      },
-      sink,
-    );
-    expect(sink).toHaveBeenCalledTimes(2);
-    expect(sink.mock.calls[0][0].type).toBe("booking_open");
-    expect(JSON.stringify(sink.mock.calls)).not.toMatch(/@|phone|ssn/i);
-  });
-});
-
-
-describe("guided booking Boulevard categories", () => {
-  it("uses Boulevard menu category names and order", () => {
-    expect([...BOULEVARD_CATEGORY_ORDER]).toEqual([
-      "Injectables",
-      "Laser",
-      "Microneedling",
-      "Facials",
-      "Peels",
-    ]);
-    const groups = treatmentsByCategory("napa");
-    expect(groups.map((g) => g.category)).toEqual([
-      "Injectables",
-      "Laser",
-      "Microneedling",
-      "Facials",
-      "Peels",
-    ]);
-    expect(groups.every((g) => g.category !== "Weight Loss")).toBe(true);
-    const total = groups.reduce((n, g) => n + g.treatments.length, 0);
-    expect(total).toBeGreaterThan(40);
-    expect(
-      groups
-        .find((g) => g.category === "Injectables")
-        ?.treatments.some((x) => x.displayName === "Sculptra"),
-    ).toBe(true);
-    expect(
-      groups
-        .find((g) => g.category === "Laser")
-        ?.treatments.some((x) => x.displayName === "IPL - Full Face"),
-    ).toBe(true);
-  });
-
-  it("starts with no expanded categories after location selection", () => {
-    const state = selectLocation(bootstrapFromIntent({}), "vacaville");
-    expect(state.step).toBe("treatments");
-    expect(state.expandedCategories).toEqual([]);
-  });
-});
-
-
-describe("guided booking handoff for full Boulevard menu", () => {
-  it("uses exact routes for verified services and chooser for the rest", () => {
-    expect(buildHandoffUrl("napa", "botox")).toBe(
-      "https://book.experiencerella.com/book/napa/botox",
-    );
-    const sculptra = buildHandoffUrl("napa", "sculptra");
-    expect(sculptra).toContain("https://book.experiencerella.com/book?");
-    expect(sculptra).toContain("location=napa");
-    expect(sculptra).toContain("category=injectables");
+  it("never labels pending verification as confirmed", async () => {
+    vi.spyOn(globalThis, "fetch").mockResolvedValue(Response.json({ ok: true, confirmation: "PENDING_VERIFICATION" }));
+    const result = await createDefaultBackend().complete!({ locationSlug: "napa", treatmentKeys: ["napa/botox"], providerId: "any-available", slot: { id: "time", startTime: "2026-11-01T18:00:00Z", label: "10:00 AM" }, client: { firstName: "Fixture", lastName: "User", email: "fixture@example.test", phone: "7073582928" } });
+    expect(result).toMatchObject({ ok: true, pending: true });
   });
 });
