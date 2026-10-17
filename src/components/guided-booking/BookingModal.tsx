@@ -272,6 +272,9 @@ export function BookingModal({
   }
 
   const primaryLabel = state.step === "complete" ? null : "Continue";
+  const selectedTreatment = state.treatments?.find((treatment) =>
+    state.selectedTreatmentKeys.includes(treatment.key),
+  );
 
   return (
     <div className="fixed inset-0 z-[80]" role="presentation">
@@ -388,27 +391,51 @@ export function BookingModal({
           </div>
         </div>
 
-        <footer className="flex shrink-0 items-center justify-between gap-3 border-t border-rule/50 bg-white/95 px-4 py-3 backdrop-blur-sm md:px-6">
-          <button
-            type="button"
-            onClick={() => patch(goBack(state))}
-            disabled={state.busy || !canGoBack(state)}
-            className="min-h-11 px-3 text-[0.6875rem] font-bold uppercase tracking-[0.16em] text-ink disabled:opacity-35"
-          >
-            Back
-          </button>
-          {primaryLabel ? (
+        <footer className="shrink-0 border-t border-rule/50 bg-white/95 px-4 py-3 backdrop-blur-sm md:px-6">
+          <div role="status" aria-live="polite" aria-atomic="true">
+            {state.step === "treatments" && selectedTreatment ? (
+              <div className="mb-3 flex items-center justify-between gap-3 rounded-sm border border-rose/50 bg-ivory px-3 py-2">
+                <div className="min-w-0">
+                  <p className="text-[0.625rem] font-bold uppercase tracking-[0.14em] text-ink/60">
+                    <span aria-hidden="true">✓ </span>Treatment added
+                  </p>
+                  <p className="mt-1 truncate text-sm font-medium text-ink">
+                    {selectedTreatment.displayName}
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  className="min-h-11 shrink-0 text-[0.625rem] font-bold uppercase tracking-[0.14em] text-rose"
+                  aria-label={`Remove ${selectedTreatment.displayName}`}
+                  onClick={() => patch(removeTreatment(state, selectedTreatment.key))}
+                >
+                  Remove
+                </button>
+              </div>
+            ) : null}
+          </div>
+          <div className="flex items-center justify-between gap-3">
             <button
               type="button"
-              onClick={primaryAction}
-              disabled={loadingMeta || state.busy || (state.step === "datetime" && reservationUncertain)}
-              className="rella-cta-rect rella-cta-rect--filled"
+              onClick={() => patch(goBack(state))}
+              disabled={state.busy || !canGoBack(state)}
+              className="min-h-11 px-3 text-[0.6875rem] font-bold uppercase tracking-[0.16em] text-ink disabled:opacity-35"
             >
-              {primaryLabel}
+              Back
             </button>
-          ) : (
-            <span className="text-xs text-silver">Finish below</span>
-          )}
+            {primaryLabel ? (
+              <button
+                type="button"
+                onClick={primaryAction}
+                disabled={loadingMeta || state.busy || (state.step === "datetime" && reservationUncertain)}
+                className="rella-cta-rect rella-cta-rect--filled"
+              >
+                {primaryLabel}
+              </button>
+            ) : (
+              <span className="text-xs text-silver">Finish below</span>
+            )}
+          </div>
         </footer>
       </div>
     </div>

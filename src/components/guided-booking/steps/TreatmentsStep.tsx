@@ -34,7 +34,8 @@ export function TreatmentsStep({
           Choose a treatment
         </h3>
         <p className="mt-2 text-sm font-light text-silver">
-          Browse Boulevard treatment categories, or search. Open a category to see options — consultations are listed first in each group.
+          Choose one treatment for this booking. Adding another replaces your
+          current selection.
         </p>
       </div>
 
@@ -78,10 +79,13 @@ export function TreatmentsStep({
                     const added = state.selectedTreatmentKeys.includes(
                       treatment.key,
                     );
+                    const replacing = !added && state.selectedTreatmentKeys.length > 0;
                     return (
                       <li
                         key={treatment.key}
-                        className="flex flex-col gap-3 p-4 sm:flex-row sm:items-center"
+                        className={`flex flex-col gap-3 p-4 sm:flex-row sm:items-center ${
+                          added ? "bg-ivory/70 ring-1 ring-inset ring-rose" : ""
+                        }`}
                       >
                         {treatment.image ? (
                           <div className="relative h-20 w-full shrink-0 overflow-hidden rounded-sm sm:h-20 sm:w-28">
@@ -122,13 +126,15 @@ export function TreatmentsStep({
                         <button
                           type="button"
                           onClick={() => onToggleTreatment(treatment.key)}
+                          aria-pressed={added}
+                          aria-label={`${added ? "Remove" : replacing ? "Replace selected treatment with" : "Add"} ${treatment.displayName}`}
                           className={`shrink-0 rounded-full border px-5 py-2.5 text-[0.625rem] font-bold uppercase tracking-[0.16em] ${
                             added
                               ? "border-ink bg-ink text-white"
                               : "border-rose bg-rose text-white"
                           }`}
                         >
-                          {added ? "Added" : "Add"}
+                          {added ? "✓ Added" : replacing ? "Replace" : "Add"}
                         </button>
                       </li>
                     );

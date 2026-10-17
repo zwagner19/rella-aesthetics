@@ -1,6 +1,6 @@
 # Amie's website with the shared Rella booking backend
 
-This branch is based on `amie-website-edits` at 04bf2d1. The copied service menu and external handoff have been replaced with the shared booking service. Page files, global styles, images, policy copy and deposit configuration are unchanged. Existing modal, treatment, review, visit-summary and date/time layout class strings match Amie's baseline. The final step adds secure booking functionality within the existing visual system.
+This branch is based on `amie-website-edits` at 04bf2d1. The copied service menu and external handoff have been replaced with the shared booking service. Page files, global styles, images, policy copy and deposit configuration are unchanged. The existing visual system is preserved; owner-requested selection feedback adds a highlighted card and a selected-treatment summary above the existing footer actions. The final step adds secure booking functionality within the existing visual system.
 
 ## Correct data source
 
@@ -21,6 +21,8 @@ The backend origin defaults to `https://book.experiencerella.com`; `RELLA_BOOKIN
 The public HTTPS branch preview uses the paired backend branch alias. Its inherited Supabase URL and service key targeted an older project and failed the existing canonical-project guard at session creation. Branch-scoped Preview configuration now uses the existing verified canonical server credential and URL; the guard and production configuration remain unchanged. A real Napa Deluxe Hydrafacial check reached provider discovery, 31 available dates and six times on the first available date without a hold, client information, payment or checkout.
 
 Treatment descriptions are display-only summaries of about two sentences. Reservation/deposit/cancellation copy is omitted from menu cards and remains on the existing review/payment screens. Service prerequisites from Boulevard are retained as review notes. Neither this copy treatment nor the preview repair changes deposit policy or source catalog configuration.
+
+This interface currently accepts one treatment per booking. Selecting another replaces it, clears the previous provider/time/quote, and starts a fresh backend session when needed. The menu now says this explicitly, marks the selected card with a checkmark/rose outline, labels other actions Replace, and keeps the selection visible above Continue on mobile. Regression checks cover replacement after a reservation/payment token and rejection of multiple treatment keys before a network request. Multi-treatment appointments need separate integration work; they have not been enabled here.
 
 ## Remaining launch evidence
 
