@@ -39,3 +39,21 @@ checkout, outcome, and conversion-job behavior remains owned by the separate
 
 This map does not authorize a merge, deployment, DNS change, WordPress change,
 appointment/cart creation, payment action, or conversion upload.
+
+
+## In-site guided booking shell (2026-10)
+
+The marketing site now opens a Rella-branded guided booking modal/fullscreen
+shell from ordinary Book CTAs (`BookingExperienceProvider` + `BookTrigger`).
+
+- Steps: location → treatments → review → provider → datetime → complete.
+- Catalog is fail-closed against verified `rella-booking` aesthetics entries
+  (location/service slugs only — no Boulevard URNs in the website client).
+- Live Boulevard availability, deposits, payment, and appointment create remain
+  owned by `book.experiencerella.com`. The default website backend is **handoff**
+  and never calls createCart/reserve/checkout/payment.
+- Opens and confirmed bookings are tracked separately; conversion remains owned
+  by the booking app after verified Boulevard success.
+- Weight-loss CTAs still navigate to `book.rellaweightloss.com` (no modal).
+- Campaign attribution consent interception for `book.experiencerella.com`
+  links is preserved on handoff anchors.

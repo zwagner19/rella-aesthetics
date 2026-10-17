@@ -72,6 +72,7 @@ export default function VacavillePage() {
               src="/images/clinic/vacaville-exterior.webp"
               alt="The Rella Aesthetics storefront and pink entrance at the Vacaville clinic"
               fill
+              unoptimized
               priority
               className="object-cover object-center"
               sizes="(min-width: 1024px) 46vw, 100vw"

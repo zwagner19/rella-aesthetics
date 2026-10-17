@@ -2,12 +2,11 @@ import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it } from "vitest";
-import {
-  HOME_LOCATION_VISUALS,
-  HomeLocationVisual,
-} from "./HomeLocationVisual";
+import { HOME_LOCATION_VISUALS } from "./home-location-visuals";
+import { HomeLocationVisual } from "./HomeLocationVisual";
 
 const source = readFileSync(join(__dirname, "HomeLocationVisual.tsx"), "utf8");
+const dataSource = readFileSync(join(__dirname, "home-location-visuals.ts"), "utf8");
 
 describe("homepage location visual", () => {
   it("uses the canonical Napa reception and approved Vacaville storefront", () => {
@@ -21,23 +20,29 @@ describe("homepage location visual", () => {
       (location) => location.slug === "vacaville",
     );
 
-    expect(napa?.image).toBe("/images/clinic/napa-reception.webp");
+    expect(napa?.image).toBe("/images/clinic/napa-reception.jpg");
     expect(napa?.imageAlt).toBe(
       "The welcoming reception area inside the Rella Aesthetics Napa clinic",
     );
     expect(napa?.imagePosition).toBe("object-center");
     expect(napa?.frameAspect).toBe("aspect-[4/5]");
+    expect(napa?.nativeWidth).toBe(800);
+    expect(napa?.nativeHeight).toBe(1200);
     expect(vacaville?.image).toBe("/images/clinic/vacaville-exterior.webp");
     expect(vacaville?.imageAlt).toBe(
       "The Rella Aesthetics storefront and pink entrance at the Vacaville clinic",
     );
     expect(vacaville?.imagePosition).toBe("object-center");
     expect(vacaville?.frameAspect).toBe("aspect-[4/5]");
+    expect(vacaville?.nativeWidth).toBe(1200);
+    expect(vacaville?.nativeHeight).toBe(1500);
     for (const location of HOME_LOCATION_VISUALS) {
-      expect(existsSync(join(process.cwd(), "public", location.image))).toBe(true);
+      expect(
+        existsSync(join(process.cwd(), "public", location.image.replace(/^\//, ""))),
+      ).toBe(true);
     }
 
-    expect(source).not.toContain("napa-exterior");
+    expect(dataSource).not.toContain("napa-exterior");
     expect(source).not.toMatch(/<video|\.mp4|autoplay/i);
   });
 
@@ -56,13 +61,21 @@ describe("homepage location visual", () => {
   });
 
   it("keeps the visual flat and booking-system neutral", () => {
-    expect(source).toContain('frameAspect: "aspect-[4/5]"');
+    expect(dataSource).toContain('frameAspect: "aspect-[4/5]"');
     expect(source).toContain("priority");
+    expect(source).toContain("ClinicLocationPhoto");
     expect(source).not.toContain("quality={90}");
     expect(source).not.toMatch(/gradient|shadow-/i);
     expect(source).not.toMatch(
       /dashboard\.boulevard\.io|joinblvd\.com|book\.experiencerella\.com|rella-hq/i,
     );
+  });
+
+  it("serves clinic photos unoptimized at native resolution", () => {
+    const photoSource = readFileSync(join(__dirname, "ClinicLocationPhoto.tsx"), "utf8");
+    expect(photoSource).toContain("unoptimized");
+    expect(dataSource).toContain("nativeWidth");
+    expect(dataSource).toContain("nativeHeight");
   });
 
   it("uses the approved translucent-white Rose location controls", () => {

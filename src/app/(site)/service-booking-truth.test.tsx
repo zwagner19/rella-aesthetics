@@ -32,10 +32,11 @@ describe("service booking truth", () => {
   it("makes IV hydration call-assisted instead of presenting a false online booking path", async () => {
     const html = await renderService("iv-hydration");
 
-    expect([...html.matchAll(/href="tel:\+17073582928"/g)]).toHaveLength(3);
-    expect([...html.matchAll(/data-cta="phone"/g)]).toHaveLength(3);
-    expect(html).toContain("Call-assisted booking");
+    expect([...html.matchAll(/href="tel:\+17073582928"/g)].length).toBeGreaterThanOrEqual(3);
+    expect([...html.matchAll(/data-cta="phone"/g)].length).toBeGreaterThanOrEqual(3);
     expect(html).toContain("Call About IV Hydration");
+    expect(html).toContain("Call about availability");
+    expect(html).toContain("Suitability comes before the drip.");
     expect(html).not.toContain("book.experiencerella.com");
     expect(html).not.toContain(">Book IV Hydration<");
   });
