@@ -5,6 +5,8 @@ import {
 } from "@/lib/guided-booking";
 import type { BookingLocation } from "@/lib/booking-routes";
 import type { GuidedBookingState } from "@/lib/guided-booking";
+import { packageMenuDescription, packageMenuLabel, type PackageOffering } from "@/lib/guided-booking/package-client";
+import { getGuidedLocation } from "@/lib/guided-booking/catalog";
 
 export function TreatmentsStep({
   locationSlug,
@@ -13,6 +15,11 @@ export function TreatmentsStep({
   onSearch,
   onToggleCategory,
   onToggleTreatment,
+  packageOfferings = [],
+  packagesLoading = false,
+  packageError,
+  onBuyPackage,
+  onBookPackage,
 }: {
   locationSlug: BookingLocation;
   state: GuidedBookingState;
@@ -20,8 +27,17 @@ export function TreatmentsStep({
   onSearch: (value: string) => void;
   onToggleCategory: (category: string) => void;
   onToggleTreatment: (key: string) => void;
+  packageOfferings?: PackageOffering[];
+  packagesLoading?: boolean;
+  packageError?: string | null;
+  onBuyPackage?: (packageId: string) => void;
+  onBookPackage?: () => void;
 }) {
   const groups = treatmentsByCategory(locationSlug, state.search, state.treatments);
+  const query = state.search.trim().toLowerCase();
+  const offers = packageOfferings.filter(offering => !query || `${offering.displayName} ${offering.description}`.toLowerCase().includes(query));
+  const showPackageActions = Boolean(onBuyPackage || onBookPackage) && (!query || offers.length > 0 || "book from my package".includes(query));
+  if (showPackageActions && !groups.some(group => group.category === "Packages")) groups.push({ category: "Packages", label: "Packages", treatments: [] });
   // Default: all Boulevard categories collapsed after location — expand on tap.
   const expanded = new Set(state.expandedCategories);
 
@@ -73,6 +89,21 @@ export function TreatmentsStep({
               </button>
               {isOpen ? (
                 <ul className="divide-y divide-rule/40 bg-white">
+                  {group.category === "Packages" && showPackageActions ? <>
+                    {onBookPackage ? <li className="flex flex-col gap-3 p-4 sm:flex-row sm:items-center">
+                      <div className="min-w-0 flex-1"><p className="font-medium text-ink">Already have a package?</p><p className="mt-1 text-sm font-light text-silver">Verify your account to find a covered treatment and book your appointment.</p></div>
+                      <button type="button" disabled={loading} onClick={onBookPackage} className="shrink-0 rounded-full border border-rose bg-rose px-5 py-2.5 text-[0.625rem] font-bold uppercase tracking-[0.16em] text-white disabled:opacity-50">Book from my package</button>
+                    </li> : null}
+                    {packagesLoading ? <li className="p-4 text-sm text-silver" role="status">Loading packages…</li> : null}
+                    {packageError ? <li className="p-4 text-sm text-rose" role="alert">{packageError}</li> : null}
+                    {offers.length ? <li className="p-4 text-[0.6875rem] font-bold uppercase tracking-[0.16em] text-ink/60">Buy a new package</li> : null}
+                    {offers.map(offering => <li key={`purchase-${offering.id}`} className="flex flex-col gap-3 p-4 sm:flex-row sm:items-center" data-package-offer="true">
+                      <div className="min-w-0 flex-1"><p className="font-medium text-ink">{packageMenuLabel(offering.displayName)}</p><p className="mt-1 text-sm font-light text-silver">{packageMenuDescription(offering)}</p></div>
+                      {offering.reviewRequired ? <a href={getGuidedLocation(locationSlug)?.phoneHref} className="shrink-0 rounded-full border border-rose bg-rose px-5 py-2.5 text-[0.625rem] font-bold uppercase tracking-[0.16em] text-white">Call to purchase</a>
+                        : <button type="button" disabled={loading} onClick={() => onBuyPackage?.(offering.id)} aria-label={`Buy ${packageMenuLabel(offering.displayName)}`} className="shrink-0 rounded-full border border-rose bg-rose px-5 py-2.5 text-[0.625rem] font-bold uppercase tracking-[0.16em] text-white disabled:opacity-50">Buy</button>}
+                    </li>)}
+                    {ordered.length ? <li className="p-4 text-[0.6875rem] font-bold uppercase tracking-[0.16em] text-ink/60">Book a package treatment</li> : null}
+                  </> : null}
                   {ordered.map((treatment) => {
                     const added = state.selectedTreatmentKeys.includes(
                       treatment.key,
@@ -106,6 +137,7 @@ export function TreatmentsStep({
                         </div>
                         <button
                           type="button"
+                          disabled={loading}
                           onClick={() => onToggleTreatment(treatment.key)}
                           aria-pressed={added}
                           aria-label={`${added ? "Remove" : "Add"} ${treatment.displayName}`}

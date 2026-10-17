@@ -5,6 +5,7 @@ import {
   providersComplete, goToStep, clientLooksComplete, createDefaultBackend,
 } from "./index";
 import type { GuidedBookingState } from "./types";
+import { createPackageIdentityClient } from "./package-client";
 
 const services = [
   { serviceSlug: "botox", displayName: "New Patient Tox", category: "Injectables", description: "Consultation" },
@@ -86,6 +87,14 @@ describe("shared booking menu and state", () => {
     expect(clientLooksComplete({ firstName: "A", lastName: "B", email: "bad", phone: "707" })).toBe(false);
     expect(clientLooksComplete(client)).toBe(true);
   });
+  it("keeps owned context for one verified service and clears it for uncovered or location changes", () => {
+    const owned: GuidedBookingState = { ...bootstrapFromIntent({ location: "napa" }), treatments: catalog,
+      selectedTreatmentKeys: ["napa/botox"], ownedPackageServiceKey: "napa/botox" };
+    expect(selectLocation(owned, "napa").ownedPackageServiceKey).toBe("napa/botox");
+    expect(selectLocation(owned, "vacaville").ownedPackageServiceKey).toBeUndefined();
+    expect(toggleTreatment(owned, "napa/live-new-service").ownedPackageServiceKey).toBeUndefined();
+    expect(removeTreatment(owned, "napa/botox").ownedPackageServiceKey).toBeUndefined();
+  });
 });
 
 type Request = { operation: string; method: string; body?: Record<string, unknown>; query: URLSearchParams };
@@ -148,6 +157,72 @@ function backendResponses(options: { confirmation?: string; failSelection?: bool
 }
 
 describe("complete shared multi-treatment backend contract", () => {
+  it.each(["napa", "vacaville"] as const)("uses authenticated owned-package context only for the selected single-service session at %s", async locationSlug => {
+    const calls = backendResponses();
+    const backend = createDefaultBackend();
+    const ownedInput = { locationSlug, treatmentKeys: [`${locationSlug}/botox`], providerIds: { [`${locationSlug}/botox`]: "any-available" } };
+    await backend.listTreatments!(locationSlug);
+    backend.setOwnedPackageContext!(true);
+    await backend.listProviders(ownedInput);
+    const availability = await backend.loadAvailability(ownedInput);
+    expect(availability.live).toBe(true);
+    const reserved = await backend.reserve!(slot);
+    expect(reserved.quote).toEqual(quoted);
+    await backend.attachPayment!("test-token");
+    expect(await backend.complete!({ ...ownedInput, client, slot })).toEqual({ ok: true, confirmationId: "confirmed" });
+    expect(calls.filter(call => call.operation === "menu" && call.method === "POST").map(call => call.body)).toEqual([{ location: locationSlug, packageOwned: true }]);
+  });
+
+  it("releases a verified owned hold before restarting a standard booking and omits the owned flag", async () => {
+    const calls = backendResponses();
+    const backend = createDefaultBackend();
+    await backend.listTreatments!("napa"); backend.setOwnedPackageContext!(true);
+    await backend.loadAvailability(input); await backend.reserve!(slot);
+    const before = calls.length;
+    backend.setOwnedPackageContext!(false);
+    await backend.listProviders(input);
+    expect(calls.slice(before).map(call => [call.operation, call.method])).toEqual([["release", "POST"], ["menu", "GET"], ["menu", "POST"], ["selection", "POST"]]);
+    expect(calls.filter(call => call.operation === "menu" && call.method === "POST").at(-1)?.body).toEqual({ location: "napa" });
+    expect(backend.quote!()).toBeUndefined();
+  });
+
+  it("does not clear an uncertain owned checkout when switching to standard mode", async () => {
+    const calls = backendResponses({ failCheckout: true });
+    const backend = createDefaultBackend();
+    await backend.listTreatments!("napa"); backend.setOwnedPackageContext!(true);
+    await backend.loadAvailability(input); await backend.reserve!(slot); await backend.attachPayment!("test-token");
+    expect(await backend.complete!({ ...input, client, slot })).toMatchObject({ pending: true });
+    const before = calls.length;
+    backend.setOwnedPackageContext!(false);
+    expect(await backend.listTreatments!("napa")).toEqual([]);
+    await expect(backend.listProviders(input)).rejects.toThrow();
+    expect(backend.verificationPending!()).toBe(true);
+    expect(calls).toHaveLength(before);
+  });
+
+  it("releases the owned hold while credentials still exist, before logging out or changing account", async () => {
+    const calls = backendResponses(); const backend = createDefaultBackend();
+    await backend.listTreatments!("napa"); backend.setOwnedPackageContext!(true);
+    await backend.loadAvailability(input); await backend.reserve!(slot);
+    const before = calls.length;
+    await backend.prepareIdentityChange!();
+    await createPackageIdentityClient().logout();
+    expect(calls.slice(before).map(call => call.operation)).toEqual(["release", "auth-logout"]);
+  });
+
+  it.each(["uncertain release", "card attached", "uncertain checkout"])("does not discard credentials or send another identity code after %s", async condition => {
+    const calls = backendResponses({ failRelease: condition === "uncertain release", failCheckout: condition === "uncertain checkout" });
+    const backend = createDefaultBackend(); await backend.listTreatments!("napa"); backend.setOwnedPackageContext!(true);
+    await backend.loadAvailability(input); await backend.reserve!(slot);
+    if (condition !== "uncertain release") await backend.attachPayment!("test-token");
+    if (condition === "uncertain checkout") await backend.complete!({ ...input, slot, client });
+    await expect((async () => {
+      await backend.prepareIdentityChange!();
+      await createPackageIdentityClient().logout();
+      await createPackageIdentityClient().sendCode({ method: "email", contact: "other@example.test" });
+    })()).rejects.toThrow();
+    expect(calls.some(call => call.operation === "auth-logout" || call.operation === "auth-code")).toBe(false);
+  });
   it("reads the menu without a real booking session, then discovers providers separately for every selected item", async () => {
     const calls = backendResponses(); const backend = createDefaultBackend();
     expect(await backend.listTreatments!("napa")).toEqual(catalog);

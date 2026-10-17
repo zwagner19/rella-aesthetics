@@ -2,7 +2,7 @@
 import { useEffect, useRef, useState } from "react";
 
 /** Raw card values never enter the marketing DOM or its third-party scripts. */
-export function SecureCardFrame({ origin, onToken, busy }: { origin: string; onToken: (token: string) => Promise<void>; busy: boolean }) {
+export function SecureCardFrame({ origin, onToken, busy, purpose = "booking" }: { origin: string; onToken: (token: string) => Promise<void>; busy: boolean; purpose?: "booking" | "package" }) {
   const frame = useRef<HTMLIFrameElement>(null);
   const [channel] = useState(() => crypto.randomUUID());
   const [parent, setParent] = useState("");
@@ -23,6 +23,6 @@ export function SecureCardFrame({ origin, onToken, busy }: { origin: string; onT
     return () => window.removeEventListener("message", receive);
   }, [origin, channel]);
   if (!parent) return null;
-  const src = `${origin}/secure-card?parent=${encodeURIComponent(parent)}&channel=${channel}`;
+  const src = `${origin}/secure-card?parent=${encodeURIComponent(parent)}&channel=${channel}&purpose=${purpose}`;
   return <iframe ref={frame} title="Secure card details" src={src} sandbox="allow-scripts allow-forms allow-same-origin" referrerPolicy="no-referrer" className="w-full border-0" style={{ height: 345, pointerEvents: busy ? "none" : "auto" }} />;
 }

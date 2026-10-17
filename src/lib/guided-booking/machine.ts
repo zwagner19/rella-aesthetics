@@ -105,6 +105,7 @@ export function selectLocation(
   return {
     ...state,
     locationSlug,
+    ownedPackageServiceKey: sameLocation ? state.ownedPackageServiceKey : undefined,
     // The menu-loading effect runs when the location changes. Keep its result
     // when a client returns to the location step and chooses that location again.
     treatments: sameLocation ? state.treatments : [],
@@ -159,6 +160,7 @@ export function toggleTreatment(
   return {
     ...state,
     selectedTreatmentKeys: [...selected],
+    ownedPackageServiceKey: selected.size === 1 && selected.has(state.ownedPackageServiceKey ?? "") ? state.ownedPackageServiceKey : undefined,
     quote: undefined,
     providerIds: Object.fromEntries(Object.entries(state.providerIds).filter(([key]) => selected.has(key))),
     schedule: undefined,
@@ -179,6 +181,7 @@ export function removeTreatment(
     selectedTreatmentKeys: state.selectedTreatmentKeys.filter(
       (key) => key !== treatmentKey,
     ),
+    ownedPackageServiceKey: state.ownedPackageServiceKey === treatmentKey ? undefined : state.ownedPackageServiceKey,
     quote: undefined,
     providerIds: Object.fromEntries(Object.entries(state.providerIds).filter(([key]) => key !== treatmentKey)),
     schedule: undefined,

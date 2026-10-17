@@ -46,6 +46,7 @@ export function BookingExperienceProvider({
   );
 
   const open = useCallback((next: BookingIntent = {}) => {
+    resolvedBackend.setOwnedPackageContext?.(false);
     setIntent(next);
     setIsOpen(true);
     emitGuidedBookingEvent({
@@ -53,7 +54,7 @@ export function BookingExperienceProvider({
       intent: next,
       at: Date.now(),
     });
-  }, []);
+  }, [resolvedBackend]);
 
   const close = useCallback(() => {
     setIsOpen(false);

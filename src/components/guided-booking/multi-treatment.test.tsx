@@ -82,4 +82,17 @@ describe("multi-treatment presentation", () => {
     expect(inputs.some(input => input.includes('type="email"') && input.includes('autoComplete="email"'))).toBe(true);
     expect(inputs.some(input => input.includes('type="tel"') && input.includes('autoComplete="tel"'))).toBe(true);
   });
+  it("keeps new purchase offers searchable and separate from appointment services without leaking monetary copy", () => {
+    const packageTreatments = backendTreatments("napa", [{ serviceSlug: "package-session", displayName: "Laser package session", category: "Packages", description: "A treatment appointment. Your provider can discuss your plan." }]);
+    const html = renderToStaticMarkup(<TreatmentsStep locationSlug="napa" state={{ ...state, treatments: packageTreatments, search: "laser", expandedCategories: ["Packages"] }}
+      packageOfferings={[{ id: "opaque-offer", displayName: "6-session laser package | from $600", description: "Laser treatments address your skin goals. The price is $600 for the package.", benefitGroups: [] }]}
+      onSearch={() => {}} onToggleCategory={() => {}} onToggleTreatment={() => {}} onBuyPackage={() => {}} onBookPackage={() => {}} />);
+    expect(html).toContain("Buy a new package");
+    expect(html).toContain("Book a package treatment");
+    expect(html).toContain('aria-label="Buy 6-session laser package"');
+    expect(html).toContain("Book from my package");
+    expect(html).toContain("Laser package session");
+    expect(html).not.toContain("$600");
+    expect(html).not.toContain("The price is");
+  });
 });

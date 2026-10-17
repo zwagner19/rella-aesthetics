@@ -98,6 +98,8 @@ export interface GuidedBookingState {
   step: GuidedBookingStep;
   locationSlug: BookingLocation | null;
   selectedTreatmentKeys: string[];
+  /** A single service chosen from the authenticated, location-scoped package wallet. */
+  ownedPackageServiceKey?: string;
   /** Provider choice for each selected location-scoped treatment key. */
   providerIds: Record<string, string>;
   /** Actual per-treatment schedule read back from Boulevard after reservation. */
@@ -159,6 +161,9 @@ export interface GuidedBookingBackend {
   readonly mode: "mock" | "live";
   /** Terminal uncertainty in this browser instance; do not start another booking. */
   verificationPending?(): boolean;
+  setOwnedPackageContext?(enabled: boolean): void;
+  /** Release a verified uncompleted hold before replacing its authenticated owner. */
+  prepareIdentityChange?(): Promise<void>;
   listTreatments?(location: BookingLocation): Promise<GuidedTreatment[]>;
   reserve?(slot: GuidedSlot): Promise<{
     schedule: GuidedScheduledTreatment[];

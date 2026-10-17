@@ -28,6 +28,8 @@ export function createSharedBookingBackend(): GuidedBookingBackend {
   let uncertaintyMessage: string | undefined;
   let completion: Completion | undefined;
   let catalogGeneration = 0;
+  let ownedPackageContext = false;
+  let sessionOwnedPackageContext = false;
   // Serialize session-changing requests so late responses cannot overwrite a newer cart cookie.
   let tail: Promise<unknown> = Promise.resolve();
   function serial<T>(work: () => Promise<T>): Promise<T> {
@@ -48,6 +50,7 @@ export function createSharedBookingBackend(): GuidedBookingBackend {
     schedule = [];
     expiresAt = undefined;
     paymentAttached = false;
+    sessionOwnedPackageContext = false;
     uncertain = false;
     uncertaintyMessage = undefined;
     if (!completion?.ok || !completion.pending) completion = undefined;
@@ -100,10 +103,11 @@ export function createSharedBookingBackend(): GuidedBookingBackend {
     // Refresh it before a new cart, including after returning from a held visit.
     // Read directly so the current treatment/provider inputs stay intact.
     await call("menu", undefined, { location: loc });
-    const data = await call("menu", { location: loc });
+    const data = await call("menu", { location: loc, ...(ownedPackageContext ? { packageOwned: true } : {}) });
     clearSession();
     location = loc;
     frameOrigin = data.cardFrameOrigin;
+    sessionOwnedPackageContext = ownedPackageContext;
   }
 
   async function releaseKnownHold() {
@@ -174,7 +178,7 @@ export function createSharedBookingBackend(): GuidedBookingBackend {
     const choices = requestedProviders ? providerChoice(loc, keys, requestedProviders) : undefined;
     const providerSignature = choices ? JSON.stringify(choices) : undefined;
     requireVerifiedSession(true);
-    if (location !== loc || (selected && selected !== serviceSignature)
+    if (location !== loc || sessionOwnedPackageContext !== ownedPackageContext || (selected && selected !== serviceSignature)
       || (providerSignature !== undefined && provider !== undefined && provider !== providerSignature)) {
       // Boulevard retains an explicit staff preference on the cart. A fresh
       // session prevents another provider or “any” from inheriting that choice.
@@ -205,6 +209,15 @@ export function createSharedBookingBackend(): GuidedBookingBackend {
 
   return {
     mode: "live",
+    setOwnedPackageContext(enabled) { ownedPackageContext = enabled; },
+    prepareIdentityChange() {
+      return serial(async () => {
+        if (completion?.ok && !completion.pending) clearSession();
+        requireVerifiedSession(true);
+        await releaseKnownHold();
+        ownedPackageContext = false;
+      });
+    },
     verificationPending() { return completion?.ok === true && completion.pending === true; },
     listTreatments(loc) {
       const generation = ++catalogGeneration;

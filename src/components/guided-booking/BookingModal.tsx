@@ -8,6 +8,8 @@ import {
   useState,
 } from "react";
 import type { BookingIntent } from "@/lib/booking-routes";
+import type { BookingLocation } from "@/lib/booking-routes";
+import { createSharedPackageClient, type PackageIntent, type PackageOffering } from "@/lib/guided-booking/package-client";
 import {
   bootstrapFromIntent,
   mapIntentToTreatmentKey,
@@ -32,6 +34,7 @@ import {
   type GuidedBookingState,
   type GuidedProviderGroup,
   type GuidedSlot,
+  type GuidedTreatment,
 } from "@/lib/guided-booking";
 import { VisitSummary } from "./VisitSummary";
 import { LocationStep } from "./steps/LocationStep";
@@ -40,6 +43,7 @@ import { ReviewStep } from "./steps/ReviewStep";
 import { ProviderStep } from "./steps/ProviderStep";
 import { DateTimeStep } from "./steps/DateTimeStep";
 import { CompleteStep } from "./steps/CompleteStep";
+import { PackageExperience } from "./PackageExperience";
 
 export function BookingModal({
   intent,
@@ -54,6 +58,14 @@ export function BookingModal({
   const dialogRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
   const closeRef = useRef<HTMLButtonElement>(null);
+  const [packageClient] = useState(() => createSharedPackageClient());
+  const [packageRequest, setPackageRequest] = useState<{ intent: PackageIntent; offeringId?: string } | null>(null);
+  const [packageOfferings, setPackageOfferings] = useState<PackageOffering[]>([]);
+  const [packagesLoading, setPackagesLoading] = useState(false);
+  const [packageError, setPackageError] = useState<string | null>(null);
+  const preparedOwnedMenu = useRef<{ location: BookingLocation; treatments: GuidedTreatment[] } | null>(null);
+  const skipOwnedMenuLoad = useRef<BookingLocation | null>(null);
+  const closePackages = useCallback(() => setPackageRequest(null), []);
   const [state, setState] = useState<GuidedBookingState>(() => ({
     ...bootstrapFromIntent(intent),
     ...(backend.verificationPending?.() ? { step: "complete" as const, confirmationId: "pending", confirmationPending: true } : {}),
@@ -80,6 +92,7 @@ export function BookingModal({
     }
     if (!state.locationSlug || !backend.listTreatments) return;
     const location = state.locationSlug;
+    if (skipOwnedMenuLoad.current === location) { skipOwnedMenuLoad.current = null; return; }
     let cancelled = false;
     setLoadingMeta(true);
     setState(prev => ({ ...prev, treatments: [], selectedTreatmentKeys: [], providerIds: {}, schedule: undefined,
@@ -100,6 +113,20 @@ export function BookingModal({
   }, [backend, state.locationSlug, intent]);
 
   useEffect(() => {
+    if (!state.locationSlug) return;
+    let cancelled = false;
+    setPackageOfferings([]); setPackagesLoading(true); setPackageError(null);
+    packageClient.listOfferings(state.locationSlug).then(offerings => {
+      if (!cancelled) setPackageOfferings(offerings);
+    }).catch(() => {
+      if (!cancelled) setPackageError("Packages could not load. Please call Rella for help with a package.");
+    }).finally(() => { if (!cancelled) setPackagesLoading(false); });
+    return () => { cancelled = true; };
+  }, [packageClient, state.locationSlug]);
+
+  useEffect(() => { if (!packageRequest) closeRef.current?.focus(); }, [packageRequest]);
+
+  useEffect(() => {
     const previous = document.body.style.overflow;
     document.body.style.overflow = "hidden";
     closeRef.current?.focus();
@@ -110,11 +137,11 @@ export function BookingModal({
 
   useEffect(() => {
     function onKey(event: KeyboardEvent) {
-      if (event.key === "Escape") onClose();
+      if (event.key === "Escape" && !packageRequest) onClose();
     }
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [onClose]);
+  }, [onClose, packageRequest]);
 
   useEffect(() => {
     if (!state.locationSlug || state.selectedTreatmentKeys.length === 0) {
@@ -231,8 +258,9 @@ export function BookingModal({
   }, [state.reservationExpiresAt, state.step, state.confirmationId]);
 
   const patch = useCallback((next: GuidedBookingState) => {
+    backend.setOwnedPackageContext?.(Boolean(next.ownedPackageServiceKey));
     setState(next);
-  }, []);
+  }, [backend]);
 
   const stepNumber = GUIDED_BOOKING_STEPS.indexOf(state.step) + 1;
 
@@ -315,6 +343,37 @@ export function BookingModal({
     return treatment ? [treatment] : [];
   });
 
+  if (packageRequest) return <PackageExperience
+    client={packageClient} initialIntent={packageRequest.intent} initialLocation={state.locationSlug ?? undefined}
+    initialOfferingId={packageRequest.offeringId} onClose={closePackages}
+    beforeIdentityChange={async () => {
+      if (!backend.prepareIdentityChange && backend.mode === "live") throw new Error("The existing appointment could not be verified. Please call Rella before changing accounts.");
+      await backend.prepareIdentityChange?.();
+      setState(prev => ({ ...prev, selectedTreatmentKeys: [], ownedPackageServiceKey: undefined, providerIds: {},
+        quote: undefined, schedule: undefined, reservationExpiresAt: undefined, date: "", slot: null, step: "treatments",
+        availabilityUnverified: true, error: null }));
+    }}
+    beforeBookOwned={async location => {
+      if (backend.verificationPending?.()) throw new Error("Please call Rella to verify your existing booking before continuing.");
+      const treatments = await backend.listTreatments?.(location) ?? state.treatments ?? [];
+      if (!treatments.length) throw new Error("Package treatments could not be verified at this clinic. Please call Rella.");
+      preparedOwnedMenu.current = { location, treatments };
+    }}
+    onBookOwned={async selected => {
+      const menu = preparedOwnedMenu.current;
+      if (!menu || menu.location !== selected.location || !menu.treatments.some(treatment => treatment.key === selected.serviceKey)) {
+        throw new Error("This package treatment is no longer available for online booking. Please call Rella.");
+      }
+      backend.setOwnedPackageContext?.(true);
+      if (state.locationSlug !== selected.location) skipOwnedMenuLoad.current = selected.location;
+      setState(prev => ({ ...prev, locationSlug: selected.location, treatments: menu.treatments,
+        selectedTreatmentKeys: [selected.serviceKey], ownedPackageServiceKey: selected.serviceKey, providerIds: {},
+        quote: undefined, schedule: undefined, reservationExpiresAt: undefined, date: "", slot: null,
+        availabilityUnverified: true, confirmationId: null, confirmationPending: false, error: null, step: "review" }));
+      setPackageRequest(null);
+    }}
+  />;
+
   return (
     <div className="fixed inset-0 z-[80]" role="presentation">
       <button
@@ -365,6 +424,11 @@ export function BookingModal({
                   locationSlug={state.locationSlug}
                   state={state}
                   loading={loadingMeta}
+                  packageOfferings={packageOfferings}
+                  packagesLoading={packagesLoading}
+                  packageError={packageError}
+                  onBuyPackage={offeringId => setPackageRequest({ intent: "buy", offeringId })}
+                  onBookPackage={() => setPackageRequest({ intent: "redeem" })}
                   onSearch={(value) => patch(setSearch(state, value))}
                   onToggleCategory={(category) =>
                     patch(toggleCategory(state, category))
