@@ -51,6 +51,8 @@ module.exports = {
     "/giveaway-terms-and-conditions",
     "/wpbc-booking-received",
     "/locations.kml",
+    "/napa/laser-hair-removal",
+    "/napa/medical-facials",
     "/services/weight-loss",
     "/opengraph-image",
     "/twitter-image",

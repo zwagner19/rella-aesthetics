@@ -40,8 +40,8 @@ conversion upload, or WordPress mutation was created during verification.
   the Napa attribution controller.
 - Legacy indexed WordPress URLs have direct permanent redirects, retired event
   URLs return `410 Gone`, and the generated sitemap is deterministic.
-- General Napa clinic hours match the currently published location schedule:
-  Monday–Friday 9am–5pm and Saturday 9am–1pm. The ad landing page directs users
+- General Napa clinic hours match the owner-confirmed location schedule:
+  Wednesday–Saturday 9am–5pm. The ad landing page directs users
   to live appointment availability rather than promising a provider schedule.
 - The contact form validates and sends accepted leads to GHL without logging
   patient-entered content. It fails closed when required CRM configuration is

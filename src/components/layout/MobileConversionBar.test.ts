@@ -22,6 +22,14 @@ describe("mobile conversion bar routing", () => {
       location: "napa",
       service: "facials",
     });
+    expect(bookingIntentForPath("/napa/laser-hair-removal")).toEqual({
+      location: "napa",
+      service: "laser-hair-removal",
+    });
+    expect(bookingIntentForPath("/napa/medical-facials")).toEqual({
+      location: "napa",
+      service: "medical-facials",
+    });
     expect(bookingIntentForPath("/vacaville/botox")).toEqual({
       location: "vacaville",
       service: "botox",
@@ -35,6 +43,18 @@ describe("mobile conversion bar routing", () => {
       "https://book.experiencerella.com/book?location=napa",
     );
     expect(resolveBookingHref(bookingIntentForPath("/napa/facials"))).toBe(
+      "https://book.experiencerella.com/book?location=napa&category=facials",
+    );
+    expect(
+      resolveBookingHref(
+        bookingIntentForPath("/napa/laser-hair-removal"),
+      ),
+    ).toBe(
+      "https://book.experiencerella.com/book?location=napa&category=laser",
+    );
+    expect(
+      resolveBookingHref(bookingIntentForPath("/napa/medical-facials")),
+    ).toBe(
       "https://book.experiencerella.com/book?location=napa&category=facials",
     );
     expect(resolveBookingHref(bookingIntentForPath("/vacaville/botox"))).toBe(

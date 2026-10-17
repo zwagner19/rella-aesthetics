@@ -60,7 +60,7 @@ async function seed() {
     zip: "94559",
     phone: "707.358.2928",
     email: "hello@experiencerella.com",
-    hours: ["Monday–Friday: 9am–5pm", "Saturday: 9am–1pm"],
+    hours: ["Wednesday–Saturday: 9am–5pm"],
   });
   console.log("✓ Location: Napa");
 
