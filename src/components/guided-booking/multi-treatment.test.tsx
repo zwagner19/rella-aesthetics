@@ -1,6 +1,6 @@
 import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it } from "vitest";
-import { backendTreatments, bootstrapFromIntent, createMockBackend } from "@/lib/guided-booking";
+import { ASSESSMENT_CONTACT_CONSENT, MARKETING_CONSENT, backendTreatments, bootstrapFromIntent, createMockBackend } from "@/lib/guided-booking";
 import type { GuidedBookingState } from "@/lib/guided-booking";
 import { TreatmentsStep } from "./steps/TreatmentsStep";
 import { ProviderStep } from "./steps/ProviderStep";
@@ -55,6 +55,16 @@ describe("multi-treatment presentation", () => {
     expect(review.match(/Amount confirmed for your complete visit before payment/g)).toHaveLength(2);
     const complete = renderToStaticMarkup(<CompleteStep state={state} mode="live" onChange={() => {}} submitting={false} onLiveComplete={async () => {}} />);
     expect(complete).toContain("Total booking deposit: $73.50");
+    expect(complete).toContain(ASSESSMENT_CONTACT_CONSENT);
+    expect(complete).toContain(MARKETING_CONSENT);
+    expect(complete).toContain("Complete your contact details to continue.");
+    expect(complete).not.toContain("Confirm booking");
+    const consented = renderToStaticMarkup(<CompleteStep state={{ ...state, client: {
+      firstName: "Fixture", lastName: "User", email: "fixture@example.test", phone: "7073582928",
+      assessmentContactConsent: false, marketingConsent: false,
+    } }} mode="live" onChange={() => {}} submitting={false} onLiveComplete={async () => {}} />);
+    expect(consented).toContain("Confirm the required contact consent to continue.");
+    expect(consented).not.toContain("Confirm booking");
     expect(complete).not.toContain("$200.00");
   });
   it("shows terminal pending verification immediately when the modal reopens", () => {
@@ -72,8 +82,9 @@ describe("multi-treatment presentation", () => {
   });
   it("uses phone-safe contact input size and keyboard/autofill types without changing desktop typography", () => {
     const html = renderToStaticMarkup(<CompleteStep state={state} mode="live" onChange={() => {}} submitting={false} onLiveComplete={async () => {}} />);
-    const inputs = html.match(/<input\b[^>]*>/g) ?? [];
+    const inputs = (html.match(/<input\b[^>]*>/g) ?? []).filter(input => !input.includes('type="checkbox"'));
     expect(inputs).toHaveLength(4);
+    expect(html.match(/type="checkbox"/g)).toHaveLength(2);
     for (const input of inputs) {
       expect(input).toContain("min-h-11");
       expect(input).toMatch(/\btext-base\b/);

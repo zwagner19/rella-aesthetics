@@ -118,6 +118,10 @@ export interface GuidedBookingState {
     lastName: string;
     email: string;
     phone: string;
+    /** Required before checkout when a phone number is collected. Not sent as a checkout field. */
+    assessmentContactConsent: boolean;
+    /** Optional promotional consent. Not sent as a checkout field. */
+    marketingConsent: boolean;
   };
 }
 

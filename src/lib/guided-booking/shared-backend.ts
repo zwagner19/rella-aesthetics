@@ -309,6 +309,7 @@ export function createSharedBookingBackend(): GuidedBookingBackend {
             return { ok: false, reason: "Please complete the treatment, time and payment steps first." };
           }
           checkoutSent = true;
+          // PR 67 checkout accepts only these four info fields. Consent stays on this form.
           const data = await call("checkout", { info: {
             firstName: input.client.firstName, lastName: input.client.lastName,
             email: input.client.email, phoneNumber: input.client.phone,

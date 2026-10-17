@@ -2,7 +2,8 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import {
   backendTreatments, resolveGuidedTreatment, treatmentsByCategory, mapIntentToTreatmentKey,
   bootstrapFromIntent, selectLocation, toggleTreatment, removeTreatment, selectProvider,
-  providersComplete, goToStep, clientLooksComplete, createDefaultBackend,
+  providersComplete, goToStep, clientLooksComplete, contactFieldsLookComplete, createDefaultBackend,
+  ASSESSMENT_CONTACT_CONSENT, MARKETING_CONSENT,
 } from "./index";
 import type { GuidedBookingState } from "./types";
 
@@ -12,7 +13,10 @@ const services = [
 ];
 const catalog = backendTreatments("napa", services);
 const slot = { id: "opaque-time", startTime: "2026-11-01T18:00:00Z", label: "10:00 AM" };
-const client = { firstName: "Fixture", lastName: "User", email: "fixture@example.test", phone: "7073582928" };
+const client = {
+  firstName: "Fixture", lastName: "User", email: "fixture@example.test", phone: "7073582928",
+  assessmentContactConsent: true, marketingConsent: true,
+};
 const input = { locationSlug: "napa" as const, treatmentKeys: ["napa/botox"], providerIds: { "napa/botox": "any-available" } };
 const multi = { ...input, treatmentKeys: ["napa/botox", "napa/live-new-service"],
   providerIds: { "napa/botox": "provider-botox", "napa/live-new-service": "any-available" } };
@@ -82,9 +86,14 @@ describe("shared booking menu and state", () => {
     expect(state.selectedTreatmentKeys).toHaveLength(6);
     expect(state.error).toContain("up to 6");
   });
-  it("validates contact information", () => {
-    expect(clientLooksComplete({ firstName: "A", lastName: "B", email: "bad", phone: "707" })).toBe(false);
-    expect(clientLooksComplete(client)).toBe(true);
+  it("validates contact information and keeps both phone-consent sentences", () => {
+    const incomplete = { ...client, email: "bad", phone: "707", assessmentContactConsent: true };
+    expect(contactFieldsLookComplete(incomplete)).toBe(false);
+    expect(clientLooksComplete(incomplete)).toBe(false);
+    expect(clientLooksComplete({ ...client, assessmentContactConsent: false })).toBe(false);
+    expect(clientLooksComplete({ ...client, marketingConsent: false })).toBe(true);
+    expect(ASSESSMENT_CONTACT_CONSENT).toBe("I ask Rella Aesthetics to contact me by phone, email, or text about my assessment and requested consultation. Messages may be sent using automated technology. Message and data rates may apply. Reply STOP to stop texts or HELP for help. This consent applies only to contact about my assessment and consultation request.");
+    expect(MARKETING_CONSENT).toBe("Optional: I agree to receive recurring promotional calls and text messages, including through automated technology, from Rella Aesthetics at the number provided. Consent is not a condition of purchase. Message frequency varies. Message and data rates may apply. Reply STOP to opt out or HELP for help.");
   });
 });
 
@@ -223,6 +232,9 @@ describe("complete shared multi-treatment backend contract", () => {
     const result = await backend.complete!({ ...multi, slot, client });
     expect(result).toEqual({ ok: true, confirmationId: "confirmed" });
     expect(calls.map(call => call.operation)).toEqual(["menu", "menu", "selection", "selection", "times", "reserve", "payment", "checkout"]);
+    expect(calls.find(call => call.operation === "checkout")?.body).toEqual({
+      info: { firstName: "Fixture", lastName: "User", email: "fixture@example.test", phoneNumber: "7073582928" },
+    });
     expect(calls.filter(call => call.operation === "menu" && call.method === "POST")).toHaveLength(1);
     expect(calls[3].body).toEqual({ selections: [{ service: "botox", provider: "provider-botox" }, { service: "live-new-service", provider: "any-available" }] });
   });
