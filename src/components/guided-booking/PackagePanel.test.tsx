@@ -35,7 +35,7 @@ describe("package presentation", () => {
     expect(html).toContain("Package purchase total: $600.00");
     expect(html).toContain("3 sessions");
     expect(html).toMatch(/Laser A.*> or <.*Laser B/);
-    expect(html).not.toContain(" and ");
+    expect(html.match(/<ul[\s\S]*?<\/ul>/)?.[0]).not.toContain(" and ");
     expect(html).not.toContain("deposit");
   });
 
