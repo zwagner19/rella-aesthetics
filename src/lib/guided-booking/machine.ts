@@ -99,16 +99,22 @@ export function selectLocation(
   const keepTreatments = state.selectedTreatmentKeys.filter((key) =>
     key.startsWith(`${locationSlug}/`),
   );
+  const sameLocation = state.locationSlug === locationSlug;
 
   return {
     ...state,
     locationSlug,
-    treatments: [],
+    // The menu-loading effect runs when the location changes. Keep its result
+    // when a client returns to the location step and chooses that location again.
+    treatments: sameLocation ? state.treatments : [],
     quote: undefined,
     selectedTreatmentKeys: keepTreatments,
     providerId: null,
     date: "",
     slot: null,
+    availabilityUnverified: true,
+    expandedCategories: sameLocation ? state.expandedCategories : [],
+    search: sameLocation ? state.search : "",
     error: null,
     step: "treatments",
   };
@@ -147,9 +153,11 @@ export function toggleTreatment(
   return {
     ...state,
     selectedTreatmentKeys: [...selected],
+    quote: undefined,
     providerId: null,
     date: "",
     slot: null,
+    availabilityUnverified: true,
     error: null,
   };
 }
@@ -163,9 +171,11 @@ export function removeTreatment(
     selectedTreatmentKeys: state.selectedTreatmentKeys.filter(
       (key) => key !== treatmentKey,
     ),
+    quote: undefined,
     providerId: null,
     date: "",
     slot: null,
+    availabilityUnverified: true,
     error: null,
   };
 }
@@ -226,8 +236,10 @@ export function selectProvider(
   return {
     ...state,
     providerId,
+    quote: undefined,
     date: "",
     slot: null,
+    availabilityUnverified: true,
     error: null,
   };
 }

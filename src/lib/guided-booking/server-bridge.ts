@@ -7,7 +7,7 @@ export function bookingBackendOrigin(): string {
   if ((!local && (!approved || url.protocol !== "https:")) || url.username || url.password || url.pathname !== "/" || url.search || url.hash) throw new Error("backend_unavailable");
   return url.origin;
 }
-const COOKIES = new Set(["rella_cart_auth", "rella_attribution_id", "rella_ad_attribution_scope", "rella_ad_user_data_denied"]);
+const COOKIES = new Set(["rella_cart_auth", "rella_attribution_id", "rella_ad_attribution_scope", "rella_ad_user_data_denied", "rella_menu_visitor"]);
 export function bookingCookies(raw: string): string {
   return raw.split(";").map(c => c.trim()).filter(c => COOKIES.has(c.split("=")[0])).join("; ");
 }
@@ -21,9 +21,10 @@ function cartId(cookie: string): string | null {
 }
 const OPERATIONS: Record<string, string> = { menu: "cart", selection: "selection", times: "cart", reserve: "reserve", payment: "payment", checkout: "checkout", complete: "complete" };
 export async function bookingBridge(req: NextRequest, operation: string): Promise<Response> {
-  const path = OPERATIONS[operation];
+  const catalogRead = operation === "menu" && req.method === "GET";
+  const path = catalogRead ? "menu" : OPERATIONS[operation];
   if (!path) return Response.json({ ok: false }, { status: 404 });
-  if ((req.method === "GET") !== (operation === "times")) return Response.json({ ok: false }, { status: 405 });
+  if ((req.method === "GET") !== (operation === "times" || catalogRead)) return Response.json({ ok: false }, { status: 405 });
   // Validate the real browser origin BEFORE setting the upstream server origin.
   if (req.method !== "GET" && req.headers.get("origin") !== req.nextUrl.origin) return Response.json({ ok: false }, { status: 403 });
   if (req.headers.get("sec-fetch-site") === "cross-site") return Response.json({ ok: false }, { status: 403 });
@@ -39,7 +40,11 @@ export async function bookingBridge(req: NextRequest, operation: string): Promis
       if (!payload || typeof payload !== "object" || Array.isArray(payload)) return Response.json({ ok: false }, { status: 400 });
     }
     const url = new URL(`/api/booking-v2/${path}`, origin);
-    if (operation === "menu") {
+    if (catalogRead) {
+      const location = req.nextUrl.searchParams.get("location");
+      if (location !== "napa" && location !== "vacaville") return Response.json({ ok: false }, { status: 400 });
+      url.searchParams.set("location", location);
+    } else if (operation === "menu") {
       if (Object.keys(payload).some(k => !["location", "consentAdUserData"].includes(k))) return Response.json({ ok: false }, { status: 400 });
       payload.menu = true;
     } else {

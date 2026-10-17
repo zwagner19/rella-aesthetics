@@ -33,18 +33,17 @@ export function DateTimeStep({
           {live
             ? "Showing live Boulevard availability for your selection."
             : availability?.message ??
-              "Live times are confirmed in Rella’s booking app before your appointment is created."}
+              "Live times will appear here after Boulevard verifies your selection."}
         </p>
       </div>
 
-      {!live ? (
+      {!live && !loading ? (
         <div
           role="status"
           className="rounded-sm border border-rule/70 bg-ivory px-4 py-3 text-sm text-ink/80"
         >
-          Availability on this marketing preview is not live Boulevard inventory.
-          Continue to complete booking on the secure booking app, where real
-          dates and times load from Boulevard.
+          Availability has not been verified yet. Please wait for the live dates
+          and times before continuing.
         </div>
       ) : null}
 

@@ -1,20 +1,30 @@
 # Amie's website with the shared Rella booking backend
 
-This branch is based on `amie-website-edits` at 04bf2d1. It replaces the copied marketing service menu and external booking handoff with the shared backend. Page files, global styles, brand assets, policy copy, and deposit configuration are unchanged. Existing modal, menu, review and visit-summary layout class strings match the baseline. The final step gains secure booking functionality in the existing visual system.
+This branch is based on `amie-website-edits` at 04bf2d1. The copied service menu and external handoff have been replaced with the shared booking service. Page files, global styles, images, policy copy and deposit configuration are unchanged. Existing modal, treatment, review, visit-summary and date/time layout class strings match Amie's baseline. The final step adds secure booking functionality within the existing visual system.
 
-The browser calls the same-origin `/api/booking-v2/bridge/*`; the server calls the booking host. The default backend origin is `https://book.experiencerella.com`. `RELLA_BOOKING_BACKEND_ORIGIN` may pin an approved Rella booking preview; localhost is accepted only outside production. Credentials stay on the booking host. HttpOnly session identity and limited attribution/consent cookies are forwarded; arbitrary cookies and caller cart identity are excluded. The API menu determines clinic service availability; images and CTA aliases remain presentation metadata only.
+## Correct data source
 
-The bridge requires the paired `rella-booking` branch `codex/shared-booking-catalog` and its explicit `BOOKING_V2_FULL_MENU_ENABLED=1` gate. Deploy/review that backend before switching this website. Set the backend's `BOOKING_V2_MARKETING_ORIGIN` to the exact HTTPS website preview origin for the isolated card frame. No production enablement is performed by this branch.
+The first local demonstration accidentally used a tiny two-service fixture. It has been disconnected and its process/file removed. The running localhost:3001 site now points to the real local booking backend, using server-only existing Boulevard credentials.
 
-The existing finalizer owns confirmation: only CONFIRMED produces confirmed UI, PENDING_VERIFICATION produces a pending message. Reserve failures stop progression. Re-entering availability clears old date/slot/quote so a newly created cart cannot use a stale reservation. Session-changing requests serialize; card fields live on the booking origin and return only an opaque vault token.
+`GET /api/booking-v2/bridge/menu?location=...` retrieves the location menu from the backend's GET menu route. That uses Rella HQ's proven Client API `createCart -> availableCategories` source with an empty metadata cart and brief server cache. Browsing does not create an application booking-session row, select a service, hold time, or make a payment. Admin active/bookable context alone is not public online visibility, and Admin defaults are not patient-facing prices.
 
-## Remaining release evidence
+Real API verification on 2026-10-16: Napa 120 service entries; Vacaville 96. Established Patient Tox and Deluxe Hydrafacial are present in both. Neither current menu has a required option group. Weight Loss stays on its separate host; Hyperhidrosis remains excluded per prior owner direction. Boulevard itself currently exposes Archived Services/historical-event/special categories; review those source configurations before public launch.
 
-- Real Boulevard sandbox or supervised verification at both locations (including card/deposit and no-card cases, named staff, time zones, timeout, duplicate submission and attribution).
-- Services with required Boulevard option groups currently stop with `options_required`; resolve before declaring full menu parity. Multi-service combinations and optional extras are not collected by the original design.
-- The deposit chat must reconcile its policy with live Boulevard amounts, including package redemption. This branch does not set deposit policy or change policy copy.
-- Desktop/mobile design signoff including the functional card fields.
+The browser menu and search were verified at both locations. The same-clinic navigation bug is fixed: returning to Location and selecting the same clinic retains its loaded menu. A loading message replaces the misleading empty-search message while the live catalog arrives.
 
-Validation: 327 website tests passed; production build and TypeScript passed. Changed booking files pass targeted ESLint. Full-repository ESLint has an existing unrelated `set-state-in-effect` error in `src/components/layout/Header.tsx:39`; that design file is untouched. Browser exercised six steps through an in-page confirmation using a local-only fixture (no actual appointment, card, payment or database write). This evidence proves local integration, not production readiness.
+## Booking session
 
-Paired draft PRs: website https://github.com/zwagner19/rella-aesthetics/pull/42 and booking backend https://github.com/zwagner19/rella-booking/pull/67. Neither is merged or production-enabled.
+A POST starts the real booking session only when proceeding to provider selection. The bridge strips caller cart identity and forwards the HttpOnly session plus bounded attribution/consent/anonymous visitor cookies. Credentials stay on the booking host. Actual dates/times, reservation, opaque vault-token attachment, checkout and durable confirmation use the existing booking engine. Same treatment/provider navigation reuses its cart safely; changing provider or returning after a known successful hold starts a fresh selection. Uncertain mutations are not replayed. Pending verification does not display confirmed.
+
+The backend origin defaults to `https://book.experiencerella.com`; `RELLA_BOOKING_BACKEND_ORIGIN` may pin the approved paired backend preview, or localhost outside production. Requires backend draft #67 and `BOOKING_V2_FULL_MENU_ENABLED=1`. For isolated card fields, set the backend's `BOOKING_V2_MARKETING_ORIGIN` to the exact website HTTPS preview origin. No production environment or launch change was made here.
+
+## Remaining launch evidence
+
+- Actual service/provider/date/hold/payment/checkout/durable-confirmation behavior in an approved sandbox or supervised test at both locations. Earlier all-six-step browser completion used a fixture only; it is not evidence of a real appointment.
+- The deposit chat's live policy/amount/credit reconciliation, plus attribution and consent continuity.
+- Source review of categories Boulevard still exposes as online, including Archived Services and historical events.
+- Required options are rejected safely if later added; the original design does not collect optional extras/multi-service combinations.
+
+Tests, TypeScript, targeted booking ESLint and both production builds pass. Full-repository ESLint has a pre-existing unrelated Header.tsx:39 effect error; that design file is untouched.
+
+Paired drafts: website https://github.com/zwagner19/rella-aesthetics/pull/42 and backend https://github.com/zwagner19/rella-booking/pull/67. Neither is merged or publicly enabled.

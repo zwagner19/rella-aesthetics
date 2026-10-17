@@ -13,12 +13,14 @@ import type { GuidedBookingState } from "@/lib/guided-booking";
 export function TreatmentsStep({
   locationSlug,
   state,
+  loading = false,
   onSearch,
   onToggleCategory,
   onToggleTreatment,
 }: {
   locationSlug: BookingLocation;
   state: GuidedBookingState;
+  loading?: boolean;
   onSearch: (value: string) => void;
   onToggleCategory: (category: string) => void;
   onToggleTreatment: (key: string) => void;
@@ -145,7 +147,7 @@ export function TreatmentsStep({
           );
         })}
         {groups.length === 0 ? (
-          <p className="text-sm text-silver">No treatments match that search.</p>
+          <p className="text-sm text-silver" role="status">{loading ? "Loading treatments…" : "No treatments match that search."}</p>
         ) : null}
       </div>
     </div>

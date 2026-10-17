@@ -322,6 +322,7 @@ export function BookingModal({
                 <TreatmentsStep
                   locationSlug={state.locationSlug}
                   state={state}
+                  loading={loadingMeta}
                   onSearch={(value) => patch(setSearch(state, value))}
                   onToggleCategory={(category) =>
                     patch(toggleCategory(state, category))

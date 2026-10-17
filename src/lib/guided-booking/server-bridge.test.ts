@@ -35,3 +35,29 @@ it("fails closed on missing session, arbitrary backend and network uncertainty",
   const response = await bookingBridge(request("menu", { location: "napa" }), "menu");
   expect(await response.json()).toEqual({ ok: false, reason: "booking_unavailable" });
 });
+it("browses the live catalog with GET without requiring or creating a booking session", async () => {
+  const network = vi.spyOn(globalThis, "fetch").mockResolvedValue(Response.json({ ok: true, source: "boulevard-client-api", services: Array.from({length:96}, (_,i) => ({serviceSlug:`live-${i}`})) }));
+  const req = new NextRequest("https://experiencerella.com/api/booking-v2/bridge/menu?location=vacaville");
+  const response = await bookingBridge(req, "menu"); const body = await response.json();
+  expect(body.services).toHaveLength(96); expect(body.source).toBe("boulevard-client-api");
+  const [url,init] = network.mock.calls[0];
+  expect(String(url)).toBe("https://book.experiencerella.com/api/booking-v2/menu?location=vacaville");
+  expect(init?.method).toBe("GET"); expect(init?.body).toBeUndefined();
+  expect(response.headers.has("set-cookie")).toBe(false);
+});
+it("rejects invalid clinic and cross-site catalog reads without an upstream call", async () => {
+  const network = vi.spyOn(globalThis, "fetch");
+  expect((await bookingBridge(new NextRequest("https://experiencerella.com/api/booking-v2/bridge/menu?location=unknown"), "menu")).status).toBe(400);
+  expect((await bookingBridge(new NextRequest("https://experiencerella.com/api/booking-v2/bridge/menu?location=napa", {headers:{"sec-fetch-site":"cross-site"}}), "menu")).status).toBe(403);
+  expect(network).not.toHaveBeenCalled();
+});
+it("preserves the anonymous visitor bucket cookie through the marketing bridge", async () => {
+  const network = vi.spyOn(globalThis, "fetch").mockResolvedValue(Response.json({ ok: true, services: [] }, { headers: { "set-cookie": "rella_menu_visitor=refreshed; Domain=book.experiencerella.com; HttpOnly; Secure; Path=/; SameSite=Lax" } }));
+  const req = new NextRequest("https://experiencerella.com/api/booking-v2/bridge/menu?location=napa", { headers: { cookie: "unrelated=private; rella_menu_visitor=signed-visitor" } });
+  const response = await bookingBridge(req, "menu");
+  expect((network.mock.calls[0][1]?.headers as Record<string, string>).Cookie).toBe("rella_menu_visitor=signed-visitor");
+  expect(response.headers.get("set-cookie")).toContain("rella_menu_visitor=refreshed");
+  expect(response.headers.get("set-cookie")).toContain("HttpOnly");
+  expect(response.headers.get("set-cookie")).toContain("Secure");
+  expect(response.headers.get("set-cookie")).not.toContain("Domain=");
+});
