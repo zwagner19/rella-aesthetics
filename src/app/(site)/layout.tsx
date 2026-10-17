@@ -24,7 +24,11 @@ export default function SiteLayout({ children }: Readonly<{ children: React.Reac
       <MetaPixel />
       <SkipNav />
       <Header />
-      <main id="main" className="flex-1 pb-20 xl:pb-0" data-site-motion="true">
+      <main
+        id="main"
+        className="flex-1 bg-ivory pb-20 pt-[72px] lg:pt-[84px] xl:pb-0"
+        data-site-motion="true"
+      >
         {children}
       </main>
       <Footer />

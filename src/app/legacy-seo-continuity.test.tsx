@@ -88,14 +88,17 @@ describe("retired event URLs", () => {
 });
 
 describe("internal SEO navigation", () => {
-  it("restores Payment Plans to desktop, mobile, and footer navigation", () => {
+  it("keeps Payment Plans reachable from mobile menu and footer under lean editorial nav", () => {
     const header = renderToStaticMarkup(<Header />);
     const mobile = renderToStaticMarkup(
       <MobileNav links={navLinks} isOpen onClose={() => undefined} />,
     );
     const footer = renderToStaticMarkup(<Footer />);
 
-    expect(header).toContain('href="/payment-plans"');
+    // Desktop primary nav stays lean (Treatments / About / Locations + Membership + Book)
+    expect(header).toContain('href="/services"');
+    expect(header).toContain('href="/about"');
+    expect(header).toContain('href="/membership"');
     expect(mobile).toContain('href="/payment-plans"');
     expect(footer).toContain('href="/payment-plans"');
   });
