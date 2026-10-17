@@ -85,7 +85,16 @@ export function CompleteStep({
 
       {mode === "live" ? (
         <div className="space-y-4">
-          {state.quote ? <p className="text-sm text-silver">Required to book: {new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(state.quote.depositCents / 100)}</p> : null}
+          {state.quote ? (
+            <p className="text-sm text-silver">
+              Total booking deposit: {new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(state.quote.depositCents / 100)}
+              <span className="mt-1 block text-xs">
+                {state.quote.depositCents > 0
+                  ? "A deposit applies to each appointment that requires one. This total covers your selected appointments."
+                  : "No deposit is due for this booking."}
+              </span>
+            </p>
+          ) : null}
           {ready && state.quote ? (
             state.quote.needsCard ? (
               cardFrameOrigin ? <SecureCardFrame origin={cardFrameOrigin} busy={submitting} onToken={onLiveComplete} /> : <p role="alert">Secure payment is unavailable. Please call Rella.</p>

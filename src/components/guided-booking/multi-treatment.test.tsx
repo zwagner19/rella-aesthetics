@@ -54,7 +54,7 @@ describe("multi-treatment presentation", () => {
     const review = renderToStaticMarkup(<ReviewStep state={state} onChangeTreatments={() => {}} />);
     expect(review.match(/Amount confirmed for your complete visit before payment/g)).toHaveLength(2);
     const complete = renderToStaticMarkup(<CompleteStep state={state} mode="live" onChange={() => {}} submitting={false} onLiveComplete={async () => {}} />);
-    expect(complete).toContain("Required to book: $73.50");
+    expect(complete).toContain("Total booking deposit: $73.50");
     expect(complete).not.toContain("$200.00");
   });
   it("shows terminal pending verification immediately when the modal reopens", () => {
