@@ -68,7 +68,7 @@ export function ReviewStep({
                 ) : null}
               </div>
               <p className="mt-3 text-xs text-silver">
-                {paymentRuleLabel(treatment)}
+                {state.selectedTreatmentKeys.length > 1 ? "Amount confirmed for your complete visit before payment" : paymentRuleLabel(treatment)}
               </p>
               {treatment.bookingNotes ? (
                 <p className="mt-3 text-sm text-ink/80">

@@ -63,6 +63,18 @@ export interface GuidedProvider {
   anyAvailable: boolean;
 }
 
+export interface GuidedProviderGroup {
+  treatmentKey: string;
+  providers: GuidedProvider[];
+}
+
+export interface GuidedScheduledTreatment {
+  treatmentKey: string;
+  startTime: string;
+  providerName?: string;
+  timeZone: string;
+}
+
 export interface GuidedSlot {
   id: string;
   startTime: string;
@@ -86,7 +98,11 @@ export interface GuidedBookingState {
   step: GuidedBookingStep;
   locationSlug: BookingLocation | null;
   selectedTreatmentKeys: string[];
-  providerId: string | null;
+  /** Provider choice for each selected location-scoped treatment key. */
+  providerIds: Record<string, string>;
+  /** Actual per-treatment schedule read back from Boulevard after reservation. */
+  schedule?: GuidedScheduledTreatment[];
+  reservationExpiresAt?: string;
   date: string;
   slot: GuidedSlot | null;
   search: string;
@@ -141,25 +157,31 @@ export interface AvailabilityResult {
 
 export interface GuidedBookingBackend {
   readonly mode: "mock" | "live";
+  /** Terminal uncertainty in this browser instance; do not start another booking. */
+  verificationPending?(): boolean;
   listTreatments?(location: BookingLocation): Promise<GuidedTreatment[]>;
-  reserve?(slot: GuidedSlot): Promise<void>;
+  reserve?(slot: GuidedSlot): Promise<{
+    schedule: GuidedScheduledTreatment[];
+    quote: { depositCents: number; totalCents: number; needsCard: boolean };
+    expiresAt: string;
+  }>;
   cardFrameOrigin?(): string | undefined;
   attachPayment?(token: string): Promise<void>;
   quote?(): { depositCents: number; totalCents: number; needsCard: boolean } | undefined;
   listProviders(input: {
     locationSlug: BookingLocation;
     treatmentKeys: string[];
-  }): Promise<GuidedProvider[]>;
+  }): Promise<GuidedProviderGroup[]>;
   loadAvailability(input: {
     locationSlug: BookingLocation;
     treatmentKeys: string[];
-    providerId: string | null;
+    providerIds: Record<string, string>;
     date?: string;
   }): Promise<AvailabilityResult>;
   loadTimesForDate(input: {
     locationSlug: BookingLocation;
     treatmentKeys: string[];
-    providerId: string | null;
+    providerIds: Record<string, string>;
     date: string;
   }): Promise<GuidedSlot[]>;
   /**
@@ -168,7 +190,7 @@ export interface GuidedBookingBackend {
   complete?(input: {
     locationSlug: BookingLocation;
     treatmentKeys: string[];
-    providerId: string | null;
+    providerIds: Record<string, string>;
     slot: GuidedSlot;
     client: GuidedBookingState["client"];
   }): Promise<{ ok: true; confirmationId: string; pending?: boolean } | { ok: false; reason: string }>;

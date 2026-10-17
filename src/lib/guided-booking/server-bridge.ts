@@ -19,7 +19,7 @@ function cartId(cookie: string): string | null {
     return typeof value.c === "string" && /^urn:blvd:Cart:[A-Za-z0-9_-]{1,64}$/.test(value.c) ? value.c : null;
   } catch { return null; }
 }
-const OPERATIONS: Record<string, string> = { menu: "cart", selection: "selection", times: "cart", reserve: "reserve", payment: "payment", checkout: "checkout", complete: "complete" };
+const OPERATIONS: Record<string, string> = { menu: "cart", selection: "selection", times: "cart", reserve: "reserve", release: "release", payment: "payment", checkout: "checkout", complete: "complete" };
 export async function bookingBridge(req: NextRequest, operation: string): Promise<Response> {
   const catalogRead = operation === "menu" && req.method === "GET";
   const path = catalogRead ? "menu" : OPERATIONS[operation];

@@ -26,6 +26,17 @@ it("derives cart identity from the session and leaves signature verification to 
   await bookingBridge(request("reserve", { cartId: "caller-cart", bookableTimeId: "time" }, undefined, `rella_cart_auth=${token}`), "reserve");
   expect(JSON.parse(String(network.mock.calls[0][1]?.body))).toEqual({ cartId: "urn:blvd:Cart:fixture", bookableTimeId: "time" });
 });
+it("releases only the cookie-bound cart through a same-origin POST", async () => {
+  const token = Buffer.from(JSON.stringify({ c: "urn:blvd:Cart:own-hold" })).toString("base64url") + ".signature";
+  const network = vi.spyOn(globalThis, "fetch").mockResolvedValue(Response.json({ ok: true, released: true }));
+  const response = await bookingBridge(request("release", { cartId: "another-cart" }, undefined, `rella_cart_auth=${token}`), "release");
+  expect(await response.json()).toEqual({ ok: true, released: true });
+  expect(String(network.mock.calls[0][0])).toBe("https://book.experiencerella.com/api/booking-v2/release");
+  expect(JSON.parse(String(network.mock.calls[0][1]?.body))).toEqual({ cartId: "urn:blvd:Cart:own-hold" });
+  expect((await bookingBridge(new NextRequest("https://experiencerella.com/api/booking-v2/bridge/release"), "release")).status).toBe(405);
+  expect((await bookingBridge(request("release", {}, "https://evil.test", `rella_cart_auth=${token}`), "release")).status).toBe(403);
+  expect(network).toHaveBeenCalledTimes(1);
+});
 it("fails closed on missing session, arbitrary backend and network uncertainty", async () => {
   expect((await bookingBridge(request("payment", { token: "opaque" }), "payment")).status).toBe(409);
   process.env.RELLA_BOOKING_BACKEND_ORIGIN = "https://evil.test";

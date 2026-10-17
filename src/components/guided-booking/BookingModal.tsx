@@ -17,6 +17,7 @@ import {
   goToStep,
   GUIDED_BOOKING_STEPS,
   progressLabel,
+  providersComplete,
   removeTreatment,
   selectDate,
   selectLocation,
@@ -29,7 +30,7 @@ import {
   type AvailabilityResult,
   type GuidedBookingBackend,
   type GuidedBookingState,
-  type GuidedProvider,
+  type GuidedProviderGroup,
   type GuidedSlot,
 } from "@/lib/guided-booking";
 import { VisitSummary } from "./VisitSummary";
@@ -52,27 +53,38 @@ export function BookingModal({
   const titleId = useId();
   const dialogRef = useRef<HTMLDivElement>(null);
   const closeRef = useRef<HTMLButtonElement>(null);
-  const [state, setState] = useState<GuidedBookingState>(() =>
-    bootstrapFromIntent(intent),
-  );
+  const [state, setState] = useState<GuidedBookingState>(() => ({
+    ...bootstrapFromIntent(intent),
+    ...(backend.verificationPending?.() ? { step: "complete" as const, confirmationId: "pending", confirmationPending: true } : {}),
+  }));
   const submittingRef = useRef(false);
   const reservingRef = useRef(false);
   const [reservationUncertain, setReservationUncertain] = useState(false);
-  const [providers, setProviders] = useState<GuidedProvider[]>([]);
+  const [providerGroups, setProviderGroups] = useState<GuidedProviderGroup[]>([]);
   const [availability, setAvailability] = useState<AvailabilityResult | null>(
     null,
   );
   const [times, setTimes] = useState<GuidedSlot[]>([]);
   const [loadingMeta, setLoadingMeta] = useState(false);
+  const allProvidersChosen = providersComplete(state);
 
   useEffect(() => {
+    if (backend.verificationPending?.()) {
+      setState(prev => prev.confirmationPending ? prev : ({ ...prev, step: "complete", confirmationId: "pending", confirmationPending: true }));
+      return;
+    }
     if (!state.locationSlug || !backend.listTreatments) return;
     const location = state.locationSlug;
     let cancelled = false;
     setLoadingMeta(true);
-    setState(prev => ({ ...prev, treatments: [], selectedTreatmentKeys: [], error: null }));
+    setState(prev => ({ ...prev, treatments: [], selectedTreatmentKeys: [], providerIds: {}, schedule: undefined,
+      reservationExpiresAt: undefined, quote: undefined, date: "", slot: null, availabilityUnverified: true, error: null }));
     backend.listTreatments(location).then(treatments => {
       if (cancelled) return;
+      if (backend.verificationPending?.()) {
+        setState(prev => ({ ...prev, step: "complete", confirmationId: "pending", confirmationPending: true }));
+        return;
+      }
       const key = mapIntentToTreatmentKey({ ...intent, location, treatments });
       setState(prev => prev.locationSlug !== location ? prev : ({ ...prev, treatments,
         selectedTreatmentKeys: key ? [key] : [], step: key ? "review" : "treatments", expandedCategories: [] }));
@@ -101,7 +113,7 @@ export function BookingModal({
 
   useEffect(() => {
     if (!state.locationSlug || state.selectedTreatmentKeys.length === 0) {
-      setProviders([]);
+      setProviderGroups([]);
       return;
     }
     if (state.step !== "provider") return;
@@ -113,7 +125,7 @@ export function BookingModal({
         treatmentKeys: state.selectedTreatmentKeys,
       })
       .then((list) => {
-        if (!cancelled) { setProviders(list); setState(prev => ({ ...prev, quote: backend.quote?.() })); }
+        if (!cancelled) { setProviderGroups(list); }
       })
       .catch(error => { if (!cancelled) setState(prev => ({ ...prev, error: error instanceof Error ? error.message : "Booking could not load. Please call Rella." })); })
       .finally(() => {
@@ -128,7 +140,7 @@ export function BookingModal({
     if (
       state.step !== "datetime" ||
       !state.locationSlug ||
-      state.selectedTreatmentKeys.length === 0
+      !allProvidersChosen
     ) {
       return;
     }
@@ -137,12 +149,13 @@ export function BookingModal({
     setAvailability(null);
     setTimes([]);
     setReservationUncertain(false);
-    setState(prev => ({ ...prev, date: "", slot: null, quote: undefined, availabilityUnverified: true, error: null }));
+    setState(prev => ({ ...prev, date: "", slot: null, quote: undefined, schedule: undefined,
+      reservationExpiresAt: undefined, availabilityUnverified: true, error: null }));
     backend
       .loadAvailability({
         locationSlug: state.locationSlug,
         treatmentKeys: state.selectedTreatmentKeys,
-        providerId: state.providerId,
+        providerIds: state.providerIds,
       })
       .then((result) => {
         if (!cancelled) {
@@ -163,14 +176,15 @@ export function BookingModal({
     };
   }, [
     backend,
+    allProvidersChosen,
     state.step,
     state.locationSlug,
     state.selectedTreatmentKeys,
-    state.providerId,
+    state.providerIds,
   ]);
 
   useEffect(() => {
-    if (!state.date || !state.locationSlug) {
+    if (state.step !== "datetime" || !state.date || !state.locationSlug) {
       setTimes([]);
       return;
     }
@@ -180,7 +194,7 @@ export function BookingModal({
       .loadTimesForDate({
         locationSlug: state.locationSlug,
         treatmentKeys: state.selectedTreatmentKeys,
-        providerId: state.providerId,
+        providerIds: state.providerIds,
         date: state.date,
       })
       .then((slots) => {
@@ -191,11 +205,25 @@ export function BookingModal({
     };
   }, [
     backend,
+    state.step,
     state.date,
     state.locationSlug,
     state.selectedTreatmentKeys,
-    state.providerId,
+    state.providerIds,
   ]);
+
+  useEffect(() => {
+    const expiresAt = state.reservationExpiresAt;
+    if (!expiresAt || state.step !== "complete" || state.confirmationId) return;
+    const delay = Math.max(0, Date.parse(expiresAt) - Date.now());
+    const timer = setTimeout(() => setState(prev => {
+      if (prev.reservationExpiresAt !== expiresAt || prev.confirmationId) return prev;
+      return { ...prev, schedule: undefined, quote: undefined, slot: null,
+        reservationExpiresAt: undefined, availabilityUnverified: true,
+        error: "Your appointment hold has expired. Go back to choose a new time before continuing." };
+    }), Math.min(delay, 2_147_483_647));
+    return () => clearTimeout(timer);
+  }, [state.reservationExpiresAt, state.step, state.confirmationId]);
 
   const patch = useCallback((next: GuidedBookingState) => {
     setState(next);
@@ -224,8 +252,8 @@ export function BookingModal({
         patch(goToStep(state, "provider"));
         return;
       case "provider":
-        if (!state.providerId) {
-          patch({ ...state, error: "Choose a provider to continue." });
+        if (!providersComplete(state)) {
+          patch({ ...state, error: "Choose a provider for each treatment to continue." });
           return;
         }
         patch(goToStep(state, "datetime"));
@@ -239,7 +267,12 @@ export function BookingModal({
         if (backend.reserve && state.slot) {
           reservingRef.current = true;
           patch({ ...state, busy: true });
-          try { await backend.reserve(state.slot); }
+          try {
+            const reservation = await backend.reserve(state.slot);
+            patch({ ...goToStep(state, "complete"), busy: false, schedule: reservation.schedule,
+              quote: reservation.quote, reservationExpiresAt: reservation.expiresAt });
+            return;
+          }
           catch { setReservationUncertain(true); patch({ ...state, busy: false, error: "We could not verify that time. Please call Rella before continuing." }); return; }
           finally { reservingRef.current = false; }
         }
@@ -262,19 +295,20 @@ export function BookingModal({
     try {
       if (token && backend.attachPayment) await backend.attachPayment(token);
       const result = await backend.complete({ locationSlug: state.locationSlug,
-        treatmentKeys: state.selectedTreatmentKeys, providerId: state.providerId, slot: state.slot, client: state.client });
-      if (!result.ok) { patch({ ...state, busy: false, error: result.reason }); return; }
+        treatmentKeys: state.selectedTreatmentKeys, providerIds: state.providerIds, slot: state.slot, client: state.client });
+      if (!result.ok) { setState(prev => ({ ...prev, busy: false, error: result.reason })); return; }
       if (!result.pending) emitGuidedBookingEvent({ type: "booking_confirmed", confirmationId: result.confirmationId, at: Date.now() });
-      patch({ ...state, busy: false, confirmationId: result.confirmationId, confirmationPending: result.pending, error: null });
+      setState(prev => ({ ...prev, busy: false, confirmationId: result.confirmationId, confirmationPending: result.pending, error: null }));
     } catch {
-      patch({ ...state, busy: false, error: "We could not verify your booking. Please call Rella before trying again." });
+      setState(prev => ({ ...prev, busy: false, error: "We could not verify your booking. Please call Rella before trying again." }));
     } finally { submittingRef.current = false; }
   }
 
   const primaryLabel = state.step === "complete" ? null : "Continue";
-  const selectedTreatment = state.treatments?.find((treatment) =>
-    state.selectedTreatmentKeys.includes(treatment.key),
-  );
+  const selectedTreatments = state.selectedTreatmentKeys.flatMap(key => {
+    const treatment = state.treatments?.find(item => item.key === key);
+    return treatment ? [treatment] : [];
+  });
 
   return (
     <div className="fixed inset-0 z-[80]" role="presentation">
@@ -345,10 +379,12 @@ export function BookingModal({
               ) : null}
               {state.step === "provider" ? (
                 <ProviderStep
-                  providers={providers}
-                  selectedId={state.providerId}
+                  groups={providerGroups.map(group => ({ ...group,
+                    displayName: state.treatments?.find(item => item.key === group.treatmentKey)?.displayName ?? "Selected treatment",
+                  }))}
+                  selectedIds={state.providerIds}
                   loading={loadingMeta}
-                  onSelect={(id) => patch(selectProvider(state, id))}
+                  onSelect={(key, id) => patch(selectProvider(state, key, id))}
                 />
               ) : null}
               {state.step === "datetime" ? (
@@ -357,12 +393,14 @@ export function BookingModal({
                   times={times}
                   selectedDate={state.date}
                   selectedSlotId={state.slot?.id ?? null}
-                  loading={loadingMeta}
+                  loading={loadingMeta || state.busy}
                   onSelectDate={(date) => patch(selectDate(state, date))}
                   onSelectSlot={(slot) => patch(selectSlot(state, slot))}
                 />
               ) : null}
               {state.step === "complete" ? (
+                <>
+                {state.schedule?.length ? <div className="mb-5 lg:hidden"><VisitSummary state={state} editable={false} /></div> : null}
                 <CompleteStep
                   state={state}
                   mode={backend.mode}
@@ -374,6 +412,7 @@ export function BookingModal({
                   cardFrameOrigin={backend.cardFrameOrigin?.()}
                   onLiveComplete={completeBooking}
                 />
+                </>
               ) : null}
               {state.error ? (
                 <p className="mt-4 text-sm text-rose" role="alert">
@@ -382,36 +421,46 @@ export function BookingModal({
               ) : null}
             </div>
             <div className="hidden lg:block">
+              {!state.confirmationPending || selectedTreatments.length > 0 ? (
               <VisitSummary
                 state={state}
                 editable={state.step === "treatments" || state.step === "review"}
                 onRemove={(key) => patch(removeTreatment(state, key))}
               />
+              ) : null}
             </div>
           </div>
         </div>
 
         <footer className="shrink-0 border-t border-rule/50 bg-white/95 px-4 py-3 backdrop-blur-sm md:px-6">
           <div role="status" aria-live="polite" aria-atomic="true">
-            {state.step === "treatments" && selectedTreatment ? (
-              <div className="mb-3 flex items-center justify-between gap-3 rounded-sm border border-rose/50 bg-ivory px-3 py-2">
+            {state.step === "treatments" && selectedTreatments.length > 0 ? (
+              <details className="mb-3 rounded-sm border border-rose/50 bg-ivory px-3 py-2">
+                <summary className="flex cursor-pointer items-center justify-between gap-3">
                 <div className="min-w-0">
                   <p className="text-[0.625rem] font-bold uppercase tracking-[0.14em] text-ink/60">
-                    <span aria-hidden="true">✓ </span>Treatment added
+                    <span aria-hidden="true">✓ </span>{selectedTreatments.length === 1 ? "Treatment added" : `${selectedTreatments.length} treatments added`}
                   </p>
                   <p className="mt-1 truncate text-sm font-medium text-ink">
-                    {selectedTreatment.displayName}
+                    {selectedTreatments.map(treatment => treatment.displayName).join(" · ")}
                   </p>
                 </div>
+                <span className="shrink-0 text-[0.625rem] font-bold uppercase tracking-[0.14em] text-rose">View</span>
+                </summary>
+                <ul className="mt-2 max-h-36 space-y-2 overflow-y-auto">
+                {selectedTreatments.map(treatment => <li key={treatment.key} className="flex items-center justify-between gap-3">
+                <span className="text-sm text-ink">{treatment.displayName}</span>
                 <button
                   type="button"
                   className="min-h-11 shrink-0 text-[0.625rem] font-bold uppercase tracking-[0.14em] text-rose"
-                  aria-label={`Remove ${selectedTreatment.displayName}`}
-                  onClick={() => patch(removeTreatment(state, selectedTreatment.key))}
+                  aria-label={`Remove ${treatment.displayName}`}
+                  onClick={() => patch(removeTreatment(state, treatment.key))}
                 >
                   Remove
                 </button>
-              </div>
+                </li>)}
+                </ul>
+              </details>
             ) : null}
           </div>
           <div className="flex items-center justify-between gap-3">

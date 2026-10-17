@@ -42,8 +42,8 @@ function mockSlotsForDate(date: string): GuidedSlot[] {
 export function createMockBackend(): GuidedBookingBackend {
   return {
     mode: "mock",
-    async listProviders() {
-      return [
+    async listProviders(input) {
+      const providers = [
         ANY_PROVIDER,
         {
           id: "mock-provider-a",
@@ -58,6 +58,7 @@ export function createMockBackend(): GuidedBookingBackend {
           anyAvailable: false,
         },
       ];
+      return input.treatmentKeys.map(treatmentKey => ({ treatmentKey, providers }));
     },
     async loadAvailability() {
       const dates = [1, 2, 3, 5, 6, 8, 9].map(isoDateOffset);

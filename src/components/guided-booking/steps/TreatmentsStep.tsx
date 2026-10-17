@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import {
   formatListPrice,
   treatmentsByCategory,
@@ -34,8 +33,8 @@ export function TreatmentsStep({
           Choose a treatment
         </h3>
         <p className="mt-2 text-sm font-light text-silver">
-          Choose one treatment for this booking. Adding another replaces your
-          current selection.
+          Add the treatments you’d like for your visit. You can choose a provider
+          for each treatment and find a time for the complete visit.
         </p>
       </div>
 
@@ -79,7 +78,6 @@ export function TreatmentsStep({
                     const added = state.selectedTreatmentKeys.includes(
                       treatment.key,
                     );
-                    const replacing = !added && state.selectedTreatmentKeys.length > 0;
                     return (
                       <li
                         key={treatment.key}
@@ -87,17 +85,6 @@ export function TreatmentsStep({
                           added ? "bg-ivory/70 ring-1 ring-inset ring-rose" : ""
                         }`}
                       >
-                        {treatment.image ? (
-                          <div className="relative h-20 w-full shrink-0 overflow-hidden rounded-sm sm:h-20 sm:w-28">
-                            <Image
-                              src={treatment.image}
-                              alt={treatment.imageAlt ?? ""}
-                              fill
-                              className="object-cover"
-                              sizes="112px"
-                            />
-                          </div>
-                        ) : null}
                         <div className="min-w-0 flex-1">
                           <div className="flex flex-wrap items-center gap-2">
                             <p className="font-medium text-ink">
@@ -127,14 +114,14 @@ export function TreatmentsStep({
                           type="button"
                           onClick={() => onToggleTreatment(treatment.key)}
                           aria-pressed={added}
-                          aria-label={`${added ? "Remove" : replacing ? "Replace selected treatment with" : "Add"} ${treatment.displayName}`}
+                          aria-label={`${added ? "Remove" : "Add"} ${treatment.displayName}`}
                           className={`shrink-0 rounded-full border px-5 py-2.5 text-[0.625rem] font-bold uppercase tracking-[0.16em] ${
                             added
                               ? "border-ink bg-ink text-white"
                               : "border-rose bg-rose text-white"
                           }`}
                         >
-                          {added ? "✓ Added" : replacing ? "Replace" : "Add"}
+                          {added ? "✓ Added" : "Add"}
                         </button>
                       </li>
                     );

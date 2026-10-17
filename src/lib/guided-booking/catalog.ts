@@ -24,7 +24,8 @@ export const GUIDED_LOCATIONS: readonly GuidedLocation[] = [
   },
 ] as const;
 
-export const ALLOWS_MULTI_TREATMENT = false;
+export const ALLOWS_MULTI_TREATMENT = true;
+export const MAX_GUIDED_TREATMENTS = 6;
 
 const IMAGE_BY_SLUG: Record<string, { image: string; imageAlt: string }> = {
   botox: {

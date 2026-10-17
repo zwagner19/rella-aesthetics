@@ -31,9 +31,9 @@ export function DateTimeStep({
         </h3>
         <p className="mt-2 text-sm font-light text-silver">
           {live
-            ? "Showing live Boulevard availability for your selection."
+            ? "Showing available times for your complete visit."
             : availability?.message ??
-              "Live times will appear here after Boulevard verifies your selection."}
+              "Available times will appear here after your visit is verified."}
         </p>
       </div>
 
@@ -53,6 +53,13 @@ export function DateTimeStep({
         </p>
       ) : null}
 
+      {live && !loading && dates.length === 0 ? (
+        <p className="text-sm text-silver" role="status">
+          No times are available for this combination. Try different providers
+          or treatments, or call Rella.
+        </p>
+      ) : null}
+
       {next.length > 0 ? (
         <div>
           <p className="text-[0.6875rem] font-bold uppercase tracking-[0.16em] text-ink/55">
@@ -63,6 +70,7 @@ export function DateTimeStep({
               <li key={`next-${slot.id}`}>
                 <button
                   type="button"
+                  disabled={loading}
                   onClick={() => {
                     onSelectDate(slot.startTime.slice(0, 10));
                     onSelectSlot(slot);
@@ -103,6 +111,7 @@ export function DateTimeStep({
                 <li key={date}>
                   <button
                     type="button"
+                    disabled={loading}
                     onClick={() => onSelectDate(date)}
                     aria-pressed={active}
                     className={`w-full rounded-sm border px-2 py-3 text-xs ${
@@ -130,6 +139,7 @@ export function DateTimeStep({
               <li key={slot.id}>
                 <button
                   type="button"
+                  disabled={loading}
                   onClick={() => onSelectSlot(slot)}
                   aria-pressed={selectedSlotId === slot.id}
                   className={`rounded-full border px-4 py-2 text-xs ${
