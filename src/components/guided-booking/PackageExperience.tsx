@@ -2,6 +2,7 @@
 
 import { useEffect, useId, useRef, useState } from "react";
 import type { BookingLocation } from "@/lib/booking-routes";
+import { initialGuidedBookingState } from "@/lib/guided-booking/machine";
 import {
   createPackageIdentityClient,
   PackageRequestError,
@@ -42,7 +43,7 @@ export function PackageExperience({ client, identityClient: providedIdentity, in
   const [location, setLocation] = useState<BookingLocation | undefined>(initialLocation);
   const [offerings, setOfferings] = useState<PackageOffering[]>([]);
   const [review, setReview] = useState<PackagePurchaseReview>();
-  const [contact, setContact] = useState<PackageContact>({ firstName: "", lastName: "", email: "", phone: "" });
+  const [contact, setContact] = useState<PackageContact>(() => ({ ...initialGuidedBookingState.client }));
   const [authentication, setAuthentication] = useState<PackageAuthentication | null>(null);
   const [busy, setBusy] = useState(Boolean(initialIntent && initialLocation));
   const [error, setError] = useState<string | null>(null);

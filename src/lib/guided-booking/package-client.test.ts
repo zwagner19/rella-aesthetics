@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from "vitest";
 import { createPackageClient, createSharedPackageClient, formatPackageTotal, packageMenuLabel, type PackageOperations, type PackagePurchaseResult } from "./package-client";
 
-const input = { client: { firstName: "Test", lastName: "Client", email: "test@example.test", phone: "7075550100" }, token: "test-token" };
+const input = { client: { firstName: "Test", lastName: "Client", email: "test@example.test", phone: "7075550100", assessmentContactConsent: true, marketingConsent: false }, token: "test-token" };
 function operations(purchase: PackageOperations["purchase"]): PackageOperations {
   return { status: async () => ({ state: "DRAFT" }), listOfferings: async () => [], reviewPurchase: async () => { throw new Error("Not requested"); }, preparePurchase: async () => { throw new Error("Not requested"); }, purchase };
 }
@@ -112,6 +112,18 @@ describe("same-origin package contract", () => {
     await client.preparePurchase(input.client);
     await expect(client.purchase({ ...input, client: { ...input.client, email: "different@example.test" } })).rejects.toThrow("Review your contact details");
     expect(calls.some(call => call.operation === "payment" || call.operation === "checkout")).toBe(false);
+  });
+
+  it("requires contact consent before preparing a package and sends only the four supported contact fields", async () => {
+    const { fetcher, calls } = adapter();
+    const client = createSharedPackageClient(fetcher);
+    await client.listOfferings("napa"); await client.reviewPurchase({ location: "napa", packageId: "opaque-package" });
+    await expect(client.preparePurchase({ ...input.client, assessmentContactConsent: false, marketingConsent: true })).rejects.toThrow("Complete your contact details");
+    expect(calls.filter(call => call.operation === "prepare")).toHaveLength(0);
+    await client.preparePurchase(input.client);
+    expect(calls.filter(call => call.operation === "prepare").map(call => call.body)).toEqual([
+      { info: { firstName: "Test", lastName: "Client", email: "test@example.test", phoneNumber: "7075550100" } },
+    ]);
   });
 
   it("stops after uncertain payment attachment and never auto-checks out or reattaches", async () => {

@@ -4,6 +4,7 @@ import type { ReactNode } from "react";
 import type { BookingLocation } from "@/lib/booking-routes";
 import { GUIDED_LOCATIONS } from "@/lib/guided-booking/catalog";
 import { clientLooksComplete } from "@/lib/guided-booking/machine";
+import { ASSESSMENT_CONTACT_CONSENT, MARKETING_CONSENT } from "@/lib/guided-booking/policies";
 import {
   formatPackageTotal,
   packageMenuLabel,
@@ -130,6 +131,18 @@ export function PackagePanel({ view, busy = false, error, onIntent, onLocation, 
             <input type={key === "email" ? "email" : key === "phone" ? "tel" : "text"} autoComplete={autoComplete} value={view.contact[key]} onChange={event => onContact({ [key]: event.target.value })} className={inputClass} required />
           </label>)}
       </fieldset>
+      <div className="space-y-3">
+        <label className="flex items-start gap-3 text-sm font-light leading-relaxed text-ink/80">
+          <input type="checkbox" className="mt-1 size-4 shrink-0 accent-rose" checked={view.contact.assessmentContactConsent}
+            onChange={event => onContact({ assessmentContactConsent: event.target.checked })} disabled={busy} required />
+          <span>{ASSESSMENT_CONTACT_CONSENT}</span>
+        </label>
+        <label className="flex items-start gap-3 text-sm font-light leading-relaxed text-ink/80">
+          <input type="checkbox" className="mt-1 size-4 shrink-0 accent-rose" checked={view.contact.marketingConsent}
+            onChange={event => onContact({ marketingConsent: event.target.checked })} disabled={busy} />
+          <span>{MARKETING_CONSENT}</span>
+        </label>
+      </div>
       <button type="button" disabled={busy || !clientLooksComplete(view.contact) || !formatPackageTotal(view.review)} onClick={() => void onPrepare()} className={actionClass}>{busy ? "Preparing…" : "Review total and payment"}</button>
     </> : null}
     {view.step === "purchase" ? <>

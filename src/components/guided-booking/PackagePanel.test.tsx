@@ -2,6 +2,7 @@ import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it } from "vitest";
 import { PackagePanel, type PackagePanelProps } from "./PackagePanel";
 import type { PackagePurchaseReview } from "@/lib/guided-booking/package-client";
+import { ASSESSMENT_CONTACT_CONSENT, MARKETING_CONSENT } from "@/lib/guided-booking/policies";
 
 const review: PackagePurchaseReview = {
   offering: { id: "opaque-package", displayName: "Laser package | $600", description: "Treatment details from the verified catalog.", benefitGroups: [{ quantity: 3, alternatives: ["Laser A", "Laser B"] }] },
@@ -52,8 +53,8 @@ describe("package presentation", () => {
   });
 
   it("uses mobile-safe contact inputs and the real secure-card component boundary", () => {
-    const html = renderToStaticMarkup(<PackagePanel {...actions} view={{ step: "contact", location: "napa", review, contact: { firstName: "", lastName: "", email: "", phone: "" } }} />);
-    const inputs = html.match(/<input\b[^>]*>/g) ?? [];
+    const html = renderToStaticMarkup(<PackagePanel {...actions} view={{ step: "contact", location: "napa", review, contact: { firstName: "", lastName: "", email: "", phone: "", assessmentContactConsent: false, marketingConsent: false } }} />);
+    const inputs = (html.match(/<input\b[^>]*>/g) ?? []).filter(input => !input.includes('type="checkbox"'));
     expect(inputs).toHaveLength(4);
     for (const input of inputs) {
       expect(input).toContain("min-h-11");
@@ -63,6 +64,30 @@ describe("package presentation", () => {
     expect(html).not.toContain('name="cardNumber"');
     expect(html).not.toContain('name="cvc"');
     expect(html).toContain("Review total and payment");
+  });
+
+  it("shows the exact approved required and optional consent wording with native unchecked controls", () => {
+    const html = renderToStaticMarkup(<PackagePanel {...actions} view={{ step: "contact", location: "napa", review, contact: {
+      firstName: "Test", lastName: "Client", email: "test@example.test", phone: "7075550100", assessmentContactConsent: false, marketingConsent: false,
+    } }} />);
+    expect(html).toContain(ASSESSMENT_CONTACT_CONSENT);
+    expect(html).toContain(MARKETING_CONSENT);
+    const checkboxes = (html.match(/<input\b[^>]*>/g) ?? []).filter(input => input.includes('type="checkbox"'));
+    expect(checkboxes).toHaveLength(2);
+    expect(checkboxes[0]).toContain('required=""');
+    expect(checkboxes[1]).not.toContain("required");
+    expect(checkboxes.every(input => !input.includes("checked"))).toBe(true);
+    expect(html).toMatch(/<button[^>]*disabled=""[^>]*>Review total and payment/);
+  });
+
+  it("allows package contact to continue with required consent while promotional consent remains optional", () => {
+    const contact = { firstName: "Test", lastName: "Client", email: "test@example.test", phone: "7075550100", assessmentContactConsent: true, marketingConsent: false };
+    const html = renderToStaticMarkup(<PackagePanel {...actions} view={{ step: "contact", location: "vacaville", review, contact }} />);
+    const button = html.match(/<button\b[^>]*>Review total and payment<\/button>/)?.[0];
+    expect(button).toBeDefined();
+    expect(button).not.toContain('disabled=""');
+    const marketingOnly = renderToStaticMarkup(<PackagePanel {...actions} view={{ step: "contact", location: "vacaville", review, contact: { ...contact, assessmentContactConsent: false, marketingConsent: true } }} />);
+    expect(marketingOnly).toMatch(/<button[^>]*disabled=""[^>]*>Review total and payment/);
   });
 
   it("requires the supplied ownership-verification flow before showing balances", () => {
