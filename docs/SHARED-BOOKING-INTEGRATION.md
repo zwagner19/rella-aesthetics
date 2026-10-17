@@ -16,3 +16,5 @@ The existing finalizer owns confirmation: only CONFIRMED produces confirmed UI, 
 - Desktop/mobile design signoff including the functional card fields.
 
 Validation: 327 website tests passed; production build and TypeScript passed. Changed booking files pass targeted ESLint. Full-repository ESLint has an existing unrelated `set-state-in-effect` error in `src/components/layout/Header.tsx:39`; that design file is untouched. Browser exercised six steps through an in-page confirmation using a local-only fixture (no actual appointment, card, payment or database write). This evidence proves local integration, not production readiness.
+
+Paired draft PRs: website https://github.com/zwagner19/rella-aesthetics/pull/42 and booking backend https://github.com/zwagner19/rella-booking/pull/67. Neither is merged or production-enabled.
