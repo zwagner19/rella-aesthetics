@@ -17,7 +17,7 @@ export const GUIDED_BOOKING_STEPS: readonly GuidedBookingStep[] = [
   "complete",
 ] as const;
 
-export type PaymentRuleCopy = "deposit" | "card_on_file" | "no_card";
+export type PaymentRuleCopy = "deposit" | "card_on_file" | "no_card" | "pending";
 
 export interface GuidedLocation {
   slug: BookingLocation;
@@ -35,8 +35,10 @@ export interface GuidedTreatment {
   serviceSlug: string;
   displayName: string;
   /** Boulevard menu category (rella-booking / Client API). */
-  category: "Injectables" | "Laser" | "Microneedling" | "Facials" | "Peels";
+  category: string;
   shortDescription: string;
+  /** Service prerequisites from the live menu, shown at review. */
+  bookingNotes?: string;
   image?: string;
   imageAlt?: string;
   durationCopy?: string;
@@ -61,6 +63,18 @@ export interface GuidedProvider {
   anyAvailable: boolean;
 }
 
+export interface GuidedProviderGroup {
+  treatmentKey: string;
+  providers: GuidedProvider[];
+}
+
+export interface GuidedScheduledTreatment {
+  treatmentKey: string;
+  startTime: string;
+  providerName?: string;
+  timeZone: string;
+}
+
 export interface GuidedSlot {
   id: string;
   startTime: string;
@@ -78,10 +92,19 @@ export interface GuidedVisitItem {
 }
 
 export interface GuidedBookingState {
+  treatments?: GuidedTreatment[];
+  quote?: { depositCents: number; totalCents: number; needsCard: boolean };
+  confirmationPending?: boolean;
   step: GuidedBookingStep;
   locationSlug: BookingLocation | null;
   selectedTreatmentKeys: string[];
-  providerId: string | null;
+  /** A single service chosen from the authenticated, location-scoped package wallet. */
+  ownedPackageServiceKey?: string;
+  /** Provider choice for each selected location-scoped treatment key. */
+  providerIds: Record<string, string>;
+  /** Actual per-treatment schedule read back from Boulevard after reservation. */
+  schedule?: GuidedScheduledTreatment[];
+  reservationExpiresAt?: string;
   date: string;
   slot: GuidedSlot | null;
   search: string;
@@ -97,6 +120,10 @@ export interface GuidedBookingState {
     lastName: string;
     email: string;
     phone: string;
+    /** Required before checkout when a phone number is collected. Not sent as a checkout field. */
+    assessmentContactConsent: boolean;
+    /** Optional promotional consent. Not sent as a checkout field. */
+    marketingConsent: boolean;
   };
 }
 
@@ -129,38 +156,51 @@ export interface AvailabilityResult {
   dates: string[];
   /** Next available slots for quick pick. */
   nextAvailable: GuidedSlot[];
-  /** Honest flag: mock/sandbox only until Boulevard Client API is wired. */
+  /** True only for availability returned by the shared booking backend. */
   live: boolean;
   message?: string;
 }
 
 export interface GuidedBookingBackend {
-  readonly mode: "mock" | "handoff";
+  readonly mode: "mock" | "live";
+  /** Terminal uncertainty in this browser instance; do not start another booking. */
+  verificationPending?(): boolean;
+  setOwnedPackageContext?(enabled: boolean): void;
+  /** Release a verified uncompleted hold before replacing its authenticated owner. */
+  prepareIdentityChange?(): Promise<void>;
+  listTreatments?(location: BookingLocation): Promise<GuidedTreatment[]>;
+  reserve?(slot: GuidedSlot): Promise<{
+    schedule: GuidedScheduledTreatment[];
+    quote: { depositCents: number; totalCents: number; needsCard: boolean };
+    expiresAt: string;
+  }>;
+  cardFrameOrigin?(): string | undefined;
+  attachPayment?(token: string): Promise<void>;
+  quote?(): { depositCents: number; totalCents: number; needsCard: boolean } | undefined;
   listProviders(input: {
     locationSlug: BookingLocation;
     treatmentKeys: string[];
-  }): Promise<GuidedProvider[]>;
+  }): Promise<GuidedProviderGroup[]>;
   loadAvailability(input: {
     locationSlug: BookingLocation;
     treatmentKeys: string[];
-    providerId: string | null;
+    providerIds: Record<string, string>;
     date?: string;
   }): Promise<AvailabilityResult>;
   loadTimesForDate(input: {
     locationSlug: BookingLocation;
     treatmentKeys: string[];
-    providerId: string | null;
+    providerIds: Record<string, string>;
     date: string;
   }): Promise<GuidedSlot[]>;
   /**
-   * Mutations are intentionally unavailable on the marketing site until a
-   * sandbox Client API path exists. Mock backend may confirm; handoff never.
+   * Live completion delegates to the existing durable booking finalizer.
    */
   complete?(input: {
     locationSlug: BookingLocation;
     treatmentKeys: string[];
-    providerId: string | null;
+    providerIds: Record<string, string>;
     slot: GuidedSlot;
     client: GuidedBookingState["client"];
-  }): Promise<{ ok: true; confirmationId: string } | { ok: false; reason: string }>;
+  }): Promise<{ ok: true; confirmationId: string; pending?: boolean } | { ok: false; reason: string }>;
 }

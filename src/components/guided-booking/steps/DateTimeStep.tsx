@@ -31,26 +31,32 @@ export function DateTimeStep({
         </h3>
         <p className="mt-2 text-sm font-light text-silver">
           {live
-            ? "Showing live Boulevard availability for your selection."
+            ? "Showing available times for your complete visit."
             : availability?.message ??
-              "Live times are confirmed in Rella’s booking app before your appointment is created."}
+              "Available times will appear here after your visit is verified."}
         </p>
       </div>
 
-      {!live ? (
+      {!live && !loading ? (
         <div
           role="status"
           className="rounded-sm border border-rule/70 bg-ivory px-4 py-3 text-sm text-ink/80"
         >
-          Availability on this marketing preview is not live Boulevard inventory.
-          Continue to complete booking on the secure booking app, where real
-          dates and times load from Boulevard.
+          Availability has not been verified yet. Please wait for the live dates
+          and times before continuing.
         </div>
       ) : null}
 
       {loading ? (
         <p className="text-sm text-silver" role="status">
           Checking availability…
+        </p>
+      ) : null}
+
+      {live && !loading && dates.length === 0 ? (
+        <p className="text-sm text-silver" role="status">
+          No times are available for this combination. Try different providers
+          or treatments, or call Rella.
         </p>
       ) : null}
 
@@ -64,6 +70,7 @@ export function DateTimeStep({
               <li key={`next-${slot.id}`}>
                 <button
                   type="button"
+                  disabled={loading}
                   onClick={() => {
                     onSelectDate(slot.startTime.slice(0, 10));
                     onSelectSlot(slot);
@@ -104,6 +111,7 @@ export function DateTimeStep({
                 <li key={date}>
                   <button
                     type="button"
+                    disabled={loading}
                     onClick={() => onSelectDate(date)}
                     aria-pressed={active}
                     className={`w-full rounded-sm border px-2 py-3 text-xs ${
@@ -131,6 +139,7 @@ export function DateTimeStep({
               <li key={slot.id}>
                 <button
                   type="button"
+                  disabled={loading}
                   onClick={() => onSelectSlot(slot)}
                   aria-pressed={selectedSlotId === slot.id}
                   className={`rounded-full border px-4 py-2 text-xs ${

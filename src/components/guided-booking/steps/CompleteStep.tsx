@@ -1,43 +1,43 @@
 "use client";
 
 import {
-  buildHandoffUrl,
+  ASSESSMENT_CONTACT_CONSENT,
+  MARKETING_CONSENT,
   clientLooksComplete,
+  contactFieldsLookComplete,
   type GuidedBookingState,
 } from "@/lib/guided-booking";
+
+import { SecureCardFrame } from "../SecureCardFrame";
 
 export function CompleteStep({
   state,
   mode,
   onChange,
   onMockComplete,
-  onHandoff,
   submitting,
+  cardFrameOrigin,
+  onLiveComplete,
 }: {
   state: GuidedBookingState;
-  mode: "mock" | "handoff";
+  mode: "mock" | "live";
+  cardFrameOrigin?: string;
+  onLiveComplete: (token?: string) => Promise<void>;
   onChange: (patch: Partial<GuidedBookingState["client"]>) => void;
   onMockComplete?: () => void;
-  onHandoff: (url: string) => void;
   submitting: boolean;
 }) {
-  const treatmentKey = state.selectedTreatmentKeys[0];
-  const serviceSlug = treatmentKey?.split("/")[1];
-  const handoffUrl =
-    state.locationSlug && serviceSlug
-      ? buildHandoffUrl(state.locationSlug, serviceSlug)
-      : null;
   const ready = clientLooksComplete(state.client);
+  const contactReady = contactFieldsLookComplete(state.client);
 
   if (state.confirmationId) {
     return (
       <div className="space-y-4" role="status">
         <h3 className="text-xl font-medium tracking-[-0.02em] text-ink">
-          Booking confirmed
+          {state.confirmationPending ? "Booking verification pending" : "Booking confirmed"}
         </h3>
         <p className="text-sm font-light text-silver">
-          Confirmation reference {state.confirmationId}. This was a mock
-          confirmation for tests — no Boulevard appointment was created.
+          {mode === "mock" ? "This was a test confirmation; no appointment was created." : state.confirmationPending ? "Please call Rella to verify your appointment before booking again." : "Your appointment has been confirmed by Rella’s booking system."}
         </p>
       </div>
     );
@@ -50,9 +50,7 @@ export function CompleteStep({
           Complete your booking
         </h3>
         <p className="mt-2 text-sm font-light text-silver">
-          {mode === "handoff"
-            ? "Enter your details, then continue to Rella’s secure booking app to pick a live Boulevard time and pay any required deposit. Appointments are created only after that confirmation succeeds."
-            : "Mock mode can confirm without Boulevard. Production never creates carts from this marketing site session."}
+          {mode === "live" ? "Enter your details to confirm your appointment securely with Boulevard." : "This is a test booking."}
         </p>
       </div>
 
@@ -82,40 +80,63 @@ export function CompleteStep({
               }
               value={state.client[key]}
               onChange={(e) => onChange({ [key]: e.target.value })}
-              className="w-full rounded-sm border border-rule/70 bg-white px-3 py-2.5 text-ink outline-none focus:border-ink"
+              className="min-h-11 w-full rounded-sm border border-rule/70 bg-white px-3 py-2.5 text-base text-ink outline-none focus:border-ink sm:text-sm"
               required
             />
           </label>
         ))}
       </div>
 
-      {mode === "handoff" ? (
-        handoffUrl ? (
-          <a
-            href={handoffUrl}
-            data-guided-booking-handoff="true"
-            onClick={() => onHandoff(handoffUrl)}
-            className={`inline-flex items-center justify-center rounded-full border-[1.5px] border-rose bg-rose px-8 py-3.5 text-[0.6875rem] font-bold uppercase tracking-[0.18em] text-white ${
-              ready ? "" : "pointer-events-none opacity-50"
-            }`}
-            aria-disabled={!ready}
-          >
-            Continue on booking app
-          </a>
-        ) : (
-          <p className="text-sm text-rose" role="alert">
-            This treatment mapping is unknown — booking refused (fail closed).
-          </p>
-        )
+      <div className="space-y-3">
+        <label className="flex items-start gap-3 text-sm font-light leading-relaxed text-ink/80">
+          <input
+            type="checkbox"
+            className="mt-1 size-4 shrink-0 accent-rose"
+            checked={state.client.assessmentContactConsent}
+            onChange={(event) =>
+              onChange({ assessmentContactConsent: event.target.checked })
+            }
+            required
+          />
+          <span>{ASSESSMENT_CONTACT_CONSENT}</span>
+        </label>
+        <label className="flex items-start gap-3 text-sm font-light leading-relaxed text-ink/80">
+          <input
+            type="checkbox"
+            className="mt-1 size-4 shrink-0 accent-rose"
+            checked={state.client.marketingConsent}
+            onChange={(event) => onChange({ marketingConsent: event.target.checked })}
+          />
+          <span>{MARKETING_CONSENT}</span>
+        </label>
+      </div>
+
+      {mode === "live" ? (
+        <div className="space-y-4">
+          {state.quote ? (
+            <p className="text-sm text-silver">
+              Total booking deposit: {new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(state.quote.depositCents / 100)}
+              <span className="mt-1 block text-xs">
+                {state.quote.depositCents > 0
+                  ? "A deposit applies to each appointment that requires one. This total covers your selected appointments."
+                  : "No deposit is due for this booking."}
+              </span>
+            </p>
+          ) : null}
+          {ready && state.quote ? (
+            state.quote.needsCard ? (
+              cardFrameOrigin ? <SecureCardFrame origin={cardFrameOrigin} busy={submitting} onToken={onLiveComplete} /> : <p role="alert">Secure payment is unavailable. Please call Rella.</p>
+            ) : <button type="button" disabled={submitting} onClick={() => void onLiveComplete()} className="rounded-full border-[1.5px] border-rose bg-rose px-8 py-3.5 text-[0.6875rem] font-bold uppercase tracking-[0.18em] text-white disabled:opacity-50">{submitting ? "Confirming…" : "Confirm booking"}</button>
+          ) : (
+            <p className="text-sm text-silver">
+              {contactReady
+                ? "Confirm the required contact consent to continue."
+                : "Complete your contact details to continue."}
+            </p>
+          )}
+        </div>
       ) : (
-        <button
-          type="button"
-          disabled={!ready || submitting}
-          onClick={onMockComplete}
-          className="rounded-full border-[1.5px] border-rose bg-rose px-8 py-3.5 text-[0.6875rem] font-bold uppercase tracking-[0.18em] text-white disabled:opacity-50"
-        >
-          {submitting ? "Confirming…" : "Confirm mock booking"}
-        </button>
+        <button type="button" disabled={!ready || submitting} onClick={onMockComplete} className="rounded-full border-[1.5px] border-rose bg-rose px-8 py-3.5 text-[0.6875rem] font-bold uppercase tracking-[0.18em] text-white disabled:opacity-50">{submitting ? "Confirming…" : "Confirm mock booking"}</button>
       )}
     </div>
   );
