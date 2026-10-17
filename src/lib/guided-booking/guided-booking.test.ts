@@ -93,14 +93,24 @@ type Choice = { service: string; provider?: string };
 function backendResponses(options: { confirmation?: string; failSelection?: boolean; failReserve?: boolean;
   failCheckout?: boolean; ambiguousCheckout?: boolean; ambiguousCheckoutStatus?: number; rejectCheckout?: boolean;
   failRelease?: boolean; denyRelease?: boolean; unverifiedRelease?: boolean;
+  requireFreshVisitor?: boolean; failMenuReadAt?: number;
   incompleteSchedule?: boolean; noCombinedDates?: boolean; reserveQuote?: typeof quoted } = {}) {
   const calls: Request[] = [];
   let committed: Choice[] = [];
+  let visitorExpiresAt = 0;
+  let menuReads = 0;
   vi.spyOn(globalThis, "fetch").mockImplementation(async (url, init) => {
     const parsed = new URL(String(url), "https://experiencerella.com");
     const operation = parsed.pathname.split("/").pop()!;
     const body = init?.body ? JSON.parse(String(init.body)) : undefined;
     calls.push({ operation, body, method: init?.method ?? "GET", query: parsed.searchParams });
+    if (operation === "menu" && init?.method === "GET") {
+      if (++menuReads === options.failMenuReadAt) return Response.json({ ok: false, reason: "menu_unavailable" }, { status: 502 });
+      visitorExpiresAt = Date.now() + 30 * 60 * 1000;
+    }
+    if (operation === "menu" && init?.method === "POST" && options.requireFreshVisitor && visitorExpiresAt <= Date.now()) {
+      return Response.json({ ok: false, reason: "menu_session_required" }, { status: 403 });
+    }
     const selections = (body?.selections ?? []) as Choice[];
     if (operation === "selection" && selections.some(item => item.provider)) {
       if (options.failSelection) throw new Error("Network interrupted after send");
@@ -163,6 +173,42 @@ describe("complete shared multi-treatment backend contract", () => {
     await expect(backend.loadAvailability({ ...multi, providerIds: { "napa/botox": "any-available" } })).rejects.toThrow("each treatment");
     expect(calls).toEqual([]);
   });
+  it("refreshes a missing visitor before bootstrap without changing the selected treatments or provider choices", async () => {
+    const calls = backendResponses({ requireFreshVisitor: true }); const backend = createDefaultBackend();
+    const originalInput = structuredClone(multi);
+    expect((await backend.loadAvailability(multi)).dates).toEqual(["2026-11-01"]);
+    expect(calls.map(call => [call.operation, call.method])).toEqual([["menu", "GET"], ["menu", "POST"], ["selection", "POST"]]);
+    expect(calls[0].query.get("location")).toBe("napa");
+    expect(calls[1].body).toEqual({ location: "napa" });
+    expect(calls[2].body).toEqual({ selections: [{ service: "botox", provider: "provider-botox" }, { service: "live-new-service", provider: "any-available" }] });
+    expect(multi).toEqual(originalInput);
+    expect(backend.cardFrameOrigin!()).toBe("https://book.experiencerella.com");
+    expect(backend.quote!()).toEqual(quoted);
+  });
+  it("refreshes an expired visitor after verified hold release before reusing the same provider choices", async () => {
+    vi.useFakeTimers(); vi.setSystemTime(new Date("2026-10-17T12:00:00Z"));
+    const calls = backendResponses({ requireFreshVisitor: true }); const backend = createDefaultBackend();
+    await backend.loadAvailability(multi); await backend.reserve!(slot);
+    const beforeBack = calls.length;
+    vi.setSystemTime(new Date("2026-10-17T12:31:00Z"));
+    expect((await backend.loadAvailability(multi)).dates).toEqual(["2026-11-01"]);
+    expect(calls.slice(beforeBack).map(call => [call.operation, call.method])).toEqual([
+      ["release", "POST"], ["menu", "GET"], ["menu", "POST"], ["selection", "POST"],
+    ]);
+    expect(calls.at(-1)?.body).toEqual({ selections: [{ service: "botox", provider: "provider-botox" }, { service: "live-new-service", provider: "any-available" }] });
+    expect(calls.filter(call => call.operation === "reserve")).toHaveLength(1);
+    expect(calls.some(call => call.operation === "payment" || call.operation === "checkout")).toBe(false);
+  });
+  it.each(["initial", "after release"])("does not create a cart or select treatments when visitor refresh fails %s", async phase => {
+    const calls = backendResponses({ requireFreshVisitor: true, failMenuReadAt: phase === "initial" ? 1 : 2 });
+    const backend = createDefaultBackend();
+    if (phase === "after release") { await backend.loadAvailability(multi); await backend.reserve!(slot); }
+    const beforeRefresh = calls.length;
+    await expect(backend.loadAvailability(multi)).rejects.toThrow("could not be verified");
+    expect(calls.slice(beforeRefresh).map(call => [call.operation, call.method])).toEqual(phase === "initial"
+      ? [["menu", "GET"]] : [["release", "POST"], ["menu", "GET"]]);
+    expect(backend.quote!()).toBeUndefined();
+  });
   it("uses one cart and one joint availability request for two treatments with different providers", async () => {
     const calls = backendResponses(); const backend = createDefaultBackend();
     await backend.listProviders(multi);
@@ -176,9 +222,9 @@ describe("complete shared multi-treatment backend contract", () => {
     await backend.attachPayment!("opaque-vault-token");
     const result = await backend.complete!({ ...multi, slot, client });
     expect(result).toEqual({ ok: true, confirmationId: "confirmed" });
-    expect(calls.map(call => call.operation)).toEqual(["menu", "selection", "selection", "times", "reserve", "payment", "checkout"]);
+    expect(calls.map(call => call.operation)).toEqual(["menu", "menu", "selection", "selection", "times", "reserve", "payment", "checkout"]);
     expect(calls.filter(call => call.operation === "menu" && call.method === "POST")).toHaveLength(1);
-    expect(calls[2].body).toEqual({ selections: [{ service: "botox", provider: "provider-botox" }, { service: "live-new-service", provider: "any-available" }] });
+    expect(calls[3].body).toEqual({ selections: [{ service: "botox", provider: "provider-botox" }, { service: "live-new-service", provider: "any-available" }] });
   });
   it("uses the actual cart quote after provider assignment, without adding per-service deposit amounts", async () => {
     const reserveQuote = { depositCents: 7350, totalCents: 31800, needsCard: true };
@@ -201,14 +247,14 @@ describe("complete shared multi-treatment backend contract", () => {
     await backend.listProviders(multi);
     await backend.loadTimesForDate({ ...multi, date: "2026-11-01" });
     await backend.loadTimesForDate({ ...multi, date: "2026-11-01" });
-    expect(calls.map(call => call.operation)).toEqual(["menu", "selection", "times", "times"]);
+    expect(calls.map(call => call.operation)).toEqual(["menu", "menu", "selection", "times", "times"]);
   });
   it.each([["any-available", "named-one"], ["named-one", "any-available"], ["named-one", "named-two"]])(
     "starts a fresh combined cart for provider changes from %s to %s", async (first, second) => {
       const calls = backendResponses(); const backend = createDefaultBackend();
       await backend.loadAvailability({ ...multi, providerIds: { ...multi.providerIds, "napa/botox": first } });
       await backend.loadAvailability({ ...multi, providerIds: { ...multi.providerIds, "napa/botox": second } });
-      expect(calls.map(call => call.operation)).toEqual(["menu", "selection", "menu", "selection"]);
+      expect(calls.map(call => call.operation)).toEqual(["menu", "menu", "selection", "menu", "menu", "selection"]);
     },
   );
   it("starts a fresh session after adding a treatment and does not reuse the previous hold/payment proof", async () => {
@@ -218,15 +264,17 @@ describe("complete shared multi-treatment backend contract", () => {
     expect(backend.quote!()).toBeUndefined();
     await backend.loadAvailability(multi);
     expect((await backend.complete!({ ...multi, slot, client })).ok).toBe(false);
-    expect(calls.map(call => call.operation)).toEqual(["menu", "selection", "reserve", "release", "menu", "selection", "selection"]);
+    expect(calls.map(call => call.operation)).toEqual(["menu", "menu", "selection", "reserve", "release", "menu", "menu", "selection", "selection"]);
   });
   it("does not replay an uncertain selection even after choosing a different provider", async () => {
     const calls = backendResponses({ failSelection: true }); const backend = createDefaultBackend();
     await expect(backend.loadAvailability(multi)).rejects.toThrow("could not be verified");
     await expect(backend.loadAvailability({ ...multi, providerIds: { ...multi.providerIds, "napa/botox": "other" } })).rejects.toThrow("call Rella");
-    expect(calls.map(call => call.operation)).toEqual(["menu", "selection"]);
+    expect(calls.map(call => call.operation)).toEqual(["menu", "menu", "selection"]);
+    const callsAfterFailure = calls.length;
     await expect(backend.listTreatments!("napa")).rejects.toThrow("call Rella");
     await expect(backend.loadAvailability(multi)).rejects.toThrow("call Rella");
+    expect(calls).toHaveLength(callsAfterFailure);
     expect(calls.filter(call => call.operation === "menu" && call.method === "POST")).toHaveLength(1);
   });
   it("does not repeat successful reserve or card attachment calls", async () => {
@@ -235,13 +283,13 @@ describe("complete shared multi-treatment backend contract", () => {
     const results = await Promise.all([backend.reserve!(slot), backend.reserve!(slot)]);
     expect(results[0]).toEqual(results[1]);
     await Promise.all([backend.attachPayment!("token"), backend.attachPayment!("token")]);
-    expect(calls.map(call => call.operation)).toEqual(["menu", "selection", "reserve", "payment"]);
+    expect(calls.map(call => call.operation)).toEqual(["menu", "menu", "selection", "reserve", "payment"]);
   });
   it("starts a fresh cart when returning from a successful reservation to choose another time", async () => {
     const calls = backendResponses(); const backend = createDefaultBackend();
     await backend.loadAvailability(multi); await backend.reserve!(slot);
     await backend.loadAvailability(multi); await backend.reserve!({ ...slot, id: "different-time" });
-    expect(calls.map(call => call.operation)).toEqual(["menu", "selection", "reserve", "release", "menu", "selection", "reserve"]);
+    expect(calls.map(call => call.operation)).toEqual(["menu", "menu", "selection", "reserve", "release", "menu", "menu", "selection", "reserve"]);
   });
   it.each([{ failReserve: true }, { incompleteSchedule: true }])("blocks replay after an uncertain hold/readback %o", async options => {
     const calls = backendResponses(options); const backend = createDefaultBackend();
@@ -260,7 +308,7 @@ describe("complete shared multi-treatment backend contract", () => {
     expect(calls.some(call => call.operation === "payment")).toBe(false);
     if (change === "availability") await backend.loadAvailability(multi);
     else await backend.listProviders(input);
-    expect(calls.filter(call => call.operation === "menu")).toHaveLength(2);
+    expect(calls.filter(call => call.operation === "menu" && call.method === "POST")).toHaveLength(2);
     expect(calls.filter(call => call.operation === "release")).toHaveLength(1);
   });
   it("keeps pending verification truthful and never submits checkout twice", async () => {
@@ -280,6 +328,7 @@ describe("complete shared multi-treatment backend contract", () => {
     expect(await backend.listTreatments!("napa")).toEqual([]);
     expect(backend.verificationPending!()).toBe(true);
     await expect(backend.listProviders(multi)).rejects.toThrow("call Rella");
+    await expect(backend.loadAvailability(multi)).rejects.toThrow("call Rella");
     expect(await backend.complete!({ ...multi, slot, client })).toEqual(result);
     expect(calls).toHaveLength(callsBeforeReopen);
     expect(calls.filter(call => call.operation === "checkout")).toHaveLength(1);
@@ -324,7 +373,7 @@ describe("complete shared multi-treatment backend contract", () => {
     await expect(backend.listTreatments!("napa")).rejects.toThrow("hold could not be released");
     await expect(backend.listProviders(input)).rejects.toThrow("hold could not be released");
     expect(calls).toHaveLength(afterRelease);
-    expect(calls.filter(call => call.operation === "menu")).toHaveLength(1);
+    expect(calls.filter(call => call.operation === "menu" && call.method === "POST")).toHaveLength(1);
     expect(calls.filter(call => call.operation === "release")).toHaveLength(1);
     expect(backend.quote!()).toBeUndefined();
   });

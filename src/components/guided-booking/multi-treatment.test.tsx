@@ -70,4 +70,16 @@ describe("multi-treatment presentation", () => {
       times={[slot]} selectedDate="2026-11-01" selectedSlotId="time" loading={true} onSelectDate={() => {}} onSelectSlot={() => {}} />);
     expect(html.match(/disabled=""/g)).toHaveLength(3);
   });
+  it("uses phone-safe contact input size and keyboard/autofill types without changing desktop typography", () => {
+    const html = renderToStaticMarkup(<CompleteStep state={state} mode="live" onChange={() => {}} submitting={false} onLiveComplete={async () => {}} />);
+    const inputs = html.match(/<input\b[^>]*>/g) ?? [];
+    expect(inputs).toHaveLength(4);
+    for (const input of inputs) {
+      expect(input).toContain("min-h-11");
+      expect(input).toMatch(/\btext-base\b/);
+      expect(input).toContain("sm:text-sm");
+    }
+    expect(inputs.some(input => input.includes('type="email"') && input.includes('autoComplete="email"'))).toBe(true);
+    expect(inputs.some(input => input.includes('type="tel"') && input.includes('autoComplete="tel"'))).toBe(true);
+  });
 });

@@ -96,6 +96,10 @@ export function createSharedBookingBackend(): GuidedBookingBackend {
 
   async function startSession(loc: BookingLocation) {
     await releaseKnownHold();
+    // The anonymous menu visitor cookie expires sooner than a cart session.
+    // Refresh it before a new cart, including after returning from a held visit.
+    // Read directly so the current treatment/provider inputs stay intact.
+    await call("menu", undefined, { location: loc });
     const data = await call("menu", { location: loc });
     clearSession();
     location = loc;

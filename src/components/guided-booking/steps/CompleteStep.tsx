@@ -76,7 +76,7 @@ export function CompleteStep({
               }
               value={state.client[key]}
               onChange={(e) => onChange({ [key]: e.target.value })}
-              className="w-full rounded-sm border border-rule/70 bg-white px-3 py-2.5 text-ink outline-none focus:border-ink"
+              className="min-h-11 w-full rounded-sm border border-rule/70 bg-white px-3 py-2.5 text-base text-ink outline-none focus:border-ink sm:text-sm"
               required
             />
           </label>
