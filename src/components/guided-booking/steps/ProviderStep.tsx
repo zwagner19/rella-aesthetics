@@ -20,8 +20,8 @@ export function ProviderStep({
           Choose a provider
         </h3>
         <p className="mt-2 text-sm font-light text-silver">
-          Any available offers the widest choice of times. Named providers appear
-          when Boulevard eligibility is available for this path.
+          Choose any available provider for the widest choice of times, or select
+          your preferred provider.
         </p>
       </div>
 

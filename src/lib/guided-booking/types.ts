@@ -37,6 +37,8 @@ export interface GuidedTreatment {
   /** Boulevard menu category (rella-booking / Client API). */
   category: string;
   shortDescription: string;
+  /** Service prerequisites from the live menu, shown at review. */
+  bookingNotes?: string;
   image?: string;
   imageAlt?: string;
   durationCopy?: string;

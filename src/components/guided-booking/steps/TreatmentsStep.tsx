@@ -2,9 +2,7 @@
 
 import Image from "next/image";
 import {
-  formatDeposit,
   formatListPrice,
-  paymentRuleLabel,
   treatmentsByCategory,
 } from "@/lib/guided-booking";
 import type { BookingLocation } from "@/lib/booking-routes";
@@ -116,16 +114,10 @@ export function TreatmentsStep({
                               formatListPrice(treatment.listPriceCents)
                                 ? `from ${formatListPrice(treatment.listPriceCents)}`
                                 : null,
-                              paymentRuleLabel(treatment),
                             ]
                               .filter(Boolean)
                               .join(" · ")}
                           </p>
-                          {treatment.depositCents != null ? (
-                            <p className="sr-only">
-                              {formatDeposit(treatment.depositCents)} deposit
-                            </p>
-                          ) : null}
                         </div>
                         <button
                           type="button"

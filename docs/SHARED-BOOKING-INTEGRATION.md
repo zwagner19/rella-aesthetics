@@ -18,13 +18,17 @@ A POST starts the real booking session only when proceeding to provider selectio
 
 The backend origin defaults to `https://book.experiencerella.com`; `RELLA_BOOKING_BACKEND_ORIGIN` may pin the approved paired backend preview, or localhost outside production. Requires backend draft #67 and `BOOKING_V2_FULL_MENU_ENABLED=1`. For isolated card fields, set the backend's `BOOKING_V2_MARKETING_ORIGIN` to the exact website HTTPS preview origin. No production environment or launch change was made here.
 
+The public HTTPS branch preview uses the paired backend branch alias. Its inherited Supabase URL and service key targeted an older project and failed the existing canonical-project guard at session creation. Branch-scoped Preview configuration now uses the existing verified canonical server credential and URL; the guard and production configuration remain unchanged. A real Napa Deluxe Hydrafacial check reached provider discovery, 31 available dates and six times on the first available date without a hold, client information, payment or checkout.
+
+Treatment descriptions are display-only summaries of about two sentences. Reservation/deposit/cancellation copy is omitted from menu cards and remains on the existing review/payment screens. Service prerequisites from Boulevard are retained as review notes. Neither this copy treatment nor the preview repair changes deposit policy or source catalog configuration.
+
 ## Remaining launch evidence
 
-- Actual service/provider/date/hold/payment/checkout/durable-confirmation behavior in an approved sandbox or supervised test at both locations. Earlier all-six-step browser completion used a fixture only; it is not evidence of a real appointment.
+- Service/provider/date coverage at both locations and hold/payment/checkout/durable-confirmation behavior in an approved sandbox or supervised test. The Napa availability check above does not establish payment or appointment completion; earlier all-six-step browser completion used a fixture only.
 - The deposit chat's live policy/amount/credit reconciliation, plus attribution and consent continuity.
 - Source review of categories Boulevard still exposes as online, including Archived Services and historical events.
 - Required options are rejected safely if later added; the original design does not collect optional extras/multi-service combinations.
 
 Tests, TypeScript, targeted booking ESLint and both production builds pass. Full-repository ESLint has a pre-existing unrelated Header.tsx:39 effect error; that design file is untouched.
 
-Paired drafts: website https://github.com/zwagner19/rella-aesthetics/pull/42 and backend https://github.com/zwagner19/rella-booking/pull/67. Neither is merged or publicly enabled.
+Paired drafts: website https://github.com/zwagner19/rella-aesthetics/pull/42 and backend https://github.com/zwagner19/rella-booking/pull/67. Both have public test previews; neither is merged or launched on the production website.

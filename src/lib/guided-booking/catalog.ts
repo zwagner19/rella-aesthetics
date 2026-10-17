@@ -1,8 +1,8 @@
 import type { BookingCategory, BookingLocation } from "@/lib/booking-routes";
+import { treatmentBookingNotes, treatmentDescription } from "./description";
 import type {
   GuidedLocation,
   GuidedTreatment,
-  PaymentRuleCopy,
 } from "./types";
 
 export const GUIDED_LOCATIONS: readonly GuidedLocation[] = [
@@ -64,7 +64,8 @@ const IMAGE_BY_SLUG: Record<string, { image: string; imageAlt: string }> = {
 export function backendTreatments(locationSlug: BookingLocation, services: Array<{serviceSlug: string; displayName: string; category: string; description: string; durationCopy?: string; listPriceCents?: number; depositCents?: number; paymentRule?: string}>): GuidedTreatment[] {
   return services.map(s => ({
     key: `${locationSlug}/${s.serviceSlug}`, locationSlug, serviceSlug: s.serviceSlug,
-    displayName: s.displayName, category: s.category, shortDescription: s.description,
+    displayName: s.displayName, category: s.category, shortDescription: treatmentDescription(s.description, s.displayName),
+    bookingNotes: treatmentBookingNotes(s.description),
     durationCopy: s.durationCopy, listPriceCents: s.listPriceCents, depositCents: s.depositCents,
     paymentRule: s.paymentRule === "NO_CARD" ? "no_card" : s.paymentRule === "CARD_ON_FILE_ZERO" ? "card_on_file" : s.paymentRule === "DEPOSIT_CENTS" ? "deposit" : "pending",
     isConsultation: /consult/i.test(s.displayName), onlineHandoff: true,
