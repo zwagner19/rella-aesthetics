@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useRef } from "react";
 import type { AvailabilityResult, GuidedSlot } from "@/lib/guided-booking";
 
 export function DateTimeStep({
@@ -22,6 +23,20 @@ export function DateTimeStep({
   const live = availability?.live === true;
   const dates = availability?.dates ?? [];
   const next = availability?.nextAvailable ?? [];
+  const timesRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!selectedDate || !times.length) return;
+    // Boulevard can return months of dates. Bring the loaded times into the
+    // existing scroll area so a phone user can see the result of their tap.
+    const parts = new Intl.DateTimeFormat("en-US", {
+      timeZone: "America/Los_Angeles", year: "numeric", month: "2-digit", day: "2-digit",
+    }).formatToParts(new Date(times[0].startTime));
+    const part = (type: string) => parts.find(value => value.type === type)?.value;
+    if (`${part("year")}-${part("month")}-${part("day")}` !== selectedDate) return;
+    timesRef.current?.scrollIntoView({ block: "nearest", behavior:
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
+  }, [selectedDate, times]);
 
   return (
     <div className="space-y-5">
@@ -130,7 +145,7 @@ export function DateTimeStep({
       ) : null}
 
       {selectedDate && times.length > 0 ? (
-        <div>
+        <div ref={timesRef}>
           <p className="text-[0.6875rem] font-bold uppercase tracking-[0.16em] text-ink/55">
             Times on {selectedDate}
           </p>
