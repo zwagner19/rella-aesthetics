@@ -10,7 +10,7 @@
   "routes": [],
   "vars": {
     "EDGE_ENABLED": "false",
-    "ORIGIN_HOST": "rella-aesthetics-6pyxqkynx-zwagner19s-projects.vercel.app"
+    "ORIGIN_HOST": "rella-aesthetics-rbfzdd029-zwagner19s-projects.vercel.app"
   },
   "observability": { "enabled": false }
 }
