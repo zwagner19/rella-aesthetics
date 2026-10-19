@@ -1,5 +1,7 @@
 # Amie's website with the shared Rella booking backend
 
+Current audit handoff: [GO-LIVE-AUDIT-HANDOFF.md](GO-LIVE-AUDIT-HANDOFF.md) (October 18, 2026). The dated checks below are historical evidence, not a current production-readiness assessment. Package purchase and verified owned-session flows were subsequently implemented in PR #42 with backend PR #67; read the backend's `docs/package-booking.md` for the current contract and remaining live-test limits.
+
 This branch is based on `amie-website-edits` at 04bf2d1. The copied service menu and external handoff have been replaced with the shared booking service. Page files, global styles, images, policy copy and deposit configuration are unchanged. The existing visual system is preserved; owner-requested selection feedback adds a highlighted card and a selected-treatment summary above the existing footer actions. The final step adds secure booking functionality within the existing visual system.
 
 ## Correct data source
@@ -35,7 +37,7 @@ Reviewed her website-related iMessages from October 15–16, including the detai
 | Swap PRP Injection and Hylenex | Place PRP Injection before Hylenex where both are offered. |
 | Reorder lasers | Initial consult, CoolPeel, Deka, CO2 resurfacing, existing add-ons, spot treatment, follow-up, IPL, BodyTone, BodySculp, vaginal rejuvenation, laser hair removal, remaining services, shaving fee. |
 | Rename generic CO2 resurfacing | Show the existing Napa service as Phoenix CO2 Skin Resurfacing using the same underlying service ID. The proposed master-record rename in Boulevard is not published by this branch. |
-| Give packages their own section | Group existing bookable laser, hair-removal and microneedling packages in Packages; do not create prepaid purchases or invent new offerings. |
+| Give packages their own section | Group existing bookable package treatments in Packages. The subsequent owner-approved implementation also lists native package sale items and supports new purchases plus verified owned-session booking; these remain separate from appointment-package services. Native offers and clinic eligibility are authoritative. |
 | Drop Erbium; hide Private Events, Archived and BottleRock | Enforce exclusions in both the menu response and server-side selection validation. The audited menus contain 77 Napa and 66 Vacaville entries, including 10 and 6 package entries respectively. |
 | BYOP consultation with a nurse, $100, for a 9–12 month plan | Proposed service setup remains a decision item: no corresponding bookable service was returned by either clinic's current menu. No service, fee, deposit or provider entitlement was invented. |
 
