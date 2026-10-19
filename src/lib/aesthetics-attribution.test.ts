@@ -1,4 +1,9 @@
 import { describe, expect, it } from "vitest";
+import { readdirSync } from "node:fs";
+import { createRequire } from "node:module";
+import { join } from "node:path";
+import { servicePages } from "./service-data";
+import { LOCAL_EDITORIAL_POSTS } from "./local-editorial-posts";
 import {
   AD_ATTRIBUTION_REVOCATION_COOKIE,
   AD_USER_DATA_DENIED_COOKIE,
@@ -7,7 +12,7 @@ import {
   AestheticsAttributionController,
   cleanAestheticsBookingHref,
   hasEligibleAestheticsPaidClick,
-  isApprovedAestheticsPilotPage,
+  isApprovedAestheticsPage,
   stripAestheticsAttribution,
   type AestheticsAttributionRuntime,
   type AestheticsConsentMessage,
@@ -137,21 +142,44 @@ async function settle() {
 }
 
 describe("paid aesthetics eligibility and URL boundaries", () => {
-  it("authorizes only the canonical exact-Napa pilot page", () => {
+  it("covers actual static marketing routes, configured sitemap paths and generated local slugs", async () => {
+    const app = join(__dirname, "..", "app");
+    function staticPages(directory: string, segments: string[] = []): string[] {
+      return readdirSync(directory, { withFileTypes: true }).flatMap(entry => {
+        if (entry.isFile()) return entry.name === "page.tsx" ? [`/${segments.join("/")}`] : [];
+        if (!entry.isDirectory() || entry.name.includes("[")) return [];
+        return staticPages(join(directory, entry.name), entry.name.startsWith("(") ? segments : [...segments, entry.name]);
+      });
+    }
+    const require = createRequire(import.meta.url);
+    const sitemap = require("../../next-sitemap.config.js") as { additionalPaths(config: unknown): Promise<Array<{ loc: string }>> };
+    const routes = [
+      ...staticPages(app).filter(path => !["/booking", "/wpbc-booking-received"].includes(path)),
+      ...(await sitemap.additionalPaths(sitemap)).map(item => item.loc),
+      ...servicePages.filter(service => service.slug !== "weight-loss").map(service => `/services/${service.slug}`),
+      ...LOCAL_EDITORIAL_POSTS.map(post => `/blog/${post.slug}`),
+    ];
+    for (const path of new Set(routes)) expect(isApprovedAestheticsPage("experiencerella.com", path), path).toBe(true);
+    expect(routes).toContain("/membership");
+    expect(isApprovedAestheticsPage("experiencerella.com", "/memberships")).toBe(false);
+    expect(isApprovedAestheticsPage("experiencerella.com", "/packages")).toBe(false);
+  });
+
+  it("authorizes exact public aesthetics hosts and marketing routes", () => {
     expect(
-      isApprovedAestheticsPilotPage("experiencerella.com", "/napa/botox"),
+      isApprovedAestheticsPage("experiencerella.com", "/napa/botox"),
     ).toBe(true);
     expect(
-      isApprovedAestheticsPilotPage("experiencerella.com", "/napa/botox/"),
+      isApprovedAestheticsPage("experiencerella.com", "/napa/botox/"),
     ).toBe(true);
     expect(
-      isApprovedAestheticsPilotPage("experiencerella.com", "/NAPA//BOTOX/"),
+      isApprovedAestheticsPage("experiencerella.com", "/NAPA//BOTOX/"),
     ).toBe(true);
     expect(
-      isApprovedAestheticsPilotPage("www.experiencerella.com", "/napa/botox"),
-    ).toBe(false);
+      isApprovedAestheticsPage("www.experiencerella.com", "/napa/botox"),
+    ).toBe(true);
     expect(
-      isApprovedAestheticsPilotPage("experiencerella.com", "/napa/botox/extra"),
+      isApprovedAestheticsPage("experiencerella.com", "/napa/botox/extra"),
     ).toBe(false);
   });
 
@@ -186,6 +214,123 @@ describe("paid aesthetics eligibility and URL boundaries", () => {
 });
 
 describe("consent-safe aesthetics capture", () => {
+  it.each([
+    ["/", "unknown"], ["/services", "unknown"], ["/contact", "unknown"],
+    ["/services/microneedling", "unknown"], ["/napa/facials", "napa"],
+    ["/locations/napa", "napa"], ["/vacaville/facials", "vacaville"],
+    ["/locations/vacaville", "vacaville"],
+  ])("captures only bounded IDs with truthful acquisition clinic at %s", async (path, location) => {
+    const runtime = new FakeRuntime();
+    runtime.href = `https://experiencerella.com${path}?gclid=bounded-click&campaignid=123&utm_term=clinical-detail&phone=7075550100`;
+    runtime.responses.push(GRANT_RESPONSE);
+    const controller = new AestheticsAttributionController(runtime);
+    controller.start();
+    expect(runtime.requests).toHaveLength(0);
+    await controller.accept();
+    expect(runtime.requests[0].body).toEqual({
+      location, consentAdUserData: "granted", gclid: "bounded-click", campaignid: "123",
+      revocationHandle: expect.stringMatching(/^rvh_[A-Za-z0-9_-]{43}$/),
+    });
+    expect(JSON.stringify(runtime.requests[0].body)).not.toContain(path === "/" ? "clinical-detail" : path);
+    expect(runtime.cookieWrites.join("\n")).not.toContain("bounded-click");
+    expect(runtime.requests[0].init.referrerPolicy).toBe("origin");
+  });
+
+  it.each(["/locations/vacaville", "/napa/botox"])("keeps an unconsented click only in memory across public soft navigation to %s", async path => {
+    const runtime = new FakeRuntime();
+    runtime.href = "https://experiencerella.com/?gclid=neutral-entry&campaignid=123";
+    runtime.responses.push(GRANT_RESPONSE);
+    const controller = new AestheticsAttributionController(runtime);
+    const view = observe(controller);
+    controller.start();
+    runtime.href = `https://experiencerella.com${path}`;
+    controller.reconcileNavigation();
+    expect(view()).toMatchObject({ mode: "panel", phase: "choice" });
+    expect(runtime.requests).toHaveLength(0);
+    expect(runtime.cookieWrites).toHaveLength(0);
+    await controller.accept();
+    expect(runtime.requests[0].body).toMatchObject({ gclid: "neutral-entry", location: "unknown" });
+    expect(runtime.href).toBe(`https://experiencerella.com${path}`);
+  });
+
+  it("finishes capture before a new cart and preserves the in-site booking action", async () => {
+    const runtime = new FakeRuntime();
+    runtime.href = "https://experiencerella.com/?gclid=slow-capture";
+    const pending = deferredResponse();
+    runtime.responses.push(pending.promise);
+    const controller = new AestheticsAttributionController(runtime);
+    controller.start();
+    let openedInSite = 0;
+    expect(controller.guardBookingNavigation("https://book.experiencerella.com/book", () => { openedInSite += 1; })).toBe(true);
+    const accepting = controller.accept();
+    await settle();
+    let ready = false;
+    const preparing = controller.prepareBooking().then(() => { ready = true; });
+    runtime.href = "https://experiencerella.com/services";
+    controller.reconcileNavigation();
+    await settle();
+    expect(ready).toBe(false);
+    expect(openedInSite).toBe(0);
+    expect(runtime.requests).toHaveLength(1);
+    pending.resolve(GRANT_RESPONSE);
+    await Promise.all([accepting, preparing]);
+    expect(ready).toBe(true);
+    expect(openedInSite).toBe(1);
+    expect(runtime.navigations).toHaveLength(0);
+  });
+
+  it("does not prepare a cart while an advertising choice is unresolved", async () => {
+    const runtime = new FakeRuntime();
+    runtime.href = "https://experiencerella.com/?gclid=unresolved";
+    const controller = new AestheticsAttributionController(runtime);
+    controller.start();
+    await expect(controller.prepareBooking()).rejects.toThrow("Choose whether to accept cookies");
+    expect(runtime.requests).toHaveLength(0);
+    await controller.deny();
+    await expect(controller.prepareBooking()).resolves.toBeUndefined();
+    expect(runtime.requests[0].body).not.toHaveProperty("gclid");
+  });
+
+  it("does not let an older capture acknowledge a newer paid entry or unblock its cart", async () => {
+    const runtime = new FakeRuntime();
+    runtime.href = "https://experiencerella.com/?gclid=first-entry";
+    const first = deferredResponse(); const second = deferredResponse();
+    runtime.responses.push(first.promise, second.promise);
+    runtime.setChoice("granted");
+    const controller = new AestheticsAttributionController(runtime);
+    controller.start();
+    await settle();
+    let ready = false;
+    const preparing = controller.prepareBooking().then(() => { ready = true; });
+    runtime.href = "https://experiencerella.com/vacaville/facials?gbraid=new-entry";
+    controller.reconcileNavigation();
+    first.resolve(GRANT_RESPONSE);
+    await settle();
+    expect(ready).toBe(false);
+    expect(runtime.requests).toHaveLength(2);
+    expect(runtime.requests[1].body).toMatchObject({ location: "vacaville", gbraid: "new-entry" });
+    expect(runtime.publications).toHaveLength(0);
+    second.resolve(GRANT_RESPONSE);
+    await preparing;
+    expect(ready).toBe(true);
+    expect(runtime.href).not.toContain("gbraid");
+  });
+
+  it("discards pending identifiers when leaving the public aesthetics surface", async () => {
+    const runtime = new FakeRuntime();
+    runtime.href = "https://experiencerella.com/?gclid=discard-me";
+    const controller = new AestheticsAttributionController(runtime);
+    const view = observe(controller);
+    controller.start();
+    runtime.href = "https://experiencerella.com/services/weight-loss";
+    controller.reconcileNavigation();
+    runtime.href = "https://experiencerella.com/contact";
+    controller.reconcileNavigation();
+    await controller.accept();
+    expect(view()).toMatchObject({ mode: "hidden" });
+    expect(runtime.requests).toHaveLength(0);
+  });
+
   it("is invisible and makes no request for an ordinary organic visitor", () => {
     const runtime = new FakeRuntime();
     const controller = new AestheticsAttributionController(runtime);
@@ -199,16 +344,20 @@ describe("consent-safe aesthetics capture", () => {
   });
 
   it.each([
-    ["experiencerella.com", "/"],
-    ["experiencerella.com", "/napa/facials"],
     ["experiencerella.com", "/napa/botox/extra"],
-    ["experiencerella.com", "/locations/napa"],
-    ["experiencerella.com", "/vacaville/botox"],
     ["experiencerella.com", "/napa/botoxx"],
-    ["www.experiencerella.com", "/napa/botox"],
+    ["experiencerella.com", "/services/weight-loss"],
+    ["experiencerella.com", "/booking"],
+    ["experiencerella.com", "/studio"],
+    ["experiencerella.com", "/api/leads"],
+    ["experiencerella.com", "/secure-card"],
+    ["experiencerella.com", "/wpbc-booking-received"],
+    ["experiencerella.com.evil.test", "/napa/botox"],
+    ["weightloss.experiencerella.com", "/"],
     ["rella-napa-botox-release.vercel.app", "/napa/botox"],
+    ["rella-aesthetics-preview.vercel.app", "/"],
   ])(
-    "keeps a paid click inert outside the exact pilot: %s%s",
+    "keeps a paid click inert outside the exact public surface: %s%s",
     (host, path) => {
       const runtime = new FakeRuntime();
       runtime.host = host;
@@ -259,6 +408,7 @@ describe("consent-safe aesthetics capture", () => {
     expect(request.init).toMatchObject({
       method: "POST",
       credentials: "include",
+      referrerPolicy: "origin",
       keepalive: true,
       headers: { "Content-Type": "application/json" },
     });
@@ -332,7 +482,7 @@ describe("consent-safe aesthetics capture", () => {
     });
   });
 
-  it("captures remembered consent only after returning to the exact path and does not repost on refresh", async () => {
+  it("captures remembered consent at both clinics and does not repost on refresh", async () => {
     const runtime = new FakeRuntime();
     runtime.setChoice("granted");
     runtime.href =
@@ -343,27 +493,18 @@ describe("consent-safe aesthetics capture", () => {
     await settle();
     expect(runtime.requests).toHaveLength(1);
     expect(runtime.href).not.toContain("gclid");
-    const writesBeforeLeavingPilot = runtime.cookieWrites.length;
-
     runtime.href =
-      "https://experiencerella.com/vacaville/facials/?gbraid=must-stay-inert&gad_campaignid=999";
-    first.reconcileNavigation();
-    await settle();
-    expect(runtime.requests).toHaveLength(1);
-    expect(runtime.cookieWrites).toHaveLength(writesBeforeLeavingPilot);
-    expect(runtime.href).toContain("must-stay-inert");
-
-    runtime.href =
-      "https://experiencerella.com/napa/botox/?gbraid=next-click&gad_campaignid=999";
+      "https://experiencerella.com/vacaville/facials/?gbraid=second-click&gad_campaignid=999";
     first.reconcileNavigation();
     await settle();
     expect(runtime.requests).toHaveLength(2);
-    expect(runtime.requests[1].body).toMatchObject({
-      location: "napa",
-      gbraid: "next-click",
-      campaignid: "999",
-    });
+    expect(runtime.requests[1].body).toMatchObject({ location: "vacaville", gbraid: "second-click", campaignid: "999" });
     expect(runtime.href).not.toContain("gbraid");
+
+    runtime.href = "https://experiencerella.com/services";
+    first.reconcileNavigation();
+    await settle();
+    expect(runtime.requests).toHaveLength(2);
     first.destroy();
 
     const refreshed = new AestheticsAttributionController(runtime);

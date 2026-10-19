@@ -1,13 +1,15 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { Suspense, useEffect, useRef, useState } from "react";
+import { usePathname, useSearchParams } from "next/navigation";
+import { registerAestheticsBookingPreparation } from "@/lib/aesthetics-booking-boundary";
 import {
   AESTHETICS_CONSENT_CHANNEL,
   AestheticsAttributionController,
   cleanAestheticsBookingHref,
   createBrowserAestheticsAttributionRuntime,
   isAestheticsBookingHref,
-  isApprovedAestheticsPilotPage,
+  isApprovedAestheticsPage,
   type AestheticsConsentMessage,
   type AestheticsConsentView,
 } from "@/lib/aesthetics-attribution";
@@ -24,9 +26,17 @@ const BOOKING_LINK_SELECTOR =
   'a[href^="https://book.experiencerella.com/"]';
 
 export function AestheticsAttributionConsent() {
+  return <Suspense fallback={null}><AestheticsAttributionConsentClient /></Suspense>;
+}
+
+function AestheticsAttributionConsentClient() {
   const [view, setView] = useState(INITIAL_VIEW);
   const controllerRef = useRef<AestheticsAttributionController | null>(null);
   const acceptRef = useRef<HTMLButtonElement | null>(null);
+  const pathname = usePathname();
+  const search = useSearchParams()?.toString();
+
+  useEffect(() => { controllerRef.current?.reconcileNavigation(); }, [pathname, search]);
 
   useEffect(() => {
     let channel: BroadcastChannel | null = null;
@@ -48,10 +58,11 @@ export function AestheticsAttributionConsent() {
     );
     controllerRef.current = controller;
     const unsubscribe = controller.subscribe(setView);
+    const unregisterPreparation = registerAestheticsBookingPreparation(() => controller.prepareBooking());
 
     function sanitizeBookingLinks() {
       if (
-        !isApprovedAestheticsPilotPage(
+        !isApprovedAestheticsPage(
           window.location.hostname,
           window.location.pathname,
         )
@@ -72,6 +83,7 @@ export function AestheticsAttributionConsent() {
     }
 
     function handleDocumentClick(event: MouseEvent) {
+      if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
       const target = event.target;
       if (!(target instanceof Element)) return;
       const link = target.closest<HTMLAnchorElement>("a[href]");
@@ -79,7 +91,7 @@ export function AestheticsAttributionConsent() {
 
       if (isAestheticsBookingHref(link.href)) {
         if (
-          !isApprovedAestheticsPilotPage(
+          !isApprovedAestheticsPage(
             window.location.hostname,
             window.location.pathname,
           )
@@ -88,7 +100,10 @@ export function AestheticsAttributionConsent() {
         }
         const clean = cleanAestheticsBookingHref(link.href);
         if (clean !== link.href) link.href = clean;
-        if (controller.guardBookingNavigation(clean)) {
+        const continueInSite = link.dataset.guidedBooking === "modal"
+          ? () => { if (link.isConnected) link.click(); }
+          : undefined;
+        if (controller.guardBookingNavigation(clean, continueInSite)) {
           event.preventDefault();
           window.requestAnimationFrame(() => acceptRef.current?.focus());
         }
@@ -148,6 +163,7 @@ export function AestheticsAttributionConsent() {
       window.removeEventListener("pageshow", reconcile);
       window.removeEventListener("popstate", reconcile);
       unsubscribe();
+      unregisterPreparation();
       controller.destroy();
       if (controllerRef.current === controller) controllerRef.current = null;
     };

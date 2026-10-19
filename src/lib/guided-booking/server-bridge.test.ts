@@ -5,6 +5,10 @@ function request(operation: string, body: object, origin = "https://experiencere
   return new NextRequest(`https://experiencerella.com/api/booking-v2/bridge/${operation}`, { method: "POST", headers: { origin, "content-type": "application/json", cookie }, body: JSON.stringify(body) });
 }
 beforeEach(() => { vi.restoreAllMocks(); delete process.env.RELLA_BOOKING_BACKEND_ORIGIN; });
+it("forwards opaque attribution, scope, withdrawal and denial while dropping unrelated cookies", () => {
+  expect(bookingCookies("patient-name=private; rella_attribution_id=opaque; rella_ad_attribution_scope=scope; rella_ad_attribution_revoke=handle; rella_ad_user_data_denied=1; session=unrelated"))
+    .toBe("rella_attribution_id=opaque; rella_ad_attribution_scope=scope; rella_ad_attribution_revoke=handle; rella_ad_user_data_denied=1");
+});
 it("binds consent recording to the authenticated cart rather than caller-supplied identity", async () => {
   const token = Buffer.from(JSON.stringify({ c: "urn:blvd:Cart:verified" })).toString("base64url") + ".signature";
   const network = vi.spyOn(globalThis, "fetch").mockResolvedValue(Response.json({ ok: true }));

@@ -41,6 +41,9 @@ describe("root layout owns no analytics", () => {
     expect(source).toMatch(/<html/);
     expect(source).toMatch(/Poppins/);
   });
+  it("owns one persistent first-party consent boundary", () => {
+    expect(code("layout.tsx").match(/<AestheticsAttributionConsent\s*\/>/g)).toHaveLength(1);
+  });
 });
 
 describe("ordinary site routes protect the booking document", () => {
@@ -56,7 +59,7 @@ describe("ordinary site routes protect the booking document", () => {
     }
   });
 
-  it("does not inherit the exact-Napa consent controller", () => {
+  it("inherits the shared first-party boundary without remounting it", () => {
     expect(source).not.toContain("AestheticsAttributionConsent");
   });
 });
@@ -69,9 +72,10 @@ describe("the exact-Napa campaign route has no browser marketing path", () => {
     "../lib/aesthetics-attribution.ts",
   ];
 
-  it("mounts only the first-party consent boundary", () => {
+  it("inherits only the shared first-party consent boundary", () => {
     const source = code("(campaign)/layout.tsx");
-    expect(source).toMatch(/<AestheticsAttributionConsent\s*\/>/);
+    expect(source).not.toContain("AestheticsAttributionConsent");
+    expect(code("layout.tsx")).toMatch(/<AestheticsAttributionConsent\s*\/>/);
     for (const banned of [
       "CampaignGtm",
       "GoogleAnalytics",

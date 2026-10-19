@@ -1,5 +1,3 @@
-import { AestheticsAttributionConsent } from "@/components/integrations/AestheticsAttributionConsent";
-
 /**
  * Campaign routes — policy layout.
  *
@@ -22,14 +20,13 @@ import { AestheticsAttributionConsent } from "@/components/integrations/Aestheti
  *
  * The exact-Napa pilot deliberately loads no third-party browser analytics,
  * advertising, chat, or call-tracking stack, even after consent. The consent
- * component may send one bounded, consented click payload to Rella's first-party
- * booking endpoint; that is the complete measurement boundary.
+ * component in the shared root may send one bounded, consented click payload
+ * to Rella's first-party booking endpoint; that is the measurement boundary.
  */
 export default function CampaignLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <>
       {children}
-      <AestheticsAttributionConsent />
     </>
   );
 }

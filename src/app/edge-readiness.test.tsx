@@ -62,14 +62,16 @@ describe("the complete non-booking link matrix targets verified public destinati
 });
 
 describe("exact-Napa browser marketing suppression", () => {
-  it("mounts the first-party consent controller and no marketing loader", () => {
+  it("inherits the persistent first-party controller and no marketing loader", () => {
     const campaign = readFileSync(join(APP, "(campaign)", "layout.tsx"), "utf8");
-    expect(campaign).toContain("AestheticsAttributionConsent");
+    expect(campaign).not.toContain("AestheticsAttributionConsent");
     expect(campaign).not.toMatch(
       /CampaignGtm|GoogleAnalytics|MetaPixel|GhlChatWidget|CallRail/,
     );
     const site = readFileSync(join(APP, "(site)", "layout.tsx"), "utf8");
     expect(site).not.toContain("AestheticsAttributionConsent");
+    const root = readFileSync(join(APP, "layout.tsx"), "utf8");
+    expect(root.match(/<AestheticsAttributionConsent\s*\/>/g)).toHaveLength(1);
   });
 
   it("has no browser tracker or conversion sink in any reachable source", () => {

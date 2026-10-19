@@ -1,7 +1,30 @@
 export const AESTHETICS_ATTRIBUTION_ENDPOINT =
   "https://book.experiencerella.com/api/booking-v2/attribution";
 export const AESTHETICS_BOOKING_ORIGIN = "https://book.experiencerella.com";
-export const AESTHETICS_PILOT_PATH = "/napa/botox";
+
+// Public entry points only. A booking, private tool, unknown path or the
+// separate weight-loss surface must never activate this consent controller.
+const AESTHETICS_PUBLIC_PATHS = new Set([
+  "/", "/about", "/contact", "/gallery", "/membership", "/payment-plans",
+  "/private-parties", "/team", "/terms", "/privacy-policy", "/cancellation-policy",
+  "/locations/napa", "/locations/vacaville", "/napa/botox", "/napa/facials",
+  "/services", "/services/botox", "/services/dermal-fillers", "/services/chemical-peels",
+  "/services/facials", "/services/hydrafacial", "/services/microneedling",
+  "/services/iv-hydration", "/services/laser-treatments", "/services/injectables",
+  "/services/lasers", "/services/skin", "/vacaville/botox", "/vacaville/filler",
+  "/vacaville/laser", "/vacaville/facials", "/vacaville/hydrafacial",
+  "/vacaville/chemical-peels", "/vacaville/microneedling", "/blog", "/blog/botox-cost-napa",
+  "/giveaway-terms-and-conditions",
+]);
+const AESTHETICS_PUBLIC_HOSTS = new Set(["experiencerella.com", "www.experiencerella.com"]);
+type AcquisitionLocation = "napa" | "vacaville" | "unknown";
+
+function acquisitionLocation(pathname: string): AcquisitionLocation {
+  const path = normalizedPath(pathname);
+  if (path.startsWith("/napa/") || path === "/locations/napa") return "napa";
+  if (path.startsWith("/vacaville/") || path === "/locations/vacaville") return "vacaville";
+  return "unknown";
+}
 
 export const AESTHETICS_CONSENT_COOKIE =
   "__Host-rella_napa_aesthetics_consent_v1";
@@ -137,13 +160,13 @@ function normalizedPath(pathname: string): string {
   return path.length > 1 ? path.replace(/\/+$/, "") : path;
 }
 
-export function isApprovedAestheticsPilotPage(
+export function isApprovedAestheticsPage(
   hostname: string,
   pathname: string,
 ): boolean {
   return (
-    hostname === "experiencerella.com" &&
-    normalizedPath(pathname) === AESTHETICS_PILOT_PATH
+    AESTHETICS_PUBLIC_HOSTS.has(hostname) &&
+    AESTHETICS_PUBLIC_PATHS.has(normalizedPath(pathname))
   );
 }
 
@@ -285,9 +308,10 @@ function isDeniedAcknowledgement(value: unknown): boolean {
 }
 
 /**
- * Consent state machine for the exact Napa campaign pilot. Raw click IDs exist
- * only in a short-lived grant payload and are never written to browser storage,
- * analytics globals, logs, or booking URLs.
+ * Consent state machine for the public aesthetics entry points. A pending
+ * bounded click survives soft navigation in memory only; it is discarded on
+ * withdrawal or departure from this public surface. Nothing is persisted or
+ * transmitted before explicit advertising consent, and no page path is sent.
  */
 export class AestheticsAttributionController {
   private view: AestheticsConsentView = HIDDEN_VIEW;
@@ -299,6 +323,9 @@ export class AestheticsAttributionController {
   private lastHref = "";
   private navigationVersion = 0;
   private pendingBookingHref: string | null = null;
+  private pendingBookingAction: (() => void) | null = null;
+  private pendingClick: { fields: ApprovedPaidClick; location: AcquisitionLocation } | null = null;
+  private capturePromise: Promise<void> | null = null;
   private requestQueue: Promise<void> = Promise.resolve();
   private denialPromise: Promise<boolean> | null = null;
   private denialRetryTimer: unknown | null = null;
@@ -326,6 +353,8 @@ export class AestheticsAttributionController {
       this.denialRetryTimer = null;
     }
     this.listeners.clear();
+    this.pendingClick = null;
+    this.pendingBookingAction = null;
   }
 
   reconcileNavigation(): void {
@@ -334,12 +363,18 @@ export class AestheticsAttributionController {
     const url = safeUrl(href);
     if (
       !url ||
-      !isApprovedAestheticsPilotPage(this.runtime.hostname(), url.pathname)
+      url.protocol !== "https:" || url.username || url.password || url.port ||
+      !isApprovedAestheticsPage(this.runtime.hostname(), url.pathname)
     ) {
       this.active = false;
       this.choice = "unknown";
       this.phase = "hidden";
       this.grantController?.abort();
+      this.lastHref = "";
+      this.navigationVersion += 1;
+      this.pendingClick = null;
+      this.pendingBookingHref = null;
+      this.pendingBookingAction = null;
       if (this.denialRetryTimer !== null) {
         this.runtime.clearTimer(this.denialRetryTimer);
         this.denialRetryTimer = null;
@@ -348,13 +383,17 @@ export class AestheticsAttributionController {
       return;
     }
 
+    const incomingClick = approvedPaidClick(url.search);
     if (href !== this.lastHref) {
       this.lastHref = href;
-      this.navigationVersion += 1;
-      this.grantController?.abort();
+      if (incomingClick && JSON.stringify(incomingClick) !== JSON.stringify(this.pendingClick?.fields)) {
+        this.navigationVersion += 1;
+        this.grantController?.abort();
+        this.pendingClick = { fields: incomingClick, location: acquisitionLocation(url.pathname) };
+      }
     }
 
-    const eligibleClick = hasEligibleAestheticsPaidClick(url.search);
+    const eligibleClick = this.pendingClick !== null;
     const cookieHeader = this.runtime.cookieHeader();
     const receipt = readAestheticsConsentChoice(cookieHeader, this.runtime.now());
     const sentinelPresent = hasDeniedSentinel(cookieHeader);
@@ -375,6 +414,7 @@ export class AestheticsAttributionController {
       (receipt === "unknown" && handlePresent)
     ) {
       this.choice = "denied";
+      this.pendingClick = null;
       this.phase = "denied";
       this.persistChoice("denied");
       this.setDeniedSentinel();
@@ -464,7 +504,7 @@ export class AestheticsAttributionController {
     }
 
     const url = safeUrl(this.runtime.currentHref());
-    const click = url ? approvedPaidClick(url.search) : null;
+    const click = this.pendingClick?.fields ?? (url ? approvedPaidClick(url.search) : null);
     if (!click) {
       this.phase = "granted";
       this.setView("reopen", "granted", "granted", "");
@@ -485,6 +525,7 @@ export class AestheticsAttributionController {
     if (!this.active || this.destroyed) return;
     this.persistChoice("denied");
     this.choice = "denied";
+    this.pendingClick = null;
     this.phase = "denying";
     const sentinelPersisted = this.setDeniedSentinel();
     this.grantController?.abort();
@@ -527,7 +568,7 @@ export class AestheticsAttributionController {
     this.reconcileNavigation();
   }
 
-  guardBookingNavigation(href: string): boolean {
+  guardBookingNavigation(href: string, continueInSite?: () => void): boolean {
     if (!isAestheticsBookingHref(href) || !this.active) return false;
     if (
       this.phase !== "choice" &&
@@ -538,6 +579,7 @@ export class AestheticsAttributionController {
       return false;
     }
     this.pendingBookingHref = cleanAestheticsBookingHref(href);
+    this.pendingBookingAction = continueInSite ?? null;
     const status =
       this.phase === "choice"
         ? "Choose whether to accept cookies, then booking will continue."
@@ -546,6 +588,18 @@ export class AestheticsAttributionController {
           : "Finishing your cookie choice before booking...";
     this.setView("panel", this.phase, this.choice, status);
     return true;
+  }
+
+  /** Cart linkage must wait for a consented capture already in flight. */
+  async prepareBooking(): Promise<void> {
+    this.reconcileNavigation();
+    let awaited: Promise<void> | null = null;
+    while (this.capturePromise && this.capturePromise !== awaited) {
+      awaited = this.capturePromise;
+      await awaited;
+    }
+    if (!this.active || this.destroyed || this.phase === "granted" || this.phase === "denied") return;
+    throw new Error(this.view.status || "Choose whether to accept cookies, then booking will continue.");
   }
 
   private setView(
@@ -639,6 +693,7 @@ export class AestheticsAttributionController {
       const response = await this.runtime.fetch(AESTHETICS_ATTRIBUTION_ENDPOINT, {
         method: "POST",
         credentials: "include",
+        referrerPolicy: "origin",
         keepalive: true,
         signal: requestController.signal,
         headers: { "Content-Type": "application/json" },
@@ -657,7 +712,7 @@ export class AestheticsAttributionController {
     if (this.denialPromise) return this.denialPromise;
     const attemptedHandle = readRevocationHandle(this.runtime.cookieHeader());
     const payload: DeniedPayload = {
-      location: "napa",
+      location: acquisitionLocation(safeUrl(this.runtime.currentHref())?.pathname ?? "/"),
       consentAdUserData: "denied",
       ...(attemptedHandle ? { revocationHandle: attemptedHandle } : {}),
     };
@@ -687,7 +742,21 @@ export class AestheticsAttributionController {
     }, delay);
   }
 
-  private async captureCurrentClick(
+  private captureCurrentClick(
+    navigationVersion: number,
+    preparedHandle?: string,
+    predecessor: string | null = null,
+    preparedClick?: ApprovedPaidClick,
+  ): Promise<void> {
+    if (this.capturePromise && this.activeCaptureVersion === navigationVersion) return this.capturePromise;
+    const work = this.performCapture(navigationVersion, preparedHandle, predecessor, preparedClick);
+    this.capturePromise = work;
+    const clear = () => { if (this.capturePromise === work) this.capturePromise = null; };
+    void work.then(clear, clear);
+    return work;
+  }
+
+  private async performCapture(
     navigationVersion: number,
     preparedHandle?: string,
     predecessor: string | null = null,
@@ -698,7 +767,8 @@ export class AestheticsAttributionController {
     this.activeCaptureVersion = navigationVersion;
     try {
       const url = safeUrl(this.runtime.currentHref());
-      const click = preparedClick ?? (url ? approvedPaidClick(url.search) : null);
+      const capturedClick = this.pendingClick;
+      const click = preparedClick ?? capturedClick?.fields ?? (url ? approvedPaidClick(url.search) : null);
       if (!url || !click) {
         this.phase = "granted";
         this.setView("reopen", "granted", "granted", "");
@@ -713,7 +783,7 @@ export class AestheticsAttributionController {
       }
 
       const payload: GrantedPayload = {
-        location: "napa",
+        location: capturedClick?.location ?? acquisitionLocation(url.pathname),
         consentAdUserData: "granted",
         revocationHandle: handle,
         ...(predecessor ? { revocationPredecessorHandle: predecessor } : {}),
@@ -739,10 +809,10 @@ export class AestheticsAttributionController {
       });
       if (this.grantController === controller) this.grantController = null;
       if (this.destroyed || this.choice !== "granted") return;
+      if (navigationVersion !== this.navigationVersion) return;
 
       if (
         !acknowledged ||
-        navigationVersion !== this.navigationVersion ||
         hasDeniedSentinel(this.runtime.cookieHeader())
       ) {
         this.phase = "error";
@@ -756,6 +826,7 @@ export class AestheticsAttributionController {
       }
 
       this.cleanLandingUrl();
+      if (this.pendingClick === capturedClick) this.pendingClick = null;
       this.phase = "granted";
       this.setView("reopen", "granted", "granted", "");
       this.runtime.publish({ grantAcknowledged: true, version: 1 });
@@ -770,6 +841,7 @@ export class AestheticsAttributionController {
   private async failClosed(status: string): Promise<void> {
     this.persistChoice("denied");
     this.choice = "denied";
+    this.pendingClick = null;
     this.phase = "error";
     this.setDeniedSentinel();
     this.grantController?.abort();
@@ -781,8 +853,11 @@ export class AestheticsAttributionController {
 
   private flushPendingBooking(): void {
     const href = this.pendingBookingHref;
+    const action = this.pendingBookingAction;
     this.pendingBookingHref = null;
-    if (href) this.runtime.navigate(cleanAestheticsBookingHref(href));
+    this.pendingBookingAction = null;
+    if (action) action();
+    else if (href) this.runtime.navigate(cleanAestheticsBookingHref(href));
   }
 }
 

@@ -7,7 +7,7 @@ export function bookingBackendOrigin(): string {
   if ((!local && (!approved || url.protocol !== "https:")) || url.username || url.password || url.pathname !== "/" || url.search || url.hash) throw new Error("backend_unavailable");
   return url.origin;
 }
-const COOKIES = new Set(["rella_cart_auth", "rella_attribution_id", "rella_ad_attribution_scope", "rella_ad_user_data_denied", "rella_menu_visitor", "rella_package_identity", "rella_owned_booking"]);
+const COOKIES = new Set(["rella_cart_auth", "rella_attribution_id", "rella_ad_attribution_scope", "rella_ad_attribution_revoke", "rella_ad_user_data_denied", "rella_menu_visitor", "rella_package_identity", "rella_owned_booking"]);
 export function bookingCookies(raw: string): string {
   return raw.split(";").map(c => c.trim()).filter(c => COOKIES.has(c.split("=")[0])).join("; ");
 }

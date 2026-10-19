@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Poppins } from "next/font/google";
 import "./globals.css";
 import { BookingExperienceProvider } from "@/components/guided-booking/BookingExperienceProvider";
+import { AestheticsAttributionConsent } from "@/components/integrations/AestheticsAttributionConsent";
 
 const poppins = Poppins({
   variable: "--font-poppins",
@@ -51,7 +52,9 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${poppins.variable} antialiased`}>
       {/*
-        The root layout owns ONLY the document and the font — no analytics.
+        The root owns the document, font and bounded first-party consent —
+        no browser marketing stack. Its consent controller persists across
+        route-group navigation; unknown/private/weight-loss hosts stay inert.
         All routes can open the in-site booking document. Marketing loaders
         remain structurally absent, independent of environment configuration.
         Site chrome (SkipNav / Header / MobileNav / Footer) lives in the `(site)`
@@ -60,7 +63,10 @@ export default function RootLayout({
         Both groups keep their URLs unchanged — route groups are path-invisible.
       */}
       <body className="min-h-screen flex flex-col font-sans text-silver-dark bg-white">
-        <BookingExperienceProvider>{children}</BookingExperienceProvider>
+        <BookingExperienceProvider>
+          {children}
+          <AestheticsAttributionConsent />
+        </BookingExperienceProvider>
       </body>
     </html>
   );
