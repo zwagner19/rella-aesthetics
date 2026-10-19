@@ -34,7 +34,7 @@ export function DateTimeStep({
     }).formatToParts(new Date(times[0].startTime));
     const part = (type: string) => parts.find(value => value.type === type)?.value;
     if (`${part("year")}-${part("month")}-${part("day")}` !== selectedDate) return;
-    timesRef.current?.scrollIntoView({ block: "nearest", behavior:
+    timesRef.current?.scrollIntoView({ block: "center", behavior:
       window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
   }, [selectedDate, times]);
 
