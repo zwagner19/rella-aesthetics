@@ -38,9 +38,6 @@ export function TreatmentDetails({
               Consultation
             </span>
           ) : null}
-          <span className="mt-0.5 block text-xs text-ink/65 underline underline-offset-2">
-            {expanded ? "Hide details" : "View details"}
-          </span>
         </span>
       </button>
       <div id={descriptionId} hidden={!expanded} className="order-last col-span-full pb-1">
