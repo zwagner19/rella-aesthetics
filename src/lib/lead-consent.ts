@@ -1,9 +1,9 @@
 import { createHash } from "node:crypto";
 import { GHL_API_BASE } from "./ghl";
-import { ASSESSMENT_CONTACT_CONSENT, CONTACT_CONSENT_POLICY_VERSION, MARKETING_CONSENT } from "./guided-booking/policies";
+import { CONTACT_CONSENT_POLICIES } from "./guided-booking/policies";
 
 export interface LeadConsent {
-  policyVersion: typeof CONTACT_CONSENT_POLICY_VERSION;
+  policyVersion: keyof typeof CONTACT_CONSENT_POLICIES;
   operational: boolean;
   marketing: boolean;
 }
@@ -17,18 +17,19 @@ export function leadConsentTags(choice: LeadConsent): string[] {
 
 export function readLeadConsent(value: unknown, phoneProvided: boolean): LeadConsent | null {
   const choice = value as Partial<LeadConsent> | null;
-  if (!choice || choice.policyVersion !== CONTACT_CONSENT_POLICY_VERSION || typeof choice.operational !== "boolean"
+  if (!choice || typeof choice.policyVersion !== "string" || !Object.hasOwn(CONTACT_CONSENT_POLICIES, choice.policyVersion) || typeof choice.operational !== "boolean"
     || typeof choice.marketing !== "boolean" || (phoneProvided && !choice.operational)
     || (!phoneProvided && choice.marketing)) return null;
-  return { policyVersion: CONTACT_CONSENT_POLICY_VERSION, operational: choice.operational, marketing: choice.marketing };
+  return { policyVersion: choice.policyVersion, operational: choice.operational, marketing: choice.marketing };
 }
-
-const policyHash = createHash("sha256").update(JSON.stringify([ASSESSMENT_CONTACT_CONSENT, MARKETING_CONSENT])).digest("hex");
 
 /** Called only with the contact identity returned by a verified server upsert. */
 export async function persistLeadConsent(input: {
   contactId: string; submissionId: string; choice: LeadConsent; phoneProvided: boolean; headers: Record<string, string>;
 }) {
+  const policy = CONTACT_CONSENT_POLICIES[input.choice.policyVersion];
+  if (!policy) throw new Error("Unknown consent policy");
+  const policyHash = createHash("sha256").update(JSON.stringify([policy.operational, policy.marketing])).digest("hex");
   const receiptId = createHash("sha256").update(`${input.contactId}/${input.submissionId}`).digest("hex");
   const base = `${GHL_API_BASE}/contacts/${encodeURIComponent(input.contactId)}/notes`;
   const request = (url: string, init?: RequestInit) => fetch(url, {

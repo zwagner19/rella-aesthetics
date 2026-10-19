@@ -98,7 +98,7 @@ export function CompleteStep({
             }
             required
           />
-          <span>{ASSESSMENT_CONTACT_CONSENT}</span>
+          <span>Required: {ASSESSMENT_CONTACT_CONSENT}</span>
         </label>
         <label className="flex items-start gap-3 text-sm font-light leading-relaxed text-ink/80">
           <input

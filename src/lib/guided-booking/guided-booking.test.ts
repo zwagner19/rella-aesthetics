@@ -87,14 +87,14 @@ describe("shared booking menu and state", () => {
     expect(state.selectedTreatmentKeys).toHaveLength(6);
     expect(state.error).toContain("up to 6");
   });
-  it("validates contact information and keeps both phone-consent sentences", () => {
+  it("requires contact permission while keeping the short promotions choice optional", () => {
     const incomplete = { ...client, email: "bad", phone: "707", assessmentContactConsent: true };
     expect(contactFieldsLookComplete(incomplete)).toBe(false);
     expect(clientLooksComplete(incomplete)).toBe(false);
     expect(clientLooksComplete({ ...client, assessmentContactConsent: false })).toBe(false);
     expect(clientLooksComplete({ ...client, marketingConsent: false })).toBe(true);
     expect(ASSESSMENT_CONTACT_CONSENT).toBe("I ask Rella Aesthetics to contact me by phone, email, or text about my inquiry, booking, or requested services. Messages may be sent using automated technology. Message and data rates may apply. Reply STOP to stop texts or HELP for help. This consent applies only to contact about my inquiry, booking, or requested services.");
-    expect(MARKETING_CONSENT).toBe("Optional: I agree to receive recurring promotional calls and text messages, including through automated technology, from Rella Aesthetics at the number provided. Consent is not a condition of purchase. Message frequency varies. Message and data rates may apply. Reply STOP to opt out or HELP for help.");
+    expect(MARKETING_CONSENT).toBe("Send me occasional deals and promotions. (Optional)");
   });
   it("keeps owned context for one verified service and clears it for uncovered or location changes", () => {
     const owned: GuidedBookingState = { ...bootstrapFromIntent({ location: "napa" }), treatments: catalog,
@@ -179,7 +179,7 @@ describe("complete shared multi-treatment backend contract", () => {
     await backend.attachPayment!("opaque-token");
     expect(await backend.complete!({ ...choices, slot, client: noMarketing })).toMatchObject({ ok: true });
     expect(calls.filter(call => call.operation === "consent").map(call => call.body)).toEqual([
-      { policyVersion: "rella-booking-consent-2026-10-19-v1", operational: true, marketing: false },
+      { policyVersion: "rella-booking-consent-2026-10-19-v2", operational: true, marketing: false },
     ]);
     expect(calls.slice(-3).map(call => call.operation)).toEqual(["consent", "payment", "checkout"]);
     expect(Object.keys((calls.at(-1)!.body!.info as object))).toEqual(["firstName", "lastName", "email", "phoneNumber"]);

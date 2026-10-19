@@ -65,6 +65,16 @@ describe("multi-treatment presentation", () => {
     } }} mode="live" onChange={() => {}} submitting={false} onLiveComplete={async () => {}} />);
     expect(consented).toContain("Confirm the required contact consent to continue.");
     expect(consented).not.toContain("Confirm booking");
+    expect(consented).toContain("Required: ");
+    const checkboxes = (consented.match(/<input\b[^>]*>/g) ?? []).filter(input => input.includes('type="checkbox"'));
+    expect(checkboxes[0]).toContain('required=""');
+    expect(checkboxes[1]).not.toContain("required");
+    const readyWithoutMarketing = renderToStaticMarkup(<CompleteStep state={{ ...state,
+      quote: { ...state.quote!, needsCard: false },
+      client: { firstName: "Fixture", lastName: "User", email: "fixture@example.test", phone: "7073582928",
+        assessmentContactConsent: true, marketingConsent: false },
+    }} mode="live" onChange={() => {}} submitting={false} onLiveComplete={async () => {}} />);
+    expect(readyWithoutMarketing).toContain("Confirm booking");
     expect(complete).not.toContain("$200.00");
   });
   it("shows terminal pending verification immediately when the modal reopens", () => {

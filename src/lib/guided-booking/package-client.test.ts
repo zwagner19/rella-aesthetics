@@ -67,7 +67,7 @@ describe("same-origin package contract", () => {
     const responses: Record<string, unknown> = {
       catalog: { ok: true, packages: [{ id: "opaque-package", name: "Verified package", description: "Native description.", benefitGroups: [] }] },
       start: { ok: true, quote: { totalCents: 60000, currency: "USD", needsCard: true }, cardFrameOrigin: "https://secure.example.test" },
-      consent: { ok: true, consent: { policyVersion: "rella-booking-consent-2026-10-19-v1", operational: true, marketing: false, recordedAt: "2026-10-19T01:00:00.000Z" } },
+      consent: { ok: true, consent: { policyVersion: "rella-booking-consent-2026-10-19-v2", operational: true, marketing: false, recordedAt: "2026-10-19T01:00:00.000Z" } },
       prepare: { ok: true, quote: { totalCents: 57500, currency: "USD", needsCard: true }, cardFrameOrigin: "https://secure.example.test" },
       payment: { ok: true, state: "PAYMENT_READY" },
       checkout: { ok: true, state: "CONFIRMED", confirmationId: "verified-purchase" },
@@ -93,7 +93,7 @@ describe("same-origin package contract", () => {
     await client.listOfferings(location); await client.reviewPurchase({ location, packageId: "opaque-package" });
     await expect(client.preparePurchase(input.client)).rejects.toThrow("consent");
     expect(calls.map(call => call.operation)).toEqual(["catalog", "start", "consent"]);
-    expect(calls.at(-1)?.body).toEqual({ policyVersion: "rella-booking-consent-2026-10-19-v1", operational: true, marketing: false });
+    expect(calls.at(-1)?.body).toEqual({ policyVersion: "rella-booking-consent-2026-10-19-v2", operational: true, marketing: false });
   });
 
   it("requires contact review again if either consent choice changes after preparation", async () => {

@@ -44,6 +44,19 @@ describe("durable contact consent", () => {
     expect(fetcher.mock.calls.map(([url, init]) => [String(url).split("/").at(-1), init?.method ?? "GET"]))
       .toEqual([["notes", "GET"], ["notes", "POST"], ["note-0", "GET"]]);
   });
+  it("keeps already-open v1 forms valid and records their original policy hash", async () => {
+    const legacy = { ...choice, policyVersion: "rella-booking-consent-2026-10-19-v1" as const };
+    expect(readLeadConsent(legacy, true)).toEqual(legacy);
+    const oldStore = notesStore();
+    await persistLeadConsent({ ...input, choice: legacy });
+    const oldReceipt = JSON.parse(oldStore.notes[0].body);
+    const newStore = notesStore();
+    await persistLeadConsent(input);
+    const newReceipt = JSON.parse(newStore.notes[0].body);
+    expect(oldReceipt.policyVersion).toBe(legacy.policyVersion);
+    expect(newReceipt.policyVersion).toBe(choice.policyVersion);
+    expect(newReceipt.policyHash).not.toBe(oldReceipt.policyHash);
+  });
   it("does not create a second note after retrying an already-saved receipt", async () => {
     const { notes, fetcher } = notesStore();
     await persistLeadConsent(input); await persistLeadConsent(input);
