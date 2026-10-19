@@ -3,7 +3,9 @@ import { leadConsentTags, persistLeadConsent, readLeadConsent, type LeadConsent 
 import { CONTACT_CONSENT_POLICY_VERSION } from "./guided-booking/policies";
 
 const choice: LeadConsent = { policyVersion: CONTACT_CONSENT_POLICY_VERSION, operational: true, marketing: false };
-const input = { contactId: "verified-contact", submissionId: "62d72df4-658e-4d6c-aa7c-608aaf27a212", choice, phoneProvided: true, headers: { Version: "2021-07-28" } };
+const input = { contactId: "verified-contact", submissionId: "62d72df4-658e-4d6c-aa7c-608aaf27a212", choice, phoneProvided: true,
+  replyContact: { email: null, phone: "+17075550100" }, channelMatches: { email: false, phone: true },
+  headers: { Version: "2021-07-28" } };
 afterEach(() => { vi.unstubAllGlobals(); vi.restoreAllMocks(); });
 
 function notesStore() {
@@ -39,7 +41,8 @@ describe("durable contact consent", () => {
     const { notes, fetcher } = notesStore();
     await persistLeadConsent(input);
     expect(notes).toHaveLength(1);
-    expect(JSON.parse(notes[0].body)).toMatchObject({ type: "rella-contact-consent", ...choice, source: "/contact", phoneProvided: true,
+    expect(JSON.parse(notes[0].body)).toMatchObject({ type: "rella-contact-consent", receiptVersion: 2, ...choice, source: "/contact", phoneProvided: true,
+      replyContact: input.replyContact, channelMatches: input.channelMatches,
       policyHash: expect.stringMatching(/^[a-f0-9]{64}$/), recordedAt: expect.any(String) });
     expect(fetcher.mock.calls.map(([url, init]) => [String(url).split("/").at(-1), init?.method ?? "GET"]))
       .toEqual([["notes", "GET"], ["notes", "POST"], ["note-0", "GET"]]);
@@ -61,6 +64,32 @@ describe("durable contact consent", () => {
     const { notes, fetcher } = notesStore();
     await persistLeadConsent(input); await persistLeadConsent(input);
     expect(notes).toHaveLength(1);
+    expect(fetcher.mock.calls.filter(([, init]) => init?.method === "POST")).toHaveLength(1);
+  });
+  it("does not rewrite an old receipt that cannot prove submitted reply details", async () => {
+    const { notes, fetcher } = notesStore();
+    await persistLeadConsent(input);
+    const legacy = JSON.parse(notes[0].body);
+    delete legacy.receiptVersion; delete legacy.replyContact; delete legacy.channelMatches;
+    notes[0].body = JSON.stringify(legacy);
+
+    await expect(persistLeadConsent(input)).rejects.toThrow("differs");
+
+    expect(notes[0].body).toBe(JSON.stringify(legacy));
+    expect(fetcher.mock.calls.filter(([, init]) => init?.method === "POST")).toHaveLength(1);
+  });
+  it.each(["replyContact", "channelMatches"] as const)("does not reuse a receipt when %s changes on retry", async field => {
+    const collisionInput = { ...input, replyContact: { email: "reply@example.test", phone: "+17075550100" }, channelMatches: { email: false, phone: true } };
+    const { notes, fetcher } = notesStore();
+    await persistLeadConsent(collisionInput);
+    const original = notes[0].body;
+    const next = field === "replyContact"
+      ? { ...collisionInput, replyContact: { ...collisionInput.replyContact, email: "changed@example.test" } }
+      : { ...collisionInput, channelMatches: { email: true, phone: true } };
+
+    await expect(persistLeadConsent(next)).rejects.toThrow("differs");
+
+    expect(notes[0].body).toBe(original);
     expect(fetcher.mock.calls.filter(([, init]) => init?.method === "POST")).toHaveLength(1);
   });
   it("recovers an uncertain note-create response by reading the saved note without repeating its mutation", async () => {
@@ -91,6 +120,24 @@ describe("durable contact consent", () => {
     fetcher.mockImplementationOnce(async () => Response.json({ notes: [] }))
       .mockImplementationOnce(async () => Response.json({ note: { id: "note-0" } }))
       .mockImplementationOnce(async () => Response.json({ note: { id: "note-0", contactId: "another-contact", body: "wrong" } }));
+    await expect(persistLeadConsent(input)).rejects.toThrow("readback");
+    expect(fetcher).toHaveBeenCalledTimes(3);
+  });
+  it.each(["replyContact", "channelMatches"] as const)("rejects exact-note readback that changes %s", async field => {
+    const { fetcher } = notesStore();
+    let body = "";
+    fetcher.mockImplementationOnce(async () => Response.json({ notes: [] }))
+      .mockImplementationOnce(async (_url, init) => {
+        body = JSON.parse(String(init?.body)).body;
+        return Response.json({ note: { id: "note-0" } }, { status: 201 });
+      })
+      .mockImplementationOnce(async () => {
+        const receipt = JSON.parse(body);
+        if (field === "replyContact") receipt.replyContact.email = "changed@example.test";
+        else receipt.channelMatches.phone = false;
+        return Response.json({ note: { id: "note-0", contactId: input.contactId, body: JSON.stringify(receipt) } });
+      });
+
     await expect(persistLeadConsent(input)).rejects.toThrow("readback");
     expect(fetcher).toHaveBeenCalledTimes(3);
   });

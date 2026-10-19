@@ -3,6 +3,7 @@ import {
   GHL_API_BASE,
   GHL_API_VERSION,
   buildGhlContactBody,
+  normalizePhone,
 } from "@/lib/ghl";
 import { EXTRA_CONTACT_INTERESTS } from "@/lib/contact-intents";
 import { services } from "@/lib/data";
@@ -184,11 +185,11 @@ export async function POST(req: NextRequest) {
     });
 
     const responseText = await ghlRes.text();
-    let result: { contact?: { id?: string }; id?: string } = {};
+    let result: { contact?: { id?: unknown; locationId?: unknown; email?: unknown; phone?: unknown } } | null = null;
     try {
-      result = responseText ? JSON.parse(responseText) : {};
+      result = responseText ? JSON.parse(responseText) : null;
     } catch {
-      result = {};
+      result = null;
     }
 
     if (!ghlRes.ok) {
@@ -204,16 +205,36 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const contactId = result.contact?.id ?? result.id;
-    if (typeof contactId !== "string" || !contactId || contactId.length > 256) {
-      console.error("GHL contact upsert returned no contact ID");
+    const contact = result?.contact;
+    const contactId = contact?.id;
+    if (typeof contactId !== "string" || !contactId || contactId.length > 256
+      || contact?.locationId !== GHL_LOCATION_ID) {
+      console.error("GHL contact upsert identity unverified");
       return NextResponse.json(
         { accepted: false, pending: true },
         { status: 202 },
       );
     }
 
-    await persistLeadConsent({ contactId, submissionId, choice: consent, phoneProvided: Boolean(phone), headers: requestHeaders });
+    const replyContact = { email: email || null, phone: phone ? normalizePhone(phone) : null };
+    const nativeEmail = typeof contact.email === "string" ? contact.email.trim().toLowerCase() : "";
+    const nativePhone = typeof contact.phone === "string" ? normalizePhone(contact.phone).replace(/\D/g, "") : "";
+    const submittedPhone = replyContact.phone?.replace(/\D/g, "") ?? "";
+    const channelMatches = {
+      email: Boolean(email) && email === nativeEmail,
+      phone: Boolean(submittedPhone) && submittedPhone === nativePhone,
+    };
+    if (!channelMatches.email && !channelMatches.phone) {
+      return NextResponse.json({ accepted: false, pending: true }, { status: 202 });
+    }
+
+    // GHL may match one existing contact and retain a different second channel.
+    // Preserve the submitted reply details without changing or merging profiles.
+    await persistLeadConsent({ contactId, submissionId, choice: consent, phoneProvided: Boolean(phone),
+      replyContact, channelMatches, headers: requestHeaders });
+    if ((email && !channelMatches.email) || (phone && !channelMatches.phone)) {
+      return NextResponse.json({ accepted: false, pending: true }, { status: 202 });
+    }
 
     const tags = [
       ...leadConsentTags(consent),

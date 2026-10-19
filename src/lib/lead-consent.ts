@@ -8,6 +8,16 @@ export interface LeadConsent {
   marketing: boolean;
 }
 
+export interface LeadReplyContact {
+  email: string | null;
+  phone: string | null;
+}
+
+export interface LeadChannelMatches {
+  email: boolean;
+  phone: boolean;
+}
+
 /** New submission tags do not revoke or overwrite an existing patient's consent. */
 export function leadConsentTags(choice: LeadConsent): string[] {
   return ["website-contact-request",
@@ -26,6 +36,7 @@ export function readLeadConsent(value: unknown, phoneProvided: boolean): LeadCon
 /** Called only with the contact identity returned by a verified server upsert. */
 export async function persistLeadConsent(input: {
   contactId: string; submissionId: string; choice: LeadConsent; phoneProvided: boolean; headers: Record<string, string>;
+  replyContact: LeadReplyContact; channelMatches: LeadChannelMatches;
 }) {
   const policy = CONTACT_CONSENT_POLICIES[input.choice.policyVersion];
   if (!policy) throw new Error("Unknown consent policy");
@@ -44,9 +55,12 @@ export async function persistLeadConsent(input: {
     try {
       const receipt = JSON.parse(body);
       return receipt.type === "rella-contact-consent" && receipt.receiptId === receiptId
+        && receipt.receiptVersion === 2
         && receipt.source === "/contact"
         && receipt.policyVersion === input.choice.policyVersion && receipt.operational === input.choice.operational
         && receipt.marketing === input.choice.marketing && receipt.phoneProvided === input.phoneProvided
+        && receipt.replyContact?.email === input.replyContact.email && receipt.replyContact?.phone === input.replyContact.phone
+        && receipt.channelMatches?.email === input.channelMatches.email && receipt.channelMatches?.phone === input.channelMatches.phone
         && receipt.policyHash === policyHash && typeof receipt.recordedAt === "string" && Number.isFinite(Date.parse(receipt.recordedAt));
     } catch { return false; }
   }
@@ -62,8 +76,9 @@ export async function persistLeadConsent(input: {
     body = existing.body;
     id = existing.id;
   } else {
-    body = JSON.stringify({ type: "rella-contact-consent", receiptId, ...input.choice,
-      phoneProvided: input.phoneProvided, policyHash, recordedAt: new Date().toISOString(), source: "/contact" });
+    body = JSON.stringify({ type: "rella-contact-consent", receiptVersion: 2, receiptId, ...input.choice,
+      phoneProvided: input.phoneProvided, replyContact: input.replyContact, channelMatches: input.channelMatches,
+      policyHash, recordedAt: new Date().toISOString(), source: "/contact" });
     const created = await request(base, { method: "POST", body: JSON.stringify({ body }) });
     const saved = await created.json();
     if (!created.ok || typeof saved.note?.id !== "string" || !saved.note.id) throw new Error("Consent note creation unverified");
