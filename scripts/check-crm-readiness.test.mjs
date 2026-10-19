@@ -51,8 +51,8 @@ test("stops before additional checks on wrong-business metadata", async () => {
   const report = await checkCrmReadiness({ env, fetcher });
   assert.equal(report.state, "invalid"); assert.equal(calls.length, 1);
 });
-test("treats 401 as invalid auth and metadata scope denial/transient failures as unknown without error body exposure", async () => {
-  for (const [status, expected] of [[401, "invalid"], [403, "unknown"], [500, "unknown"]]) {
+test("treats authentication or scope denial and transient failures as unknown without error body exposure", async () => {
+  for (const [status, expected] of [[401, "unknown"], [403, "unknown"], [500, "unknown"]]) {
     const report = await checkCrmReadiness({ env, fetcher: async () => Response.json({ error: env.GHL_API_KEY }, { status }) });
     assert.equal(report.state, expected); assert.equal(report.business.httpStatus, status);
     assert(!JSON.stringify(report).includes(env.GHL_API_KEY));
@@ -74,11 +74,18 @@ test("continues custom-field and synthetic notes checks when location metadata i
   assert(calls.some(([url]) => url.includes("/__rella_readiness_no_patient__/notes")));
   assert(!JSON.stringify(report).includes("private permission details"));
 });
-test("401 invalid auth stops before unrelated metadata and notes requests", async () => {
+test("401 metadata scope denial does not skip independent contact-read checks", async () => {
   let calls = 0;
   const report = await checkCrmReadiness({ env, fetcher: async () => { calls++; return Response.json({}, { status: 401 }); } });
-  assert.equal(report.state, "invalid"); assert.equal(report.business.reason, "invalid_auth");
-  assert.equal(report.business.httpStatus, 401); assert.equal(calls, 1);
+  assert.equal(report.state, "unknown"); assert.equal(report.business.reason, "auth_or_scope_denied");
+  assert.equal(report.business.httpStatus, 401); assert.equal(calls, 5);
+  assert.equal(report.notesRead.outcome, "auth_or_scope_denied");
+});
+test("reports only a boolean for the UI-verified business account location", async () => {
+  const report = await checkCrmReadiness({ env: { ...env, GHL_LOCATION_ID: "AN9PD7sVxQPYWh1Jv6ji" }, fetcher: async () => Response.json({}, { status: 401 }) });
+  assert.equal(report.configuration.approvedAccountLocationMatches, true);
+  assert(!JSON.stringify(report).includes("AN9PD7sVxQPYWh1Jv6ji"));
+  assert.equal(report.business.state, "unknown");
 });
 test("malformed JSON retains bounded HTTP status without logging response contents", async () => {
   const report = await checkCrmReadiness({ env, fetcher: async () => new Response("private non-json response", { status: 200 }) });

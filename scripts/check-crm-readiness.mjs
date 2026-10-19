@@ -4,6 +4,7 @@
  * A successful metadata check is not evidence of notes-write or workflow safety.
  */
 import { pathToFileURL } from "node:url";
+import { createHash } from "node:crypto";
 
 export const CANONICAL_PROJECT = "prj_3ppAinB6Uzy0i0WA1OxB81rubmnD";
 const BRANCH = "codex/amie-shared-booking";
@@ -16,6 +17,9 @@ const FIELD_ENV = {
   message: "GHL_CUSTOM_FIELD_MESSAGE_ID",
 };
 const EXPECTED_NAMES = new Set(["rella aesthetics", "rella aesthetics napa", "rella aesthetics vacaville"]);
+// The business account was verified in the authenticated GHL integration UI.
+// Log only a match boolean, never the configured location identifier.
+const APPROVED_ACCOUNT_HASH = createHash("sha256").update("AN9PD7sVxQPYWh1Jv6ji").digest("hex");
 
 function scopeClaims(token, now) {
   const unknown = { present: false, verified: false, contactsRead: null, contactsWrite: null, expired: null };
@@ -32,7 +36,7 @@ function scopeClaims(token, now) {
 }
 
 function failure(status) {
-  if (status === 401) return "invalid_auth";
+  if (status === 401) return "auth_or_scope_denied";
   if (status === 403) return "metadata_scope_denied";
   if (status === 404) return "not_found";
   return "unknown";
@@ -44,7 +48,7 @@ function httpStatus(status) {
 
 function metadataFailure(status) {
   const reason = failure(status);
-  return { state: status === 401 || status === 404 ? "invalid" : "unknown", reason, httpStatus: httpStatus(status) };
+  return { state: status === 404 ? "invalid" : "unknown", reason, httpStatus: httpStatus(status) };
 }
 
 export async function checkCrmReadiness({ env = process.env, fetcher = fetch, explicit = false, now = Date.now() } = {}) {
@@ -55,6 +59,7 @@ export async function checkCrmReadiness({ env = process.env, fetcher = fetch, ex
   }
   const configuration = {
     credential: Boolean(env.GHL_API_KEY), location: Boolean(env.GHL_LOCATION_ID),
+    approvedAccountLocationMatches: Boolean(env.GHL_LOCATION_ID) && createHash("sha256").update(env.GHL_LOCATION_ID).digest("hex") === APPROVED_ACCOUNT_HASH,
     serviceField: Boolean(env[FIELD_ENV.service]), clinicField: Boolean(env[FIELD_ENV.clinic]), messageField: Boolean(env[FIELD_ENV.message]),
   };
   const report = { check: "rella-crm-readiness-v1", state: "unknown", launchReady: false,
@@ -82,9 +87,9 @@ export async function checkCrmReadiness({ env = process.env, fetcher = fetch, ex
   const location = await get(`/locations/${encodedLocation}`);
   if (location.status !== 200 || !location.data?.location) {
     report.business = metadataFailure(location.status);
-    if (location.status === 401) { report.state = "invalid"; return report; }
-    // A location-metadata scope can be absent while contact/custom-field reads
-    // are permitted. Inspect those independent read-only capabilities as well.
+    // GHL can return 401 for a missing scope as well as invalid authentication.
+    // Metadata permissions are independent of the approved contact permissions.
+    // Inspect independent read-only capabilities without requesting more scopes.
   } else {
     const metadata = location.data.location;
     const names = [metadata.name, metadata.business?.name].filter(value => typeof value === "string")
@@ -108,8 +113,8 @@ export async function checkCrmReadiness({ env = process.env, fetcher = fetch, ex
 
   // This identifier cannot address a native contact. Do not list/search patients.
   const notes = await get(`/contacts/${SYNTHETIC_CONTACT}/notes`);
-  report.notesRead = { state: notes.status === 401 ? "invalid" : "unknown", httpStatus: httpStatus(notes.status), proof: "synthetic_probe_is_not_scope_proof", outcome:
-    notes.status === 401 ? "invalid_auth" : notes.status === 403 ? "scope_or_resource_denied"
+  report.notesRead = { state: "unknown", httpStatus: httpStatus(notes.status), proof: "synthetic_probe_is_not_scope_proof", outcome:
+    notes.status === 401 ? "auth_or_scope_denied" : notes.status === 403 ? "scope_or_resource_denied"
       : notes.status === 200 && Array.isArray(notes.data?.notes) && notes.data.notes.length === 0 ? "empty_probe_accepted"
         : notes.status === 404 ? "synthetic_contact_not_found" : "unverified" };
   // JWT claims are informational only; positive API readback is required above.

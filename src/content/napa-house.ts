@@ -3,6 +3,7 @@
  * Sources: repo `locations.napa`, `content/team`, `service-data.availableLocations`,
  * and read-only live-site audit notes. Do not invent amenities, parking, or hours.
  */
+import { locations } from "@/lib/data";
 
 export const napaHouseIdentity = {
   brand: "Rella Aesthetics",
@@ -18,15 +19,8 @@ export const napaHousePractical = {
   phoneTel: "+17073582928",
   mapUrl: "https://maps.google.com/?q=1541+3rd+St+Napa+CA+94559",
   googleReviewUrl: "https://g.page/r/CcUDgqqvRr8MEBM/review",
-  /**
-   * Hours from repo `locations.napa` (what this Next app already publishes).
-   * Live WordPress Napa pages also publish Wed–Sat / conflicting schema — flagged in report.
-   */
-  hours: [
-    "Monday–Friday: 9am–5pm",
-    "Saturday: 9am–1pm",
-    "Sunday: Closed",
-  ],
+  /** Owner-approved hours shared with contact copy and structured data. */
+  hours: locations.napa.hours,
 } as const;
 
 /**
