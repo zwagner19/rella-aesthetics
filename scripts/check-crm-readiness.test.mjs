@@ -3,15 +3,17 @@ import assert from "node:assert/strict";
 import { CANONICAL_PROJECT, checkCrmReadiness } from "./check-crm-readiness.mjs";
 
 const env = { VERCEL_PROJECT_ID: CANONICAL_PROJECT, VERCEL_ENV: "preview", VERCEL_GIT_COMMIT_REF: "codex/amie-shared-booking",
-  GHL_API_KEY: "sensitive-do-not-print", GHL_LOCATION_ID: "sensitive-location", GHL_CUSTOM_FIELD_SERVICE_ID: "service-id",
-  GHL_CUSTOM_FIELD_LOCATION_ID: "clinic-id", GHL_CUSTOM_FIELD_MESSAGE_ID: "message-id" };
+  GHL_API_KEY: "sensitive-do-not-print", GHL_LOCATION_ID: "sensitive-location", GHL_CUSTOM_FIELD_SERVICE_ID: "sKdonP3enW4FefPCVuUD",
+  GHL_CUSTOM_FIELD_LOCATION_ID: "HqLMdCYtaiRCcLenwe9V", GHL_CUSTOM_FIELD_MESSAGE_ID: "e3NvXYXNv8QNVqMqXGDr",
+  GHL_CUSTOM_FIELD_RECEIPT_ID: "fgqFVClK8ZWn7S1l1aCI" };
 function adapter(overrides = {}) {
   const calls = [];
   return { calls, fetcher: async (url, init) => {
     calls.push([url, init]);
     if (url.includes("customFields")) {
       const id = url.split("/").at(-1);
-      return Response.json({ customField: { id, locationId: env.GHL_LOCATION_ID, model: "contact" } });
+      return Response.json({ customField: { id, locationId: env.GHL_LOCATION_ID, model: "contact",
+        ...(id === env.GHL_CUSTOM_FIELD_RECEIPT_ID ? { fieldKey: "contact.website_inquiry_receipt_id", dataType: "TEXT" } : {}) } });
     }
     if (url.includes("/notes")) return Response.json({ message: "private-message-not-logged" }, { status: 404 });
     return Response.json({ location: { id: env.GHL_LOCATION_ID, name: "Rella Aesthetics", ...overrides } });
@@ -36,11 +38,15 @@ test("verifies metadata using GET only, prints no sensitive values, and leaves n
   const { calls, fetcher } = adapter();
   const report = await checkCrmReadiness({ env, fetcher });
   assert.equal(report.business.state, "verified");
-  assert.deepEqual(Object.values(report.customFields).map(field => field.state), ["verified", "verified", "verified"]);
+  assert.deepEqual(Object.values(report.customFields).map(field => field.state), ["verified", "verified", "verified", "verified"]);
+  assert.equal(report.configuration.requiredCount, 6);
+  assert.equal(report.configuration.configuredCount, 6);
+  assert.equal(report.configuration.fieldIdsValid, true);
+  assert.equal(report.configuration.fieldIdsDistinct, true);
   assert.equal(report.notesRead.state, "unknown");
   assert.equal(report.launchReady, false);
   assert.equal(report.state, "unknown");
-  assert.equal(calls.length, 5);
+  assert.equal(calls.length, 6);
   assert(calls.every(([, init]) => init.method === "GET" && init.redirect === "manual"));
   assert(!calls.some(([url]) => url.includes("contacts?") || /contacts\/$/.test(url)));
   const output = JSON.stringify(report);
@@ -68,9 +74,9 @@ test("continues custom-field and synthetic notes checks when location metadata i
   } });
   assert.deepEqual(report.business, { state: "unknown", reason: "metadata_scope_denied", httpStatus: 403 });
   assert.equal(report.state, "unknown");
-  assert.deepEqual(Object.values(report.customFields).map(field => [field.state, field.httpStatus]), [["verified", 200], ["verified", 200], ["verified", 200]]);
+  assert.deepEqual(Object.values(report.customFields).map(field => [field.state, field.httpStatus]), [["verified", 200], ["verified", 200], ["verified", 200], ["verified", 200]]);
   assert.equal(report.notesRead.httpStatus, 404);
-  assert.equal(calls.length, 5);
+  assert.equal(calls.length, 6);
   assert(calls.some(([url]) => url.includes("/__rella_readiness_no_patient__/notes")));
   assert(!JSON.stringify(report).includes("private permission details"));
 });
@@ -78,7 +84,7 @@ test("401 metadata scope denial does not skip independent contact-read checks", 
   let calls = 0;
   const report = await checkCrmReadiness({ env, fetcher: async () => { calls++; return Response.json({}, { status: 401 }); } });
   assert.equal(report.state, "unknown"); assert.equal(report.business.reason, "auth_or_scope_denied");
-  assert.equal(report.business.httpStatus, 401); assert.equal(calls, 5);
+  assert.equal(report.business.httpStatus, 401); assert.equal(calls, 6);
   assert.equal(report.notesRead.outcome, "auth_or_scope_denied");
 });
 test("reports only a boolean for the UI-verified business account location", async () => {
@@ -88,10 +94,80 @@ test("reports only a boolean for the UI-verified business account location", asy
   assert.equal(report.business.state, "unknown");
 });
 test("compares configured fields to the authenticated Website Leads fields without logging IDs", async () => {
-  const fields = { GHL_CUSTOM_FIELD_SERVICE_ID: "sKdonP3enW4FefPCVuUD", GHL_CUSTOM_FIELD_LOCATION_ID: "HqLMdCYtaiRCcLenwe9V", GHL_CUSTOM_FIELD_MESSAGE_ID: "e3NvXYXNv8QNVqMqXGDr" };
+  const fields = { GHL_CUSTOM_FIELD_SERVICE_ID: "sKdonP3enW4FefPCVuUD", GHL_CUSTOM_FIELD_LOCATION_ID: "HqLMdCYtaiRCcLenwe9V", GHL_CUSTOM_FIELD_MESSAGE_ID: "e3NvXYXNv8QNVqMqXGDr", GHL_CUSTOM_FIELD_RECEIPT_ID: "fgqFVClK8ZWn7S1l1aCI" };
   const report = await checkCrmReadiness({ env: { ...env, ...fields }, fetcher: async () => Response.json({}, { status: 401 }) });
-  assert.deepEqual(report.configuration.approvedFieldIdsMatch, { service: true, clinic: true, message: true });
+  assert.deepEqual(report.configuration.approvedFieldIdsMatch, { service: true, clinic: true, message: true, receipt: true });
   for (const value of Object.values(fields)) assert(!JSON.stringify(report).includes(value));
+});
+test("requires all six configurations before any metadata request", async () => {
+  for (const key of ["GHL_API_KEY", "GHL_LOCATION_ID", "GHL_CUSTOM_FIELD_SERVICE_ID", "GHL_CUSTOM_FIELD_LOCATION_ID", "GHL_CUSTOM_FIELD_MESSAGE_ID", "GHL_CUSTOM_FIELD_RECEIPT_ID"]) {
+    const { calls, fetcher } = adapter();
+    const report = await checkCrmReadiness({ env: { ...env, [key]: undefined }, fetcher });
+    assert.equal(report.state, "invalid");
+    assert.equal(report.configuration.requiredCount, 6);
+    assert.equal(report.configuration.configuredCount, 5);
+    assert.equal(report.business.reason, "missing_required_configuration");
+    assert.equal(calls.length, 0);
+  }
+});
+test("rejects malformed, duplicate and unapproved receipt IDs before any request", async () => {
+  for (const [value, valid, distinct] of [["unsafe/receipt?value", false, true], [env.GHL_CUSTOM_FIELD_MESSAGE_ID, true, false], ["A".repeat(20), true, true]]) {
+    const { calls, fetcher } = adapter();
+    const report = await checkCrmReadiness({ env: { ...env, GHL_CUSTOM_FIELD_RECEIPT_ID: value }, fetcher });
+    assert.equal(report.state, "invalid");
+    assert.equal(report.configuration.configuredCount, 6);
+    assert.equal(report.configuration.fieldIdsValid, valid);
+    assert.equal(report.configuration.fieldIdsDistinct, distinct);
+    assert.equal(report.configuration.approvedFieldIdsMatch.receipt, false);
+    assert.equal(report.business.reason, "invalid_required_configuration");
+    assert.equal(calls.length, 0);
+    assert(!JSON.stringify(report).includes(value));
+  }
+});
+test("verifies the receipt field key, native ID, account and contact model", async () => {
+  for (const override of [{ fieldKey: "contact.another_field" }, { id: "private-wrong-id" }, { locationId: "private-wrong-location" }, { model: "opportunity" }]) {
+    const { fetcher } = adapter();
+    const report = await checkCrmReadiness({ env, fetcher: async (url, init) => {
+      if (!url.endsWith(`/customFields/${env.GHL_CUSTOM_FIELD_RECEIPT_ID}`)) return fetcher(url, init);
+      return Response.json({ customField: { id: env.GHL_CUSTOM_FIELD_RECEIPT_ID, locationId: env.GHL_LOCATION_ID,
+        model: "contact", fieldKey: "contact.website_inquiry_receipt_id", dataType: "TEXT", ...override } });
+    } });
+    assert.equal(report.state, "invalid");
+    assert.equal(report.customFields.receipt.state, "invalid");
+    for (const value of Object.values(override)) assert(!JSON.stringify(report).includes(value));
+  }
+});
+test("does not call an unexpected receipt-type representation a credential failure", async () => {
+  for (const dataType of [undefined, "LARGE_TEXT", "SINGLE_LINE"]) {
+    const { fetcher } = adapter();
+    const report = await checkCrmReadiness({ env, fetcher: async (url, init) => {
+      if (!url.endsWith(`/customFields/${env.GHL_CUSTOM_FIELD_RECEIPT_ID}`)) return fetcher(url, init);
+      return Response.json({ customField: { id: env.GHL_CUSTOM_FIELD_RECEIPT_ID, locationId: env.GHL_LOCATION_ID,
+        model: "contact", fieldKey: "contact.website_inquiry_receipt_id", dataType } });
+    } });
+    assert.equal(report.business.state, "verified");
+    assert.equal(report.state, "unknown");
+    assert.deepEqual(report.customFields.receipt, { state: "unknown", reason: "receipt_field_type_unverified", httpStatus: 200 });
+    assert.equal(report.launchReady, false);
+  }
+});
+test("keeps receipt metadata-scope limits unknown and performs only bounded GET checks", async () => {
+  for (const status of [401, 403]) {
+    const { calls, fetcher } = adapter();
+    const report = await checkCrmReadiness({ env, fetcher: async (url, init) => {
+      if (!url.endsWith(`/customFields/${env.GHL_CUSTOM_FIELD_RECEIPT_ID}`)) return fetcher(url, init);
+      calls.push([url, init]);
+      return Response.json({ private: env.GHL_API_KEY }, { status });
+    } });
+    assert.equal(report.state, "unknown");
+    assert.equal(report.customFields.receipt.state, "unknown");
+    assert.equal(report.customFields.receipt.httpStatus, status);
+    assert.equal(report.notesRead.state, "unknown");
+    assert.equal(report.launchReady, false);
+    assert.equal(calls.length, 6);
+    assert(calls.every(([, init]) => init.method === "GET"));
+    assert(!JSON.stringify(report).includes(env.GHL_API_KEY));
+  }
 });
 test("malformed JSON retains bounded HTTP status without logging response contents", async () => {
   const report = await checkCrmReadiness({ env, fetcher: async () => new Response("private non-json response", { status: 200 }) });

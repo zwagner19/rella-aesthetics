@@ -15,12 +15,15 @@ const FIELD_ENV = {
   service: "GHL_CUSTOM_FIELD_SERVICE_ID",
   clinic: "GHL_CUSTOM_FIELD_LOCATION_ID",
   message: "GHL_CUSTOM_FIELD_MESSAGE_ID",
+  receipt: "GHL_CUSTOM_FIELD_RECEIPT_ID",
 };
 const APPROVED_FIELDS = {
   service: "sKdonP3enW4FefPCVuUD",
   clinic: "HqLMdCYtaiRCcLenwe9V",
   message: "e3NvXYXNv8QNVqMqXGDr",
+  receipt: "fgqFVClK8ZWn7S1l1aCI",
 };
+const FIELD_ID = /^[A-Za-z0-9]{20}$/;
 const EXPECTED_NAMES = new Set(["rella aesthetics", "rella aesthetics napa", "rella aesthetics vacaville"]);
 // The business account was verified in the authenticated GHL integration UI.
 // Log only a match boolean, never the configured location identifier.
@@ -67,14 +70,25 @@ export async function checkCrmReadiness({ env = process.env, fetcher = fetch, ex
     approvedAccountLocationMatches: Boolean(env.GHL_LOCATION_ID) && createHash("sha256").update(env.GHL_LOCATION_ID).digest("hex") === APPROVED_ACCOUNT_HASH,
     approvedFieldIdsMatch: Object.fromEntries(Object.entries(FIELD_ENV).map(([label, key]) => [label, env[key] === APPROVED_FIELDS[label]])),
     serviceField: Boolean(env[FIELD_ENV.service]), clinicField: Boolean(env[FIELD_ENV.clinic]), messageField: Boolean(env[FIELD_ENV.message]),
+    receiptField: Boolean(env[FIELD_ENV.receipt]),
+    fieldIdsValid: Object.values(FIELD_ENV).every(key => typeof env[key] === "string" && FIELD_ID.test(env[key])),
+    fieldIdsDistinct: new Set(Object.values(FIELD_ENV).map(key => env[key])).size === Object.keys(FIELD_ENV).length,
+    requiredCount: 2 + Object.keys(FIELD_ENV).length,
+    configuredCount: [env.GHL_API_KEY, env.GHL_LOCATION_ID, ...Object.values(FIELD_ENV).map(key => env[key])].filter(Boolean).length,
   };
   const report = { check: "rella-crm-readiness-v1", state: "unknown", launchReady: false,
     configuration, business: { state: "unknown" }, customFields: {}, notesRead: { state: "unknown", proof: "synthetic_probe_is_not_scope_proof" },
     notesWrite: "requires_supervised_synthetic_test", staffRouting: "requires_workflow_readback",
     unverifiedTokenClaims: scopeClaims(env.GHL_API_KEY ?? "", now) };
-  if (!configuration.credential || !configuration.location || !configuration.messageField) {
+  if (configuration.configuredCount !== configuration.requiredCount) {
     report.state = "invalid";
     report.business = { state: "not_checked", reason: "missing_required_configuration" };
+    return report;
+  }
+  if (!configuration.fieldIdsValid || !configuration.fieldIdsDistinct
+    || !Object.values(configuration.approvedFieldIdsMatch).every(Boolean)) {
+    report.state = "invalid";
+    report.business = { state: "not_checked", reason: "invalid_required_configuration" };
     return report;
   }
   const headers = { Authorization: `Bearer ${env.GHL_API_KEY}`, Version: VERSION, Accept: "application/json" };
@@ -112,7 +126,14 @@ export async function checkCrmReadiness({ env = process.env, fetcher = fetch, ex
     if (response.status !== 200 || !field) {
       return [label, metadataFailure(response.status)];
     }
-    const valid = field.id === env[key] && field.locationId === env.GHL_LOCATION_ID && field.model === "contact";
+    const valid = field.id === env[key] && field.locationId === env.GHL_LOCATION_ID && field.model === "contact"
+      && (label !== "receipt" || field.fieldKey === "contact.website_inquiry_receipt_id");
+    // GHL's TEXT type corresponds to the UI's Single Line field. A different
+    // metadata representation cannot prove the UI-verified type is wrong.
+    // https://marketplace.gohighlevel.com/docs/ghl/locations/get-custom-fields/
+    if (valid && label === "receipt" && field.dataType !== "TEXT") {
+      return [label, { state: "unknown", reason: "receipt_field_type_unverified", httpStatus: 200 }];
+    }
     return [label, { state: valid ? "verified" : "invalid", configuredIdentityMatches: valid, httpStatus: 200 }];
   }));
   report.customFields = Object.fromEntries(checks);
