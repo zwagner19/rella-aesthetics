@@ -4,13 +4,26 @@
   "account_id": "75105179cc5b470c9eed6f11866493a5",
   "main": "controlled-launch-worker.mjs",
   "compatibility_date": "2026-10-18",
-  "compatibility_flags": ["global_fetch_private_origin"],
+  "compatibility_flags": [
+    "global_fetch_private_origin"
+  ],
   "workers_dev": false,
   "preview_urls": false,
-  "routes": [],
+  "routes": [
+    {
+      "pattern": "experiencerella.com/*",
+      "zone_id": "b49a5feaea8d0846f784c14a4f5f1167"
+    },
+    {
+      "pattern": "www.experiencerella.com/*",
+      "zone_id": "b49a5feaea8d0846f784c14a4f5f1167"
+    }
+  ],
   "vars": {
-    "EDGE_ENABLED": "false",
-    "ORIGIN_HOST": "rella-aesthetics-6tux78j1o-zwagner19s-projects.vercel.app"
+    "EDGE_ENABLED": "true",
+    "ORIGIN_HOST": "rella-aesthetics-hbhhyf6qz-zwagner19s-projects.vercel.app"
   },
-  "observability": { "enabled": false }
+  "observability": {
+    "enabled": false
+  }
 }
