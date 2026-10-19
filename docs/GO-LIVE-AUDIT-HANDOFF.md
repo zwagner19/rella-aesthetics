@@ -1,5 +1,7 @@
 # Rella prelaunch audit handoff — October 18, 2026
 
+> Current execution status, October 18 evening PDT: the owner authorized controlled-launch preparation. Read [CONTROLLED-LAUNCH-STATUS.md](CONTROLLED-LAUNCH-STATUS.md) and [CONTROLLED-LAUNCH-RUNBOOK.md](CONTROLLED-LAUNCH-RUNBOOK.md) first for implemented fixes, exact staged deployments, completed checks and remaining human gates. The original audit brief below records an older snapshot; its historical consent, deployment and test-count statements do not describe the latest source. Public traffic has not been cut over. Keep Amie’s visual design locked and deposit work with the separate chat.
+
 ## Objective and source of truth
 
 Audit the actual website, paired booking backend and downstream measurement before the public cutover. Establish what functions, what needs improvement, what is unverified and what blocks launch. Start with an evidence-backed audit and proposed fix sequence; do not redesign or promote the site during this pass.

@@ -1,0 +1,16 @@
+{
+  "$schema": "https://raw.githubusercontent.com/cloudflare/workers-sdk/main/packages/wrangler/config-schema.json",
+  "name": "rella-controlled-launch",
+  "account_id": "75105179cc5b470c9eed6f11866493a5",
+  "main": "controlled-launch-worker.mjs",
+  "compatibility_date": "2026-10-18",
+  "compatibility_flags": ["global_fetch_private_origin"],
+  "workers_dev": false,
+  "preview_urls": false,
+  "routes": [],
+  "vars": {
+    "EDGE_ENABLED": "false",
+    "ORIGIN_HOST": "rella-aesthetics-in4go5v3h-zwagner19s-projects.vercel.app"
+  },
+  "observability": { "enabled": false }
+}

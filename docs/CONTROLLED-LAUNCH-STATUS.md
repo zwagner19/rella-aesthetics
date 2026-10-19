@@ -1,0 +1,70 @@
+# Controlled launch status
+
+Updated October 18, 2026 PDT / October 19 UTC. **The replacement site is prepared and staged; it is not public-live and is not yet cleared for cutover.** Amie’s layout, imagery and visual styling remain unchanged. Deposit policy, amounts, reconciliation and conversion value decisions remain with the separate deposit workstream.
+
+## What is running where
+
+| Surface | Verified state |
+|---|---|
+| New website | Commit `efee4ed92327ed4e4e984aab976163887d2243ed` includes the final phone centering fix. Production-environment stage **READY** `dpl_3S2pV9midZkxjSBGuRXeQQqXANFp`, immutable host `https://rella-aesthetics-in4go5v3h-zwagner19s-projects.vercel.app`, without customer-domain movement; a deployment-only override pins its backend stage. Same-source Preview **READY** `dpl_5Us3SpYvZAdCrSSTGgCiu717xDYH`, immutable host `https://rella-aesthetics-b4v1076jx-zwagner19s-projects.vercel.app`. Preview noindex is intentional. Vercel automatically moved its pre-existing generated team alias to the stage despite `autoAssignCustomDomains:false`; the production target, cron and weight-loss custom domain stayed unchanged. |
+| New backend | Production-environment stage `dpl_4BEhbucPg5TxkKGubh5eUeUTLode`, commit `76485859c9482123cb203a942bb0010e27df2549`, is **READY** at `https://rella-booking-2xwksjj4i-zwagner19s-projects.vercel.app`. Staging alias: `rella-booking-controlled-launch-zwagner19s-projects.vercel.app`. `autoAssignCustomDomains:false`. |
+| Public booking | Both `book.experiencerella.com` and `book.rellaweightloss.com`, the production target and its cron remain on old deployment `dpl_FzvsMLVsfMNFdxn6EuEzPpZQPCmP`. No public backend promotion occurred. |
+| Disabled edge stage | `rella-controlled-launch`, deployment `a8d8b73f-be04-4dfc-8ff8-5ac2bf1714af`,100% version `ffa7610e-49ee-437a-a9e5-aacceb0e2136`: `EDGE_ENABLED` string `false`, pinned website production-stage host, compatibility date `2026-10-18` with `global_fetch_private_origin`, workers.dev and previews disabled. **Zero zone routes.** |
+| Public website | Apex/www remain Proxied/Auto CNAMEs to `wp.wpenginepowered.com`, verified in the authenticated Cloudflare UI. TLS remains Full (strict). The new Worker receives no public traffic. Existing website project production still serves `weightloss.experiencerella.com`. |
+
+The [runbook](CONTROLLED-LAUNCH-RUNBOOK.md) records exact project IDs, old production deployment anchors, routing behavior and rollback. A general website or backend promotion also affects its existing weight-loss domain; neither may be treated as an aesthetics-only alias change.
+
+## Completed preparation and limited live evidence
+
+- Booking and package contact permission receipts are implemented separately from the four native contact fields. Operational permission is required where applicable; marketing is optional and `false` is retained. Uncertain checkout remains pending, and historical completion/recovery is not blocked by a missing new receipt.
+- Migration `20261019022923_operational_consent_receipts.sql` was applied to canonical Supabase project `ufqfdjgrmirxlbrpxylt`. Nullable `consent_receipt` JSONB columns exist on `boulevard_booking_sessions` and `boulevard_package_sessions`; five-field constraints were validated and existing deny-by-default RLS remained unchanged. Anonymous appointment/package receipt submission, exact readback and timestamp-preserving retry passed for both clinics: four rows, no holds, payment or native contact entry.
+- The existing GHL `rella-website-contact-form` integration was saved/reopened with **only `contacts.write` retained and `contacts.readonly` added**. Its same masked token was retained; no new token or broader metadata permissions were approved. The same five Sensitive GHL variables now target `[preview, production]`; IDs, types and targets were read back without changing stored values. Runtime booleans positively match the approved account and all three field IDs. A metadata401 can reflect a missing independent metadata scope and is not proof of a bad contact credential; a synthetic notes400 does not establish notes access. Real synthetic lead/note readback and downstream workflow routing remain outstanding; the workflow panel did not provide usable readback. No existing patient profile was read for readiness.
+- The staged backend returned native-backed public menus for both clinics (77 Napa /66 Vacaville). Apex/www secure-card parent GETs returned200 with the exact parent CSP; a foreign parent returned403. This proves the staged document/parent boundary, not card tokenization, charge or appointment confirmation. The old public backend card route remains404.
+- The reviewed Worker preserves six existing WordPress entry routes and required WordPress assets/form/admin namespaces, forwarding new APIs once without financial retries or WordPress fallback. All 38 checked public pages passed local Worker invocation against both an immutable Preview and the actual staged Production build. This is not active Cloudflare route execution or public indexability proof.
+- GETs on website Preview `f7dde79` returned200 for home, Botox and contact, with the new origin marker and intentional Preview noindex. Home/Botox share-image metadata is present and image endpoints returned200. Contact renders the approved hours. `/booking` still307s to the old public booking host before promotion. A nonexistent path returned404 with Next-injected noindex; the older audit’s inherited index/follow observation alone does not establish an indexable404. Recheck the final staged artifact.
+- Four automated desktop/WebKit cases across both clinics passed through two treatments, two provider groups,31 date choices and3–4 available time choices, without holds or browser errors. After the final centering fix, all four cases passed the full time-button viewport assertion (visible ratio1). WebKit automation is not a physical iPhone Safari result.
+
+Approved public hours are now in contact/location copy, Napa House, Napa facial/editorial copy, structured data, KML and future Sanity seed inputs:
+
+| Clinic | Open | Closed |
+|---|---|---|
+| Napa | Wednesday–Saturday, 9am–5pm | Sunday–Tuesday |
+| Vacaville | Tuesday–Friday, 9am–5pm; Saturday, 9am–1pm | Sunday–Monday |
+
+No Sanity seed, WordPress or Google Business Profile update was performed by this code change.
+
+## Validation scope
+
+| Check | Result |
+|---|---|
+| Website tests | 487 passing |
+| CRM readiness script tests | 13 passing |
+| Independent Node edge tests | 53 passing |
+| Backend tests | 1,379 passing |
+| Type checking, required lint/build checks | Passed for the reviewed source/release stages; the latest website Preview is READY |
+| Real supervised completed checkout, charge, OTP/owned-wallet flow | **Pending / not established by these tests** |
+| Physical iPhone Safari | **Pending**; responsive Chromium simulation is separate evidence |
+| Public cutover, complete consented conversion chain, accepted deduplicated upload | **Not performed / not proven** |
+
+## Remaining release gates and supplied-audit reconciliation
+
+The supplied `go-live-prelaunch-audit.md` examined older website `4400589` and backend `5c2a158`. It remains useful evidence of that snapshot, not a claim that every finding still exists in the current Preview.
+
+1. **Supervised patient journey:** complete the specifically approved tests for both clinics, including a multi-treatment appointment, native exact schedule/providers, secure card, durable confirmed versus pending outcome, package purchase, and authenticated package ownership/DOB/remaining-voucher eligibility. Card entry stays human. Do not infer a successful charge from a visible iframe or a mock. Physical iPhone Safari remains a separate requested check.
+2. **CRM delivery and workflow safety:** settings targets are extended; verify the intended production-stage runtime and prove an approved synthetic phone/email lead, permission receipt readback, marketing=false and staff routing. No `website-lead` tag is emitted by the reviewed source; that does not prove external workflows cannot promote a contact. A note GET→POST sequence is not evidence of exactly-once concurrent receipt creation.
+3. **Public backend and fallback parity:** verify the staged backend’s unchanged weight-loss behavior before promotion. Then prove the public card document, `/booking`, ordinary/no-JS Book fallback and both domains use the approved backend. Public promotion has not happened.
+4. **Paid landing continuity and measurement:** retain `/napa`, `/napa/botox`, `/napa/laser`, `/napa/filler`, `/napa/hydrafacial`, `/napa/hyperhidrosis`, both slash forms and queries, on WordPress for day one. Current active-ad destinations were not retrieved; do not claim all six receive ads. New sitewide/Vacaville paid capture, granted-click cart eligibility, actual runtime flags, deployed HQ recovery/uploader and one accepted deduplicated conversion remain unproven. Preserve the existing flags/upload state; do not turn uploads on as a smoke test. A package sale remains separate from appointment conversion, with no claimed package conversion contract.
+5. **Release path and indexability:** website/backend stages are READY and the pinned new Worker is disabled; current DNS/routes/TLS were read back in the authenticated UI. Verify canonical/marker/robots/sitemap and public/private behavior on the exact final stages, then obtain the final promotion/route-activation decision. Zero routes and older public booking still apply. Only `/services/weight-loss` has the fixed external-canonical exception. Preview success does not establish public SEO behavior.
+6. **Open hold reported by the external audit:** it reported an unreleased Napa October22 hold without a cart/reservation identifier or expiry in that report. Current release/expiry was not independently established from those details. Identify and verify its current state before another controlled financial test; do not replay, cancel or release an unidentified session.
+7. **Catalog accuracy and design decisions:** the audit conflated two hair packages. The online `$1,800` **PRP Hair Restoration 3x Treatments** references the active ordinary PRP service; the separate `$2,160` **Hair Restoration Package (3 Treatments)** references an inactive package-specific service and remains guarded. Do not hide the valid product based on that conflation. Diamonds remains unavailable; Deluxe six-treatment/six-perk is Napa-only, verified for new purchases without wallet backfill. Source-price anomalies, including reported laser-hair package prices, still need the catalog/deposit owners’ confirmation before financial approval. Owned vouchers are applied by staff later; booking does not claim online voucher redemption.
+8. **Accessibility and performance:** the reported rose-button contrast issue is not silently fixed under the locked design; any color change needs the owner/design decision. Recheck keyboard focus, label/tap targets and mobile error/scroll behavior on the final artifact. Core Web Vitals/field data and Google Business Profile hour consistency were not proven. These remain explicit findings, not completed acceptance checks.
+
+The former “consent is discarded,” missing phone-consent UI, missing share-image and stale Napa-hour findings are addressed in current source/Preview and the limited receipt checks above. Real CRM delivery, full native checkout and public production verification remain separate gates. Marketing/chat loaders are structurally absent from the reviewed booking/contact document; confirm that remains true in the final public response without enabling trackers for the test.
+
+## Evidence and next action
+
+Repository references: [release runbook](CONTROLLED-LAUNCH-RUNBOOK.md), [original audit handoff](GO-LIVE-AUDIT-HANDOFF.md), [backend consent contract](../../rella-booking/docs/operational-consent.md), [package implementation/release limits](../../rella-booking/docs/package-booking.md).
+
+Local workspace evidence, outside this repository and not portable release dependencies: [backend stage readback](/Users/zachwagner/Documents/Codex/2026-10-16/ok-x20/outputs/rella-controlled-backend-stage-2026-10-19.json), [website Production stage](/Users/zachwagner/Documents/Codex/2026-10-16/ok-x20/outputs/rella-controlled-website-stage-2026-10-19.json), [disabled edge-stage readback](/Users/zachwagner/Documents/Codex/2026-10-16/ok-x20/outputs/rella-controlled-edge-disabled-stage-2026-10-19.json), [38-page Production-upstream Worker verification](/Users/zachwagner/Documents/Codex/2026-10-16/ok-x20/outputs/rella-controlled-website-stage-html-2026-10-19.json), [phone/desktop availability checks](/Users/zachwagner/Documents/Codex/2026-10-16/ok-x20/work/release-evidence/visit-qa.json), and the supplied [older prelaunch audit](/Users/zachwagner/Downloads/go-live-prelaunch-audit.md). DNS/TLS/empty-route evidence was read directly in the authenticated Cloudflare dashboard without changes. Do not place tokens, contact details, payment data or patient records in these documents.
+
+Next: finish the supervised checks and missing configuration/readbacks, record the approved immutable release IDs and rollback state, then request the specific final promotion/route-activation decision. A READY build, saved permission, migration or passing suite alone is not that decision.
