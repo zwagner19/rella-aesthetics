@@ -93,7 +93,7 @@ describe("shared booking menu and state", () => {
     expect(clientLooksComplete(incomplete)).toBe(false);
     expect(clientLooksComplete({ ...client, assessmentContactConsent: false })).toBe(false);
     expect(clientLooksComplete({ ...client, marketingConsent: false })).toBe(true);
-    expect(ASSESSMENT_CONTACT_CONSENT).toBe("I ask Rella Aesthetics to contact me by phone, email, or text about my assessment and requested consultation. Messages may be sent using automated technology. Message and data rates may apply. Reply STOP to stop texts or HELP for help. This consent applies only to contact about my assessment and consultation request.");
+    expect(ASSESSMENT_CONTACT_CONSENT).toBe("I ask Rella Aesthetics to contact me by phone, email, or text about my inquiry, booking, or requested services. Messages may be sent using automated technology. Message and data rates may apply. Reply STOP to stop texts or HELP for help. This consent applies only to contact about my inquiry, booking, or requested services.");
     expect(MARKETING_CONSENT).toBe("Optional: I agree to receive recurring promotional calls and text messages, including through automated technology, from Rella Aesthetics at the number provided. Consent is not a condition of purchase. Message frequency varies. Message and data rates may apply. Reply STOP to opt out or HELP for help.");
   });
   it("keeps owned context for one verified service and clears it for uncovered or location changes", () => {
@@ -109,6 +109,7 @@ describe("shared booking menu and state", () => {
 type Request = { operation: string; method: string; body?: Record<string, unknown>; query: URLSearchParams };
 type Choice = { service: string; provider?: string };
 function backendResponses(options: { confirmation?: string; failSelection?: boolean; failReserve?: boolean;
+  invalidConsent?: boolean; failConsent?: boolean;
   failCheckout?: boolean; ambiguousCheckout?: boolean; ambiguousCheckoutStatus?: number; rejectCheckout?: boolean;
   failRelease?: boolean; denyRelease?: boolean; unverifiedRelease?: boolean;
   requireFreshVisitor?: boolean; failMenuReadAt?: number;
@@ -136,6 +137,7 @@ function backendResponses(options: { confirmation?: string; failSelection?: bool
     }
     if (operation === "reserve" && options.failReserve) return Response.json({ ok: false, reason: "reserve_uncertain" }, { status: 502 });
     if (operation === "checkout" && options.failCheckout) throw new Error("Lost checkout response");
+    if (operation === "consent" && options.failConsent) throw new Error("Lost consent readback");
     if (operation === "checkout" && options.ambiguousCheckout) return Response.json({ ok: false, reason: "checkout_unverified" }, { status: options.ambiguousCheckoutStatus ?? 502 });
     if (operation === "checkout" && options.rejectCheckout) return Response.json({ ok: false, stage: "SAFE_TO_RETRY", reason: "invalid_body" }, { status: 400 });
     if (operation === "release" && options.failRelease) throw new Error("Release response lost");
@@ -158,6 +160,7 @@ function backendResponses(options: { confirmation?: string; failSelection?: bool
             quote: options.reserveQuote ?? quoted, timeZone: "America/Los_Angeles",
             expiresAt: new Date(Date.now() + 15 * 60 * 1000).toISOString(),
           }
+            : operation === "consent" ? { consent: { ...body, ...(options.invalidConsent ? { marketing: !body.marketing } : {}), recordedAt: new Date().toISOString() } }
             : operation === "checkout" ? { confirmation: options.confirmation ?? "CONFIRMED" }
               : operation === "release" ? { released: !options.unverifiedRelease } : {};
     return Response.json({ ok: true, ...data });
@@ -166,6 +169,52 @@ function backendResponses(options: { confirmation?: string; failSelection?: bool
 }
 
 describe("complete shared multi-treatment backend contract", () => {
+  it.each(["napa", "vacaville"] as const)("records optional marketing=false separately before payment and checkout at %s", async locationSlug => {
+    const calls = backendResponses(); const backend = createDefaultBackend();
+    const choices = { locationSlug, treatmentKeys: [`${locationSlug}/botox`], providerIds: { [`${locationSlug}/botox`]: "any-available" } };
+    const noMarketing = { ...client, marketingConsent: false };
+    await backend.loadAvailability(choices); await backend.reserve!(slot);
+    await expect(backend.attachPayment!("opaque-token")).rejects.toThrow("consent");
+    await backend.recordConsent!(noMarketing); await backend.recordConsent!(noMarketing);
+    await backend.attachPayment!("opaque-token");
+    expect(await backend.complete!({ ...choices, slot, client: noMarketing })).toMatchObject({ ok: true });
+    expect(calls.filter(call => call.operation === "consent").map(call => call.body)).toEqual([
+      { policyVersion: "rella-booking-consent-2026-10-19-v1", operational: true, marketing: false },
+    ]);
+    expect(calls.slice(-3).map(call => call.operation)).toEqual(["consent", "payment", "checkout"]);
+    expect(Object.keys((calls.at(-1)!.body!.info as object))).toEqual(["firstName", "lastName", "email", "phoneNumber"]);
+  });
+  it.each(["invalidConsent", "failConsent"] as const)("stops before payment when consent persistence is unverified: %s", async failure => {
+    const calls = backendResponses({ [failure]: true }); const backend = createDefaultBackend();
+    await backend.loadAvailability(input); await backend.reserve!(slot);
+    await expect(backend.recordConsent!(client)).rejects.toThrow();
+    await expect(backend.attachPayment!("must-not-send")).rejects.toThrow("consent");
+    expect(await backend.complete!({ ...input, slot, client })).toMatchObject({ ok: false });
+    expect(calls.some(call => call.operation === "payment" || call.operation === "checkout")).toBe(false);
+    expect(backend.verificationPending!()).toBe(false);
+  });
+  it("requires a new verified receipt when the optional marketing choice changes", async () => {
+    const calls = backendResponses(); const backend = createDefaultBackend();
+    await backend.loadAvailability(input); await backend.reserve!(slot);
+    await backend.recordConsent!(client); await backend.attachPayment!("opaque-token");
+    const changed = { ...client, marketingConsent: false };
+    expect(await backend.complete!({ ...input, slot, client: changed })).toMatchObject({ ok: false });
+    expect(calls.some(call => call.operation === "checkout")).toBe(false);
+    await backend.recordConsent!(changed);
+    expect(await backend.complete!({ ...input, slot, client: changed })).toMatchObject({ ok: true });
+    expect(calls.filter(call => call.operation === "consent")).toHaveLength(2);
+  });
+  it("does not reuse an older receipt after a changed consent response is lost", async () => {
+    const options = { failConsent: false }; const calls = backendResponses(options); const backend = createDefaultBackend();
+    await backend.loadAvailability(input); await backend.reserve!(slot); await backend.recordConsent!(client);
+    options.failConsent = true;
+    await expect(backend.recordConsent!({ ...client, marketingConsent: false })).rejects.toThrow();
+    await expect(backend.attachPayment!("must-not-send")).rejects.toThrow("consent");
+    options.failConsent = false;
+    await backend.recordConsent!(client); await backend.attachPayment!("verified-token");
+    expect(calls.filter(call => call.operation === "consent")).toHaveLength(3);
+    expect(calls.filter(call => call.operation === "payment")).toHaveLength(1);
+  });
   it.each(["napa", "vacaville"] as const)("uses authenticated owned-package context only for the selected single-service session at %s", async locationSlug => {
     const calls = backendResponses();
     const backend = createDefaultBackend();
@@ -177,7 +226,7 @@ describe("complete shared multi-treatment backend contract", () => {
     expect(availability.live).toBe(true);
     const reserved = await backend.reserve!(slot);
     expect(reserved.quote).toEqual(quoted);
-    await backend.attachPayment!("test-token");
+    await backend.recordConsent!(client); await backend.attachPayment!("test-token");
     expect(await backend.complete!({ ...ownedInput, client, slot })).toEqual({ ok: true, confirmationId: "confirmed" });
     expect(calls.filter(call => call.operation === "menu" && call.method === "POST").map(call => call.body)).toEqual([{ location: locationSlug, packageOwned: true }]);
   });
@@ -199,7 +248,7 @@ describe("complete shared multi-treatment backend contract", () => {
     const calls = backendResponses({ failCheckout: true });
     const backend = createDefaultBackend();
     await backend.listTreatments!("napa"); backend.setOwnedPackageContext!(true);
-    await backend.loadAvailability(input); await backend.reserve!(slot); await backend.attachPayment!("test-token");
+    await backend.loadAvailability(input); await backend.reserve!(slot); await backend.recordConsent!(client); await backend.attachPayment!("test-token");
     expect(await backend.complete!({ ...input, client, slot })).toMatchObject({ pending: true });
     const before = calls.length;
     backend.setOwnedPackageContext!(false);
@@ -223,7 +272,7 @@ describe("complete shared multi-treatment backend contract", () => {
     const calls = backendResponses({ failRelease: condition === "uncertain release", failCheckout: condition === "uncertain checkout" });
     const backend = createDefaultBackend(); await backend.listTreatments!("napa"); backend.setOwnedPackageContext!(true);
     await backend.loadAvailability(input); await backend.reserve!(slot);
-    if (condition !== "uncertain release") await backend.attachPayment!("test-token");
+    if (condition !== "uncertain release") { await backend.recordConsent!(client); await backend.attachPayment!("test-token"); }
     if (condition === "uncertain checkout") await backend.complete!({ ...input, slot, client });
     await expect((async () => {
       await backend.prepareIdentityChange!();
@@ -303,10 +352,10 @@ describe("complete shared multi-treatment backend contract", () => {
       ["napa/botox", "2026-11-01T10:00:00", "provider-botox"],
       ["napa/live-new-service", "2026-11-01T11:00:00", "Assigned provider for live-new-service"],
     ]);
-    await backend.attachPayment!("opaque-vault-token");
+    await backend.recordConsent!(client); await backend.attachPayment!("opaque-vault-token");
     const result = await backend.complete!({ ...multi, slot, client });
     expect(result).toEqual({ ok: true, confirmationId: "confirmed" });
-    expect(calls.map(call => call.operation)).toEqual(["menu", "menu", "selection", "selection", "times", "reserve", "payment", "checkout"]);
+    expect(calls.map(call => call.operation)).toEqual(["menu", "menu", "selection", "selection", "times", "reserve", "consent", "payment", "checkout"]);
     expect(calls.find(call => call.operation === "checkout")?.body).toEqual({
       info: { firstName: "Fixture", lastName: "User", email: "fixture@example.test", phoneNumber: "7073582928" },
     });
@@ -369,8 +418,9 @@ describe("complete shared multi-treatment backend contract", () => {
     await backend.loadAvailability(multi);
     const results = await Promise.all([backend.reserve!(slot), backend.reserve!(slot)]);
     expect(results[0]).toEqual(results[1]);
+    await backend.recordConsent!(client);
     await Promise.all([backend.attachPayment!("token"), backend.attachPayment!("token")]);
-    expect(calls.map(call => call.operation)).toEqual(["menu", "menu", "selection", "reserve", "payment"]);
+    expect(calls.map(call => call.operation)).toEqual(["menu", "menu", "selection", "reserve", "consent", "payment"]);
   });
   it("starts a fresh cart when returning from a successful reservation to choose another time", async () => {
     const calls = backendResponses(); const backend = createDefaultBackend();
@@ -400,14 +450,14 @@ describe("complete shared multi-treatment backend contract", () => {
   });
   it("keeps pending verification truthful and never submits checkout twice", async () => {
     const calls = backendResponses({ confirmation: "PENDING_VERIFICATION" }); const backend = createDefaultBackend();
-    await backend.loadAvailability(multi); await backend.reserve!(slot); await backend.attachPayment!("token");
+    await backend.loadAvailability(multi); await backend.reserve!(slot); await backend.recordConsent!(client); await backend.attachPayment!("token");
     const results = await Promise.all([backend.complete!({ ...multi, slot, client }), backend.complete!({ ...multi, slot, client })]);
     expect(results).toEqual([{ ok: true, confirmationId: "pending", pending: true }, { ok: true, confirmationId: "pending", pending: true }]);
     expect(calls.filter(call => call.operation === "checkout")).toHaveLength(1);
   });
   it.each([{ failCheckout: true }, { ambiguousCheckout: true }, { ambiguousCheckout: true, ambiguousCheckoutStatus: 409 }, { confirmation: "UNVERIFIED" }])("retains terminal pending verification after an uncertain checkout and modal reopen %o", async options => {
     const calls = backendResponses(options); const backend = createDefaultBackend();
-    await backend.loadAvailability(multi); await backend.reserve!(slot); await backend.attachPayment!("token");
+    await backend.loadAvailability(multi); await backend.reserve!(slot); await backend.recordConsent!(client); await backend.attachPayment!("token");
     const result = await backend.complete!({ ...multi, slot, client });
     expect(result).toEqual({ ok: true, confirmationId: "pending", pending: true });
     expect(backend.verificationPending!()).toBe(true);
@@ -422,13 +472,13 @@ describe("complete shared multi-treatment backend contract", () => {
   });
   it("keeps a definitive validation rejection as an error rather than claiming pending submission", async () => {
     backendResponses({ rejectCheckout: true }); const backend = createDefaultBackend();
-    await backend.loadAvailability(multi); await backend.reserve!(slot); await backend.attachPayment!("token");
+    await backend.loadAvailability(multi); await backend.reserve!(slot); await backend.recordConsent!(client); await backend.attachPayment!("token");
     expect(await backend.complete!({ ...multi, slot, client })).toMatchObject({ ok: false });
     expect(backend.verificationPending!()).toBe(false);
   });
   it("allows an explicitly started new booking after a verified confirmation", async () => {
     const calls = backendResponses(); const backend = createDefaultBackend();
-    await backend.loadAvailability(multi); await backend.reserve!(slot); await backend.attachPayment!("token");
+    await backend.loadAvailability(multi); await backend.reserve!(slot); await backend.recordConsent!(client); await backend.attachPayment!("token");
     expect(await backend.complete!({ ...multi, slot, client })).toEqual({ ok: true, confirmationId: "confirmed" });
     expect(backend.verificationPending!()).toBe(false);
     expect(await backend.listTreatments!("napa")).toEqual(catalog);
@@ -466,7 +516,7 @@ describe("complete shared multi-treatment backend contract", () => {
   });
   it("explains why changing a visit after card attachment needs verification and keeps its known hold", async () => {
     const calls = backendResponses(); const backend = createDefaultBackend();
-    await backend.loadAvailability(multi); await backend.reserve!(slot); await backend.attachPayment!("linked-token");
+    await backend.loadAvailability(multi); await backend.reserve!(slot); await backend.recordConsent!(client); await backend.attachPayment!("linked-token");
     const beforeChange = calls.length;
     await expect(backend.loadAvailability(multi)).rejects.toThrow("card has already been linked");
     await expect(backend.listTreatments!("napa")).rejects.toThrow("card has already been linked");

@@ -5,6 +5,16 @@ function request(operation: string, body: object, origin = "https://experiencere
   return new NextRequest(`https://experiencerella.com/api/booking-v2/bridge/${operation}`, { method: "POST", headers: { origin, "content-type": "application/json", cookie }, body: JSON.stringify(body) });
 }
 beforeEach(() => { vi.restoreAllMocks(); delete process.env.RELLA_BOOKING_BACKEND_ORIGIN; });
+it("binds consent recording to the authenticated cart rather than caller-supplied identity", async () => {
+  const token = Buffer.from(JSON.stringify({ c: "urn:blvd:Cart:verified" })).toString("base64url") + ".signature";
+  const network = vi.spyOn(globalThis, "fetch").mockResolvedValue(Response.json({ ok: true }));
+  const choice = { policyVersion: "rella-booking-consent-2026-10-19-v1", operational: true, marketing: false };
+  await bookingBridge(request("consent", { ...choice, cartId: "untrusted" }, undefined, `rella_cart_auth=${token}`), "consent");
+  expect(String(network.mock.calls[0][0])).toBe("https://book.experiencerella.com/api/booking-v2/consent");
+  expect(JSON.parse(String(network.mock.calls[0][1]?.body))).toEqual({ ...choice, cartId: "urn:blvd:Cart:verified" });
+  expect((await bookingBridge(request("consent", choice, "https://evil.test", `rella_cart_auth=${token}`), "consent")).status).toBe(403);
+  expect(network).toHaveBeenCalledTimes(1);
+});
 it("rejects hostile origins and unknown operations before contacting the backend", async () => {
   const network = vi.spyOn(globalThis, "fetch");
   expect((await bookingBridge(request("menu", { location: "napa" }, "https://evil.test"), "menu")).status).toBe(403);

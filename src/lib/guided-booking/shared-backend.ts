@@ -1,5 +1,6 @@
 import type { BookingLocation } from "@/lib/booking-routes";
 import { backendTreatments, MAX_GUIDED_TREATMENTS } from "./catalog";
+import { consentPayload, verifyConsentReceipt } from "./consent";
 import type { GuidedBookingBackend, GuidedProviderGroup, GuidedScheduledTreatment } from "./types";
 
 type Quote = { depositCents: number; totalCents: number; needsCard: boolean };
@@ -24,6 +25,7 @@ export function createSharedBookingBackend(): GuidedBookingBackend {
   let schedule: GuidedScheduledTreatment[] = [];
   let expiresAt: string | undefined;
   let paymentAttached = false;
+  let recordedConsent: string | undefined;
   let uncertain = false;
   let uncertaintyMessage: string | undefined;
   let completion: Completion | undefined;
@@ -50,6 +52,7 @@ export function createSharedBookingBackend(): GuidedBookingBackend {
     schedule = [];
     expiresAt = undefined;
     paymentAttached = false;
+    recordedConsent = undefined;
     sessionOwnedPackageContext = false;
     uncertain = false;
     uncertaintyMessage = undefined;
@@ -296,10 +299,23 @@ export function createSharedBookingBackend(): GuidedBookingBackend {
     },
     quote() { return selection ? { ...selection.quote } : undefined; },
     cardFrameOrigin() { return frameOrigin; },
+    recordConsent(client) {
+      return serial(async () => {
+        requireVerifiedSession();
+        if (!reservedSlot || !selection) throw new Error("Choose and reserve a time first.");
+        const payload = consentPayload(client);
+        if (recordedConsent === JSON.stringify(payload)) return;
+        // A changed receipt may have been stored even if its response is lost.
+        recordedConsent = undefined;
+        const data = await call("consent", payload);
+        recordedConsent = verifyConsentReceipt(data.consent, client);
+      });
+    },
     attachPayment(token) {
       return serial(async () => {
         requireVerifiedSession();
         if (!reservedSlot || !selection) throw new Error("Choose and reserve a time first.");
+        if (!recordedConsent) throw new Error("Please confirm your contact consent before continuing.");
         if (paymentAttached) return;
         try {
           await call("payment", { token });
@@ -321,8 +337,11 @@ export function createSharedBookingBackend(): GuidedBookingBackend {
             || !selection || (selection.quote.needsCard && !paymentAttached)) {
             return { ok: false, reason: "Please complete the treatment, time and payment steps first." };
           }
+          if (recordedConsent !== JSON.stringify(consentPayload(input.client))) {
+            return { ok: false, reason: "Please confirm your contact consent before continuing." };
+          }
           checkoutSent = true;
-          // PR 67 checkout accepts only these four info fields. Consent stays on this form.
+          // Consent is stored separately; Boulevard accepts only these four info fields.
           const data = await call("checkout", { info: {
             firstName: input.client.firstName, lastName: input.client.lastName,
             email: input.client.email, phoneNumber: input.client.phone,

@@ -7,11 +7,13 @@
   },
   "scripts": {
     "dev": "next dev",
+    "prebuild": "node scripts/check-crm-readiness.mjs",
     "build": "next build",
     "postbuild": "next-sitemap",
     "start": "next start",
     "lint": "eslint",
     "test": "vitest run",
+    "test:crm-readiness": "node --test scripts/check-crm-readiness.test.mjs",
     "audit:production": "npm audit --omit=dev --audit-level=high",
     "studio:dev": "sanity dev",
     "studio:deploy": "sanity deploy"

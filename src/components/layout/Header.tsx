@@ -36,7 +36,8 @@ export function Header() {
 
   useEffect(() => {
     if (!isEditorialHeroRoute) {
-      setScrolled(true);
+      // Scroll state only affects editorial heroes; ordinary pages already
+      // derive their solid header from isEditorialHeroRoute.
       return;
     }
 

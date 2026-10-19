@@ -10,6 +10,10 @@ const poppins = Poppins({
   display: "swap",
 });
 
+// Reuse the approved two-location artwork through Next's image optimizer;
+// social crawlers should not have to download the 5.9 MB source PNG.
+const socialImage = "/_next/image?url=%2Fimages%2Fclinic%2Frella_two_locations_with_text_4k.png&w=1200&q=75";
+
 export const metadata: Metadata = {
   title: {
     default: "Rella Aesthetics Med Spa | Vacaville & Napa CA",
@@ -22,6 +26,16 @@ export const metadata: Metadata = {
     type: "website",
     locale: "en_US",
     siteName: "Rella Aesthetics",
+    images: [{
+      url: socialImage,
+      width: 1200,
+      height: 675,
+      alt: "Rella Aesthetics in Napa and Vacaville",
+    }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    images: [socialImage],
   },
   robots: {
     index: true,
@@ -38,13 +52,10 @@ export default function RootLayout({
     <html lang="en" className={`${poppins.variable} antialiased`}>
       {/*
         The root layout owns ONLY the document and the font — no analytics.
-        Direct GA and Meta previously lived here, which meant campaign routes
-        INHERITED them. They rendered null only because the canonical project
-        has no corresponding environment variables; that is a coincidence of
-        configuration, not a contract. Analytics ownership is now structural:
-        direct GA/Meta belong to `(site)`, while `(campaign)` loads no third-party
-        tracking code. Site chrome (SkipNav / Header / MobileNav / Footer / GHL
-        chat) also lives in the `(site)` route group, so the `(campaign)` group
+        All routes can open the in-site booking document. Marketing loaders
+        remain structurally absent, independent of environment configuration.
+        Site chrome (SkipNav / Header / MobileNav / Footer) lives in the `(site)`
+        route group, so the `(campaign)` group
         can render the focused B01 shell instead of hiding chrome with CSS.
         Both groups keep their URLs unchanged — route groups are path-invisible.
       */}

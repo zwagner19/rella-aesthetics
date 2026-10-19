@@ -2,6 +2,7 @@ import type { BookingLocation } from "@/lib/booking-routes";
 import { clientLooksComplete } from "./machine";
 import { treatmentDescription } from "./description";
 import type { GuidedBookingState } from "./types";
+import { consentPayload, verifyConsentReceipt } from "./consent";
 
 export type PackageIntent = "buy" | "redeem";
 export type PackageContact = GuidedBookingState["client"];
@@ -219,6 +220,9 @@ export function createSharedPackageClient(fetcher: typeof fetch = fetch): Packag
   function info(client: PackageContact) {
     return { firstName: client.firstName.trim(), lastName: client.lastName.trim(), email: client.email.trim(), phoneNumber: client.phone.trim() };
   }
+  function preparedSignature(client: PackageContact) {
+    return JSON.stringify({ info: info(client), consent: consentPayload(client) });
+  }
   return createPackageClient({
     async status() { return readStatus(await call("status")); },
     async listOfferings(location) {
@@ -248,17 +252,20 @@ export function createSharedPackageClient(fetcher: typeof fetch = fetch): Packag
     },
     preparePurchase(client) {
       return serial(async () => {
+        preparedContact = undefined;
         if (!review || !clientLooksComplete(client)) throw new PackageRequestError("Complete your contact details to continue.", true);
+        const consent = await call("consent", consentPayload(client));
+        verifyConsentReceipt(consent.consent, client);
         const data = await call("prepare", { info: info(client) });
         review = readReview(data, review.offering);
-        preparedContact = JSON.stringify(info(client));
+        preparedContact = preparedSignature(client);
         paymentAttached = false;
         return review;
       });
     },
     purchase({ client, token }) {
       return serial(async () => {
-        if (!review || preparedContact !== JSON.stringify(info(client))) {
+        if (!review || !clientLooksComplete(client) || preparedContact !== preparedSignature(client)) {
           throw new PackageRequestError("Review your contact details and package total before purchasing.", true);
         }
         if (review.needsCard && !paymentAttached) {

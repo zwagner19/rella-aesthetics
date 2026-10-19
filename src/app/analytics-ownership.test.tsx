@@ -9,8 +9,8 @@ vi.mock("next/font/google", () => ({
 
 /**
  * Analytics ownership is structural, not dependent on environment settings.
- * Ordinary site routes retain their existing direct analytics. The exact-Napa
- * campaign route suppresses the entire browser marketing stack for its full
+ * Every site route can open booking in the same document. Both route groups
+ * suppress the entire browser marketing stack for the full
  * session; consent permits only the bounded first-party attribution request.
  */
 const APP = __dirname;
@@ -43,16 +43,15 @@ describe("root layout owns no analytics", () => {
   });
 });
 
-describe("ordinary site routes retain their existing integrations", () => {
+describe("ordinary site routes protect the booking document", () => {
   const source = code("(site)/layout.tsx");
 
-  it("renders direct GA and Meta", () => {
-    expect(source).toMatch(/<GoogleAnalytics\s*\/>/);
-    expect(source).toMatch(/<MetaPixel\s*\/>/);
+  it("does not import or render browser marketing or chat loaders", () => {
+    expect(source).not.toMatch(/GoogleAnalytics|MetaPixel|GhlChatWidget|CampaignGtm/);
   });
 
-  it("keeps the existing site chrome and GHL widget", () => {
-    for (const expected of ["SkipNav", "Header", "Footer", "GhlChatWidget"]) {
+  it("keeps the existing site chrome", () => {
+    for (const expected of ["SkipNav", "Header", "Footer", "MobileConversionBar"]) {
       expect(source).toContain(expected);
     }
   });
@@ -104,6 +103,7 @@ describe("the exact-Napa campaign route has no browser marketing path", () => {
     Object.assign(process.env, configured);
     try {
       const { default: CampaignLayout } = await import("./(campaign)/layout");
+      const { default: SiteLayout } = await import("./(site)/layout");
       const { default: Page } = await import("./(campaign)/napa/botox/page");
       const html = renderToStaticMarkup(
         <CampaignLayout>
@@ -114,6 +114,9 @@ describe("the exact-Napa campaign route has no browser marketing path", () => {
         expect(html).not.toContain(value);
       }
       expect(html).not.toMatch(BROWSER_MARKETING_PATTERN);
+      const ordinaryHtml = renderToStaticMarkup(<SiteLayout><p>Booking can open here.</p></SiteLayout>);
+      for (const value of Object.values(configured)) expect(ordinaryHtml).not.toContain(value);
+      expect(ordinaryHtml).not.toMatch(BROWSER_MARKETING_PATTERN);
       const scripts = [...html.matchAll(/<script([^>]*)>/g)].map(
         (match) => match[1],
       );

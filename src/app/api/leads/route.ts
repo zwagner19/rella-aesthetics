@@ -6,6 +6,7 @@ import {
 } from "@/lib/ghl";
 import { EXTRA_CONTACT_INTERESTS } from "@/lib/contact-intents";
 import { services } from "@/lib/data";
+import { leadConsentTags, persistLeadConsent, readLeadConsent } from "@/lib/lead-consent";
 
 interface LeadPayload {
   name?: string;
@@ -15,6 +16,8 @@ interface LeadPayload {
   location?: string;
   message?: string;
   website?: string;
+  consent?: unknown;
+  submissionId?: string;
 }
 
 const limits = {
@@ -60,7 +63,15 @@ function clinicTag(location: string): string {
 }
 
 export async function POST(req: NextRequest) {
+  let deliveryStarted = false;
   try {
+    if (req.headers.get("sec-fetch-site") === "cross-site"
+      || (req.headers.get("origin") && req.headers.get("origin") !== new URL(req.url).origin)) {
+      return NextResponse.json({ error: "Request not allowed" }, { status: 403 });
+    }
+    if (!req.headers.get("content-type")?.startsWith("application/json")) {
+      return NextResponse.json({ error: "JSON required" }, { status: 415 });
+    }
     const rawBody: unknown = await req.json();
     const body: LeadPayload =
       rawBody && typeof rawBody === "object" ? rawBody : {};
@@ -104,6 +115,12 @@ export async function POST(req: NextRequest) {
         { error: "Select a valid service interest" },
         { status: 400 },
       );
+    }
+
+    const consent = readLeadConsent(body.consent, Boolean(phone));
+    const submissionId = clean(body.submissionId, 36);
+    if (!consent || !/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(submissionId)) {
+      return NextResponse.json({ error: "Please review your contact consent before sending." }, { status: 400 });
     }
 
     const GHL_API_KEY = process.env.GHL_API_KEY ?? "";
@@ -158,6 +175,7 @@ export async function POST(req: NextRequest) {
       Authorization: `Bearer ${GHL_API_KEY}`,
       Version: GHL_API_VERSION,
     };
+    deliveryStarted = true;
     const ghlRes = await fetch(`${GHL_API_BASE}/contacts/upsert`, {
       method: "POST",
       headers: requestHeaders,
@@ -182,16 +200,18 @@ export async function POST(req: NextRequest) {
     }
 
     const contactId = result.contact?.id ?? result.id;
-    if (!contactId) {
+    if (typeof contactId !== "string" || !contactId || contactId.length > 256) {
       console.error("GHL contact upsert returned no contact ID");
       return NextResponse.json(
-        { error: "Contact form is temporarily unavailable" },
-        { status: 502 },
+        { accepted: false, pending: true },
+        { status: 202 },
       );
     }
 
+    await persistLeadConsent({ contactId, submissionId, choice: consent, phoneProvided: Boolean(phone), headers: requestHeaders });
+
     const tags = [
-      "website-lead",
+      ...leadConsentTags(consent),
       interestTag(service),
       clinicTag(location),
     ].filter(Boolean);
@@ -202,15 +222,18 @@ export async function POST(req: NextRequest) {
       signal: AbortSignal.timeout(8_000),
     });
 
-    // The lead is already persisted, so a tag failure must not invite duplicates.
+    // The contact/receipt are already saved. A routing failure needs verification,
+    // never another lead submission or an unverified follow-up promise.
     if (!tagRes.ok) {
       console.error("GHL contact tagging failed", { status: tagRes.status });
+      return NextResponse.json({ accepted: false, pending: true }, { status: 202 });
     }
 
     return NextResponse.json({ success: true, accepted: true });
   } catch (error) {
     const errorName = error instanceof Error ? error.name : "UnknownError";
     console.error("Lead submission failed", { errorName });
+    if (deliveryStarted) return NextResponse.json({ accepted: false, pending: true }, { status: 202 });
     return NextResponse.json(
       { error: "Contact form is temporarily unavailable" },
       { status: 500 },

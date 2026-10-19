@@ -175,6 +175,7 @@ export interface GuidedBookingBackend {
     expiresAt: string;
   }>;
   cardFrameOrigin?(): string | undefined;
+  recordConsent?(client: GuidedBookingState["client"]): Promise<void>;
   attachPayment?(token: string): Promise<void>;
   quote?(): { depositCents: number; totalCents: number; needsCard: boolean } | undefined;
   listProviders(input: {

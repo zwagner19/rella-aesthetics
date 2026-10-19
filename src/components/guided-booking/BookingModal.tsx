@@ -326,6 +326,7 @@ export function BookingModal({
     submittingRef.current = true;
     patch({ ...state, busy: true, error: null });
     try {
+      await backend.recordConsent?.(state.client);
       if (token && backend.attachPayment) await backend.attachPayment(token);
       const result = await backend.complete({ locationSlug: state.locationSlug,
         treatmentKeys: state.selectedTreatmentKeys, providerIds: state.providerIds, slot: state.slot, client: state.client });

@@ -67,6 +67,7 @@ describe("same-origin package contract", () => {
     const responses: Record<string, unknown> = {
       catalog: { ok: true, packages: [{ id: "opaque-package", name: "Verified package", description: "Native description.", benefitGroups: [] }] },
       start: { ok: true, quote: { totalCents: 60000, currency: "USD", needsCard: true }, cardFrameOrigin: "https://secure.example.test" },
+      consent: { ok: true, consent: { policyVersion: "rella-booking-consent-2026-10-19-v1", operational: true, marketing: false, recordedAt: "2026-10-19T01:00:00.000Z" } },
       prepare: { ok: true, quote: { totalCents: 57500, currency: "USD", needsCard: true }, cardFrameOrigin: "https://secure.example.test" },
       payment: { ok: true, state: "PAYMENT_READY" },
       checkout: { ok: true, state: "CONFIRMED", confirmationId: "verified-purchase" },
@@ -86,6 +87,33 @@ describe("same-origin package contract", () => {
     return { fetcher, calls, responses };
   }
 
+  it.each(["napa", "vacaville"] as const)("does not prepare contact or attach a card at %s without a verified matching consent receipt", async location => {
+    const { fetcher, calls } = adapter({ consent: { ok: true, consent: { policyVersion: "old", operational: true, marketing: false, recordedAt: "2026-10-19T01:00:00Z" } } });
+    const client = createSharedPackageClient(fetcher);
+    await client.listOfferings(location); await client.reviewPurchase({ location, packageId: "opaque-package" });
+    await expect(client.preparePurchase(input.client)).rejects.toThrow("consent");
+    expect(calls.map(call => call.operation)).toEqual(["catalog", "start", "consent"]);
+    expect(calls.at(-1)?.body).toEqual({ policyVersion: "rella-booking-consent-2026-10-19-v1", operational: true, marketing: false });
+  });
+
+  it("requires contact review again if either consent choice changes after preparation", async () => {
+    const { fetcher, calls } = adapter(); const client = createSharedPackageClient(fetcher);
+    await client.listOfferings("napa"); await client.reviewPurchase({ location: "napa", packageId: "opaque-package" });
+    await client.preparePurchase(input.client);
+    await expect(client.purchase({ ...input, client: { ...input.client, marketingConsent: true } })).rejects.toThrow("Review your contact");
+    await expect(client.purchase({ ...input, client: { ...input.client, assessmentContactConsent: false } })).rejects.toThrow("Review your contact");
+    expect(calls.some(call => call.operation === "payment" || call.operation === "checkout")).toBe(false);
+  });
+  it("invalidates prior contact approval before attempting a replacement receipt", async () => {
+    const { fetcher, calls, responses } = adapter(); const client = createSharedPackageClient(fetcher);
+    await client.listOfferings("napa"); await client.reviewPurchase({ location: "napa", packageId: "opaque-package" });
+    await client.preparePurchase(input.client);
+    responses.consent = { ok: true, consent: null };
+    await expect(client.preparePurchase({ ...input.client, marketingConsent: true })).rejects.toThrow("consent");
+    await expect(client.purchase(input)).rejects.toThrow("Review your contact");
+    expect(calls.some(call => call.operation === "payment" || call.operation === "checkout")).toBe(false);
+  });
+
   it.each(["napa", "vacaville"] as const)("buys one package at %s using the post-contact native total and distinct payment/checkout calls", async location => {
     const { fetcher, calls } = adapter();
     const client = createSharedPackageClient(fetcher);
@@ -95,11 +123,11 @@ describe("same-origin package contract", () => {
     const prepared = await client.preparePurchase(input.client);
     expect(prepared.totalCents).toBe(57500);
     expect(await client.purchase(input)).toEqual({ status: "confirmed", confirmationId: "verified-purchase" });
-    expect(calls.map(call => call.operation)).toEqual(["catalog", "start", "prepare", "payment", "checkout"]);
+    expect(calls.map(call => call.operation)).toEqual(["catalog", "start", "consent", "prepare", "payment", "checkout"]);
     expect(calls[1].body).toEqual({ location, packageKey: "opaque-package" });
-    expect(calls[2].body).toEqual({ info: { firstName: "Test", lastName: "Client", email: "test@example.test", phoneNumber: "7075550100" } });
-    expect(calls[3].body).toEqual({ token: "test-token" });
-    expect(calls[4].body).toEqual({});
+    expect(calls[3].body).toEqual({ info: { firstName: "Test", lastName: "Client", email: "test@example.test", phoneNumber: "7075550100" } });
+    expect(calls[4].body).toEqual({ token: "test-token" });
+    expect(calls[5].body).toEqual({});
   });
 
   it("does not attach payment or checkout before contact preparation, or after contact details change", async () => {

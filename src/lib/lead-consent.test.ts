@@ -1,0 +1,84 @@
+import { afterEach, describe, expect, it, vi } from "vitest";
+import { leadConsentTags, persistLeadConsent, readLeadConsent, type LeadConsent } from "./lead-consent";
+import { CONTACT_CONSENT_POLICY_VERSION } from "./guided-booking/policies";
+
+const choice: LeadConsent = { policyVersion: CONTACT_CONSENT_POLICY_VERSION, operational: true, marketing: false };
+const input = { contactId: "verified-contact", submissionId: "62d72df4-658e-4d6c-aa7c-608aaf27a212", choice, phoneProvided: true, headers: { Version: "2021-07-28" } };
+afterEach(() => { vi.unstubAllGlobals(); vi.restoreAllMocks(); });
+
+function notesStore() {
+  const notes: Array<{ id: string; contactId: string; body: string }> = [];
+  const fetcher = vi.fn(async (url: RequestInfo | URL, init?: RequestInit) => {
+    if (init?.method === "POST") {
+      notes.push({ id: `note-${notes.length}`, contactId: input.contactId, body: JSON.parse(String(init.body)).body });
+      return Response.json({ note: notes.at(-1) }, { status: 201 });
+    }
+    return Response.json(String(url).endsWith("/notes") ? { notes } : { note: notes.at(-1) });
+  });
+  vi.stubGlobal("fetch", fetcher);
+  return { notes, fetcher };
+}
+
+describe("durable contact consent", () => {
+  it("only adds the explicit marketing opt-in tag when selected, without legacy promotion enrollment tags", () => {
+    expect(leadConsentTags(choice)).toEqual(["website-contact-request", "website-contact-operational-consent"]);
+    expect(leadConsentTags({ ...choice, operational: false })).toEqual(["website-contact-request"]);
+    expect(leadConsentTags({ ...choice, marketing: true })).toEqual(["website-contact-request", "website-contact-operational-consent", "website-contact-marketing-opt-in"]);
+    expect(leadConsentTags(choice)).not.toContain("website-lead");
+  });
+  it("requires explicit operational acceptance for phone, accepts marketing=false and preserves email-only", () => {
+    expect(readLeadConsent(choice, true)).toEqual(choice);
+    expect(readLeadConsent({ ...choice, operational: false }, true)).toBeNull();
+    expect(readLeadConsent({ ...choice, operational: "true" }, true)).toBeNull();
+    expect(readLeadConsent({ ...choice, marketing: "false" }, true)).toBeNull();
+    expect(readLeadConsent({ ...choice, policyVersion: "old" }, true)).toBeNull();
+    expect(readLeadConsent({ ...choice, operational: false }, false)).toMatchObject({ operational: false, marketing: false });
+    expect(readLeadConsent({ ...choice, marketing: true }, false)).toBeNull();
+  });
+  it("writes a versioned timestamped receipt and reads back the exact server contact note", async () => {
+    const { notes, fetcher } = notesStore();
+    await persistLeadConsent(input);
+    expect(notes).toHaveLength(1);
+    expect(JSON.parse(notes[0].body)).toMatchObject({ type: "rella-contact-consent", ...choice, source: "/contact", phoneProvided: true,
+      policyHash: expect.stringMatching(/^[a-f0-9]{64}$/), recordedAt: expect.any(String) });
+    expect(fetcher.mock.calls.map(([url, init]) => [String(url).split("/").at(-1), init?.method ?? "GET"]))
+      .toEqual([["notes", "GET"], ["notes", "POST"], ["note-0", "GET"]]);
+  });
+  it("does not create a second note after retrying an already-saved receipt", async () => {
+    const { notes, fetcher } = notesStore();
+    await persistLeadConsent(input); await persistLeadConsent(input);
+    expect(notes).toHaveLength(1);
+    expect(fetcher.mock.calls.filter(([, init]) => init?.method === "POST")).toHaveLength(1);
+  });
+  it("recovers an uncertain note-create response by reading the saved note without repeating its mutation", async () => {
+    const { notes, fetcher } = notesStore();
+    fetcher.mockImplementationOnce(async () => Response.json({ notes: [] }))
+      .mockImplementationOnce(async (_url, init) => {
+        notes.push({ id: "note-0", contactId: input.contactId, body: JSON.parse(String(init?.body)).body });
+        throw new Error("response lost after save");
+      });
+    await expect(persistLeadConsent(input)).rejects.toThrow("response lost");
+    await persistLeadConsent(input);
+    expect(notes).toHaveLength(1);
+    expect(fetcher.mock.calls.filter(([, init]) => init?.method === "POST")).toHaveLength(1);
+  });
+  it("blocks conflicting consent on a replayed submission ID without another note", async () => {
+    const { notes } = notesStore(); await persistLeadConsent(input);
+    await expect(persistLeadConsent({ ...input, choice: { ...choice, marketing: true } })).rejects.toThrow("differs");
+    expect(notes).toHaveLength(1);
+  });
+  it("does not create a note when existing notes cannot be checked", async () => {
+    const fetcher = vi.fn(async () => Response.json({ message: "Forbidden" }, { status: 403 }));
+    vi.stubGlobal("fetch", fetcher);
+    await expect(persistLeadConsent(input)).rejects.toThrow("lookup");
+    expect(fetcher).toHaveBeenCalledTimes(1);
+  });
+  it("does not claim persistence after mismatched readback", async () => {
+    const { fetcher } = notesStore();
+    fetcher.mockImplementationOnce(async () => Response.json({ notes: [] }))
+      .mockImplementationOnce(async () => Response.json({ note: { id: "note-0" } }))
+      .mockImplementationOnce(async () => Response.json({ note: { id: "note-0", contactId: "another-contact", body: "wrong" } }));
+    await expect(persistLeadConsent(input)).rejects.toThrow("readback");
+    expect(fetcher).toHaveBeenCalledTimes(3);
+  });
+});

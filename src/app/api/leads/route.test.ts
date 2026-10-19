@@ -1,13 +1,27 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { POST } from "./route";
+import { CONTACT_CONSENT_POLICY_VERSION } from "@/lib/guided-booking/policies";
 import { buildGhlContactBody } from "@/lib/ghl";
 
 function leadRequest(body: Record<string, unknown>) {
   return new Request("https://experiencerella.com/api/leads", {
     method: "POST",
     headers: { "content-type": "application/json" },
-    body: JSON.stringify(body),
+    body: JSON.stringify({ submissionId: "62d72df4-658e-4d6c-aa7c-608aaf27a212", consent: { policyVersion: CONTACT_CONSENT_POLICY_VERSION, operational: Boolean(body.phone), marketing: false }, ...body }),
   });
+}
+
+function withConsentNotes(delegate: typeof fetch) {
+  let saved = "";
+  return async (url: RequestInfo | URL, init?: RequestInit) => {
+    if (String(url).endsWith("/notes") && init?.method === "POST") {
+      saved = JSON.parse(String(init.body)).body;
+      return Response.json({ note: { id: "note-fixture" } }, { status: 201 });
+    }
+    if (String(url).endsWith("/notes")) return Response.json({ notes: [] });
+    if (String(url).endsWith("/notes/note-fixture")) return Response.json({ note: { id: "note-fixture", contactId: "contact-456", body: saved } });
+    return delegate(url, init);
+  };
 }
 
 function configureGhl() {
@@ -25,11 +39,75 @@ afterEach(() => {
 });
 
 describe("contact lead delivery", () => {
+  it.each([
+    undefined,
+    { policyVersion: CONTACT_CONSENT_POLICY_VERSION, operational: false, marketing: false },
+    { policyVersion: "old", operational: true, marketing: false },
+    { policyVersion: CONTACT_CONSENT_POLICY_VERSION, operational: true, marketing: "false" },
+  ])("rejects missing or invalid phone consent before any CRM request: %j", async consent => {
+    configureGhl(); const fetchMock = vi.fn(); vi.stubGlobal("fetch", fetchMock);
+    const response = await POST(leadRequest({ name: "Test Person", phone: "7075550100", consent }) as never);
+    expect(response.status).toBe(400); expect(fetchMock).not.toHaveBeenCalled();
+  });
+
+  it("does not claim successful delivery if contact saved but durable consent readback fails", async () => {
+    configureGhl(); vi.spyOn(console, "error").mockImplementation(() => {});
+    const fetchMock = vi.fn()
+      .mockResolvedValueOnce(Response.json({ contact: { id: "verified-contact" } }))
+      .mockResolvedValueOnce(Response.json({ notes: [] }))
+      .mockResolvedValueOnce(Response.json({ note: { id: "saved-note" } }, { status: 201 }))
+      .mockResolvedValueOnce(Response.json({ note: { id: "saved-note", contactId: "wrong", body: "wrong" } }));
+    vi.stubGlobal("fetch", fetchMock);
+    const response = await POST(leadRequest({ name: "Test Person", phone: "7075550100", contactId: "browser-id-is-not-authority" }) as never);
+    expect(response.status).toBe(202);
+    expect(await response.json()).toEqual({ accepted: false, pending: true });
+    expect(fetchMock.mock.calls.slice(1).every(([url]) => String(url).includes("/contacts/verified-contact/notes"))).toBe(true);
+    expect(fetchMock).toHaveBeenCalledTimes(4);
+  });
+
+  it("persists email-only no-phone/no-marketing choices before success and routing tags", async () => {
+    configureGhl(); let savedBody = ""; let savedTags: string[] = [];
+    const actions: string[] = [];
+    vi.stubGlobal("fetch", vi.fn(async (url, init) => {
+      const path = new URL(String(url)).pathname;
+      actions.push(`${init?.method ?? "GET"} ${path}`);
+      if (path.endsWith("upsert")) return Response.json({ contact: { id: "server-contact" } });
+      if (path.endsWith("/notes") && init?.method === "POST") {
+        savedBody = JSON.parse(String(init.body)).body;
+        return Response.json({ note: { id: "server-note" } }, { status: 201 });
+      }
+      if (path.endsWith("/notes")) return Response.json({ notes: [] });
+      if (path.endsWith("/server-note")) return Response.json({ note: { id: "server-note", contactId: "server-contact", body: savedBody } });
+      if (path.endsWith("/tags")) savedTags = JSON.parse(String(init?.body)).tags;
+      return Response.json({});
+    }));
+    const response = await POST(leadRequest({ name: "Test Person", email: "test@example.test" }) as never);
+    expect(await response.json()).toEqual({ success: true, accepted: true });
+    expect(JSON.parse(savedBody)).toMatchObject({ operational: false, marketing: false, phoneProvided: false, policyVersion: CONTACT_CONSENT_POLICY_VERSION });
+    expect(savedTags).toEqual(["website-contact-request"]);
+    expect(actions).toEqual(["POST /contacts/upsert", "GET /contacts/server-contact/notes", "POST /contacts/server-contact/notes", "GET /contacts/server-contact/notes/server-note", "POST /contacts/server-contact/tags"]);
+  });
+
+  it("keeps a lost upsert response pending without issuing a second mutation", async () => {
+    configureGhl(); vi.spyOn(console, "error").mockImplementation(() => {});
+    const fetchMock = vi.fn().mockRejectedValue(new Error("response lost")); vi.stubGlobal("fetch", fetchMock);
+    const response = await POST(leadRequest({ name: "Test Person", email: "test@example.test" }) as never);
+    expect(response.status).toBe(202); expect(await response.json()).toEqual({ accepted: false, pending: true });
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+  });
+
+  it("rejects cross-site forged consent before any CRM request", async () => {
+    const fetchMock = vi.fn(); vi.stubGlobal("fetch", fetchMock);
+    const response = await POST(new Request("https://experiencerella.com/api/leads", {
+      method: "POST", headers: { origin: "https://evil.test", "content-type": "application/json" }, body: "{}",
+    }) as never);
+    expect(response.status).toBe(403); expect(fetchMock).not.toHaveBeenCalled();
+  });
   it("fails closed when CRM delivery is not configured", async () => {
     vi.stubEnv("GHL_API_KEY", "");
     vi.stubEnv("GHL_LOCATION_ID", "");
     const fetchMock = vi.fn();
-    vi.stubGlobal("fetch", fetchMock);
+    vi.stubGlobal("fetch", withConsentNotes(fetchMock));
 
     const response = await POST(
       leadRequest({ name: "Test Person", email: "test@example.com" }) as never,
@@ -47,7 +125,7 @@ describe("contact lead delivery", () => {
     vi.stubEnv("GHL_LOCATION_ID", "location-123");
     vi.stubEnv("GHL_CUSTOM_FIELD_MESSAGE_ID", "");
     const fetchMock = vi.fn();
-    vi.stubGlobal("fetch", fetchMock);
+    vi.stubGlobal("fetch", withConsentNotes(fetchMock));
 
     const response = await POST(
       leadRequest({
@@ -63,7 +141,7 @@ describe("contact lead delivery", () => {
 
   it("silently rejects honeypot submissions", async () => {
     const fetchMock = vi.fn();
-    vi.stubGlobal("fetch", fetchMock);
+    vi.stubGlobal("fetch", withConsentNotes(fetchMock));
 
     const response = await POST(
       leadRequest({
@@ -78,7 +156,7 @@ describe("contact lead delivery", () => {
     expect(fetchMock).not.toHaveBeenCalled();
   });
 
-  it("upserts bounded fields and applies routing tags", async () => {
+  it.each([false, true])("upserts bounded fields and applies explicit consent routing tags (marketing=%s)", async marketing => {
     configureGhl();
     const fetchMock = vi
       .fn()
@@ -88,7 +166,7 @@ describe("contact lead delivery", () => {
         }),
       )
       .mockResolvedValueOnce(new Response("{}", { status: 201 }));
-    vi.stubGlobal("fetch", fetchMock);
+    vi.stubGlobal("fetch", withConsentNotes(fetchMock));
 
     const response = await POST(
       leadRequest({
@@ -98,6 +176,7 @@ describe("contact lead delivery", () => {
         service: "Medical Weight Loss",
         location: "Napa",
         message: "Please call after 3pm.",
+        consent: { policyVersion: CONTACT_CONSENT_POLICY_VERSION, operational: true, marketing },
       }) as never,
     );
 
@@ -125,14 +204,14 @@ describe("contact lead delivery", () => {
       "https://services.leadconnectorhq.com/contacts/contact-456/tags",
     );
     expect(JSON.parse(String(tagOptions.body))).toEqual({
-      tags: ["website-lead", "interest-medical-weight-loss", "location-napa"],
+      tags: ["website-contact-request", "website-contact-operational-consent", ...(marketing ? ["website-contact-marketing-opt-in"] : []), "interest-medical-weight-loss", "location-napa"],
     });
   });
 
   it("rejects unrecognized clinic values", async () => {
     configureGhl();
     const fetchMock = vi.fn();
-    vi.stubGlobal("fetch", fetchMock);
+    vi.stubGlobal("fetch", withConsentNotes(fetchMock));
 
     const response = await POST(
       leadRequest({
@@ -149,7 +228,7 @@ describe("contact lead delivery", () => {
   it("rejects arbitrary service tags", async () => {
     configureGhl();
     const fetchMock = vi.fn();
-    vi.stubGlobal("fetch", fetchMock);
+    vi.stubGlobal("fetch", withConsentNotes(fetchMock));
 
     const response = await POST(
       leadRequest({
@@ -181,27 +260,27 @@ describe("contact lead delivery", () => {
     expect(await response.json()).not.toHaveProperty("success", true);
   });
 
-  it("keeps an accepted lead successful if tag assignment fails", async () => {
+  it("keeps a saved lead pending verification if staff routing tags fail, without inviting resubmission", async () => {
     configureGhl();
     vi.spyOn(console, "error").mockImplementation(() => {});
     vi.stubGlobal(
       "fetch",
-      vi
+      withConsentNotes(vi
         .fn()
         .mockResolvedValueOnce(
           new Response(JSON.stringify({ contact: { id: "contact-456" } }), {
             status: 200,
           }),
         )
-        .mockResolvedValueOnce(new Response("", { status: 500 })),
+        .mockResolvedValueOnce(new Response("", { status: 500 }))),
     );
 
     const response = await POST(
       leadRequest({ name: "Test Person", email: "test@example.com" }) as never,
     );
 
-    expect(response.status).toBe(200);
-    expect(await response.json()).toEqual({ success: true, accepted: true });
+    expect(response.status).toBe(202);
+    expect(await response.json()).toEqual({ accepted: false, pending: true });
   });
 });
 

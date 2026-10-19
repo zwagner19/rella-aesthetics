@@ -6,6 +6,14 @@ function request(op: string, body?: unknown, headers: Record<string,string> = {}
     headers: { origin: "https://experiencerella.com", "content-type": "application/json", ...headers }, ...(body !== undefined ? { body: JSON.stringify(body) } : {}) });
 }
 beforeEach(() => { vi.restoreAllMocks(); delete process.env.RELLA_BOOKING_BACKEND_ORIGIN; });
+it("forwards consent choices with only the HttpOnly purchase proof", async () => {
+  const network = vi.spyOn(globalThis,"fetch").mockResolvedValue(Response.json({ok:true}));
+  const choice = {policyVersion:"rella-booking-consent-2026-10-19-v1",operational:true,marketing:false};
+  await packageBridge(request("consent",choice,{cookie:"unrelated=secret; rella_package_purchase=session"}),"consent");
+  expect(String(network.mock.calls[0][0])).toBe("https://book.experiencerella.com/api/package-booking/consent");
+  expect((network.mock.calls[0][1]?.headers as Record<string,string>).Cookie).toBe("rella_package_purchase=session");
+  expect(JSON.parse(String(network.mock.calls[0][1]?.body))).toEqual(choice);
+});
 it("rejects methods, unknown operations, hostile origins and invalid locations before network", async () => {
   const network = vi.spyOn(globalThis,"fetch");
   expect((await packageBridge(request("checkout"),"checkout")).status).toBe(405);

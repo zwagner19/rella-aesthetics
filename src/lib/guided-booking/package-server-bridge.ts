@@ -2,7 +2,7 @@ import { NextRequest } from "next/server";
 import { bookingBackendOrigin } from "./server-bridge";
 
 const GETS = new Set(["catalog", "status", "owned"]);
-const POSTS = new Set(["start", "prepare", "payment", "checkout", "auth-code", "auth-verify", "auth-profile", "auth-logout", "book-owned"]);
+const POSTS = new Set(["start", "prepare", "consent", "payment", "checkout", "auth-code", "auth-verify", "auth-profile", "auth-logout", "book-owned"]);
 const COOKIES = new Set(["rella_package_purchase", "rella_package_identity", "rella_owned_booking", "rella_menu_visitor", "rella_cart_auth"]);
 export async function packageBridge(req: NextRequest, operation: string): Promise<Response> {
   if (!GETS.has(operation) && !POSTS.has(operation)) return Response.json({ ok: false }, { status: 404 });
