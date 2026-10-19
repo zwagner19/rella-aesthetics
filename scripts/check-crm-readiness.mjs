@@ -32,9 +32,19 @@ function scopeClaims(token, now) {
 }
 
 function failure(status) {
-  if (status === 401 || status === 403) return "access_denied";
+  if (status === 401) return "invalid_auth";
+  if (status === 403) return "metadata_scope_denied";
   if (status === 404) return "not_found";
   return "unknown";
+}
+
+function httpStatus(status) {
+  return Number.isInteger(status) && status >= 100 && status <= 599 ? status : null;
+}
+
+function metadataFailure(status) {
+  const reason = failure(status);
+  return { state: status === 401 || status === 404 ? "invalid" : "unknown", reason, httpStatus: httpStatus(status) };
 }
 
 export async function checkCrmReadiness({ env = process.env, fetcher = fetch, explicit = false, now = Date.now() } = {}) {
@@ -58,50 +68,52 @@ export async function checkCrmReadiness({ env = process.env, fetcher = fetch, ex
   }
   const headers = { Authorization: `Bearer ${env.GHL_API_KEY}`, Version: VERSION, Accept: "application/json" };
   async function get(path) {
+    let status = null;
     try {
       const response = await fetcher(`${API}${path}`, { method: "GET", headers, redirect: "manual", cache: "no-store", signal: AbortSignal.timeout(8_000) });
-      if (!response.ok) return { status: response.status };
+      status = httpStatus(response.status);
+      if (!response.ok) return { status };
       const raw = await response.text();
-      if (raw.length > 262_144) return { status: response.status };
-      return { status: response.status, data: JSON.parse(raw) };
-    } catch { return { status: null }; }
+      if (raw.length > 262_144) return { status };
+      return { status, data: JSON.parse(raw) };
+    } catch { return { status }; }
   }
   const encodedLocation = encodeURIComponent(env.GHL_LOCATION_ID);
   const location = await get(`/locations/${encodedLocation}`);
   if (location.status !== 200 || !location.data?.location) {
-    const reason = failure(location.status);
-    report.business = { state: reason === "unknown" ? "unknown" : "invalid", reason };
-    report.state = report.business.state === "invalid" ? "invalid" : "unknown";
-    return report;
+    report.business = metadataFailure(location.status);
+    if (location.status === 401) { report.state = "invalid"; return report; }
+    // A location-metadata scope can be absent while contact/custom-field reads
+    // are permitted. Inspect those independent read-only capabilities as well.
+  } else {
+    const metadata = location.data.location;
+    const names = [metadata.name, metadata.business?.name].filter(value => typeof value === "string")
+      .map(value => value.trim().toLowerCase().replace(/[^a-z0-9]+/g, " ").trim());
+    const identityMatches = metadata.id === env.GHL_LOCATION_ID && names.some(name => EXPECTED_NAMES.has(name));
+    report.business = { state: identityMatches ? "verified" : "invalid", configuredIdentityMatches: identityMatches, httpStatus: 200 };
+    if (!identityMatches) { report.state = "invalid"; return report; }
   }
-  const metadata = location.data.location;
-  const names = [metadata.name, metadata.business?.name].filter(value => typeof value === "string")
-    .map(value => value.trim().toLowerCase().replace(/[^a-z0-9]+/g, " ").trim());
-  const identityMatches = metadata.id === env.GHL_LOCATION_ID && names.some(name => EXPECTED_NAMES.has(name));
-  report.business = { state: identityMatches ? "verified" : "invalid", configuredIdentityMatches: identityMatches };
-  if (!identityMatches) { report.state = "invalid"; return report; }
 
   const checks = await Promise.all(Object.entries(FIELD_ENV).map(async ([label, key]) => {
     if (!env[key]) return [label, { state: "not_configured" }];
     const response = await get(`/locations/${encodedLocation}/customFields/${encodeURIComponent(env[key])}`);
     const field = response.data?.customField;
     if (response.status !== 200 || !field) {
-      const reason = failure(response.status);
-      return [label, { state: reason === "unknown" ? "unknown" : "invalid", reason }];
+      return [label, metadataFailure(response.status)];
     }
     const valid = field.id === env[key] && field.locationId === env.GHL_LOCATION_ID && field.model === "contact";
-    return [label, { state: valid ? "verified" : "invalid", configuredIdentityMatches: valid }];
+    return [label, { state: valid ? "verified" : "invalid", configuredIdentityMatches: valid, httpStatus: 200 }];
   }));
   report.customFields = Object.fromEntries(checks);
 
   // This identifier cannot address a native contact. Do not list/search patients.
   const notes = await get(`/contacts/${SYNTHETIC_CONTACT}/notes`);
-  report.notesRead = { state: "unknown", proof: "synthetic_probe_is_not_scope_proof", outcome:
-    notes.status === 401 || notes.status === 403 ? "access_denied"
+  report.notesRead = { state: notes.status === 401 ? "invalid" : "unknown", httpStatus: httpStatus(notes.status), proof: "synthetic_probe_is_not_scope_proof", outcome:
+    notes.status === 401 ? "invalid_auth" : notes.status === 403 ? "scope_or_resource_denied"
       : notes.status === 200 && Array.isArray(notes.data?.notes) && notes.data.notes.length === 0 ? "empty_probe_accepted"
         : notes.status === 404 ? "synthetic_contact_not_found" : "unverified" };
   // JWT claims are informational only; positive API readback is required above.
-  report.state = checks.some(([, check]) => check.state === "invalid") || report.notesRead.outcome === "access_denied" ? "invalid" : "unknown";
+  report.state = report.business.state === "invalid" || checks.some(([, check]) => check.state === "invalid") || report.notesRead.state === "invalid" ? "invalid" : "unknown";
   return report;
 }
 

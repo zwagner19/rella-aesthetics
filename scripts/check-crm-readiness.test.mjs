@@ -51,11 +51,39 @@ test("stops before additional checks on wrong-business metadata", async () => {
   const report = await checkCrmReadiness({ env, fetcher });
   assert.equal(report.state, "invalid"); assert.equal(calls.length, 1);
 });
-test("treats auth denial as invalid and transient/malformed responses as unknown without error body exposure", async () => {
-  for (const [status, expected] of [[403, "invalid"], [500, "unknown"]]) {
+test("treats 401 as invalid auth and metadata scope denial/transient failures as unknown without error body exposure", async () => {
+  for (const [status, expected] of [[401, "invalid"], [403, "unknown"], [500, "unknown"]]) {
     const report = await checkCrmReadiness({ env, fetcher: async () => Response.json({ error: env.GHL_API_KEY }, { status }) });
-    assert.equal(report.state, expected); assert(!JSON.stringify(report).includes(env.GHL_API_KEY));
+    assert.equal(report.state, expected); assert.equal(report.business.httpStatus, status);
+    assert(!JSON.stringify(report).includes(env.GHL_API_KEY));
   }
+});
+test("continues custom-field and synthetic notes checks when location metadata is forbidden", async () => {
+  const { calls, fetcher } = adapter();
+  const report = await checkCrmReadiness({ env, fetcher: async (url, init) => {
+    if (!url.includes("customFields") && !url.includes("/notes")) {
+      calls.push([url, init]); return Response.json({ message: "private permission details" }, { status: 403 });
+    }
+    return fetcher(url, init);
+  } });
+  assert.deepEqual(report.business, { state: "unknown", reason: "metadata_scope_denied", httpStatus: 403 });
+  assert.equal(report.state, "unknown");
+  assert.deepEqual(Object.values(report.customFields).map(field => [field.state, field.httpStatus]), [["verified", 200], ["verified", 200], ["verified", 200]]);
+  assert.equal(report.notesRead.httpStatus, 404);
+  assert.equal(calls.length, 5);
+  assert(calls.some(([url]) => url.includes("/__rella_readiness_no_patient__/notes")));
+  assert(!JSON.stringify(report).includes("private permission details"));
+});
+test("401 invalid auth stops before unrelated metadata and notes requests", async () => {
+  let calls = 0;
+  const report = await checkCrmReadiness({ env, fetcher: async () => { calls++; return Response.json({}, { status: 401 }); } });
+  assert.equal(report.state, "invalid"); assert.equal(report.business.reason, "invalid_auth");
+  assert.equal(report.business.httpStatus, 401); assert.equal(calls, 1);
+});
+test("malformed JSON retains bounded HTTP status without logging response contents", async () => {
+  const report = await checkCrmReadiness({ env, fetcher: async () => new Response("private non-json response", { status: 200 }) });
+  assert.equal(report.state, "unknown"); assert.equal(report.business.httpStatus, 200);
+  assert.equal(report.notesRead.httpStatus, 200); assert(!JSON.stringify(report).includes("private"));
 });
 test("a forged JWT scope claim cannot establish notes read or write readiness", async () => {
   const token = `fake.${Buffer.from(JSON.stringify({ scope: "contacts.readonly contacts.write", exp: 9999999999 })).toString("base64url")}.unsigned`;
@@ -76,10 +104,11 @@ test("detects wrong configured custom-field identity without exposing the native
 });
 test("does not mistake an empty synthetic notes response for positive permission proof", async () => {
   const { fetcher } = adapter();
-  for (const [status, outcome] of [[200, "empty_probe_accepted"], [403, "access_denied"]]) {
+  for (const [status, outcome] of [[200, "empty_probe_accepted"], [403, "scope_or_resource_denied"]]) {
     const report = await checkCrmReadiness({ env, fetcher: async (url, init) => url.includes("/notes")
       ? Response.json({ notes: [] }, { status }) : fetcher(url, init) });
     assert.equal(report.notesRead.state, "unknown"); assert.equal(report.notesRead.outcome, outcome);
+    assert.equal(report.notesRead.httpStatus, status);
     assert.equal(report.launchReady, false);
   }
 });
