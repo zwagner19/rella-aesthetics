@@ -1,5 +1,11 @@
 # Controlled launch status
 
+**Current status — October 19, 2026, 4:08 p.m. PDT: public-live.** The owner authorized switching the public website live. The new site is now served at [experiencerella.com](https://experiencerella.com/) through the enabled two-route Worker, with the approved booking backend live on both booking domains. Public checks passed. Read [PUBLIC-LAUNCH-RECORD-2026-10-19.md](PUBLIC-LAUNCH-RECORD-2026-10-19.md) for current source/deployment references, verification and remaining evidence. Amie’s design is preserved; the separate deposit project was not changed. Cindy’s Rella-app handoff work remains paused. Ayano’s human read and a genuine Google-ad accepted conversion remain unproven.
+
+## Historical prelaunch snapshot
+
+The remainder of this file preserves the earlier preparation record and canary evidence. Its older deployment mappings, disabled edge and “not public-live” statements are historical, superseded by the public launch record above.
+
 Updated October 19, 2026 PDT / UTC. **The replacement site is prepared and staged; it is not public-live and is not yet cleared for cutover.** Amie’s overall site design, imagery and visual system are retained. Booking-menu spacing and disclosure controls changed as explicitly requested by the owner. Deposit policy, amounts, reconciliation and conversion value decisions remain with the separate deposit workstream.
 
 ## October 19 owner acceptance and inquiry delivery

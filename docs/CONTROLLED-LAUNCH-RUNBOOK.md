@@ -1,5 +1,11 @@
 # Controlled launch: preserve WordPress landings, release the remaining site
 
+**Current status — October 19, 2026, 4:08 p.m. PDT: public-live.** The authorized cutover is complete: the new immutable website RELEASE is served by the enabled apex/www Worker, the approved backend is live on both booking domains, and public GET/asset checks passed. See [PUBLIC-LAUNCH-RECORD-2026-10-19.md](PUBLIC-LAUNCH-RECORD-2026-10-19.md) for the current live mappings, verification and rollback context. No DNS change or separate deposit-project mutation occurred; Amie’s design is preserved. Cindy’s Rella-app handoff work remains paused.
+
+## Historical prelaunch snapshot and execution plan
+
+The remainder of this file is the preserved prelaunch runbook. Its zero-route/disabled-Worker state, older deployment references and future-tense activation steps are historical; do not execute them as a new pending launch. Current live state is in the public launch record above. Original canaries and rollback anchors remain available below.
+
 Updated October 19, 2026 PDT / UTC. **Prepared and staged, not publicly launched.** Fresh website inquiries from both clinics now persist an Ayano-owned Rella HQ thread event and unread notification; push transport accepted both. Human read is unproven. The seven-setting website build and paired backend are refreshed in the Production environment without moving customer domains. Public website/booking aliases remain on their existing releases, and Cloudflare still has zero Worker routes with `EDGE_ENABLED` false. The disabled Worker now pins the final permanent-origin RELEASE artifact; no route activation occurred. Paula is the Vacaville handoff; Napa stays with Ayano; Andrea is deferred. Owner-confirmed checkout/iPhone/package items 1–3 are not being replayed. Amie’s design remains locked, deposits remain with the other workstream, and no advertising upload was fabricated. Final public promotion/route activation still requires the specific release decision. See [current status](CONTROLLED-LAUNCH-STATUS.md).
 
 ## Verified topology and rollback anchors
