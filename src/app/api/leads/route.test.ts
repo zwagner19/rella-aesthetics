@@ -2,6 +2,13 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import { POST } from "./route";
 import { CONTACT_CONSENT_POLICY_VERSION } from "@/lib/guided-booking/policies";
 import { buildGhlContactBody } from "@/lib/ghl";
+import { HQ_WEBSITE_INQUIRY_ENDPOINT } from "@/lib/lead-hq";
+
+const hqId = "87a29220-d242-4970-bef2-db8ae986bd92";
+function hqAccepted(body: string) {
+  return Response.json({ ok: true, receiptId: JSON.parse(body).receiptId,
+    threadId: hqId, eventId: hqId, notificationId: hqId, recipient: "ayano", outcome: "processed" });
+}
 
 function leadRequest(body: Record<string, unknown>) {
   return new Request("https://experiencerella.com/api/leads", {
@@ -33,6 +40,7 @@ function withReceiptMarker(delegate: typeof fetch) {
 function withConsentNotes(delegate: typeof fetch) {
   let saved = "";
   return withReceiptMarker(async (url: RequestInfo | URL, init?: RequestInit) => {
+    if (String(url) === HQ_WEBSITE_INQUIRY_ENDPOINT) return hqAccepted(String(init?.body));
     if (String(url).endsWith("/notes") && init?.method === "POST") {
       saved = JSON.parse(String(init.body)).body;
       return Response.json({ note: { id: "note-fixture" } }, { status: 201 });
@@ -44,6 +52,7 @@ function withConsentNotes(delegate: typeof fetch) {
 }
 
 function configureGhl() {
+  vi.stubEnv("LEAD_INBOX_WEBSITE_WEBHOOK_SECRET", "synthetic-test-secret-32-characters-long");
   vi.stubEnv("GHL_API_KEY", "test-token");
   vi.stubEnv("GHL_LOCATION_ID", "location-123");
   vi.stubEnv("GHL_CUSTOM_FIELD_SERVICE_ID", "service-field");
@@ -92,6 +101,14 @@ describe("contact lead delivery", () => {
     vi.stubGlobal("fetch", vi.fn(async (url, init) => {
       const path = new URL(String(url)).pathname;
       actions.push(`${init?.method ?? "GET"} ${path}`);
+      if (String(url) === HQ_WEBSITE_INQUIRY_ENDPOINT) {
+        const sent = JSON.parse(String(init?.body));
+        expect(sent).toMatchObject({ receiptId: JSON.parse(savedBody).receiptId,
+          recordedAt: JSON.parse(savedBody).recordedAt, ghlContactId: "server-contact", ghlNoteId: "server-note",
+          operational: false, marketing: false, replyContact: { email: "test@example.test", phone: null },
+          channelMatches: { email: true, phone: false } });
+        return hqAccepted(String(init?.body));
+      }
       if (path.endsWith("upsert")) return Response.json({ contact: ghlContact("server-contact", "test@example.test") });
       if (path.endsWith("/notes") && init?.method === "POST") {
         savedBody = JSON.parse(String(init.body)).body;
@@ -118,7 +135,33 @@ describe("contact lead delivery", () => {
     expect(JSON.parse(savedBody)).toMatchObject({ operational: false, marketing: false, phoneProvided: false, policyVersion: CONTACT_CONSENT_POLICY_VERSION });
     expect(savedTags).toEqual(["website-contact-request"]);
     expect(actions).toEqual(["POST /contacts/upsert", "GET /contacts/server-contact/notes", "POST /contacts/server-contact/notes", "GET /contacts/server-contact/notes/server-note",
+      "POST /api/integrations/lead-inbox/website",
       "GET /contacts/server-contact", "PUT /contacts/server-contact", "GET /contacts/server-contact", "POST /contacts/server-contact/tags"]);
+  });
+
+  it("fails before creating a contact when HQ delivery is not configured", async () => {
+    configureGhl(); vi.stubEnv("LEAD_INBOX_WEBSITE_WEBHOOK_SECRET", "");
+    const transport = vi.fn(); vi.stubGlobal("fetch", transport);
+    const response = await POST(leadRequest({ name: "Test Person", email: "test@example.test" }) as never);
+    expect(response.status).toBe(503);
+    expect(transport).not.toHaveBeenCalled();
+  });
+
+  it("keeps an uncertain HQ save pending without replaying or claiming staff delivery", async () => {
+    configureGhl(); const logger = vi.spyOn(console, "error").mockImplementation(() => {});
+    const transport = withConsentNotes(vi.fn().mockResolvedValueOnce(Response.json({ contact: ghlContact("contact-456", "test@example.test") })));
+    const attempts: string[] = [];
+    vi.stubGlobal("fetch", vi.fn(async (url: RequestInfo | URL, init?: RequestInit) => {
+      attempts.push(String(url));
+      if (String(url) === HQ_WEBSITE_INQUIRY_ENDPOINT) throw new Error("response lost with sensitive detail");
+      return transport(url, init);
+    }));
+    const response = await POST(leadRequest({ name: "Test Person", email: "test@example.test" }) as never);
+    expect(response.status).toBe(202);
+    expect(await response.json()).toEqual({ accepted: false, pending: true });
+    expect(attempts.filter(url => url === HQ_WEBSITE_INQUIRY_ENDPOINT)).toHaveLength(1);
+    expect(attempts.some(url => url.endsWith("/tags"))).toBe(false);
+    expect(logger.mock.calls).toEqual([["Lead submission failed", { errorName: "LeadHqDeliveryError", stage: "hq_delivery" }]]);
   });
 
   it.each(["", "bad field", "too-short", "x".repeat(21), "s".repeat(20), "l".repeat(20), "m".repeat(20)])("rejects a missing/malformed/overlapping receipt field before upsert: %s", async field => {
@@ -214,7 +257,10 @@ describe("contact lead delivery", () => {
       channelMatches: matches, marketing: false,
       inquiry: { name: "Test Person", serviceInterest: "Medical Weight Loss", clinicPreference: "Napa", message: "Synthetic website inquiry" },
     });
-    expect(fetchMock).toHaveBeenCalledTimes(7); // Verified receipt, then marker GET/PUT/readback, without routing tags.
+    const hqWrite = fetchMock.mock.calls.find(([url]) => String(url) === HQ_WEBSITE_INQUIRY_ENDPOINT)!;
+    expect(JSON.parse(String(hqWrite[1]?.body))).toMatchObject({ channelMatches: matches,
+      replyContact: { email: "reply@example.test", phone: "+17075550100" }, marketing: false });
+    expect(fetchMock).toHaveBeenCalledTimes(8); // Verified receipt, HQ review alert, then marker readback; no routing tags.
   });
 
   it.each([

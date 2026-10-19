@@ -28,6 +28,7 @@ export interface LeadInquiry {
 export interface VerifiedLeadReceipt {
   receiptId: string;
   noteId: string;
+  recordedAt: string;
 }
 
 export class LeadReceiptSignalError extends Error {
@@ -119,7 +120,7 @@ export async function persistLeadConsent(input: {
   const saved = await readback.json();
   if (!readback.ok || saved.note?.id !== id || saved.note?.contactId !== input.contactId
     || saved.note?.body !== body || !matches(saved.note.body)) throw new Error("Consent note readback unverified");
-  return { receiptId, noteId: id };
+  return { receiptId, noteId: id, recordedAt: JSON.parse(body).recordedAt };
 }
 
 /**
@@ -130,7 +131,7 @@ export async function persistLeadConsent(input: {
  */
 export async function signalLeadReceipt(input: {
   contactId: string; locationId: string; fieldId: string;
-  receipt: VerifiedLeadReceipt; headers: Record<string, string>;
+  receipt: Pick<VerifiedLeadReceipt, "receiptId" | "noteId">; headers: Record<string, string>;
 }): Promise<void> {
   if (!validLeadReceiptField(input.fieldId, []) || !/^[a-f0-9]{64}$/.test(input.receipt.receiptId)
     || !input.receipt.noteId) throw new LeadReceiptSignalError("receipt_marker_input");

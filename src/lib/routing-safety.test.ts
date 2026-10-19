@@ -33,8 +33,9 @@ describe("no public CTA points at /booking", () => {
 });
 
 describe("employee-only Rella HQ is outside the public website", () => {
-  it("has no Rella HQ hostname or navigation target in production source", () => {
-    const offenders = FILES.filter((p) =>
+  it("keeps HQ outside public navigation, with only the signed server inquiry connector allowed", () => {
+    const connector = "lib/lead-hq.ts";
+    const offenders = FILES.filter((p) => rel(p) !== connector &&
       /rella-hq(?:-[a-z0-9-]+)?\.vercel\.app|rella-hq/i.test(
         readFileSync(p, "utf8"),
       ),
@@ -44,6 +45,15 @@ describe("employee-only Rella HQ is outside the public website", () => {
       offenders,
       `public source must never send customers to Rella HQ: ${offenders.join(", ")}`,
     ).toEqual([]);
+    // The authorized integration is server-to-server; customers stay on the
+    // website. An import from a page or client component would fail this guard.
+    const importers = FILES.filter(p => rel(p) !== connector
+      && /(?:from\s*["'][^"']*lead-hq["']|import\s*\(["'][^"']*lead-hq["'])/.test(readFileSync(p, "utf8"))).map(rel);
+    expect(importers).toEqual(["app/api/leads/route.ts"]);
+    const serverSource = readFileSync(join(SRC, connector), "utf8");
+    expect(serverSource).toContain('from "node:crypto"');
+    expect(serverSource).not.toMatch(/["']use client["']/);
+    expect(serverSource).toContain("process.env.LEAD_INBOX_WEBSITE_WEBHOOK_SECRET");
   });
 });
 

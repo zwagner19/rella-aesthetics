@@ -71,21 +71,25 @@ export async function checkCrmReadiness({ env = process.env, fetcher = fetch, ex
     approvedFieldIdsMatch: Object.fromEntries(Object.entries(FIELD_ENV).map(([label, key]) => [label, env[key] === APPROVED_FIELDS[label]])),
     serviceField: Boolean(env[FIELD_ENV.service]), clinicField: Boolean(env[FIELD_ENV.clinic]), messageField: Boolean(env[FIELD_ENV.message]),
     receiptField: Boolean(env[FIELD_ENV.receipt]),
+    hqWebhookSecret: Boolean(env.LEAD_INBOX_WEBSITE_WEBHOOK_SECRET),
+    hqWebhookSecretValid: typeof env.LEAD_INBOX_WEBSITE_WEBHOOK_SECRET === "string"
+      && env.LEAD_INBOX_WEBSITE_WEBHOOK_SECRET.length >= 32
+      && env.LEAD_INBOX_WEBSITE_WEBHOOK_SECRET.trim() === env.LEAD_INBOX_WEBSITE_WEBHOOK_SECRET,
     fieldIdsValid: Object.values(FIELD_ENV).every(key => typeof env[key] === "string" && FIELD_ID.test(env[key])),
     fieldIdsDistinct: new Set(Object.values(FIELD_ENV).map(key => env[key])).size === Object.keys(FIELD_ENV).length,
-    requiredCount: 2 + Object.keys(FIELD_ENV).length,
-    configuredCount: [env.GHL_API_KEY, env.GHL_LOCATION_ID, ...Object.values(FIELD_ENV).map(key => env[key])].filter(Boolean).length,
+    requiredCount: 3 + Object.keys(FIELD_ENV).length,
+    configuredCount: [env.GHL_API_KEY, env.GHL_LOCATION_ID, env.LEAD_INBOX_WEBSITE_WEBHOOK_SECRET, ...Object.values(FIELD_ENV).map(key => env[key])].filter(Boolean).length,
   };
   const report = { check: "rella-crm-readiness-v1", state: "unknown", launchReady: false,
     configuration, business: { state: "unknown" }, customFields: {}, notesRead: { state: "unknown", proof: "synthetic_probe_is_not_scope_proof" },
-    notesWrite: "requires_supervised_synthetic_test", staffRouting: "requires_workflow_readback",
+    notesWrite: "requires_supervised_synthetic_test", staffRouting: "requires_workflow_readback", staffAppReceipt: "requires_runtime_canary",
     unverifiedTokenClaims: scopeClaims(env.GHL_API_KEY ?? "", now) };
   if (configuration.configuredCount !== configuration.requiredCount) {
     report.state = "invalid";
     report.business = { state: "not_checked", reason: "missing_required_configuration" };
     return report;
   }
-  if (!configuration.fieldIdsValid || !configuration.fieldIdsDistinct
+  if (!configuration.hqWebhookSecretValid || !configuration.fieldIdsValid || !configuration.fieldIdsDistinct
     || !Object.values(configuration.approvedFieldIdsMatch).every(Boolean)) {
     report.state = "invalid";
     report.business = { state: "not_checked", reason: "invalid_required_configuration" };

@@ -46,7 +46,7 @@ describe("durable contact consent", () => {
       replyContact: input.replyContact, channelMatches: input.channelMatches,
       inquiry: input.inquiry,
       policyHash: expect.stringMatching(/^[a-f0-9]{64}$/), recordedAt: expect.any(String) });
-    expect(verified).toEqual({ receiptId: JSON.parse(notes[0].body).receiptId, noteId: "note-0" });
+    expect(verified).toEqual({ receiptId: JSON.parse(notes[0].body).receiptId, noteId: "note-0", recordedAt: JSON.parse(notes[0].body).recordedAt });
     expect(fetcher.mock.calls.map(([url, init]) => [String(url).split("/").at(-1), init?.method ?? "GET"]))
       .toEqual([["notes", "GET"], ["notes", "POST"], ["note-0", "GET"]]);
   });

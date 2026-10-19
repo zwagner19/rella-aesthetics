@@ -8,6 +8,7 @@ import {
 import { EXTRA_CONTACT_INTERESTS } from "@/lib/contact-intents";
 import { services } from "@/lib/data";
 import { LeadReceiptSignalError, leadConsentTags, persistLeadConsent, readLeadConsent, signalLeadReceipt, validLeadReceiptField } from "@/lib/lead-consent";
+import { deliverLeadToHq, LeadHqDeliveryError, leadHqConfigured } from "@/lib/lead-hq";
 
 interface LeadPayload {
   name?: string;
@@ -132,7 +133,7 @@ export async function POST(req: NextRequest) {
     const GHL_CF_RECEIPT = process.env.GHL_CUSTOM_FIELD_RECEIPT_ID ?? "";
 
     // A prospect must never see success unless the CRM accepted the contact.
-    if (!GHL_API_KEY || !GHL_LOCATION_ID
+    if (!GHL_API_KEY || !GHL_LOCATION_ID || !leadHqConfigured()
       || !validLeadReceiptField(GHL_CF_RECEIPT, [GHL_CF_SERVICE, GHL_CF_LOCATION, GHL_CF_MESSAGE])) {
       return NextResponse.json(
         { error: "Contact form is temporarily unavailable" },
@@ -235,6 +236,10 @@ export async function POST(req: NextRequest) {
     const receipt = await persistLeadConsent({ contactId, submissionId, choice: consent, phoneProvided: Boolean(phone),
       replyContact, channelMatches, inquiry: { name, serviceInterest: service, clinicPreference: location, message },
       headers: requestHeaders });
+    // HQ receives the immutable inquiry before mutable CRM tags/markers. A
+    // collision still reaches Ayano for review, with unsafe reply links omitted.
+    await deliverLeadToHq({ receipt, contactId, locationId: GHL_LOCATION_ID, choice: consent,
+      replyContact, channelMatches, inquiry: { name, serviceInterest: service, clinicPreference: location, message } });
     // This requests staff review even when duplicate profiles conflict. It does
     // not grant marketing permission or claim that every reply channel saved.
     await signalLeadReceipt({ contactId, locationId: GHL_LOCATION_ID, fieldId: GHL_CF_RECEIPT, receipt, headers: requestHeaders });
@@ -270,7 +275,7 @@ export async function POST(req: NextRequest) {
   } catch (error) {
     const errorName = error instanceof Error ? error.name : "UnknownError";
     console.error("Lead submission failed", { errorName,
-      ...(error instanceof LeadReceiptSignalError ? { stage: error.stage } : {}),
+      ...(error instanceof LeadReceiptSignalError || error instanceof LeadHqDeliveryError ? { stage: error.stage } : {}),
     });
     if (deliveryStarted) return NextResponse.json({ accepted: false, pending: true }, { status: 202 });
     return NextResponse.json(

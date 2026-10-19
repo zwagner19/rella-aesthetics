@@ -1,11 +1,12 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
+import { createHash } from "node:crypto";
 import { CANONICAL_PROJECT, checkCrmReadiness } from "./check-crm-readiness.mjs";
 
 const env = { VERCEL_PROJECT_ID: CANONICAL_PROJECT, VERCEL_ENV: "preview", VERCEL_GIT_COMMIT_REF: "codex/amie-shared-booking",
   GHL_API_KEY: "sensitive-do-not-print", GHL_LOCATION_ID: "sensitive-location", GHL_CUSTOM_FIELD_SERVICE_ID: "sKdonP3enW4FefPCVuUD",
   GHL_CUSTOM_FIELD_LOCATION_ID: "HqLMdCYtaiRCcLenwe9V", GHL_CUSTOM_FIELD_MESSAGE_ID: "e3NvXYXNv8QNVqMqXGDr",
-  GHL_CUSTOM_FIELD_RECEIPT_ID: "fgqFVClK8ZWn7S1l1aCI" };
+  GHL_CUSTOM_FIELD_RECEIPT_ID: "fgqFVClK8ZWn7S1l1aCI", LEAD_INBOX_WEBSITE_WEBHOOK_SECRET: "hq-webhook-secret-not-for-output-123456789" };
 function adapter(overrides = {}) {
   const calls = [];
   return { calls, fetcher: async (url, init) => {
@@ -39,8 +40,11 @@ test("verifies metadata using GET only, prints no sensitive values, and leaves n
   const report = await checkCrmReadiness({ env, fetcher });
   assert.equal(report.business.state, "verified");
   assert.deepEqual(Object.values(report.customFields).map(field => field.state), ["verified", "verified", "verified", "verified"]);
-  assert.equal(report.configuration.requiredCount, 6);
-  assert.equal(report.configuration.configuredCount, 6);
+  assert.equal(report.configuration.requiredCount, 7);
+  assert.equal(report.configuration.configuredCount, 7);
+  assert.equal(report.configuration.hqWebhookSecret, true);
+  assert.equal(report.configuration.hqWebhookSecretValid, true);
+  assert.equal(report.staffAppReceipt, "requires_runtime_canary");
   assert.equal(report.configuration.fieldIdsValid, true);
   assert.equal(report.configuration.fieldIdsDistinct, true);
   assert.equal(report.notesRead.state, "unknown");
@@ -51,6 +55,7 @@ test("verifies metadata using GET only, prints no sensitive values, and leaves n
   assert(!calls.some(([url]) => url.includes("contacts?") || /contacts\/$/.test(url)));
   const output = JSON.stringify(report);
   for (const sensitive of [...Object.values(env), "private-message-not-logged", "Rella Aesthetics"]) assert(!output.includes(sensitive));
+  assert(!output.includes(createHash("sha256").update(env.LEAD_INBOX_WEBSITE_WEBHOOK_SECRET).digest("hex")));
 });
 test("stops before additional checks on wrong-business metadata", async () => {
   const { calls, fetcher } = adapter({ name: "Another business" });
@@ -99,13 +104,13 @@ test("compares configured fields to the authenticated Website Leads fields witho
   assert.deepEqual(report.configuration.approvedFieldIdsMatch, { service: true, clinic: true, message: true, receipt: true });
   for (const value of Object.values(fields)) assert(!JSON.stringify(report).includes(value));
 });
-test("requires all six configurations before any metadata request", async () => {
-  for (const key of ["GHL_API_KEY", "GHL_LOCATION_ID", "GHL_CUSTOM_FIELD_SERVICE_ID", "GHL_CUSTOM_FIELD_LOCATION_ID", "GHL_CUSTOM_FIELD_MESSAGE_ID", "GHL_CUSTOM_FIELD_RECEIPT_ID"]) {
+test("requires all seven configurations before any metadata request", async () => {
+  for (const key of ["GHL_API_KEY", "GHL_LOCATION_ID", "GHL_CUSTOM_FIELD_SERVICE_ID", "GHL_CUSTOM_FIELD_LOCATION_ID", "GHL_CUSTOM_FIELD_MESSAGE_ID", "GHL_CUSTOM_FIELD_RECEIPT_ID", "LEAD_INBOX_WEBSITE_WEBHOOK_SECRET"]) {
     const { calls, fetcher } = adapter();
     const report = await checkCrmReadiness({ env: { ...env, [key]: undefined }, fetcher });
     assert.equal(report.state, "invalid");
-    assert.equal(report.configuration.requiredCount, 6);
-    assert.equal(report.configuration.configuredCount, 5);
+    assert.equal(report.configuration.requiredCount, 7);
+    assert.equal(report.configuration.configuredCount, 6);
     assert.equal(report.business.reason, "missing_required_configuration");
     assert.equal(calls.length, 0);
   }
@@ -115,13 +120,42 @@ test("rejects malformed, duplicate and unapproved receipt IDs before any request
     const { calls, fetcher } = adapter();
     const report = await checkCrmReadiness({ env: { ...env, GHL_CUSTOM_FIELD_RECEIPT_ID: value }, fetcher });
     assert.equal(report.state, "invalid");
-    assert.equal(report.configuration.configuredCount, 6);
+    assert.equal(report.configuration.configuredCount, 7);
     assert.equal(report.configuration.fieldIdsValid, valid);
     assert.equal(report.configuration.fieldIdsDistinct, distinct);
     assert.equal(report.configuration.approvedFieldIdsMatch.receipt, false);
     assert.equal(report.business.reason, "invalid_required_configuration");
     assert.equal(calls.length, 0);
     assert(!JSON.stringify(report).includes(value));
+  }
+});
+test("rejects a short or whitespace-padded HQ secret before any CRM request", async () => {
+  for (const secret of ["x".repeat(31), ` ${"x".repeat(32)}`, `${"x".repeat(32)} `, `\t${"x".repeat(32)}`, `${"x".repeat(32)}\n`, " ".repeat(32), 123456]) {
+    const { calls, fetcher } = adapter();
+    const report = await checkCrmReadiness({ env: { ...env, LEAD_INBOX_WEBSITE_WEBHOOK_SECRET: secret }, fetcher });
+    assert.equal(report.state, "invalid");
+    assert.equal(report.business.reason, "invalid_required_configuration");
+    assert.equal(report.configuration.hqWebhookSecret, true);
+    assert.equal(report.configuration.hqWebhookSecretValid, false);
+    assert.equal(calls.length, 0);
+    assert.equal(report.staffAppReceipt, "requires_runtime_canary");
+    assert(!JSON.stringify(report).includes(String(secret)));
+  }
+});
+test("accepts a 32-character HQ secret as configuration only, without an HQ call or digest", async () => {
+  for (const secret of ["x".repeat(32), `${"x".repeat(16)} ${"y".repeat(15)}`]) {
+    const { calls, fetcher } = adapter();
+    const report = await checkCrmReadiness({ env: { ...env, LEAD_INBOX_WEBSITE_WEBHOOK_SECRET: secret }, fetcher });
+    assert.equal(report.configuration.configuredCount, 7);
+    assert.equal(report.configuration.hqWebhookSecretValid, true);
+    assert.equal(report.state, "unknown");
+    assert.equal(report.launchReady, false);
+    assert.equal(report.staffAppReceipt, "requires_runtime_canary");
+    assert.equal(calls.length, 6);
+    assert(calls.every(([url, init]) => url.startsWith("https://services.leadconnectorhq.com/") && init.method === "GET"));
+    const output = JSON.stringify(report);
+    assert(!output.includes(secret));
+    assert(!output.includes(createHash("sha256").update(secret).digest("hex")));
   }
 });
 test("verifies the receipt field key, native ID, account and contact model", async () => {
