@@ -49,8 +49,8 @@ export function TreatmentsStep({
           Choose a treatment
         </h3>
         <p className="mt-2 text-sm font-light text-silver">
-          Tap a treatment name for details. Use Add to choose one or more
-          treatments for your visit.
+          Open “What’s this treatment?” to learn more. Use Add to choose one or
+          more treatments for your visit.
         </p>
       </div>
 
@@ -99,7 +99,7 @@ export function TreatmentsStep({
                     {packageError ? <li className="p-4 text-sm text-rose" role="alert">{packageError}</li> : null}
                     {offers.length ? <li className="p-4 text-[0.6875rem] font-bold uppercase tracking-[0.16em] text-ink/60">Buy a new package</li> : null}
                     {offers.map(offering => <li key={`purchase-${offering.id}`} className="grid grid-cols-[minmax(0,1fr)_auto] items-start gap-x-3 gap-y-1 px-3 py-2" data-package-offer="true">
-                      <TreatmentDetails key={`${locationSlug}/${offering.id}`} name={packageMenuLabel(offering.displayName)} description={packageMenuDescription(offering)} />
+                      <TreatmentDetails key={`${locationSlug}/${offering.id}`} name={packageMenuLabel(offering.displayName)} description={packageMenuDescription(offering)} kind="package" />
                       {offering.reviewRequired ? <a href={getGuidedLocation(locationSlug)?.phoneHref} className="inline-flex min-h-11 items-center justify-center justify-self-end rounded-full border border-rose bg-rose px-4 py-2 text-[0.625rem] font-bold uppercase tracking-[0.16em] text-white">Call to purchase</a>
                         : <button type="button" disabled={loading} onClick={() => onBuyPackage?.(offering.id)} aria-label={`Buy ${packageMenuLabel(offering.displayName)}`} className="min-h-11 justify-self-end rounded-full border border-rose bg-rose px-4 py-2 text-[0.625rem] font-bold uppercase tracking-[0.16em] text-white disabled:opacity-50">Buy</button>}
                     </li>)}
