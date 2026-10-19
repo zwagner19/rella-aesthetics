@@ -16,6 +16,11 @@ const FIELD_ENV = {
   clinic: "GHL_CUSTOM_FIELD_LOCATION_ID",
   message: "GHL_CUSTOM_FIELD_MESSAGE_ID",
 };
+const APPROVED_FIELDS = {
+  service: "sKdonP3enW4FefPCVuUD",
+  clinic: "HqLMdCYtaiRCcLenwe9V",
+  message: "e3NvXYXNv8QNVqMqXGDr",
+};
 const EXPECTED_NAMES = new Set(["rella aesthetics", "rella aesthetics napa", "rella aesthetics vacaville"]);
 // The business account was verified in the authenticated GHL integration UI.
 // Log only a match boolean, never the configured location identifier.
@@ -60,6 +65,7 @@ export async function checkCrmReadiness({ env = process.env, fetcher = fetch, ex
   const configuration = {
     credential: Boolean(env.GHL_API_KEY), location: Boolean(env.GHL_LOCATION_ID),
     approvedAccountLocationMatches: Boolean(env.GHL_LOCATION_ID) && createHash("sha256").update(env.GHL_LOCATION_ID).digest("hex") === APPROVED_ACCOUNT_HASH,
+    approvedFieldIdsMatch: Object.fromEntries(Object.entries(FIELD_ENV).map(([label, key]) => [label, env[key] === APPROVED_FIELDS[label]])),
     serviceField: Boolean(env[FIELD_ENV.service]), clinicField: Boolean(env[FIELD_ENV.clinic]), messageField: Boolean(env[FIELD_ENV.message]),
   };
   const report = { check: "rella-crm-readiness-v1", state: "unknown", launchReady: false,

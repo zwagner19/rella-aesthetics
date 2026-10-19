@@ -87,6 +87,12 @@ test("reports only a boolean for the UI-verified business account location", asy
   assert(!JSON.stringify(report).includes("AN9PD7sVxQPYWh1Jv6ji"));
   assert.equal(report.business.state, "unknown");
 });
+test("compares configured fields to the authenticated Website Leads fields without logging IDs", async () => {
+  const fields = { GHL_CUSTOM_FIELD_SERVICE_ID: "sKdonP3enW4FefPCVuUD", GHL_CUSTOM_FIELD_LOCATION_ID: "HqLMdCYtaiRCcLenwe9V", GHL_CUSTOM_FIELD_MESSAGE_ID: "e3NvXYXNv8QNVqMqXGDr" };
+  const report = await checkCrmReadiness({ env: { ...env, ...fields }, fetcher: async () => Response.json({}, { status: 401 }) });
+  assert.deepEqual(report.configuration.approvedFieldIdsMatch, { service: true, clinic: true, message: true });
+  for (const value of Object.values(fields)) assert(!JSON.stringify(report).includes(value));
+});
 test("malformed JSON retains bounded HTTP status without logging response contents", async () => {
   const report = await checkCrmReadiness({ env, fetcher: async () => new Response("private non-json response", { status: 200 }) });
   assert.equal(report.state, "unknown"); assert.equal(report.business.httpStatus, 200);
