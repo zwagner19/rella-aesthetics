@@ -7,6 +7,7 @@ import type { BookingLocation } from "@/lib/booking-routes";
 import type { GuidedBookingState } from "@/lib/guided-booking";
 import { packageMenuDescription, packageMenuLabel, type PackageOffering } from "@/lib/guided-booking/package-client";
 import { getGuidedLocation } from "@/lib/guided-booking/catalog";
+import { TreatmentDetails } from "../TreatmentDetails";
 
 export function TreatmentsStep({
   locationSlug,
@@ -98,7 +99,7 @@ export function TreatmentsStep({
                     {packageError ? <li className="p-4 text-sm text-rose" role="alert">{packageError}</li> : null}
                     {offers.length ? <li className="p-4 text-[0.6875rem] font-bold uppercase tracking-[0.16em] text-ink/60">Buy a new package</li> : null}
                     {offers.map(offering => <li key={`purchase-${offering.id}`} className="flex flex-col gap-3 p-4 sm:flex-row sm:items-center" data-package-offer="true">
-                      <div className="min-w-0 flex-1"><p className="font-medium text-ink">{packageMenuLabel(offering.displayName)}</p><p className="mt-1 text-sm font-light text-silver">{packageMenuDescription(offering)}</p></div>
+                      <TreatmentDetails key={`${locationSlug}/${offering.id}`} name={packageMenuLabel(offering.displayName)} description={packageMenuDescription(offering)} />
                       {offering.reviewRequired ? <a href={getGuidedLocation(locationSlug)?.phoneHref} className="shrink-0 rounded-full border border-rose bg-rose px-5 py-2.5 text-[0.625rem] font-bold uppercase tracking-[0.16em] text-white">Call to purchase</a>
                         : <button type="button" disabled={loading} onClick={() => onBuyPackage?.(offering.id)} aria-label={`Buy ${packageMenuLabel(offering.displayName)}`} className="shrink-0 rounded-full border border-rose bg-rose px-5 py-2.5 text-[0.625rem] font-bold uppercase tracking-[0.16em] text-white disabled:opacity-50">Buy</button>}
                     </li>)}
@@ -115,26 +116,8 @@ export function TreatmentsStep({
                           added ? "bg-ivory/70 ring-1 ring-inset ring-rose" : ""
                         }`}
                       >
-                        <div className="min-w-0 flex-1">
-                          <div className="flex flex-wrap items-center gap-2">
-                            <p className="font-medium text-ink">
-                              {treatment.displayName}
-                            </p>
-                            {treatment.isConsultation ? (
-                              <span className="text-[0.625rem] font-bold uppercase tracking-[0.14em] text-rose">
-                                Consultation
-                              </span>
-                            ) : null}
-                          </div>
-                          <p className="mt-1 text-sm font-light text-silver">
-                            {treatment.shortDescription}
-                          </p>
-                          {treatment.durationCopy ? (
-                            <p className="mt-2 text-xs text-silver">
-                              {treatment.durationCopy}
-                            </p>
-                          ) : null}
-                        </div>
+                        <TreatmentDetails name={treatment.displayName} description={treatment.shortDescription}
+                          duration={treatment.durationCopy} consultation={treatment.isConsultation} />
                         <button
                           type="button"
                           disabled={loading}
