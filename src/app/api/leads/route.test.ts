@@ -78,7 +78,10 @@ describe("contact lead delivery", () => {
       }
       if (path.endsWith("/notes")) return Response.json({ notes: [] });
       if (path.endsWith("/server-note")) return Response.json({ note: { id: "server-note", contactId: "server-contact", body: savedBody } });
-      if (path.endsWith("/tags")) savedTags = JSON.parse(String(init?.body)).tags;
+      if (path.endsWith("/tags")) {
+        savedTags = JSON.parse(String(init?.body)).tags;
+        return Response.json({ tags: savedTags }, { status: 201 });
+      }
       return Response.json({});
     }));
     const response = await POST(leadRequest({ name: "Test Person", email: "test@example.test" }) as never);
@@ -94,6 +97,19 @@ describe("contact lead delivery", () => {
     const response = await POST(leadRequest({ name: "Test Person", email: "test@example.test" }) as never);
     expect(response.status).toBe(202); expect(await response.json()).toEqual({ accepted: false, pending: true });
     expect(fetchMock).toHaveBeenCalledTimes(1);
+  });
+
+  it.each([500, 502, 503])("keeps an ambiguous upsert HTTP %s pending without another CRM request", async status => {
+    configureGhl(); vi.spyOn(console, "error").mockImplementation(() => {});
+    const fetchMock = vi.fn().mockResolvedValue(Response.json({ message: "Upstream server error" }, { status }));
+    vi.stubGlobal("fetch", fetchMock);
+
+    const response = await POST(leadRequest({ name: "Test Person", email: "test@example.test" }) as never);
+
+    expect(response.status).toBe(202);
+    expect(await response.json()).toEqual({ accepted: false, pending: true });
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+    expect(fetchMock.mock.calls[0][0]).toBe("https://services.leadconnectorhq.com/contacts/upsert");
   });
 
   it("rejects cross-site forged consent before any CRM request", async () => {
@@ -165,7 +181,7 @@ describe("contact lead delivery", () => {
           status: 200,
         }),
       )
-      .mockResolvedValueOnce(new Response("{}", { status: 201 }));
+      .mockImplementationOnce(async (_url, init) => Response.json({ tags: JSON.parse(String(init?.body)).tags }, { status: 201 }));
     vi.stubGlobal("fetch", withConsentNotes(fetchMock));
 
     const response = await POST(
@@ -281,6 +297,55 @@ describe("contact lead delivery", () => {
 
     expect(response.status).toBe(202);
     expect(await response.json()).toEqual({ accepted: false, pending: true });
+  });
+
+  it.each([
+    {},
+    { tags: [] },
+    { tags: ["website-contact-request"] },
+    { tags: ["website-contact-request", "website-contact-operational-consent", 1] },
+  ])("does not claim acceptance from unverified routing-tag readback: %j", async tagResult => {
+    configureGhl(); vi.spyOn(console, "error").mockImplementation(() => {});
+    const fetchMock = vi.fn()
+      .mockResolvedValueOnce(Response.json({ contact: { id: "contact-456" } }))
+      .mockResolvedValueOnce(Response.json(tagResult, { status: 201 }));
+    vi.stubGlobal("fetch", withConsentNotes(fetchMock));
+
+    const response = await POST(leadRequest({ name: "Test Person", phone: "7075550100" }) as never);
+
+    expect(response.status).toBe(202);
+    expect(await response.json()).toEqual({ accepted: false, pending: true });
+    expect(fetchMock).toHaveBeenCalledTimes(2);
+  });
+
+  it("keeps malformed routing-tag JSON pending without repeating the tag mutation", async () => {
+    configureGhl(); vi.spyOn(console, "error").mockImplementation(() => {});
+    const fetchMock = vi.fn()
+      .mockResolvedValueOnce(Response.json({ contact: { id: "contact-456" } }))
+      .mockResolvedValueOnce(new Response("not-json", { status: 201 }));
+    vi.stubGlobal("fetch", withConsentNotes(fetchMock));
+
+    const response = await POST(leadRequest({ name: "Test Person", email: "test@example.test" }) as never);
+
+    expect(response.status).toBe(202);
+    expect(await response.json()).toEqual({ accepted: false, pending: true });
+    expect(fetchMock).toHaveBeenCalledTimes(2);
+  });
+
+  it("accepts verified requested tags without altering historical marketing permission", async () => {
+    configureGhl();
+    const fetchMock = vi.fn()
+      .mockResolvedValueOnce(Response.json({ contact: { id: "contact-456" } }))
+      .mockResolvedValueOnce(Response.json({ tags: ["historical-tag", "website-contact-marketing-opt-in", "website-contact-request"] }, { status: 201 }));
+    vi.stubGlobal("fetch", withConsentNotes(fetchMock));
+
+    const response = await POST(leadRequest({ name: "Test Person", email: "test@example.test" }) as never);
+
+    expect(await response.json()).toEqual({ success: true, accepted: true });
+    const [url, options] = fetchMock.mock.calls[1];
+    expect(String(url)).toMatch(/\/tags$/);
+    expect(JSON.parse(String(options?.body))).toEqual({ tags: ["website-contact-request"] });
+    expect(JSON.parse(String(fetchMock.mock.calls[0][1]?.body))).not.toHaveProperty("dnd");
   });
 });
 

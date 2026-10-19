@@ -193,6 +193,11 @@ export async function POST(req: NextRequest) {
 
     if (!ghlRes.ok) {
       console.error("GHL contact upsert failed", { status: ghlRes.status });
+      // An upstream server error can arrive after the contact was saved.
+      // Keep that outcome pending rather than inviting another submission.
+      if (ghlRes.status >= 500) {
+        return NextResponse.json({ accepted: false, pending: true }, { status: 202 });
+      }
       return NextResponse.json(
         { error: "Contact form is temporarily unavailable" },
         { status: 502 },
@@ -221,11 +226,16 @@ export async function POST(req: NextRequest) {
       body: JSON.stringify({ tags }),
       signal: AbortSignal.timeout(8_000),
     });
+    const tagResult: unknown = tagRes.ok ? await tagRes.json().catch(() => null) : null;
+    const savedTags = tagResult && typeof tagResult === "object" && "tags" in tagResult
+      ? tagResult.tags : null;
 
     // The contact/receipt are already saved. A routing failure needs verification,
     // never another lead submission or an unverified follow-up promise.
-    if (!tagRes.ok) {
-      console.error("GHL contact tagging failed", { status: tagRes.status });
+    if (!tagRes.ok || !Array.isArray(savedTags)
+      || !savedTags.every(tag => typeof tag === "string")
+      || !tags.every(tag => savedTags.includes(tag))) {
+      console.error("GHL contact tagging unverified", { status: tagRes.status });
       return NextResponse.json({ accepted: false, pending: true }, { status: 202 });
     }
 
