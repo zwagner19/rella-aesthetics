@@ -8,14 +8,20 @@ Amie’s homepage, global styles, fonts, imagery and site chrome remain preserve
 
 | Surface | Live or review reference |
 |---|---|
-| Website functional source | `e7557032f36619dcd47ac567e1648f1d1391683a`, tree `f48b42b70a5e2e3f8b4a1c0871030f048d881084`, branch `codex/amie-shared-booking`. |
-| Website RELEASE | `dpl_6r1K2UNv2A92kLZ1gfrjWPhvr1JG`, immutable host `rella-aesthetics-hbhhyf6qz-zwagner19s-projects.vercel.app`. The website uses permanent backend origin `https://book.experiencerella.com`. |
-| Website QA | `dpl_3qbSZw7GjeK4pggAadVyPduoXzSQ`; [controlled preview](https://rella-aesthetics-controlled-launch-zwagner19s-projects.vercel.app/). This remains a separate review artifact. |
-| Public edge | `rella-controlled-launch`, version `64779a9e-44bb-4b2d-b540-2e4e77a25ab8`, deployment `21f21bbc-100d-4709-853a-88a6ceaf7f9c`, deployed at 100%; `EDGE_ENABLED` string `true`, origin pinned to the immutable RELEASE above. Only `experiencerella.com/*` and `www.experiencerella.com/*` are bound. |
+| Website functional source | `b250597d19ba4497b933e80e4b35ef2c54b68d8c`, tree `3ca8c122c43888a89d7cb60df312753019731c85`, branch `codex/amie-shared-booking`. |
+| Website RELEASE | `dpl_2deAgzevUSbSpnXHMKvzdqw9MzUD`, immutable host `rella-aesthetics-l92l29lrv-zwagner19s-projects.vercel.app`. The website uses permanent backend origin `https://book.experiencerella.com`. |
+| Website QA | `dpl_2deAgzevUSbSpnXHMKvzdqw9MzUD`; [controlled preview](https://rella-aesthetics-controlled-launch-zwagner19s-projects.vercel.app/). The review alias now serves the same immutable release and permanent booking backend as public. |
+| Public edge | `rella-controlled-launch`, version `63bf61f1-46de-416f-9edf-cbf7ca563ed4`, deployment `bb82b56f-6f97-4a72-8d6f-938723f2df62`, deployed at 100%; `EDGE_ENABLED` string `true`, origin pinned to the immutable RELEASE above. Only `experiencerella.com/*` and `www.experiencerella.com/*` are bound. |
 | Public booking backend | `dpl_CT1GC3jB1MkiHkTc7U12HdamPxE5`, source `460d5d6e6f56f62692243deb173897a940695230`, immutable host `rella-booking-39fab4ict-zwagner19s-projects.vercel.app`. Both `book.experiencerella.com` and `book.rellaweightloss.com` were read back on this exact deployment. |
 | Rella HQ | The inquiry connection was overwritten by automatic main deployment `dpl_34DSKMoHfHfrAyHm6XBzuvYYCLMr` / `98fa7f6` during launch. Combined source `8817dcc50913c6172574a931d14f6372cb5417c1` preserves that exact latest main plus the website bridge; HQ-only deployment `dpl_DgBDsVAhGQ7SFLpEJuhxC9NpbXNA` is now live at the fixed HQ alias, with automatic production-domain assignment disabled and read back. It contains no Cindy notification implementation. |
 
 The website Vercel project’s shared production alias was not generally promoted. The fixed website RELEASE is served through the Worker, preserving the existing weight-loss website deployment. No DNS, nameserver, TLS or security-setting change was needed.
+
+## Homepage team order follow-up
+
+At `2026-10-19T23:23:08Z`, the owner-requested homepage order was published: Zach, Warda, Anna, Devyn, Marisa, Michaela, Natalie, Sandra, Pia, Paula, Ayano. Existing unlisted staff Hailey and Ryan follow that ordered group; no staff record was removed. Shared team/location data and the homepage JSX/classes are byte-identical to the prior release. Seven existing team/design tests, focused lint, TypeScript and Production build passed. The live browser and public HTML confirm the order; homepage/team/contact and both clinic menu GETs passed. No booking, form submission, HQ deployment or deposit change was needed for this follow-up. [Order evidence](../../../outputs/rella-homepage-team-order-2026-10-19.json).
+
+The previous public website artifact was `dpl_6r1K2UNv2A92kLZ1gfrjWPhvr1JG`; the preceding enabled Worker version was `64779a9e-44bb-4b2d-b540-2e4e77a25ab8`. The current references above supersede those website references only. Initial launch acceptance below remains historical evidence for its original artifacts.
 
 ## Public checks completed
 
