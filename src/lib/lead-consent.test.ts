@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { leadConsentTags, persistLeadConsent, readLeadConsent, type LeadConsent } from "./lead-consent";
+import { leadConsentTags, persistLeadConsent, readLeadConsent, signalLeadReceipt, validLeadReceiptField, type LeadConsent } from "./lead-consent";
 import { CONTACT_CONSENT_POLICY_VERSION } from "./guided-booking/policies";
 
 const choice: LeadConsent = { policyVersion: CONTACT_CONSENT_POLICY_VERSION, operational: true, marketing: false };
@@ -40,12 +40,13 @@ describe("durable contact consent", () => {
   });
   it("writes a versioned timestamped receipt and reads back the exact server contact note", async () => {
     const { notes, fetcher } = notesStore();
-    await persistLeadConsent(input);
+    const verified = await persistLeadConsent(input);
     expect(notes).toHaveLength(1);
     expect(JSON.parse(notes[0].body)).toMatchObject({ type: "rella-contact-consent", receiptVersion: 3, ...choice, source: "/contact", phoneProvided: true,
       replyContact: input.replyContact, channelMatches: input.channelMatches,
       inquiry: input.inquiry,
       policyHash: expect.stringMatching(/^[a-f0-9]{64}$/), recordedAt: expect.any(String) });
+    expect(verified).toEqual({ receiptId: JSON.parse(notes[0].body).receiptId, noteId: "note-0" });
     expect(fetcher.mock.calls.map(([url, init]) => [String(url).split("/").at(-1), init?.method ?? "GET"]))
       .toEqual([["notes", "GET"], ["notes", "POST"], ["note-0", "GET"]]);
   });
@@ -194,5 +195,88 @@ describe("durable contact consent", () => {
 
     await expect(persistLeadConsent(input)).rejects.toThrow("readback");
     expect(fetcher).toHaveBeenCalledTimes(3);
+  });
+});
+
+describe("verified receipt staff-review marker", () => {
+  const markerInput = { contactId: input.contactId, locationId: "approved-location", fieldId: "rrrrrrrrrrrrrrrrrrrr",
+    receipt: { receiptId: "a".repeat(64), noteId: "verified-note" }, headers: input.headers };
+  function markerStore() {
+    let value: string | null = null;
+    const contact = () => ({ id: markerInput.contactId, locationId: markerInput.locationId,
+      customFields: value ? [{ id: markerInput.fieldId, value }] : [] });
+    const fetcher = vi.fn(async (_url: RequestInfo | URL, init?: RequestInit) => {
+      if (init?.method === "PUT") {
+        value = JSON.parse(String(init.body)).customFields[0].fieldValue;
+        return Response.json({ succeeded: true, contact: contact() });
+      }
+      return Response.json({ contact: contact() });
+    });
+    vi.stubGlobal("fetch", fetcher);
+    return { fetcher, contact };
+  }
+
+  it("requires a distinct native field ID", () => {
+    expect(validLeadReceiptField(markerInput.fieldId, ["other"])).toBe(true);
+    for (const field of ["", "bad field", "short", "x".repeat(21)]) expect(validLeadReceiptField(field, [])).toBe(false);
+    expect(validLeadReceiptField(markerInput.fieldId, [markerInput.fieldId])).toBe(false);
+  });
+
+  it("updates only the dedicated field, then verifies the exact contact and marker", async () => {
+    const { fetcher } = markerStore();
+    await signalLeadReceipt(markerInput);
+    expect(fetcher.mock.calls.map(([, init]) => init?.method ?? "GET")).toEqual(["GET", "PUT", "GET"]);
+    const [, options] = fetcher.mock.calls[1];
+    expect(JSON.parse(String(options?.body))).toEqual({ customFields: [{ id: markerInput.fieldId, fieldValue: markerInput.receipt.receiptId }] });
+    expect(fetcher.mock.calls.every(([url, options]) => String(url).endsWith(`/contacts/${markerInput.contactId}`) && options?.cache === "no-store")).toBe(true);
+  });
+
+  it("skips a duplicate marker but signals a new receipt for the same contact", async () => {
+    const { fetcher } = markerStore();
+    await signalLeadReceipt(markerInput);
+    await signalLeadReceipt(markerInput);
+    expect(fetcher.mock.calls.filter(([, init]) => init?.method === "PUT")).toHaveLength(1);
+    await signalLeadReceipt({ ...markerInput, receipt: { ...markerInput.receipt, receiptId: "b".repeat(64) } });
+    expect(fetcher.mock.calls.filter(([, init]) => init?.method === "PUT")).toHaveLength(2);
+  });
+
+  it("does not replay a lost marker-write response; an explicit retry reads the saved marker", async () => {
+    const { fetcher, contact } = markerStore();
+    fetcher.mockImplementationOnce(async () => Response.json({ contact: contact() }))
+      .mockImplementationOnce(async () => { throw new Error("response lost"); });
+    await expect(signalLeadReceipt(markerInput)).rejects.toThrow("response lost");
+    expect(fetcher).toHaveBeenCalledTimes(2);
+    fetcher.mockImplementationOnce(async () => Response.json({ contact: { ...contact(), customFields: [{ id: markerInput.fieldId, value: markerInput.receipt.receiptId }] } }));
+    await signalLeadReceipt(markerInput);
+    expect(fetcher.mock.calls.filter(([, init]) => init?.method === "PUT")).toHaveLength(1);
+  });
+
+  it.each([
+    { id: "wrong", locationId: "approved-location", customFields: [] },
+    { id: input.contactId, locationId: "wrong", customFields: [] },
+    { id: input.contactId, locationId: "approved-location" },
+    { id: input.contactId, locationId: "approved-location", customFields: [{ id: "rrrrrrrrrrrrrrrrrrrr", value: 7 }] },
+    { id: input.contactId, locationId: "approved-location", customFields: [{ id: "rrrrrrrrrrrrrrrrrrrr", value: "a" }, { id: "rrrrrrrrrrrrrrrrrrrr", value: "b" }] },
+  ])("does not mutate an unverified contact/field response: %j", async contact => {
+    const fetcher = vi.fn(async () => Response.json({ contact })); vi.stubGlobal("fetch", fetcher);
+    await expect(signalLeadReceipt(markerInput)).rejects.toThrow("unverified");
+    expect(fetcher).toHaveBeenCalledTimes(1);
+  });
+
+  it.each(["failed", "wrong-contact", "wrong-location", "wrong-marker"])("keeps %s marker mutation unverified without a second write", async failure => {
+    const { fetcher, contact } = markerStore();
+    fetcher.mockImplementationOnce(async () => Response.json({ contact: contact() }))
+      .mockImplementationOnce(async () => Response.json({ succeeded: failure !== "failed", contact: {
+        ...contact(), ...(failure === "wrong-contact" ? { id: "wrong" } : {}), ...(failure === "wrong-location" ? { locationId: "wrong" } : {}),
+      } }));
+    await expect(signalLeadReceipt(markerInput)).rejects.toThrow("unverified");
+    expect(fetcher.mock.calls.filter(([, init]) => init?.method === "PUT")).toHaveLength(1);
+    expect(fetcher).toHaveBeenCalledTimes(failure === "wrong-marker" ? 3 : 2);
+  });
+
+  it("does not mutate when marker lookup is unavailable", async () => {
+    const fetcher = vi.fn(async () => Response.json({}, { status: 403 })); vi.stubGlobal("fetch", fetcher);
+    await expect(signalLeadReceipt(markerInput)).rejects.toThrow("lookup");
+    expect(fetcher).toHaveBeenCalledTimes(1);
   });
 });

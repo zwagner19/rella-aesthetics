@@ -15,9 +15,24 @@ function ghlContact(id: string, email?: string, phone?: string) {
   return { id, locationId: "location-123", email, phone };
 }
 
+const receiptFieldId = "rrrrrrrrrrrrrrrrrrrr";
+
+function withReceiptMarker(delegate: typeof fetch) {
+  let marker: string | null = null;
+  return async (url: RequestInfo | URL, init?: RequestInit) => {
+    const match = new URL(String(url)).pathname.match(/^\/contacts\/([^/]+)$/);
+    if (match && (!init?.method || init.method === "PUT")) {
+      if (init?.method === "PUT") marker = JSON.parse(String(init.body)).customFields[0].fieldValue;
+      const contact = { ...ghlContact(match[1]), customFields: marker ? [{ id: receiptFieldId, value: marker }] : [] };
+      return Response.json(init?.method === "PUT" ? { succeeded: true, contact } : { contact });
+    }
+    return delegate(url, init);
+  };
+}
+
 function withConsentNotes(delegate: typeof fetch) {
   let saved = "";
-  return async (url: RequestInfo | URL, init?: RequestInit) => {
+  return withReceiptMarker(async (url: RequestInfo | URL, init?: RequestInit) => {
     if (String(url).endsWith("/notes") && init?.method === "POST") {
       saved = JSON.parse(String(init.body)).body;
       return Response.json({ note: { id: "note-fixture" } }, { status: 201 });
@@ -25,7 +40,7 @@ function withConsentNotes(delegate: typeof fetch) {
     if (String(url).endsWith("/notes")) return Response.json({ notes: [] });
     if (String(url).endsWith("/notes/note-fixture")) return Response.json({ note: { id: "note-fixture", contactId: "contact-456", body: saved } });
     return delegate(url, init);
-  };
+  });
 }
 
 function configureGhl() {
@@ -34,6 +49,7 @@ function configureGhl() {
   vi.stubEnv("GHL_CUSTOM_FIELD_SERVICE_ID", "service-field");
   vi.stubEnv("GHL_CUSTOM_FIELD_LOCATION_ID", "location-field");
   vi.stubEnv("GHL_CUSTOM_FIELD_MESSAGE_ID", "message-field");
+  vi.stubEnv("GHL_CUSTOM_FIELD_RECEIPT_ID", receiptFieldId);
 }
 
 afterEach(() => {
@@ -71,6 +87,7 @@ describe("contact lead delivery", () => {
 
   it("persists email-only no-phone/no-marketing choices before success and routing tags", async () => {
     configureGhl(); let savedBody = ""; let savedTags: string[] = [];
+    let marker: string | null = null;
     const actions: string[] = [];
     vi.stubGlobal("fetch", vi.fn(async (url, init) => {
       const path = new URL(String(url)).pathname;
@@ -82,6 +99,14 @@ describe("contact lead delivery", () => {
       }
       if (path.endsWith("/notes")) return Response.json({ notes: [] });
       if (path.endsWith("/server-note")) return Response.json({ note: { id: "server-note", contactId: "server-contact", body: savedBody } });
+      if (path === "/contacts/server-contact") {
+        if (init?.method === "PUT") {
+          expect(JSON.parse(String(init.body))).toEqual({ customFields: [{ id: receiptFieldId, fieldValue: JSON.parse(savedBody).receiptId }] });
+          marker = JSON.parse(String(init.body)).customFields[0].fieldValue;
+        }
+        const contact = { ...ghlContact("server-contact"), customFields: marker ? [{ id: receiptFieldId, value: marker }] : [] };
+        return Response.json(init?.method === "PUT" ? { succeeded: true, contact } : { contact });
+      }
       if (path.endsWith("/tags")) {
         savedTags = JSON.parse(String(init?.body)).tags;
         return Response.json({ tags: savedTags }, { status: 201 });
@@ -92,7 +117,50 @@ describe("contact lead delivery", () => {
     expect(await response.json()).toEqual({ success: true, accepted: true });
     expect(JSON.parse(savedBody)).toMatchObject({ operational: false, marketing: false, phoneProvided: false, policyVersion: CONTACT_CONSENT_POLICY_VERSION });
     expect(savedTags).toEqual(["website-contact-request"]);
-    expect(actions).toEqual(["POST /contacts/upsert", "GET /contacts/server-contact/notes", "POST /contacts/server-contact/notes", "GET /contacts/server-contact/notes/server-note", "POST /contacts/server-contact/tags"]);
+    expect(actions).toEqual(["POST /contacts/upsert", "GET /contacts/server-contact/notes", "POST /contacts/server-contact/notes", "GET /contacts/server-contact/notes/server-note",
+      "GET /contacts/server-contact", "PUT /contacts/server-contact", "GET /contacts/server-contact", "POST /contacts/server-contact/tags"]);
+  });
+
+  it.each(["", "bad field", "too-short", "x".repeat(21), "s".repeat(20), "l".repeat(20), "m".repeat(20)])("rejects a missing/malformed/overlapping receipt field before upsert: %s", async field => {
+    configureGhl();
+    vi.stubEnv("GHL_CUSTOM_FIELD_SERVICE_ID", "s".repeat(20));
+    vi.stubEnv("GHL_CUSTOM_FIELD_LOCATION_ID", "l".repeat(20));
+    vi.stubEnv("GHL_CUSTOM_FIELD_MESSAGE_ID", "m".repeat(20));
+    vi.stubEnv("GHL_CUSTOM_FIELD_RECEIPT_ID", field);
+    const fetchMock = vi.fn(); vi.stubGlobal("fetch", fetchMock);
+    const response = await POST(leadRequest({ name: "Test Person", email: "test@example.test" }) as never);
+    expect(response.status).toBe(503);
+    expect(fetchMock).not.toHaveBeenCalled();
+  });
+
+  it("keeps a lost marker-write response pending without retrying or routing tags", async () => {
+    configureGhl(); const logger = vi.spyOn(console, "error").mockImplementation(() => {});
+    const transport = withConsentNotes(vi.fn().mockResolvedValueOnce(Response.json({ contact: ghlContact("contact-456", "test@example.test") })));
+    const fetchMock = vi.fn(async (url: RequestInfo | URL, init?: RequestInit) => {
+      if (init?.method === "PUT") throw new Error("upstream payload must not be logged");
+      return transport(url, init);
+    });
+    vi.stubGlobal("fetch", fetchMock);
+    const response = await POST(leadRequest({ name: "Test Person", email: "test@example.test", message: "Private synthetic message" }) as never);
+    expect(response.status).toBe(202);
+    expect(await response.json()).toEqual({ accepted: false, pending: true });
+    expect(fetchMock.mock.calls.filter(([, init]) => init?.method === "PUT")).toHaveLength(1);
+    expect(fetchMock.mock.calls.some(([url]) => String(url).endsWith("/tags"))).toBe(false);
+    expect(logger.mock.calls).toEqual([["Lead submission failed", { errorName: "Error" }]]);
+  });
+
+  it("logs only a fixed marker stage when exact contact readback is unexpected", async () => {
+    configureGhl(); const logger = vi.spyOn(console, "error").mockImplementation(() => {});
+    const transport = withConsentNotes(vi.fn().mockResolvedValueOnce(Response.json({ contact: ghlContact("contact-456", "test@example.test") })));
+    const fetchMock = vi.fn(async (url: RequestInfo | URL, init?: RequestInit) => {
+      if (String(url).endsWith("/contacts/contact-456")) return Response.json({ contact: ghlContact("wrong", "test@example.test") });
+      return transport(url, init);
+    });
+    vi.stubGlobal("fetch", fetchMock);
+    const response = await POST(leadRequest({ name: "Test Person", email: "test@example.test" }) as never);
+    expect(response.status).toBe(202);
+    expect(fetchMock.mock.calls.some(([, init]) => init?.method === "PUT")).toBe(false);
+    expect(logger.mock.calls).toEqual([["Lead submission failed", { errorName: "LeadReceiptSignalError", stage: "receipt_marker_lookup" }]]);
   });
 
   it("keeps a lost upsert response pending without issuing a second mutation", async () => {
@@ -146,7 +214,7 @@ describe("contact lead delivery", () => {
       channelMatches: matches, marketing: false,
       inquiry: { name: "Test Person", serviceInterest: "Medical Weight Loss", clinicPreference: "Napa", message: "Synthetic website inquiry" },
     });
-    expect(fetchMock).toHaveBeenCalledTimes(4); // Upsert, list, receipt write and exact readback.
+    expect(fetchMock).toHaveBeenCalledTimes(7); // Verified receipt, then marker GET/PUT/readback, without routing tags.
   });
 
   it.each([

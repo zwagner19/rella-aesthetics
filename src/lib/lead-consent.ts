@@ -25,6 +25,22 @@ export interface LeadInquiry {
   message: string;
 }
 
+export interface VerifiedLeadReceipt {
+  receiptId: string;
+  noteId: string;
+}
+
+export class LeadReceiptSignalError extends Error {
+  constructor(readonly stage: "receipt_marker_input" | "receipt_marker_lookup" | "receipt_marker_update" | "receipt_marker_readback") {
+    super(`${stage} unverified`);
+    this.name = "LeadReceiptSignalError";
+  }
+}
+
+export function validLeadReceiptField(fieldId: string, otherFieldIds: string[]): boolean {
+  return /^[A-Za-z0-9]{20}$/.test(fieldId) && !otherFieldIds.includes(fieldId);
+}
+
 /** New submission tags do not revoke or overwrite an existing patient's consent. */
 export function leadConsentTags(choice: LeadConsent): string[] {
   return ["website-contact-request",
@@ -42,16 +58,14 @@ export function readLeadConsent(value: unknown, phoneProvided: boolean): LeadCon
 
 /**
  * Called only with the contact identity returned by a verified server upsert.
- * A native Note Added staff alert can run before our readback: it must request
- * review rather than claim verification or contact the patient automatically.
  * Note lookup/create is not atomic across instances and makes no exactly-once
- * or rapid workflow re-entry guarantee.
+ * guarantee. Staff routing uses a separate marker only after exact readback.
  */
 export async function persistLeadConsent(input: {
   contactId: string; submissionId: string; choice: LeadConsent; phoneProvided: boolean; headers: Record<string, string>;
   replyContact: LeadReplyContact; channelMatches: LeadChannelMatches;
   inquiry: LeadInquiry;
-}) {
+}): Promise<VerifiedLeadReceipt> {
   const policy = CONTACT_CONSENT_POLICIES[input.choice.policyVersion];
   if (!policy) throw new Error("Unknown consent policy");
   const policyHash = createHash("sha256").update(JSON.stringify([policy.operational, policy.marketing])).digest("hex");
@@ -105,4 +119,51 @@ export async function persistLeadConsent(input: {
   const saved = await readback.json();
   if (!readback.ok || saved.note?.id !== id || saved.note?.contactId !== input.contactId
     || saved.note?.body !== body || !matches(saved.note.body)) throw new Error("Consent note readback unverified");
+  return { receiptId, noteId: id };
+}
+
+/**
+ * The dedicated field signals an internal review of immutable receipt notes.
+ * It is deliberately excluded from upsert, which runs before receipt readback.
+ * Workflow re-entry cannot guarantee every rapid request while a contact is
+ * already active. The mutable marker is never the inquiry content itself.
+ */
+export async function signalLeadReceipt(input: {
+  contactId: string; locationId: string; fieldId: string;
+  receipt: VerifiedLeadReceipt; headers: Record<string, string>;
+}): Promise<void> {
+  if (!validLeadReceiptField(input.fieldId, []) || !/^[a-f0-9]{64}$/.test(input.receipt.receiptId)
+    || !input.receipt.noteId) throw new LeadReceiptSignalError("receipt_marker_input");
+  const url = `${GHL_API_BASE}/contacts/${encodeURIComponent(input.contactId)}`;
+  const request = (init?: RequestInit) => fetch(url, {
+    ...init, headers: input.headers, cache: "no-store", signal: AbortSignal.timeout(8_000),
+  });
+  function marker(result: unknown, stage: "receipt_marker_lookup" | "receipt_marker_readback"): string | null {
+    if (!result || typeof result !== "object" || !("contact" in result)) throw new LeadReceiptSignalError(stage);
+    const contact = result.contact;
+    if (!contact || typeof contact !== "object" || !("id" in contact) || contact.id !== input.contactId
+      || !("locationId" in contact) || contact.locationId !== input.locationId
+      || !("customFields" in contact) || !Array.isArray(contact.customFields)) throw new LeadReceiptSignalError(stage);
+    const fields = contact.customFields.filter(field => field && typeof field === "object" && field.id === input.fieldId);
+    if (fields.length > 1) throw new LeadReceiptSignalError(stage);
+    if (!fields.length || fields[0].value == null) return null;
+    if (typeof fields[0].value !== "string") throw new LeadReceiptSignalError(stage);
+    return fields[0].value;
+  }
+  const current = await request();
+  if (!current.ok) throw new LeadReceiptSignalError("receipt_marker_lookup");
+  if (marker(await current.json(), "receipt_marker_lookup") === input.receipt.receiptId) return;
+
+  // Do not resend a timed-out write. A later explicit retry reads the marker
+  // first and can verify a completed write without repeating it.
+  const updated = await request({ method: "PUT", body: JSON.stringify({
+    customFields: [{ id: input.fieldId, fieldValue: input.receipt.receiptId }],
+  }) });
+  const result = await updated.json();
+  if (!updated.ok || result.contact?.id !== input.contactId || result.contact?.locationId !== input.locationId
+    || !(result.succeeded === true || (result.succeeded === undefined && result.succeded === true))) {
+    throw new LeadReceiptSignalError("receipt_marker_update");
+  }
+  const readback = await request();
+  if (!readback.ok || marker(await readback.json(), "receipt_marker_readback") !== input.receipt.receiptId) throw new LeadReceiptSignalError("receipt_marker_readback");
 }

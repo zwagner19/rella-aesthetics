@@ -7,7 +7,7 @@ import {
 } from "@/lib/ghl";
 import { EXTRA_CONTACT_INTERESTS } from "@/lib/contact-intents";
 import { services } from "@/lib/data";
-import { leadConsentTags, persistLeadConsent, readLeadConsent } from "@/lib/lead-consent";
+import { LeadReceiptSignalError, leadConsentTags, persistLeadConsent, readLeadConsent, signalLeadReceipt, validLeadReceiptField } from "@/lib/lead-consent";
 
 interface LeadPayload {
   name?: string;
@@ -129,9 +129,11 @@ export async function POST(req: NextRequest) {
     const GHL_CF_SERVICE = process.env.GHL_CUSTOM_FIELD_SERVICE_ID ?? "";
     const GHL_CF_LOCATION = process.env.GHL_CUSTOM_FIELD_LOCATION_ID ?? "";
     const GHL_CF_MESSAGE = process.env.GHL_CUSTOM_FIELD_MESSAGE_ID ?? "";
+    const GHL_CF_RECEIPT = process.env.GHL_CUSTOM_FIELD_RECEIPT_ID ?? "";
 
     // A prospect must never see success unless the CRM accepted the contact.
-    if (!GHL_API_KEY || !GHL_LOCATION_ID) {
+    if (!GHL_API_KEY || !GHL_LOCATION_ID
+      || !validLeadReceiptField(GHL_CF_RECEIPT, [GHL_CF_SERVICE, GHL_CF_LOCATION, GHL_CF_MESSAGE])) {
       return NextResponse.json(
         { error: "Contact form is temporarily unavailable" },
         { status: 503 },
@@ -230,9 +232,12 @@ export async function POST(req: NextRequest) {
 
     // GHL may match one existing contact and retain a different second channel.
     // Preserve the submitted reply details without changing or merging profiles.
-    await persistLeadConsent({ contactId, submissionId, choice: consent, phoneProvided: Boolean(phone),
+    const receipt = await persistLeadConsent({ contactId, submissionId, choice: consent, phoneProvided: Boolean(phone),
       replyContact, channelMatches, inquiry: { name, serviceInterest: service, clinicPreference: location, message },
       headers: requestHeaders });
+    // This requests staff review even when duplicate profiles conflict. It does
+    // not grant marketing permission or claim that every reply channel saved.
+    await signalLeadReceipt({ contactId, locationId: GHL_LOCATION_ID, fieldId: GHL_CF_RECEIPT, receipt, headers: requestHeaders });
     if ((email && !channelMatches.email) || (phone && !channelMatches.phone)) {
       return NextResponse.json({ accepted: false, pending: true }, { status: 202 });
     }
@@ -264,7 +269,9 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ success: true, accepted: true });
   } catch (error) {
     const errorName = error instanceof Error ? error.name : "UnknownError";
-    console.error("Lead submission failed", { errorName });
+    console.error("Lead submission failed", { errorName,
+      ...(error instanceof LeadReceiptSignalError ? { stage: error.stage } : {}),
+    });
     if (deliveryStarted) return NextResponse.json({ accepted: false, pending: true }, { status: 202 });
     return NextResponse.json(
       { error: "Contact form is temporarily unavailable" },
