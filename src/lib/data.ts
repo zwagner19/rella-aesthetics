@@ -19,7 +19,7 @@ export const services = [
     slug: "chemical-peels",
     title: "Chemical Peels",
     category: "Skin Care",
-    description: "Universal Peel is currently available for Vacaville online booking; call Rella to ask about other peel options.",
+    description: "Explore the current peel menu at each clinic and choose an option with guidance from the Rella team.",
     image: "/images/treatments/chemical-peel.webp",
     imageAlt: "A Rella provider applying an in-clinic facial treatment",
   },

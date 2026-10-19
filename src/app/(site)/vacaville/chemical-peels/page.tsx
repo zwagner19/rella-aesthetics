@@ -18,12 +18,12 @@ const clinic = locations.vacaville;
 export const metadata: Metadata = {
   title: "Chemical Peels in Vacaville | Options & Booking",
   description:
-    "Review recovery planning and book the Universal Peel currently listed in Rella's Vacaville online peel category.",
+    "Explore chemical peels and recovery planning at Rella Vacaville. Browse the live menu for current peel services and availability.",
   alternates: { canonical: CANONICAL },
   openGraph: {
     title: "Chemical Peels in Vacaville | Rella Aesthetics",
     description:
-      "Universal Peel online booking, consultation-led selection, and recovery planning in Vacaville.",
+      "Chemical peel online booking, consultation-led selection, and recovery planning in Vacaville.",
     url: CANONICAL,
     type: "website",
     images: [
@@ -38,7 +38,7 @@ export const metadata: Metadata = {
 const peelOptions = [
   {
     name: "Universal Peel",
-    body: "The 90-minute peel currently listed in Vacaville's online category. Review formulation, candidacy, preparation, and expected recovery before confirming.",
+    body: "A 90-minute peel option in Vacaville's live menu. Review formulation, candidacy, preparation, and expected recovery before confirming.",
   },
 ] as const;
 
@@ -49,7 +49,7 @@ const visitSteps = [
   },
   {
     title: "Compare",
-    body: "Review the Universal Peel's formulation, preparation, and expected recovery. Call Rella if you want to ask about another peel.",
+    body: "Review the selected peel's formulation, preparation, and expected recovery. Call Rella if you want help comparing options.",
   },
   {
     title: "Treat",
@@ -65,12 +65,12 @@ const faqs = [
   {
     question: "Which chemical peels does Rella offer in Vacaville?",
     answer:
-      "Rella's current Vacaville online peel category lists Universal Peel. Other peel options may be discussed by phone, but their availability should not be inferred from the online menu.",
+      "Vacaville's live peel menu includes MicroPeel Sensitive, MicroPeel Plus 30, TCA Peel, and Universal Peel. Browse the live menu for current services and availability.",
   },
   {
     question: "How much is a chemical peel at Rella Vacaville?",
     answer:
-      "The booking flow shows the current Universal Peel total before confirmation. Call Rella to confirm availability and pricing before planning around another peel.",
+      "The booking flow shows the selected peel's current total before confirmation. Browse the live menu for current services and availability, or call Rella for help comparing options.",
   },
   {
     question: "How do I choose the right peel?",
@@ -151,7 +151,7 @@ export default function VacavilleChemicalPeelsPage() {
               Chemical peels in Vacaville.
             </h1>
             <p className="mb-8 max-w-[650px] text-lg font-light leading-relaxed text-silver-dark md:text-xl">
-              Review the Universal Peel currently available for online booking, plan around your skin and schedule, and understand recovery before treatment.
+              Browse the live peel menu, plan around your skin and schedule, and understand recovery before treatment.
             </p>
             <div className="flex flex-col gap-3 sm:flex-row">
               <Button disableHover href={BOOKING_HREF} data-cta="service-booking" className="rounded-full">
@@ -162,7 +162,7 @@ export default function VacavilleChemicalPeelsPage() {
               </Button>
             </div>
             <p className="mt-5 text-xs leading-6 text-ink/70">
-              The live Vacaville peel category opens first and currently lists Universal Peel. Review its details before confirming.
+              The live Vacaville peel category opens first. Browse current services and availability, then review the selected peel&apos;s details before confirming.
             </p>
           </div>
 
@@ -189,7 +189,7 @@ export default function VacavilleChemicalPeelsPage() {
 
       <TrustStrip
         ariaLabel="Rella Vacaville chemical-peel visit facts"
-        items={["Vacaville-only booking", "Universal Peel online", "90-minute service", "Recovery reviewed first"]}
+        items={["Vacaville peel booking", "Live peel menu", "90-minute Universal Peel", "Recovery reviewed first"]}
       />
 
       <section className="py-20 md:py-28" aria-labelledby="vacaville-peel-options">
@@ -199,10 +199,10 @@ export default function VacavilleChemicalPeelsPage() {
               Current Vacaville menu
             </p>
             <h2 id="vacaville-peel-options" className="mb-5 text-3xl font-medium tracking-[-0.04em] text-rose-text md:text-5xl">
-              One peel is currently listed online.
+              Explore the live Vacaville peel menu.
             </h2>
             <p className="text-lg font-light leading-relaxed text-ink/70">
-              The online category currently exposes Universal Peel. Call Rella to ask about another option rather than assuming it is available to book.
+              Universal Peel is one of the options in Vacaville&apos;s live menu. Browse current services and availability, or ask the team for help comparing formulations.
             </p>
           </div>
           <div className="grid max-w-[720px] gap-5">
@@ -251,7 +251,7 @@ export default function VacavilleChemicalPeelsPage() {
               Book Universal Peel in Vacaville.
             </h2>
             <p className="text-lg font-light leading-relaxed text-ink/70">
-              Rella&apos;s online menu currently lists Universal Peel. The booking button keeps the correct clinic and peel category selected without choosing a professional or appointment for you.
+              The booking button opens Vacaville&apos;s live peel category, including Universal Peel. You choose the service, professional, and appointment after reviewing the current options.
             </p>
           </div>
           <div className="border-l-4 border-rose bg-rose-blush p-7 md:p-10">

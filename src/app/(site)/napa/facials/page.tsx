@@ -18,7 +18,7 @@ const clinic = locations.napa;
 export const metadata: Metadata = {
   title: "Facials in Napa | Skin Consult & Options",
   description:
-    "Compare the three facial options currently available for online booking at Rella Aesthetics in downtown Napa.",
+    "Explore facials and HydraFacial at Rella Aesthetics in downtown Napa. Browse the live menu for current services and availability.",
   alternates: { canonical: CANONICAL },
   openGraph: {
     title: "Professional Facials in Napa | Rella Aesthetics",
@@ -57,7 +57,7 @@ const visitSteps = [
   },
   {
     title: "Select",
-    body: "Compare the three current online options and confirm the exact steps, products, enhancements, and total for the chosen service.",
+    body: "Compare the live facial menu and confirm the exact steps, products, enhancements, and total for the chosen service.",
   },
   {
     title: "Experience",
@@ -73,7 +73,7 @@ const faqs = [
   {
     question: "Which facial options are listed at Rella Napa?",
     answer:
-      "Rella's current Napa online facial category lists an Initial Skin Health Consult, Signature HydraFacial, and Deluxe HydraFacial. Inventory can change, so confirm the selected service in the booking flow.",
+      "Napa's facial options include a skin consult, Signature, Deluxe and Platinum HydraFacial, microdermabrasion, and dermaplaning. Browse the live menu for current services and availability.",
   },
   {
     question: "How do I choose the right facial?",
@@ -88,7 +88,7 @@ const faqs = [
   {
     question: "How is a professional facial different from HydraFacial?",
     answer:
-      "HydraFacial is a branded multi-step service. Napa's online facial category currently lists Signature and Deluxe HydraFacial alongside the Initial Skin Health Consult. The team can explain the steps included in each option.",
+      "HydraFacial is a branded multi-step service, with Signature, Deluxe and Platinum options in Napa's live menu. The team can explain how their included steps compare with other facial services.",
   },
   {
     question: "Can a facial replace medical care for acne or another skin condition?",
@@ -159,7 +159,7 @@ export default function NapaFacialsPage() {
               Professional facials in Napa, with a plan first.
             </h1>
             <p className="mb-8 max-w-[650px] text-lg font-light leading-relaxed text-silver-dark md:text-xl">
-              Compare the three facial options currently available online around your skin, recent treatments, goals, and schedule—then choose in Rella&apos;s booking flow.
+              Explore facial options around your skin, recent treatments, goals, and schedule—then browse the live menu for current services and availability.
             </p>
             <div className="flex flex-col gap-3 sm:flex-row">
               <Button disableHover href={BOOKING_HREF} data-cta="service-booking" className="rounded-full">
@@ -197,20 +197,20 @@ export default function NapaFacialsPage() {
 
       <TrustStrip
         ariaLabel="Rella Napa professional facial visit facts"
-        items={["Three online options", "15-minute skin consult", "45-minute HydraFacials", "Current total confirmed"]}
+        items={["Live facial menu", "15-minute skin consult", "45-minute Signature & Deluxe", "Current total confirmed"]}
       />
 
       <section className="py-20 md:py-28" aria-labelledby="napa-facial-options">
         <div className="mx-auto max-w-[1120px] px-6 md:px-8">
           <div className="mb-12 max-w-[810px]">
             <p className="mb-4 text-[0.6875rem] font-bold uppercase tracking-[0.2em] text-rose-text">
-              Current Napa menu
+              Explore Napa facials
             </p>
             <h2 id="napa-facial-options" className="mb-5 text-3xl font-medium tracking-[-0.04em] text-rose-text md:text-5xl">
               Start with your skin. Then choose the service.
             </h2>
             <p className="text-lg font-light leading-relaxed text-ink/70">
-              The online category currently lists a skin consult plus Signature and Deluxe HydraFacial. Call Rella before booking if you need another facial option.
+              A skin consult and HydraFacial are a few ways to start. Browse the live menu for the full range of current facial services and availability.
             </p>
           </div>
           <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-6">

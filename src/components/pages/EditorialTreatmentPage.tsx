@@ -45,7 +45,9 @@ export function EditorialTreatmentPage({
       });
   const primaryLabel = callAssisted
     ? "Call About IV Hydration"
-    : "Book a consultation";
+    : service.slug === "iv-hydration"
+      ? "Book IV Hydration"
+      : "Book a consultation";
 
   const results = matchingTreatmentResults(editorial.resultMatch);
   const showResultsSection = Boolean(editorial.resultsHeading);

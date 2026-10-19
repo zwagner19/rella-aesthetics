@@ -17,90 +17,94 @@ describe("service booking truth", () => {
   it.each([
     ["chemical-peels", "peels"],
     ["microneedling", "microneedling"],
-  ] as const)("pins %s CTAs to its only bookable clinic", async (slug, category) => {
+  ] as const)("offers %s at both clinics without preselecting a treatment", async (slug, category) => {
     const html = await renderService(slug);
-    const pinnedHref =
-      `https://book.experiencerella.com/book?location=vacaville&amp;category=${category}`;
-
-    expect(html.split(`href="${pinnedHref}"`).length - 1).toBe(3);
-    expect(html).not.toContain(
+    for (const location of ["vacaville", "napa"]) {
+      expect(html).toContain(
+        `href="https://book.experiencerella.com/book?location=${location}&amp;category=${category}"`,
+      );
+    }
+    expect(html).toContain(
       `href="https://book.experiencerella.com/book?category=${category}"`,
     );
-    expect(html).not.toContain("Book in Napa");
+    expect(html).toContain("Book in Napa");
+    expect(html).toContain("Book in Vacaville");
   });
 
-  it("makes IV hydration call-assisted instead of presenting a false online booking path", async () => {
+  it("opens IV hydration booking while retaining clinical screening guidance", async () => {
     const html = await renderService("iv-hydration");
-
-    expect([...html.matchAll(/href="tel:\+17073582928"/g)].length).toBeGreaterThanOrEqual(3);
-    expect([...html.matchAll(/data-cta="phone"/g)].length).toBeGreaterThanOrEqual(3);
-    expect(html).toContain("Call About IV Hydration");
-    expect(html).toContain("Call about availability");
+    expect(html).toContain('href="https://book.experiencerella.com/book"');
+    expect(html).toContain('href="https://book.experiencerella.com/book?location=napa"');
+    expect(html).toContain('href="https://book.experiencerella.com/book?location=vacaville"');
+    expect(html).toContain("Book IV Hydration");
     expect(html).toContain("Suitability comes before the drip.");
-    expect(html).not.toContain("book.experiencerella.com");
-    expect(html).not.toContain(">Book IV Hydration<");
+    expect(html).toContain("Clinical screening is still required before treatment.");
+    expect(html).not.toContain("Call About IV Hydration");
+    expect(html).not.toContain("Call-assisted");
   });
 });
 
-describe("local pages match the production booking catalog", () => {
-  it("lists the three Napa facial options currently exposed online", () => {
+describe("local pages describe the live booking catalog", () => {
+  it("keeps Napa facial examples without limiting the full live menu", () => {
     const html = renderToStaticMarkup(<NapaFacialsPage />);
 
     expect(html).toContain("Initial Skin Health Consult");
     expect(html).toContain("Signature HydraFacial");
     expect(html).toContain("Deluxe HydraFacial");
-    expect(html).toContain("Three online options");
-    expect(html).not.toMatch(
-      /Microdermabrasion Deluxe Facial|Anti Aging Facial|Acne Facial|Dermaplaning Deluxe Facial/,
-    );
+    expect(html).toContain("Platinum");
+    expect(html).toContain("Live facial menu");
+    expect(html).not.toMatch(/three facial options|Three online options/);
   });
 
-  it("lists the two Vacaville facial options currently exposed online", () => {
+  it("includes Deluxe and Platinum in Vacaville facial discovery", () => {
     const html = renderToStaticMarkup(<VacavilleFacialsPage />);
 
     expect(html).toContain("Initial Skin Health Consult");
     expect(html).toContain("Signature HydraFacial");
-    expect(html).toContain("Two online options");
-    expect(html).not.toMatch(
-      /Microdermabrasion|Express Facial|Acne Facial|Dermaplaning Facial/,
-    );
+    expect(html).toContain("Deluxe");
+    expect(html).toContain("Platinum");
+    expect(html).toContain("Live facial menu");
+    expect(html).not.toMatch(/two facial options|Two online options/);
   });
 
-  it("distinguishes the bookable Signature HydraFacial from phone-confirmed tiers", () => {
+  it("offers all three verified Vacaville HydraFacial tiers through the live menu", () => {
     const html = renderToStaticMarkup(<VacavilleHydrafacialPage />);
 
-    expect(html).toContain("Signature listed online");
-    expect(html).toContain("One currently online");
-    expect(html).toContain("not currently exposed in Vacaville&#x27;s online menu");
-    expect(html).toContain("call Rella to confirm");
+    for (const tier of ["Signature", "Deluxe", "Platinum"]) {
+      expect(html).toContain(tier);
+    }
+    expect(html).toContain("Live HydraFacial menu");
+    expect(html).not.toMatch(/Signature only|Only Signature|One currently online|not currently exposed|Other tiers by phone/);
   });
 
-  it("presents laser and microneedling as consult-only online flows", () => {
+  it("keeps consultation guidance without hiding live laser and microneedling treatments", () => {
     const laserHtml = renderToStaticMarkup(<VacavilleLaserPage />);
     const microneedlingHtml = renderToStaticMarkup(
       <VacavilleMicroneedlingPage />,
     );
 
-    expect(laserHtml).toContain("Initial consult online");
+    expect(laserHtml).toContain("Live laser menu");
     expect(laserHtml).toContain("Book Initial Laser Consult");
-    expect(laserHtml).toContain(
-      "current online option is the Initial Laser Consult",
-    );
-    expect(microneedlingHtml).toContain("Initial consult online");
+    expect(laserHtml).toContain("require the Initial Laser Consult before IPL");
+    expect(laserHtml).not.toContain("current online option is the Initial Laser Consult");
+    expect(microneedlingHtml).toContain("Live microneedling menu");
     expect(microneedlingHtml).toContain(
       "Book Initial Microneedling Consult",
     );
-    expect(microneedlingHtml).toContain(
-      "currently lists the Initial Microneedling Consult",
-    );
+    expect(microneedlingHtml).toContain("SkinPen");
+    expect(microneedlingHtml).toContain("RF Microneedling");
+    expect(microneedlingHtml).not.toContain("currently lists the Initial Microneedling Consult");
   });
 
-  it("lists only Universal Peel as currently bookable online", () => {
+  it("keeps the Universal Peel example alongside the other verified live peel options", () => {
     const html = renderToStaticMarkup(<VacavilleChemicalPeelsPage />);
 
-    expect(html).toContain("Universal Peel online");
-    expect(html).toContain("90-minute service");
+    expect(html).toContain("Live peel menu");
+    expect(html).toContain("90-minute Universal Peel");
     expect(html).toContain("Book Universal Peel");
-    expect(html).not.toMatch(/MicroPeel Sensitive|MicroPeel Plus 20|TCA Peel/);
+    for (const peel of ["MicroPeel Sensitive", "MicroPeel Plus 30", "TCA Peel"]) {
+      expect(html).toContain(peel);
+    }
+    expect(html).not.toMatch(/One peel is currently|Vacaville-only booking/);
   });
 });

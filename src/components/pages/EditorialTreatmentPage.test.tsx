@@ -40,25 +40,25 @@ describe("EditorialTreatmentPage propagation", () => {
     expect(html).toContain("CoolPeel");
   });
 
-  it("keeps IV hydration call-assisted and screening-led", () => {
+  it("offers IV hydration booking and keeps clinical screening guidance", () => {
     const html = renderSlug("iv-hydration");
     expect(html).toContain("Hydration with clinical judgment.");
-    expect(html).toContain("Call About IV Hydration");
-    expect(html).toContain("tel:+17073582928");
-    expect(html).toContain("data-cta=\"phone\"");
+    expect(html).toContain("Book IV Hydration");
+    expect(html).toContain("Clinical screening is still required before treatment.");
+    expect(html).toContain("data-cta=\"service-booking\"");
     expect(html).toContain("Suitability comes before the drip.");
     expect(html).not.toContain("The Transform House");
   });
 
-  it("keeps Vacaville-only peels and microneedling single-house", () => {
+  it("offers peels and microneedling at both clinics", () => {
     const peels = renderSlug("chemical-peels");
     expect(peels).toContain("Vacaville");
-    expect(peels).not.toContain("Vacaville · Napa House");
-    expect(peels).toContain("Universal Peel");
+    expect(peels).toContain("Vacaville · Napa House");
+    expect(peels).toContain("Browse the live menu");
 
     const micro = renderSlug("microneedling");
     expect(micro).toContain("Vacaville");
-    expect(micro).not.toContain("Vacaville · Napa House");
+    expect(micro).toContain("Vacaville · Napa House");
     expect(micro).toContain("Texture takes intention.");
   });
 
