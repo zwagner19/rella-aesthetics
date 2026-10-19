@@ -5,6 +5,7 @@ import { CONTACT_CONSENT_POLICY_VERSION } from "./guided-booking/policies";
 const choice: LeadConsent = { policyVersion: CONTACT_CONSENT_POLICY_VERSION, operational: true, marketing: false };
 const input = { contactId: "verified-contact", submissionId: "62d72df4-658e-4d6c-aa7c-608aaf27a212", choice, phoneProvided: true,
   replyContact: { email: null, phone: "+17075550100" }, channelMatches: { email: false, phone: true },
+  inquiry: { name: "Test Person", serviceInterest: "Botox", clinicPreference: "Napa", message: "Synthetic inquiry A" },
   headers: { Version: "2021-07-28" } };
 afterEach(() => { vi.unstubAllGlobals(); vi.restoreAllMocks(); });
 
@@ -41,8 +42,9 @@ describe("durable contact consent", () => {
     const { notes, fetcher } = notesStore();
     await persistLeadConsent(input);
     expect(notes).toHaveLength(1);
-    expect(JSON.parse(notes[0].body)).toMatchObject({ type: "rella-contact-consent", receiptVersion: 2, ...choice, source: "/contact", phoneProvided: true,
+    expect(JSON.parse(notes[0].body)).toMatchObject({ type: "rella-contact-consent", receiptVersion: 3, ...choice, source: "/contact", phoneProvided: true,
       replyContact: input.replyContact, channelMatches: input.channelMatches,
+      inquiry: input.inquiry,
       policyHash: expect.stringMatching(/^[a-f0-9]{64}$/), recordedAt: expect.any(String) });
     expect(fetcher.mock.calls.map(([url, init]) => [String(url).split("/").at(-1), init?.method ?? "GET"]))
       .toEqual([["notes", "GET"], ["notes", "POST"], ["note-0", "GET"]]);
@@ -62,20 +64,55 @@ describe("durable contact consent", () => {
   });
   it("does not create a second note after retrying an already-saved receipt", async () => {
     const { notes, fetcher } = notesStore();
-    await persistLeadConsent(input); await persistLeadConsent(input);
+    await persistLeadConsent(input);
+    const original = notes[0].body;
+    await persistLeadConsent(input);
     expect(notes).toHaveLength(1);
+    expect(notes[0].body).toBe(original);
     expect(fetcher.mock.calls.filter(([, init]) => init?.method === "POST")).toHaveLength(1);
+  });
+  it("preserves distinct inquiry snapshots for repeat requests from the same contact", async () => {
+    const { notes } = notesStore();
+    await persistLeadConsent(input);
+    const secondInquiry = { ...input.inquiry, clinicPreference: "Vacaville", message: "Synthetic inquiry B" };
+    await persistLeadConsent({ ...input, submissionId: "7cf36f5d-8773-442c-9e12-6219670bcb01", inquiry: secondInquiry });
+
+    const receipts = notes.map(note => JSON.parse(note.body));
+    expect(receipts.map(receipt => receipt.inquiry)).toEqual([input.inquiry, secondInquiry]);
+    expect(receipts[0].receiptId).not.toBe(receipts[1].receiptId);
   });
   it("does not rewrite an old receipt that cannot prove submitted reply details", async () => {
     const { notes, fetcher } = notesStore();
     await persistLeadConsent(input);
     const legacy = JSON.parse(notes[0].body);
-    delete legacy.receiptVersion; delete legacy.replyContact; delete legacy.channelMatches;
+    delete legacy.receiptVersion; delete legacy.replyContact; delete legacy.channelMatches; delete legacy.inquiry;
     notes[0].body = JSON.stringify(legacy);
 
     await expect(persistLeadConsent(input)).rejects.toThrow("differs");
 
     expect(notes[0].body).toBe(JSON.stringify(legacy));
+    expect(fetcher.mock.calls.filter(([, init]) => init?.method === "POST")).toHaveLength(1);
+  });
+  it("keeps a v2 receipt pending without rewriting its missing inquiry snapshot", async () => {
+    const { notes, fetcher } = notesStore();
+    await persistLeadConsent(input);
+    const legacy = JSON.parse(notes[0].body);
+    legacy.receiptVersion = 2; delete legacy.inquiry;
+    notes[0].body = JSON.stringify(legacy);
+
+    await expect(persistLeadConsent(input)).rejects.toThrow("differs");
+
+    expect(notes[0].body).toBe(JSON.stringify(legacy));
+    expect(fetcher.mock.calls.filter(([, init]) => init?.method === "POST")).toHaveLength(1);
+  });
+  it.each(["name", "serviceInterest", "clinicPreference", "message"] as const)("does not rewrite a receipt when inquiry %s changes on retry", async field => {
+    const { notes, fetcher } = notesStore();
+    await persistLeadConsent(input);
+    const original = notes[0].body;
+
+    await expect(persistLeadConsent({ ...input, inquiry: { ...input.inquiry, [field]: "Changed synthetic value" } })).rejects.toThrow("differs");
+
+    expect(notes[0].body).toBe(original);
     expect(fetcher.mock.calls.filter(([, init]) => init?.method === "POST")).toHaveLength(1);
   });
   it.each(["replyContact", "channelMatches"] as const)("does not reuse a receipt when %s changes on retry", async field => {
@@ -135,6 +172,23 @@ describe("durable contact consent", () => {
         const receipt = JSON.parse(body);
         if (field === "replyContact") receipt.replyContact.email = "changed@example.test";
         else receipt.channelMatches.phone = false;
+        return Response.json({ note: { id: "note-0", contactId: input.contactId, body: JSON.stringify(receipt) } });
+      });
+
+    await expect(persistLeadConsent(input)).rejects.toThrow("readback");
+    expect(fetcher).toHaveBeenCalledTimes(3);
+  });
+  it.each(["name", "serviceInterest", "clinicPreference", "message"] as const)("rejects exact-note readback that tampers with inquiry %s", async field => {
+    const { fetcher } = notesStore();
+    let body = "";
+    fetcher.mockImplementationOnce(async () => Response.json({ notes: [] }))
+      .mockImplementationOnce(async (_url, init) => {
+        body = JSON.parse(String(init?.body)).body;
+        return Response.json({ note: { id: "note-0" } }, { status: 201 });
+      })
+      .mockImplementationOnce(async () => {
+        const receipt = JSON.parse(body);
+        receipt.inquiry[field] = "Changed synthetic value";
         return Response.json({ note: { id: "note-0", contactId: input.contactId, body: JSON.stringify(receipt) } });
       });
 

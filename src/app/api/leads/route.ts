@@ -231,7 +231,8 @@ export async function POST(req: NextRequest) {
     // GHL may match one existing contact and retain a different second channel.
     // Preserve the submitted reply details without changing or merging profiles.
     await persistLeadConsent({ contactId, submissionId, choice: consent, phoneProvided: Boolean(phone),
-      replyContact, channelMatches, headers: requestHeaders });
+      replyContact, channelMatches, inquiry: { name, serviceInterest: service, clinicPreference: location, message },
+      headers: requestHeaders });
     if ((email && !channelMatches.email) || (phone && !channelMatches.phone)) {
       return NextResponse.json({ accepted: false, pending: true }, { status: 202 });
     }

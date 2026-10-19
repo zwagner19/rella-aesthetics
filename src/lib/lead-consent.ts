@@ -18,6 +18,13 @@ export interface LeadChannelMatches {
   phone: boolean;
 }
 
+export interface LeadInquiry {
+  name: string;
+  serviceInterest: string;
+  clinicPreference: string;
+  message: string;
+}
+
 /** New submission tags do not revoke or overwrite an existing patient's consent. */
 export function leadConsentTags(choice: LeadConsent): string[] {
   return ["website-contact-request",
@@ -33,10 +40,17 @@ export function readLeadConsent(value: unknown, phoneProvided: boolean): LeadCon
   return { policyVersion: choice.policyVersion, operational: choice.operational, marketing: choice.marketing };
 }
 
-/** Called only with the contact identity returned by a verified server upsert. */
+/**
+ * Called only with the contact identity returned by a verified server upsert.
+ * A native Note Added staff alert can run before our readback: it must request
+ * review rather than claim verification or contact the patient automatically.
+ * Note lookup/create is not atomic across instances and makes no exactly-once
+ * or rapid workflow re-entry guarantee.
+ */
 export async function persistLeadConsent(input: {
   contactId: string; submissionId: string; choice: LeadConsent; phoneProvided: boolean; headers: Record<string, string>;
   replyContact: LeadReplyContact; channelMatches: LeadChannelMatches;
+  inquiry: LeadInquiry;
 }) {
   const policy = CONTACT_CONSENT_POLICIES[input.choice.policyVersion];
   if (!policy) throw new Error("Unknown consent policy");
@@ -55,12 +69,14 @@ export async function persistLeadConsent(input: {
     try {
       const receipt = JSON.parse(body);
       return receipt.type === "rella-contact-consent" && receipt.receiptId === receiptId
-        && receipt.receiptVersion === 2
+        && receipt.receiptVersion === 3
         && receipt.source === "/contact"
         && receipt.policyVersion === input.choice.policyVersion && receipt.operational === input.choice.operational
         && receipt.marketing === input.choice.marketing && receipt.phoneProvided === input.phoneProvided
         && receipt.replyContact?.email === input.replyContact.email && receipt.replyContact?.phone === input.replyContact.phone
         && receipt.channelMatches?.email === input.channelMatches.email && receipt.channelMatches?.phone === input.channelMatches.phone
+        && receipt.inquiry?.name === input.inquiry.name && receipt.inquiry?.serviceInterest === input.inquiry.serviceInterest
+        && receipt.inquiry?.clinicPreference === input.inquiry.clinicPreference && receipt.inquiry?.message === input.inquiry.message
         && receipt.policyHash === policyHash && typeof receipt.recordedAt === "string" && Number.isFinite(Date.parse(receipt.recordedAt));
     } catch { return false; }
   }
@@ -76,8 +92,9 @@ export async function persistLeadConsent(input: {
     body = existing.body;
     id = existing.id;
   } else {
-    body = JSON.stringify({ type: "rella-contact-consent", receiptVersion: 2, receiptId, ...input.choice,
+    body = JSON.stringify({ type: "rella-contact-consent", receiptVersion: 3, receiptId, ...input.choice,
       phoneProvided: input.phoneProvided, replyContact: input.replyContact, channelMatches: input.channelMatches,
+      inquiry: input.inquiry,
       policyHash, recordedAt: new Date().toISOString(), source: "/contact" });
     const created = await request(base, { method: "POST", body: JSON.stringify({ body }) });
     const saved = await created.json();

@@ -133,7 +133,8 @@ describe("contact lead delivery", () => {
     const fetchMock = vi.fn(withConsentNotes(delegate));
     vi.stubGlobal("fetch", fetchMock);
 
-    const response = await POST(leadRequest({ name: "Test Person", email: " REPLY@EXAMPLE.TEST ", phone: "(707) 555-0100" }) as never);
+    const response = await POST(leadRequest({ name: "  Test Person  ", email: " REPLY@EXAMPLE.TEST ", phone: "(707) 555-0100",
+      service: "Medical Weight Loss", location: "napa", message: "Synthetic website inquiry" }) as never);
 
     expect(response.status).toBe(202);
     expect(await response.json()).toEqual({ accepted: false, pending: true });
@@ -141,8 +142,9 @@ describe("contact lead delivery", () => {
     expect(fetchMock.mock.calls.some(([url]) => String(url).endsWith("/tags"))).toBe(false);
     const noteWrite = fetchMock.mock.calls.find(([url, init]) => String(url).endsWith("/notes") && init?.method === "POST")!;
     expect(JSON.parse(JSON.parse(String(noteWrite[1]?.body)).body)).toMatchObject({
-      receiptVersion: 2, replyContact: { email: "reply@example.test", phone: "+17075550100" },
+      receiptVersion: 3, replyContact: { email: "reply@example.test", phone: "+17075550100" },
       channelMatches: matches, marketing: false,
+      inquiry: { name: "Test Person", serviceInterest: "Medical Weight Loss", clinicPreference: "Napa", message: "Synthetic website inquiry" },
     });
     expect(fetchMock).toHaveBeenCalledTimes(4); // Upsert, list, receipt write and exact readback.
   });
