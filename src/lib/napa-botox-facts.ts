@@ -9,12 +9,11 @@
  * from here so a single test can hold the whole page to the canon. Two rules
  * are load-bearing rather than stylistic:
  *
- *  1. The $50 booking deposit is NEVER merged with, described as, or displayed
- *     as part of per-unit treatment pricing. They are separate blocks with
- *     separate language.
+ *  1. The $100 booking deposit is displayed separately from per-unit treatment
+ *     pricing and is applied to the completed treatment.
  *  2. Nothing may be stated that the canon does not establish — no cancellation
- *     FEE amount beyond the retained-deposit sentence, no refund or
- *     deposit-application promise, no ratings, no credentials beyond the
+ *     FEE amount beyond the retained-deposit sentence, no refund or transfer
+ *     promise, no ratings, no credentials beyond the
  *     approved line, no delivery channel for confirmations.
  *
  * `service-data.ts` mirrors these prices for shared service pages. Tests guard
@@ -35,20 +34,20 @@ export const PRICING = {
 export const VISIT = {
   durationMinutes: 30,
   durationCopy: "30 minutes",
-  /** Charged by Boulevard at confirmation. Never described as credited,
-   *  applied toward treatment, refundable, or transferable. */
-  depositAmount: "$50",
+  /** Charged by Boulevard at confirmation and applied to completed treatment. */
+  depositAmount: "$100",
 } as const;
 
-/** Verbatim approved payment disclosure (FACTS-AND-CONTENT-TOKENS, D1). */
+/** Current owner-approved payment disclosure, clarified October 2026. */
 export const PAYMENT_DISCLOSURE =
-  "A card is required to book. Boulevard will charge a $50 deposit when you confirm your appointment. " +
-  "Card details are sent directly to Boulevard’s secure payment vault and are not stored on Rella’s servers.";
+  "A card is required to book. Boulevard will charge a $100 deposit when you confirm your appointment. " +
+  "The deposit is applied to your completed treatment. Card details are sent directly to Boulevard’s secure " +
+  "payment vault and are not stored on Rella’s servers.";
 
-/** Verbatim approved cancellation policy (D3). No other fee is stated. */
+/** Current owner-approved 48-hour cancellation policy. */
 export const CANCELLATION_POLICY =
-  "Please give at least 48 hours’ notice if you need to cancel. Rella may retain your $50 deposit for " +
-  "cancellations within 48 hours. Emergencies are reviewed individually.";
+  "Please give at least 48 hours’ notice if you need to cancel or reschedule. Rella may retain your $100 " +
+  "deposit for changes within 48 hours or a no-show. Emergencies are reviewed individually.";
 
 export const CANCELLATION_POLICY_URL = "https://experiencerella.com/cancellation-policy";
 
@@ -116,8 +115,8 @@ export const FAQS: readonly Faq[] = [
     a: "They’re closely related — Dysport can show results a little sooner (2–5 days), and the two are priced differently per unit: Botox® $18/unit, Dysport $6/unit. Your provider will recommend the right fit at your visit.",
   },
   {
-    q: "What is the $50 deposit for?",
-    a: `${PAYMENT_DISCLOSURE} It is a booking deposit, separate from per-unit treatment pricing.`,
+    q: "What is the $100 deposit for?",
+    a: `${PAYMENT_DISCLOSURE} It is separate from the per-unit price shown in your treatment plan.`,
   },
   {
     q: "What if I need to cancel or reschedule?",
