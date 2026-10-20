@@ -57,7 +57,7 @@ export const LOCAL_EDITORIAL_POSTS: readonly LocalEditorialPost[] = [
       "A transparent guide to Rella Napa's Botox, Dysport, membership, and booking-deposit pricing—plus the questions that determine your actual treatment total.",
     category: "Injectables",
     publishedAt: "2026-08-03T12:00:00-07:00",
-    modifiedAt: "2026-09-04T12:00:00-07:00",
+    modifiedAt: "2026-10-20T12:00:00-07:00",
     authorName: "Rella Aesthetics",
     readingTime: "7 minute read",
     coverImage: "/images/treatments/botox-dysport.webp",
@@ -67,7 +67,7 @@ export const LOCAL_EDITORIAL_POSTS: readonly LocalEditorialPost[] = [
     dek:
       "The per-unit number matters, but it is not the whole quote. Here is the current Rella Napa pricing and the practical math to review before you book.",
     answerFirst:
-      "Rella's current published Napa price is $18 per unit for Botox® and $6 per unit for Dysport. The 2026 Tox Membership is $30 per month with a one-year commitment; members pay $13 per unit for Botox and $4.40 per unit for Dysport. A $50 booking deposit is charged when a new-patient tox appointment is confirmed, and it is separate from treatment pricing.",
+      "Rella's current published Napa price is $18 per unit for Botox® and $6 per unit for Dysport. The 2026 Tox Membership is $30 per month with a one-year commitment; members pay $13 per unit for Botox and $4.40 per unit for Dysport. A $100 booking deposit is charged when a new-patient tox appointment is confirmed and is applied to the completed treatment.",
     keyFacts: [
       "Downtown Napa: 1541 3rd St, Napa, CA 94559",
       "Clinic hours: Wednesday–Saturday, 9am–5pm; Sunday–Tuesday: Closed",
@@ -104,8 +104,8 @@ export const LOCAL_EDITORIAL_POSTS: readonly LocalEditorialPost[] = [
       },
       {
         item: "New-patient booking deposit",
-        publicPrice: "$50",
-        whatItMeans: "Charged at confirmation; separate from treatment pricing",
+        publicPrice: "$100",
+        whatItMeans: "Charged at confirmation and applied to completed treatment",
       },
     ],
     sections: [
@@ -134,10 +134,10 @@ export const LOCAL_EDITORIAL_POSTS: readonly LocalEditorialPost[] = [
       },
       {
         id: "booking-deposit",
-        heading: "What the $50 booking deposit is—and is not",
+        heading: "How the $100 booking deposit works",
         paragraphs: [
-          "A card is required to book the 30-minute new-patient tox visit. A $50 deposit is charged when the appointment is confirmed. Card details are handled by the secure booking provider and are not stored on Rella's servers.",
-          "The deposit is separate from the per-unit Botox or Dysport treatment price. Rella does not describe it as credited, refundable, transferable, or automatically applied to treatment unless a separately approved policy says so. If you need to cancel, review the current cancellation policy before the 48-hour window.",
+          "A card is required to book the 30-minute new-patient tox visit. A $100 deposit is charged when the appointment is confirmed and is applied to the completed treatment. Card details are handled by the secure booking provider and are not stored on Rella's servers.",
+          "Your provider still reviews the product, proposed unit count, and full treatment total with you before treatment. If you need to cancel or reschedule, review the current 48-hour cancellation policy.",
         ],
       },
       {
@@ -197,9 +197,9 @@ export const LOCAL_EDITORIAL_POSTS: readonly LocalEditorialPost[] = [
           "The total depends on the product, areas, anatomy, goals, and proposed unit count. Your provider reviews the plan and expected total before treatment.",
       },
       {
-        question: "Is the $50 deposit part of the Botox price?",
+        question: "Is the $100 deposit applied to my Botox or Dysport treatment?",
         answer:
-          "No. It is a booking deposit charged when the new-patient appointment is confirmed in Rella's secure booking experience, and it is separate from per-unit treatment pricing.",
+          "Yes. It is charged when the new-patient appointment is confirmed in Rella's secure booking experience and is applied to the completed treatment. Your provider reviews the proposed unit count and remaining total before treatment.",
       },
       {
         question: "Is the Rella Tox Membership month-to-month?",
@@ -213,7 +213,7 @@ export const LOCAL_EDITORIAL_POSTS: readonly LocalEditorialPost[] = [
       },
     ],
     reviewedAgainst:
-      "Pricing and booking facts are current as of August 3, 2026 and were reviewed against Rella's July 24 public pricing record and July 26 Napa tox operating decisions.",
+      "Pricing and booking facts were updated October 20, 2026 to match Rella's current $100 booking-deposit policy for new-patient tox appointments.",
   },
 ] as const;
 
