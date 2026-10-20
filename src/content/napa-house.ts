@@ -36,7 +36,7 @@ export const napaHouseCategories = [
 ] as const;
 
 /**
- * Provider preview — Wagner, Warda, Devyn only (Zach refinement).
+ * Owner-approved Napa team preview, using the existing team-directory records.
  * Equal visual weight; no staffing notes.
  */
 export const napaHousePeople = [
@@ -54,6 +54,21 @@ export const napaHousePeople = [
     name: "Devyn Pickett",
     role: "Aesthetic RN",
     image: "/images/team/devyn.jpg",
+  },
+  {
+    name: "Marisa Avalos",
+    role: "Aesthetic RN",
+    image: "/images/team/marisa-avalos.jpg",
+  },
+  {
+    name: "Natalie",
+    role: "Esthetician",
+    image: "/images/team/natalie.jpg",
+  },
+  {
+    name: "Hailey Butler",
+    role: "Medical Assistant",
+    image: "/images/team/hailey-butler.jpg",
   },
 ] as const;
 
