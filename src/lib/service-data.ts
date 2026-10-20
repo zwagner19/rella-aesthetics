@@ -426,12 +426,12 @@ export const servicePages: ServicePageData[] = [
     pricing: {
       heading: "Pricing",
       body: "Program cost depends on the care plan, medication choice, labs, and follow-up needs. Rella will explain the applicable options and costs before you decide.",
-      note: "The medical qualification consultation requires no card and does not guarantee treatment, a prescription, or a specific medication.",
+      note: "The medical qualification consultation requires a $100 reservation deposit and does not guarantee treatment, a prescription, or a specific medication. After the attended consultation, the deposit is applied toward treatment or account credit, or refunded if the patient is not a candidate or chooses not to proceed.",
     },
     faq: [
       { question: "What happens during the first consultation?", answer: "The 30-minute phone consultation with Zachary Wagner, DO, is used to review relevant history, goals, prior attempts, and safety considerations and determine whether you medically qualify to proceed. It does not guarantee a prescription or a specific medication." },
       { question: "Does Rella offer semaglutide or other GLP-1 options?", answer: "GLP-1 medications may be discussed when clinically appropriate. The appropriate medication, source, dosing, and availability depend on your history and current clinical circumstances." },
-      { question: "Do I need a card to see consultation times?", answer: "No. The 30-minute medical qualification phone consultation does not require a card." },
+      { question: "Is a reservation deposit required for the consultation?", answer: "Yes. A $100 reservation deposit is required when you book. After the attended consultation, it is applied toward treatment or account credit, or refunded if you are not a candidate or choose not to proceed." },
       { question: "How much weight can I lose?", answer: "Results vary by person, treatment plan, health factors, and follow-through. Rella does not promise a specific result and will discuss realistic expectations for the plan being considered." },
     ],
     image: "/images/treatments/medical-weight-loss.webp",

@@ -142,7 +142,7 @@ describe("every Wave 3 contract is preserved", () => {
   });
 
   it("deposit language unchanged and still separate from per-unit pricing", () => {
-    expect(decoded).toMatch(/Boulevard will charge a \$50 deposit when you confirm your appointment/);
+    expect(decoded).toMatch(/Boulevard will charge a \$100 deposit when you confirm your appointment/);
     expect(decoded).toContain("separate from per-unit treatment pricing");
   });
 
