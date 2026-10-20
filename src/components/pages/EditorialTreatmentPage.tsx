@@ -130,6 +130,7 @@ export function EditorialTreatmentPage({
 
       <TreatmentLocations
         id={`${prefix}-locations-heading`}
+        serviceSlug={service.slug}
         availableLocations={availableLocations}
         bookingHrefFor={bookingHrefFor}
         callAssisted={callAssisted}

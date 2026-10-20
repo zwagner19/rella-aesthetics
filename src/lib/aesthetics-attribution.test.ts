@@ -4,6 +4,7 @@ import { createRequire } from "node:module";
 import { join } from "node:path";
 import { servicePages } from "./service-data";
 import { LOCAL_EDITORIAL_POSTS } from "./local-editorial-posts";
+import { WORDPRESS_LANDINGS } from "../../edge/controlled-launch-worker.mjs";
 import {
   AD_ATTRIBUTION_REVOCATION_COOKIE,
   AD_USER_DATA_DENIED_COOKIE,
@@ -142,7 +143,7 @@ async function settle() {
 }
 
 describe("paid aesthetics eligibility and URL boundaries", () => {
-  it("covers actual static marketing routes, configured sitemap paths and generated local slugs", async () => {
+  it("covers Next marketing routes while classifying retained WordPress sitemap pages separately", async () => {
     const app = join(__dirname, "..", "app");
     function staticPages(directory: string, segments: string[] = []): string[] {
       return readdirSync(directory, { withFileTypes: true }).flatMap(entry => {
@@ -153,9 +154,19 @@ describe("paid aesthetics eligibility and URL boundaries", () => {
     }
     const require = createRequire(import.meta.url);
     const sitemap = require("../../next-sitemap.config.js") as { additionalPaths(config: unknown): Promise<Array<{ loc: string }>> };
+    const sitemapPaths = (await sitemap.additionalPaths(sitemap)).map(item => item.loc);
+    // Sitemap discovery covers both applications. The edge keeps these six
+    // pages on WordPress, so listing them must not expand the Next controller's
+    // capture scope. Its existing /napa/botox implementation is still covered
+    // independently by staticPages below.
+    const retainedWordPressPages = new Set<string>(WORDPRESS_LANDINGS);
+    const isWordPressLanding = (path: string) => retainedWordPressPages.has(path.replace(/\/$/, ""));
+    const wordpressSitemapPaths = sitemapPaths.filter(isWordPressLanding);
+    expect(wordpressSitemapPaths).toHaveLength(WORDPRESS_LANDINGS.length);
+    expect(new Set(wordpressSitemapPaths.map(path => path.replace(/\/$/, "")))).toEqual(retainedWordPressPages);
     const routes = [
       ...staticPages(app).filter(path => !["/booking", "/wpbc-booking-received"].includes(path)),
-      ...(await sitemap.additionalPaths(sitemap)).map(item => item.loc),
+      ...sitemapPaths.filter(path => !isWordPressLanding(path)),
       ...servicePages.filter(service => service.slug !== "weight-loss").map(service => `/services/${service.slug}`),
       ...LOCAL_EDITORIAL_POSTS.map(post => `/blog/${post.slug}`),
     ];
@@ -163,6 +174,9 @@ describe("paid aesthetics eligibility and URL boundaries", () => {
     expect(routes).toContain("/membership");
     expect(isApprovedAestheticsPage("experiencerella.com", "/memberships")).toBe(false);
     expect(isApprovedAestheticsPage("experiencerella.com", "/packages")).toBe(false);
+    for (const path of WORDPRESS_LANDINGS.filter(path => path !== "/napa/botox")) {
+      expect(isApprovedAestheticsPage("experiencerella.com", path), path).toBe(false);
+    }
   });
 
   it("authorizes exact public aesthetics hosts and marketing routes", () => {

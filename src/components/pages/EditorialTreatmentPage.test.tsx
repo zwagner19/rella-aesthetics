@@ -16,6 +16,25 @@ function renderSlug(slug: string) {
 }
 
 describe("EditorialTreatmentPage propagation", () => {
+  it("links the existing clinic names to matching local treatment details while retaining booking", () => {
+    const localPages = [
+      ["chemical-peels", "/vacaville/chemical-peels", "Vacaville"],
+      ["facials", "/vacaville/facials", "Vacaville"],
+      ["facials", "/napa/facials", "Napa House"],
+      ["hydrafacial", "/vacaville/hydrafacial", "Vacaville"],
+      ["hydrafacial", "/napa/hydrafacial/", "Napa House"],
+      ["laser-treatments", "/vacaville/laser", "Vacaville"],
+      ["laser-treatments", "/napa/laser/", "Napa House"],
+      ["microneedling", "/vacaville/microneedling", "Vacaville"],
+    ];
+    for (const [slug, href, name] of localPages) {
+      const html = renderSlug(slug);
+      expect(html).toContain(`<a href="${href}">${name}</a>`);
+      expect(html).toMatch(/<a(?=[^>]*href="https:\/\/book\.experiencerella\.com\/)(?=[^>]*data-cta="service-booking")[^>]*>Book in Vacaville<\/a>/);
+      expect(html).toMatch(/<a(?=[^>]*href="https:\/\/book\.experiencerella\.com\/)(?=[^>]*data-cta="service-booking")[^>]*>Book in Napa<\/a>/);
+    }
+  });
+
   it("covers every non-locked individual treatment slug", () => {
     expect([...EDITORIAL_TREATMENT_SLUGS].sort()).toEqual(
       [

@@ -23,7 +23,7 @@ describe("generated sitemap contract", () => {
     expect(new Set(locations).size).toBe(locations.length);
     expect(locations).toContain("/");
     expect(locations).toContain("/payment-plans");
-    expect(locations).toContain("/napa/botox");
+    expect(locations).toContain("/napa/botox/");
     expect(locations).toContain("/napa/facials");
     expect(locations).not.toContain("/services/weight-loss");
     expect(locations).not.toContain("/blog");
@@ -41,6 +41,24 @@ describe("generated sitemap contract", () => {
     }
 
     expect(paths.find((entry) => entry.loc === "/")?.priority).toBe(1);
+  });
+
+  it("keeps all six retained WordPress landings on their public slash canonical", async () => {
+    const transform = sitemapConfig.transform;
+    if (!transform) throw new Error("Sitemap transform is required");
+    const config = { ...sitemapConfig, transform } as AdditionalPathsConfig;
+    for (const path of [
+      "/napa", "/napa/botox", "/napa/laser", "/napa/filler",
+      "/napa/hydrafacial", "/napa/hyperhidrosis",
+    ]) {
+      for (const variant of [path, `${path}/`]) {
+        const entry = await transform(config, variant);
+        expect(entry).toMatchObject({ loc: `${path}/`, trailingSlash: true });
+      }
+    }
+    const ordinaryPage = await transform(config, "/napa/facials");
+    expect(ordinaryPage?.loc).toBe("/napa/facials");
+    expect(ordinaryPage).not.toHaveProperty("trailingSlash");
   });
 
   it("excludes noindex records, retired URLs, Studio, and the legacy booking launcher", () => {
