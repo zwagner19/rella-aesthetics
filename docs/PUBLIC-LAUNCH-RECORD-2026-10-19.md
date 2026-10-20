@@ -8,14 +8,22 @@ Amie’s homepage, global styles, fonts, imagery and site chrome remain preserve
 
 | Surface | Live or review reference |
 |---|---|
-| Website functional source | `cfd093f87eaa9b27b4fca511d2152b722ed33b14`, tree `2e61d14c7e2f78f27cdacc1bc73c12a553d25e08`, branch `codex/amie-shared-booking`. |
-| Website RELEASE | `dpl_6su8JBUQa2Szt2zsoN4pRdW6rvRh`, immutable host `rella-aesthetics-5issr5o5j-zwagner19s-projects.vercel.app`. The website uses permanent backend origin `https://book.experiencerella.com`. |
-| Website QA | `dpl_6su8JBUQa2Szt2zsoN4pRdW6rvRh`; [controlled preview](https://rella-aesthetics-controlled-launch-zwagner19s-projects.vercel.app/). The review alias serves the same immutable release and permanent booking backend as public. |
-| Public edge | `rella-controlled-launch`, version `41b77c08-b02e-4a10-a74f-117e349d5bab`, deployed at 100% at `2026-10-20T00:29:26Z`; `EDGE_ENABLED` string `true`, origin pinned to the immutable RELEASE above. Only `experiencerella.com/*` and `www.experiencerella.com/*` are bound. |
+| Website functional source | `9699f5690012163745987bc5fd2788344386736b`, tree `e2ecb4f29e09525f148b2a5702242c3c3c641f0e`, branch `codex/amie-shared-booking`. Includes the separate policy owner's October 20 source `30d437c`. |
+| Website RELEASE | `dpl_BFDC7gLW2aHHskZRYHtNs1xqa5G6`, immutable host `rella-aesthetics-8vgu8h3km-zwagner19s-projects.vercel.app`. The website uses permanent backend origin `https://book.experiencerella.com`. |
+| Website QA | `dpl_BFDC7gLW2aHHskZRYHtNs1xqa5G6`; [controlled preview](https://rella-aesthetics-controlled-launch-zwagner19s-projects.vercel.app/). The review alias serves the same immutable release and permanent booking backend as public. |
+| Public edge | `rella-controlled-launch`, version `17426760-e06e-445e-a1be-abe81f2e510d`, deployed at 100% at `2026-10-20T17:02:09Z`; `EDGE_ENABLED` string `true`, origin pinned to the immutable RELEASE above. Only `experiencerella.com/*` and `www.experiencerella.com/*` are bound. |
 | Public booking backend | `dpl_CT1GC3jB1MkiHkTc7U12HdamPxE5`, source `460d5d6e6f56f62692243deb173897a940695230`, immutable host `rella-booking-39fab4ict-zwagner19s-projects.vercel.app`. Both `book.experiencerella.com` and `book.rellaweightloss.com` were read back on this exact deployment. |
 | Rella HQ | The inquiry connection was overwritten by automatic main deployment `dpl_34DSKMoHfHfrAyHm6XBzuvYYCLMr` / `98fa7f6` during launch. Combined source `8817dcc50913c6172574a931d14f6372cb5417c1` preserves that exact latest main plus the website bridge; HQ-only deployment `dpl_DgBDsVAhGQ7SFLpEJuhxC9NpbXNA` is now live at the fixed HQ alias, with automatic production-domain assignment disabled and read back. It contains no Cindy notification implementation. |
 
 The website Vercel project’s shared production alias was not generally promoted. The fixed website RELEASE is served through the Worker, preserving the existing weight-loss website deployment. No DNS, nameserver, TLS or security-setting change was needed.
+
+## Napa team follow-up — October 20
+
+At `2026-10-20T17:02:09Z` (10:02 a.m. Pacific), the owner's requested Napa additions were published: Marisa Avalos (Aesthetic RN), Natalie (Esthetician), and Hailey Butler (Medical Assistant). Their names, titles and existing portraits come from the team directory. The only application-source edit appends these three records to `napaHousePeople`; Napa already uses the same card classes as Vacaville. No component, stylesheet, image, booking or deposit code changed. The previous live policy-owner source `30d437c` was fast-forwarded before this change and remains included.
+
+Sixteen existing team/design tests, TypeScript, focused lint, diff checks and the remote production build passed. Stage and public GET comparisons of homepage, both location pages, cancellation policy and terms found no unexpected visible-copy changes; only the three requested Napa profiles were added. All three portraits returned 200, and all six live card images loaded in the browser. The deployed page retains the identical stylesheet asset `1hhovwjltxgw7.css` and existing desktop card styling. A 390px browser viewport confirmed one-column cards without horizontal overflow; this was browser emulation, not a new physical iPhone test. No booking or contact submission was made.
+
+Evidence: [public checks](../../../outputs/rella-napa-team-live-2026-10-20.json), [live card measurements](../../../outputs/rella-napa-team-live-dom-2026-10-20.json), [live screenshot](../../../outputs/rella-napa-team-live-2026-10-20.png). The immediate website-only rollback anchor for this update is Worker `e17e75a0-7175-40c6-907e-f8b8686bdc7c` at 100%, with origin `rella-aesthetics-nl6b6uv0a-zwagner19s-projects.vercel.app` / deployment `dpl_GDY1TcFaxCrZ3obWG4bvKJXccegZ`; this preserves the separate chat's current policy release. Older rollback references below describe their respective historical releases.
 
 ## Homepage team order follow-up
 
