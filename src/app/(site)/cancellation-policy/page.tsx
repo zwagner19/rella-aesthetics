@@ -37,9 +37,9 @@ export default function CancellationPolicyPage() {
           <div className="prose prose-lg max-w-none space-y-6 text-ink/70">
             <h2 className="font-medium text-xl text-ink">Current Policy</h2>
             <p>
-              Please give at least 48 hours&apos; notice if you need to cancel. Rella may retain the
-              applicable booking deposit for cancellations within 48 hours. Emergencies are
-              reviewed individually.
+              Please give at least 48 hours&apos; notice if you need to cancel or reschedule. Rella may
+              retain the applicable booking deposit for a cancellation or reschedule within 48
+              hours, or for a no-show. Emergencies are reviewed individually.
             </p>
 
             <h2 className="font-medium text-xl text-ink mt-8">
@@ -57,10 +57,6 @@ export default function CancellationPolicyPage() {
               Napa New-Patient Tox Appointments
             </h2>
             <p>{CANCELLATION_POLICY}</p>
-            <p>
-              A $50 booking deposit is charged when the appointment is confirmed. The
-              deposit is separate from per-unit treatment pricing.
-            </p>
 
             <h2 className="font-medium text-xl text-ink mt-8">Need to Make a Change?</h2>
             <p>

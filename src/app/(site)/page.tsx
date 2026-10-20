@@ -169,7 +169,7 @@ function HomePageContent({ isWeightLoss }: { isWeightLoss: boolean }) {
               {[
                 "ABOM-certified physician",
                 "Napa and Vacaville clinic support",
-                "No card required for the starting-point consultation",
+                "$100 consultation deposit applied toward care after the attended consultation",
                 "Medication only when clinically appropriate",
               ].map((item) => (
                 <li key={item} className="flex gap-3">
