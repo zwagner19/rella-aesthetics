@@ -30,7 +30,12 @@ export function Header() {
   const mobileMenuButtonRef = useRef<HTMLButtonElement>(null);
   const closeMobileNav = useCallback(() => {
     setMobileOpen(false);
-    window.requestAnimationFrame(() => mobileMenuButtonRef.current?.focus());
+    window.requestAnimationFrame(() => {
+      if (document.querySelector(
+        '[role="dialog"][aria-modal="true"]:not(#mobile-navigation):not([hidden]):not([aria-hidden="true"]), #rella-aesthetics-cookie-panel',
+      )) return;
+      mobileMenuButtonRef.current?.focus();
+    });
   }, []);
   const bookingHref = resolveBookingHref({});
 

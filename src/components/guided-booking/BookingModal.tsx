@@ -505,7 +505,7 @@ export function BookingModal({
         <footer className="shrink-0 border-t border-rule/50 bg-white/95 px-4 py-3 backdrop-blur-sm md:px-6">
           <div role="status" aria-live="polite" aria-atomic="true">
             {state.step === "treatments" && selectedTreatments.length > 0 ? (
-              <details className="mb-3 rounded-sm border border-rose/50 bg-ivory px-3 py-2">
+              <details className="mb-3 max-h-[max(4rem,calc(100dvh-22rem))] overflow-y-auto rounded-sm border border-rose/50 bg-ivory px-3 py-2">
                 <summary className="flex cursor-pointer items-center justify-between gap-3">
                 <div className="min-w-0">
                   <p className="text-[0.625rem] font-bold uppercase tracking-[0.14em] text-ink/60">
