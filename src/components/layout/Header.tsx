@@ -32,7 +32,7 @@ export function Header() {
     setMobileOpen(false);
     window.requestAnimationFrame(() => {
       if (document.querySelector(
-        '[role="dialog"][aria-modal="true"]:not(#mobile-navigation):not([hidden]):not([aria-hidden="true"]), #rella-aesthetics-cookie-panel',
+        '[role="dialog"][aria-modal="true"]:not(#mobile-navigation):not([hidden]):not([aria-hidden="true"])',
       )) return;
       mobileMenuButtonRef.current?.focus();
     });
