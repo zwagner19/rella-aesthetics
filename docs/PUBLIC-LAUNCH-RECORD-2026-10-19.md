@@ -8,14 +8,24 @@ Amie’s homepage, global styles, fonts, imagery and site chrome remain preserve
 
 | Surface | Live or review reference |
 |---|---|
-| Website functional source | `d03c03f3592b37737e4effeea04e659529a5d535`, tree `ad15566e6f5f45aa4cd60a183b2bd15cfa47dd64`, branch `codex/amie-shared-booking`. Retains the policy owner's October 20 source `30d437c` and October 21 local SEO release. |
-| Website RELEASE | `dpl_6y5fPsNxRETUGhRAkwpx29x9zW7x`, immutable host `rella-aesthetics-ke9kln2ap-zwagner19s-projects.vercel.app`. The website uses permanent backend origin `https://book.experiencerella.com`. |
-| Website QA | `dpl_6y5fPsNxRETUGhRAkwpx29x9zW7x`; [controlled preview](https://rella-aesthetics-controlled-launch-zwagner19s-projects.vercel.app/). The review alias serves the same immutable release and permanent booking backend as public. |
-| Public edge | `rella-controlled-launch`, version `c1e2eb37-a545-46df-bcb7-03cf6a1be733`, deployed at 100% at `2026-10-21T19:13:47Z`; `EDGE_ENABLED` string `true`, origin pinned to the immutable RELEASE above. Only `experiencerella.com/*` and `www.experiencerella.com/*` are bound. |
+| Website functional source | `5e8b4b807d0d7240227fbb307182ea3cf119086c`, tree `5d17d833042e205dab209421d28af13a8a983fcb`, branch `codex/amie-shared-booking`. Retains the policy owner's October 20 source `30d437c` and October 21 local SEO release. |
+| Website RELEASE | `dpl_ELp5X6oHV5osNTQkWdm21SnGsDXm`, immutable host `rella-aesthetics-8vufs8bmw-zwagner19s-projects.vercel.app`. The website uses permanent backend origin `https://book.experiencerella.com`. |
+| Website QA | `dpl_ELp5X6oHV5osNTQkWdm21SnGsDXm`; [controlled preview](https://rella-aesthetics-controlled-launch-zwagner19s-projects.vercel.app/). The review alias serves the same immutable release and permanent booking backend as public. |
+| Public edge | `rella-controlled-launch`, version `79938d0e-10cd-4272-aa7a-3a83f3c6dcdc`, deployed at 100% on October 21 after the cookie-control fix; `EDGE_ENABLED` string `true`, origin pinned to the immutable RELEASE above. Only `experiencerella.com/*` and `www.experiencerella.com/*` are bound. |
 | Public booking backend | `dpl_CMRZ6Dhf1FL7TQAdXZY387F3qWJE`, source `dd891ba6c2642eb62364af5c9fa9ac0cebe6266d`, immutable host `rella-booking-p7opekuui-zwagner19s-projects.vercel.app`. Both booking aliases were read back on this exact deployment on October 21. Attribution PR69 and booking-restoration PR67 are merged into main. |
 | Rella HQ | October 21 read-only observation: the app alias is `dpl_DyH4LLzADSNWru5AvEnGpax9kfaw` / `e240ce54c8691b67d56058e3412dad95a98f4447`; the actual scheduler is `dpl_D1wRj3e3qjLfcKWvyYTEDSRGQpAV` / `38609f4`. Their booking/attribution cron code is identical. Neither was changed for the initial website source release. Historical inquiry bridge delivery proof remains below; it was not re-tested by this attribution task. |
 
 The website Vercel project’s shared production alias was not generally promoted. The fixed website RELEASE is served through the Worker, preserving the existing weight-loss website deployment. No DNS, nameserver, TLS or security-setting change was needed.
+
+## Cookie control overlap — October 21
+
+A public owner screenshot and live browser readback reproduced the post-choice Cookie settings shortcut covering the booking Continue button. A single scoped CSS rule now hides only that background shortcut while an aria-modal dialog is present; it returns automatically when booking closes. The full cookie choice/status panel remains available. This also covers the existing package and mobile-navigation dialogs. No component, booking behavior, attribution/consent logic, global style, deposit code or backend setting changed.
+
+Application source `5e8b4b8` passed 86 existing attribution/integration tests, TypeScript, independent review and the staged production build. Live checks passed at 1280×720 and 390×844: the shortcut is hidden during booking, Continue is the actual pointer target at its center, settings return after closing booking, and the complete choice panel still opens and remains visible when booking is opened. The phone page has no horizontal overflow. Generated stylesheet comparison shows the single scoped hide rule plus the unused `.invisible` utility returning; all prior rules are unchanged. The latter has no live use or visual effect.
+
+Only the website Worker origin and controlled QA alias were updated to the release above. The permanent booking backend remains `dpl_CMRZ6Dhf1FL7TQAdXZY387F3qWJE`; the shared weight-loss website remains `dpl_2Z6PHXTs4cbNVdC4Qw3p8SAb5Axu`. No reservation, appointment, checkout, charge or advertising event was created. The browser viewport was reset. Existing open browser documents need a refresh to load the updated stylesheet.
+
+Immediate website rollback is Worker `c1e2eb37-a545-46df-bcb7-03cf6a1be733`, retaining the complete source-attribution release. Evidence: [live checks](../../../outputs/rella-cookie-fix-live-checks-2026-10-21.json), [CSS comparison](../../../outputs/rella-cookie-fix-css-comparison-2026-10-21.json), [desktop](../../../outputs/rella-cookie-fix-live-desktop-2026-10-21.png), [phone](../../../outputs/rella-cookie-fix-live-phone-2026-10-21.png).
 
 ## Source attribution — October 21
 
