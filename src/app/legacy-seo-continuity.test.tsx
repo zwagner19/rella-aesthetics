@@ -135,7 +135,7 @@ describe("internal SEO navigation", () => {
     expect(footer).not.toContain(">Education<");
   });
 
-  it("lists Napa House offerings without linking to category or city-guide pages", () => {
+  it("links Napa House offerings to the approved local treatment pages", () => {
     const html = renderToStaticMarkup(<NapaLocationPage />);
 
     expect(html).toContain("Injectables");
@@ -148,11 +148,12 @@ describe("internal SEO navigation", () => {
     expect(html).not.toContain('href="/services/lasers"');
     expect(html).not.toContain('href="/services/iv-hydration"');
     expect(html).not.toContain('href="/services/weight-loss"');
-    expect(html).not.toContain('href="/napa/botox"');
-    expect(html).not.toContain('href="/napa/facials"');
+    expect(html).toContain('href="/napa/botox/"');
+    expect(html).toContain('href="/napa/facials"');
+    expect(html).toContain('href="/napa/laser/"');
   });
 
-  it("lists Vacaville care categories without linking to the older city guides", () => {
+  it("links Vacaville care categories to the approved local treatment pages", () => {
     const html = renderToStaticMarkup(<VacavilleLocationPage />);
 
     expect(html).toContain("Injectables");
@@ -164,13 +165,13 @@ describe("internal SEO navigation", () => {
     expect(html).toContain("https://maps.google.com/?q=542+Main+St+Vacaville+CA+95688");
     expect(html).toContain("Book Vacaville");
 
+    for (const slug of ["botox", "facials", "laser"]) {
+      expect(html).toContain(`href="/vacaville/${slug}"`);
+    }
     for (const slug of [
-      "botox",
       "chemical-peels",
-      "facials",
       "filler",
       "hydrafacial",
-      "laser",
       "microneedling",
     ]) {
       expect(html).not.toContain(`href="/vacaville/${slug}"`);

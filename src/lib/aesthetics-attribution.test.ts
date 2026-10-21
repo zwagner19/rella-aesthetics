@@ -10,7 +10,9 @@ import {
   AD_USER_DATA_DENIED_COOKIE,
   AESTHETICS_ATTRIBUTION_ENDPOINT,
   AESTHETICS_CONSENT_COOKIE,
+  AESTHETICS_SOURCE_CONSENT_COOKIE,
   AestheticsAttributionController,
+  aestheticsSourceEvidence,
   cleanAestheticsBookingHref,
   hasEligibleAestheticsPaidClick,
   isApprovedAestheticsPage,
@@ -27,6 +29,13 @@ const GRANT_RESPONSE = {
   attributionId: "attr_opaque_server_value",
   consentAdUserData: "granted",
   clickIdentifiersStored: true,
+};
+const SOURCE_RESPONSE = {
+  ok: true,
+  attributionId: "attr_opaque_source_value",
+  consentAdUserData: "granted",
+  sourceStored: true,
+  clickIdentifiersStored: false,
 };
 const DENY_RESPONSE = {
   ok: true,
@@ -53,6 +62,7 @@ function deferredResponse(): DeferredResponse {
 
 class FakeRuntime implements AestheticsAttributionRuntime {
   href = "https://experiencerella.com/napa/botox/";
+  referringHref = "";
   host = "experiencerella.com";
   cookies = new Map<string, string>();
   cookieWrites: string[] = [];
@@ -68,6 +78,7 @@ class FakeRuntime implements AestheticsAttributionRuntime {
   private nextTimer = 1;
 
   currentHref = () => this.href;
+  referrer = () => this.referringHref;
   hostname = () => this.host;
   cookieHeader = () =>
     [...this.cookies].map(([name, value]) => `${name}=${value}`).join("; ");
@@ -122,11 +133,16 @@ class FakeRuntime implements AestheticsAttributionRuntime {
     this.publications.push(message);
   };
 
-  setChoice(choice: "granted" | "denied") {
+  setChoice(choice: "granted" | "denied", widerPurpose = true) {
     this.cookies.set(
       AESTHETICS_CONSENT_COOKIE,
       `v1.${choice}.${Math.floor(NOW / 1000)}`,
     );
+    if (choice === "granted" && widerPurpose) {
+      const handle = `rvh_${"A".repeat(43)}`;
+      this.cookies.set(AD_ATTRIBUTION_REVOCATION_COOKIE, handle);
+      this.cookies.set(AESTHETICS_SOURCE_CONSENT_COOKIE, `v1.granted.${Math.floor(NOW / 1000)}.${handle}`);
+    }
   }
 }
 
@@ -243,6 +259,7 @@ describe("consent-safe aesthetics capture", () => {
     await controller.accept();
     expect(runtime.requests[0].body).toEqual({
       location, consentAdUserData: "granted", gclid: "bounded-click", campaignid: "123",
+      sourceEvidence: "google_click", utm_source: "google", utm_medium: "cpc",
       revocationHandle: expect.stringMatching(/^rvh_[A-Za-z0-9_-]{43}$/),
     });
     expect(JSON.stringify(runtime.requests[0].body)).not.toContain(path === "/" ? "clinical-detail" : path);
@@ -341,18 +358,18 @@ describe("consent-safe aesthetics capture", () => {
     runtime.href = "https://experiencerella.com/contact";
     controller.reconcileNavigation();
     await controller.accept();
-    expect(view()).toMatchObject({ mode: "hidden" });
+    expect(view()).toMatchObject({ mode: "reopen", phase: "granted" });
     expect(runtime.requests).toHaveLength(0);
   });
 
-  it("is invisible and makes no request for an ordinary organic visitor", () => {
+  it("offers the existing choice without collecting an ordinary visitor before consent", () => {
     const runtime = new FakeRuntime();
     const controller = new AestheticsAttributionController(runtime);
     const view = observe(controller);
 
     controller.start();
 
-    expect(view()).toMatchObject({ mode: "hidden", phase: "hidden" });
+    expect(view()).toMatchObject({ mode: "panel", phase: "choice" });
     expect(runtime.requests).toHaveLength(0);
     expect(runtime.cookieWrites).toHaveLength(0);
   });
@@ -433,6 +450,9 @@ describe("consent-safe aesthetics capture", () => {
       gclid: "paid-click.1",
       campaignid: "123",
       adgroupid: "456",
+      sourceEvidence: "google_click",
+      utm_source: "google",
+      utm_medium: "cpc",
     });
     expect(runtime.href).toBe(
       "https://experiencerella.com/napa/botox/?email=person%40example.com",
@@ -496,7 +516,7 @@ describe("consent-safe aesthetics capture", () => {
     });
   });
 
-  it("captures remembered consent at both clinics and does not repost on refresh", async () => {
+  it("captures both clinics once per entry and leaves internal navigation unchanged", async () => {
     const runtime = new FakeRuntime();
     runtime.setChoice("granted");
     runtime.href =
@@ -521,10 +541,15 @@ describe("consent-safe aesthetics capture", () => {
     expect(runtime.requests).toHaveLength(2);
     first.destroy();
 
+    runtime.responses.push(SOURCE_RESPONSE);
     const refreshed = new AestheticsAttributionController(runtime);
     refreshed.start();
     await settle();
-    expect(runtime.requests).toHaveLength(2);
+    expect(runtime.requests).toHaveLength(3);
+    expect(runtime.requests[2].body).toMatchObject({
+      sourceEvidence: "direct_or_unknown", utm_source: "direct_or_unknown", utm_medium: "none",
+    });
+    expect(runtime.requests[2].body).not.toHaveProperty("gclid");
   });
 
   it("holds a booking while grant is pending, then navigates with a clean URL", async () => {
@@ -609,5 +634,268 @@ describe("consent-safe aesthetics capture", () => {
       revocationHandle: replacementHandle,
     });
     expect(grant?.body).not.toHaveProperty("revocationPredecessorHandle");
+  });
+});
+
+describe("bounded all-channel source evidence", () => {
+  it.each([
+    ["?utm_source=Newsletter&utm_medium=EMAIL&utm_campaign=private-care&utm_content=person@example.com", "", "utm", "newsletter", "email"],
+    ["?utm_source=facebook&utm_medium=paid_social", "", "utm", "facebook", "paid_social"],
+    ["?gclid=bounded-click&utm_source=facebook&utm_medium=social", "", "google_click", "google", "cpc"],
+    ["", "https://www.google.com/search?q=private+medical+question", "referrer", "google", "organic"],
+    ["", "https://l.instagram.com/?email=person@example.com", "referrer", "instagram", "social"],
+    ["", "https://partner.example.test/private/patient", "referrer", "other", "referral"],
+    ["", "https://experiencerella.com/services/botox", "direct_or_unknown", "direct_or_unknown", "none"],
+    ["", "https://book.experiencerella.com/book/napa/botox", "direct_or_unknown", "direct_or_unknown", "none"],
+    ["", "", "direct_or_unknown", "direct_or_unknown", "none"],
+    ["?utm_source=person@example.com&utm_medium=email", "", "utm", "other", "unknown"],
+    ["?utm_source=google&utm_source=facebook&utm_medium=cpc", "", "utm", "other", "unknown"],
+    ["?utm_source=google&utm_medium=cpc&utm_medium=social", "", "utm", "other", "unknown"],
+    ["?utm_source=fb&utm_medium=paid-social", "", "utm", "facebook", "paid_social"],
+    ["?utm_source=facebook.com&utm_medium=social", "", "utm", "facebook", "social"],
+    ["?utm_source=ig&utm_medium=social", "", "utm", "instagram", "social"],
+    ["?utm_source=instagram.com&utm_medium=social", "", "utm", "instagram", "social"],
+    ["?utm_source=gbp&utm_medium=organic", "", "utm", "google_business_profile", "organic"],
+    ["?utm_source=gmb&utm_medium=organic", "", "utm", "google_business_profile", "organic"],
+    ["?utm_source=google&utm_medium=organic&utm_campaign=google_business_profile", "", "utm", "google_business_profile", "organic"],
+    ["?utm_source=google&utm_medium=organic&utm_campaign=gbp&utm_campaign=gmb", "", "utm", "other", "unknown"],
+    ["?gclid=bounded-click&utm_source=google&utm_medium=organic&utm_campaign=gbp", "", "google_click", "google", "cpc"],
+    ["?utm_source=linkedin.com&utm_medium=social", "", "utm", "linkedin", "social"],
+    ["", "https://www.linkedin.com/feed/private", "referrer", "linkedin", "social"],
+    ["?utm_campaign=private-condition", "https://www.google.com/search", "utm", "other", "unknown"],
+    ["?utm_source=arbitrary-brand&utm_medium=cpc", "https://www.google.com/search", "utm", "other", "unknown"],
+    ["", "https://www.google.com.evil.test/search", "referrer", "other", "referral"],
+    ["", "https://person:secret@google.com/search", "direct_or_unknown", "direct_or_unknown", "none"],
+  ])("classifies only finite evidence from %s and %s", (search, referrer, evidence, source, medium) => {
+    expect(aestheticsSourceEvidence(search, referrer)).toEqual({
+      sourceEvidence: evidence, utm_source: source, utm_medium: medium,
+    });
+  });
+
+  it.each([
+    ["?utm_source=email&utm_medium=email&utm_term=private-condition", ""],
+    ["", "https://www.google.com/search?q=private-condition&email=person@example.com"],
+    ["", ""],
+  ])("keeps each source in memory until the wider choice is granted: %s", async (search, referrer) => {
+    const runtime = new FakeRuntime();
+    runtime.href = `https://experiencerella.com/${search}`;
+    runtime.referringHref = referrer;
+    runtime.responses.push(SOURCE_RESPONSE);
+    const controller = new AestheticsAttributionController(runtime);
+    controller.start();
+    controller.reconcileNavigation();
+    expect(runtime.requests).toHaveLength(0);
+    expect(runtime.cookieWrites).toHaveLength(0);
+    await controller.accept();
+    expect(runtime.requests).toHaveLength(1);
+    expect(runtime.requests[0].body).toEqual({
+      location: "unknown", consentAdUserData: "granted",
+      revocationHandle: expect.stringMatching(/^rvh_[A-Za-z0-9_-]{43}$/),
+      ...aestheticsSourceEvidence(search, referrer),
+    });
+    const persisted = JSON.stringify([runtime.requests[0].body, runtime.cookieWrites]);
+    expect(persisted).not.toMatch(/private-condition|person@example|\/search|utm_term|utm_campaign|utm_content/);
+    expect(runtime.requests[0].init.referrerPolicy).toBe("origin");
+    expect(runtime.cookies.get(AESTHETICS_SOURCE_CONSENT_COOKIE)).toMatch(/^v1\.granted\./);
+  });
+
+  it("does not reinterpret an older Google-only grant as broader consent", async () => {
+    const runtime = new FakeRuntime();
+    runtime.href = "https://experiencerella.com/?utm_source=newsletter&utm_medium=email";
+    runtime.setChoice("granted", false);
+    runtime.cookies.set(AD_ATTRIBUTION_REVOCATION_COOKIE, `rvh_${"A".repeat(43)}`);
+    runtime.responses.push(SOURCE_RESPONSE);
+    const controller = new AestheticsAttributionController(runtime);
+    const view = observe(controller);
+    controller.start();
+    await settle();
+    expect(view()).toMatchObject({ mode: "panel", phase: "choice" });
+    expect(runtime.requests).toHaveLength(0);
+    await expect(controller.prepareBooking()).rejects.toThrow("Choose whether to accept cookies");
+    await controller.accept();
+    expect(runtime.requests[0].body).toMatchObject({ sourceEvidence: "utm", utm_source: "newsletter" });
+    expect(runtime.cookies.get(AESTHETICS_CONSENT_COOKIE)).toMatch(/^v1\.granted\./);
+  });
+
+  it.each(["receipt", "handle"])("does not revive a broader purpose after WordPress changes the legacy %s", async changed => {
+    const runtime = new FakeRuntime();
+    runtime.setChoice("granted");
+    const previousMarker = runtime.cookies.get(AESTHETICS_SOURCE_CONSENT_COOKIE);
+    if (changed === "receipt") {
+      runtime.cookies.set(AESTHETICS_CONSENT_COOKIE, `v1.granted.${Math.floor(NOW / 1000) - 1}`);
+    } else {
+      runtime.cookies.set(AD_ATTRIBUTION_REVOCATION_COOKIE, `rvh_${"B".repeat(43)}`);
+    }
+    runtime.responses.push(SOURCE_RESPONSE);
+    const controller = new AestheticsAttributionController(runtime);
+    const view = observe(controller);
+    controller.start();
+    await settle();
+    expect(view()).toMatchObject({ phase: "choice" });
+    expect(runtime.requests).toHaveLength(0);
+    await controller.accept();
+    expect(runtime.requests).toHaveLength(1);
+    expect(runtime.cookies.get(AESTHETICS_SOURCE_CONSENT_COOKIE)).toBe(
+      `${runtime.cookies.get(AESTHETICS_CONSENT_COOKIE)}.${runtime.cookies.get(AD_ATTRIBUTION_REVOCATION_COOKIE)}`,
+    );
+    if (changed === "handle") expect(runtime.cookies.get(AESTHETICS_SOURCE_CONSENT_COOKIE)).not.toBe(previousMarker);
+  });
+
+  it("requires source acknowledgement and preserves decline-to-book after a failed capture", async () => {
+    const runtime = new FakeRuntime();
+    runtime.href = "https://experiencerella.com/?utm_source=email&utm_medium=email";
+    runtime.responses.push({ ...SOURCE_RESPONSE, sourceStored: false }, DENY_RESPONSE);
+    const controller = new AestheticsAttributionController(runtime);
+    const view = observe(controller);
+    controller.start();
+    let opened = 0;
+    controller.guardBookingNavigation("https://book.experiencerella.com/book", () => { opened += 1; });
+    await controller.accept();
+    expect(view()).toMatchObject({ mode: "panel", phase: "error" });
+    expect(opened).toBe(0);
+    await expect(controller.prepareBooking()).rejects.toThrow();
+    await controller.deny();
+    expect(opened).toBe(1);
+    await expect(controller.prepareBooking()).resolves.toBeUndefined();
+    expect(runtime.cookies.has(AESTHETICS_SOURCE_CONSENT_COOKIE)).toBe(false);
+    expect(runtime.requests.at(-1)?.body).not.toHaveProperty("sourceEvidence");
+  });
+
+  it("does not accept source-only acknowledgement for a Google click", async () => {
+    const runtime = new FakeRuntime();
+    runtime.href = "https://experiencerella.com/?gclid=unacknowledged";
+    runtime.responses.push(SOURCE_RESPONSE);
+    const controller = new AestheticsAttributionController(runtime);
+    const view = observe(controller);
+    controller.start();
+    await controller.accept();
+    expect(view()).toMatchObject({ mode: "panel", phase: "error" });
+    expect(runtime.href).toContain("gclid=");
+  });
+
+  it("bounds a stalled source request and keeps decline available to continue booking", async () => {
+    const runtime = new FakeRuntime();
+    const normalFetch = runtime.fetch;
+    runtime.fetch = async (_input, init) => new Promise<AttributionFetchResponse>((_resolve, reject) => {
+      init.signal?.addEventListener("abort", () => reject(new Error("aborted")), { once: true });
+    });
+    const controller = new AestheticsAttributionController(runtime);
+    const view = observe(controller);
+    controller.start();
+    let opened = 0;
+    controller.guardBookingNavigation("https://book.experiencerella.com/book", () => { opened += 1; });
+    const accepting = controller.accept();
+    await settle();
+    expect(runtime.timers.size).toBe(1);
+    for (const abort of runtime.timers.values()) abort();
+    await accepting;
+    expect(view()).toMatchObject({ phase: "error", mode: "panel" });
+    expect(opened).toBe(0);
+    runtime.fetch = normalFetch;
+    await controller.deny();
+    expect(opened).toBe(1);
+    expect(view()).toMatchObject({ phase: "denied" });
+  });
+
+  it("fails closed if the wider purpose cookie cannot be saved", async () => {
+    const runtime = new FakeRuntime();
+    runtime.rejectedCookies.add(AESTHETICS_SOURCE_CONSENT_COOKIE);
+    const controller = new AestheticsAttributionController(runtime);
+    controller.start();
+    await controller.accept();
+    expect(runtime.requests.every(request => request.body.consentAdUserData === "denied")).toBe(true);
+    expect(runtime.requests.every(request => !Object.hasOwn(request.body, "sourceEvidence"))).toBe(true);
+    expect(runtime.cookies.get(AESTHETICS_CONSENT_COOKIE)).toMatch(/^v1\.denied\./);
+  });
+
+  it("does not resurrect declined UTM or referrer evidence when cookies are later allowed", async () => {
+    const runtime = new FakeRuntime();
+    runtime.href = "https://experiencerella.com/?utm_source=email&utm_medium=email";
+    runtime.referringHref = "https://www.google.com/search?q=private-condition";
+    const controller = new AestheticsAttributionController(runtime);
+    controller.start();
+    await controller.deny();
+    await controller.accept();
+    expect(runtime.requests.every(request => request.body.consentAdUserData === "denied")).toBe(true);
+    runtime.responses.push(SOURCE_RESPONSE);
+    runtime.href = "https://experiencerella.com/locations/vacaville?utm_source=instagram&utm_medium=social";
+    controller.reconcileNavigation();
+    await settle();
+    expect(runtime.requests.at(-1)?.body).toMatchObject({
+      location: "vacaville", sourceEvidence: "utm", utm_source: "instagram", utm_medium: "social",
+    });
+    expect(JSON.stringify(runtime.requests)).not.toContain("private-condition");
+  });
+
+  it("captures an entry once without replacing it during ordinary internal navigation", async () => {
+    const runtime = new FakeRuntime();
+    runtime.href = "https://experiencerella.com/?utm_source=newsletter&utm_medium=email";
+    runtime.responses.push(SOURCE_RESPONSE, SOURCE_RESPONSE);
+    const controller = new AestheticsAttributionController(runtime);
+    controller.start();
+    await controller.accept();
+    runtime.href = "https://experiencerella.com/locations/napa";
+    controller.reconcileNavigation();
+    await settle();
+    expect(runtime.requests).toHaveLength(1);
+    runtime.href = "https://experiencerella.com/locations/napa?utm_source=facebook&utm_medium=paid_social";
+    controller.reconcileNavigation();
+    await settle();
+    expect(runtime.requests).toHaveLength(2);
+    expect(runtime.requests[1].body).toMatchObject({ location: "napa", utm_source: "facebook", utm_medium: "paid_social" });
+  });
+
+  it("waits for the newer source when an older acknowledgement arrives late", async () => {
+    const runtime = new FakeRuntime();
+    runtime.href = "https://experiencerella.com/?utm_source=email&utm_medium=email";
+    runtime.setChoice("granted");
+    const first = deferredResponse();
+    const second = deferredResponse();
+    runtime.responses.push(first.promise, second.promise);
+    const controller = new AestheticsAttributionController(runtime);
+    controller.start();
+    await settle();
+    let ready = false;
+    const preparing = controller.prepareBooking().then(() => { ready = true; });
+    runtime.href = "https://experiencerella.com/locations/vacaville?utm_source=instagram&utm_medium=social";
+    controller.reconcileNavigation();
+    first.resolve(SOURCE_RESPONSE);
+    await settle();
+    expect(ready).toBe(false);
+    expect(runtime.publications).toHaveLength(0);
+    expect(runtime.requests[1].body).toMatchObject({ utm_source: "instagram" });
+    second.resolve(SOURCE_RESPONSE);
+    await preparing;
+    expect(ready).toBe(true);
+    expect(runtime.href).not.toContain("utm_source");
+  });
+
+  it.each(["granted", "denied"] as const)("does not resume a booking from a late ACK after another tab changes consent to %s", async nextChoice => {
+    const runtime = new FakeRuntime();
+    runtime.href = "https://experiencerella.com/?utm_source=email&utm_medium=email";
+    const pending = deferredResponse();
+    runtime.responses.push(pending.promise);
+    const controller = new AestheticsAttributionController(runtime);
+    const view = observe(controller);
+    controller.start();
+    let opened = 0;
+    controller.guardBookingNavigation("https://book.experiencerella.com/book", () => { opened += 1; });
+    const accepting = controller.accept();
+    await settle();
+    const receipt = `v1.${nextChoice}.${Math.floor(NOW / 1000) - 1}`;
+    const handle = `rvh_${"Z".repeat(43)}`;
+    runtime.cookies.set(AESTHETICS_CONSENT_COOKIE, receipt);
+    runtime.cookies.set(AD_ATTRIBUTION_REVOCATION_COOKIE, handle);
+    if (nextChoice === "granted") runtime.cookies.set(AESTHETICS_SOURCE_CONSENT_COOKIE, `${receipt}.${handle}`);
+    else runtime.cookies.set(AD_USER_DATA_DENIED_COOKIE, "1");
+    pending.resolve(SOURCE_RESPONSE);
+    await accepting;
+    expect(opened).toBe(0);
+    expect(runtime.replacements).toHaveLength(0);
+    expect(runtime.publications).toHaveLength(0);
+    expect(runtime.cookies.has(AESTHETICS_SOURCE_CONSENT_COOKIE)).toBe(false);
+    expect(view()?.phase).toBe(nextChoice === "granted" ? "choice" : "denied");
+    if (nextChoice === "granted") await expect(controller.prepareBooking()).rejects.toThrow("Choose whether to accept cookies");
+    else expect(runtime.requests.at(-1)?.body).not.toHaveProperty("sourceEvidence");
   });
 });

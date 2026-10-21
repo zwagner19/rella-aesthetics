@@ -201,8 +201,8 @@ function AestheticsAttributionConsentClient() {
         Cookies
       </h2>
       <p id="rella-aesthetics-cookie-copy" className={styles.copy}>
-        Accept cookies to help us understand whether a Google ad leads to a
-        booked appointment. Booking and care are unchanged. {" "}
+        Accept cookies to help us understand how you found Rella and whether
+        your visit leads to a booked appointment. Booking and care are unchanged. {" "}
         <a href="/privacy-policy">
           Privacy policy
         </a>
