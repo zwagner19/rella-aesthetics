@@ -14,7 +14,13 @@ export const metadata: Metadata = {
 
 const loc = locations.vacaville;
 
-const categories = ["Injectables", "Skin", "Lasers", "Wellness", "Weight"] as const;
+const categories = [
+  { label: "Injectables", href: "/vacaville/botox", ariaLabel: "Injectables: Botox and Dysport in Vacaville" },
+  { label: "Skin", href: "/vacaville/facials", ariaLabel: "Skin: Facials in Vacaville" },
+  { label: "Lasers", href: "/vacaville/laser", ariaLabel: "Lasers: Laser treatments in Vacaville" },
+  { label: "Wellness" },
+  { label: "Weight" },
+] as const;
 
 /** Primary Vacaville staff from the verified team directory. */
 const vacavillePeople = [
@@ -194,10 +200,14 @@ export default function VacavillePage() {
           <ul className="border-t border-rule" role="list">
             {categories.map((category) => (
               <li
-                key={category}
+                key={category.label}
                 className="border-b border-rule py-3.5 text-xl font-medium tracking-[-0.01em] text-ink md:py-4 md:text-2xl"
               >
-                {category}
+                {"href" in category ? (
+                  <a href={category.href} aria-label={category.ariaLabel} className="block">
+                    {category.label}
+                  </a>
+                ) : category.label}
               </li>
             ))}
           </ul>

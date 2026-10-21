@@ -4,7 +4,7 @@ import { locations } from "@/lib/data";
 import { localBusinessSchema } from "@/lib/schemas";
 
 export const metadata: Metadata = {
-  title: "Napa House | Rella Aesthetics Downtown Napa",
+  title: "Napa House Med Spa | Downtown Napa",
   description:
     "Visit Rella Aesthetics Napa House at 1541 3rd St in downtown Napa — consultation-led aesthetics, wellness, and hospitality-first care.",
   alternates: { canonical: "/locations/napa" },

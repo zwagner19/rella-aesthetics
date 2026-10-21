@@ -28,11 +28,11 @@ export const napaHousePractical = {
  * Peels + microneedling remain Vacaville-only in service-data — not claimed here as Napa exclusives.
  */
 export const napaHouseCategories = [
-  { label: "Injectables", href: "/services/injectables" },
-  { label: "Skin", href: "/services/skin" },
-  { label: "Lasers", href: "/services/lasers" },
-  { label: "Wellness", href: "/services/iv-hydration" },
-  { label: "Weight", href: "/services/weight-loss" },
+  { label: "Injectables", href: "/napa/botox/", ariaLabel: "Injectables: Botox and Dysport in Napa" },
+  { label: "Skin", href: "/napa/facials", ariaLabel: "Skin: Facials in Napa" },
+  { label: "Lasers", href: "/napa/laser/", ariaLabel: "Lasers: Laser treatments in Napa" },
+  { label: "Wellness" },
+  { label: "Weight" },
 ] as const;
 
 /**
