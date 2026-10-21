@@ -102,6 +102,11 @@
   box-shadow: 0 7px 20px rgb(45 31 29 / 14%);
 }
 
+/* Keep the background settings shortcut out of active modal controls. */
+:global(body:has([role="dialog"][aria-modal="true"])) .reopen {
+  display: none;
+}
+
 @media (max-width: 640px) {
   .panel,
   .reopen {
