@@ -5,6 +5,7 @@ import { join } from "node:path";
 import { servicePages } from "./service-data";
 import { LOCAL_EDITORIAL_POSTS } from "./local-editorial-posts";
 import { WORDPRESS_LANDINGS } from "../../edge/controlled-launch-worker.mjs";
+import { requestClinicBookingEntry } from "./clinic-booking-entry";
 import {
   AD_ATTRIBUTION_REVOCATION_COOKIE,
   AD_USER_DATA_DENIED_COOKIE,
@@ -157,6 +158,78 @@ function observe(controller: AestheticsAttributionController) {
 async function settle() {
   for (let index = 0; index < 8; index += 1) await Promise.resolve();
 }
+
+describe("clinic booking-link entry and source consent", () => {
+  it.each(["napa", "vacaville"] as const)("waits for a %s source acknowledgement before opening the existing modal", async location => {
+    const runtime = new FakeRuntime();
+    runtime.href = `https://experiencerella.com/locations/${location}?booking=open&utm_source=google_business_profile&utm_medium=organic`;
+    const acknowledgement = deferredResponse();
+    runtime.responses.push(acknowledgement.promise);
+    const controller = new AestheticsAttributionController(runtime);
+    const opened: unknown[] = [];
+    const entryRuntime = { currentHref: runtime.currentHref, replaceHref: runtime.replaceHref, open: (intent: unknown) => { opened.push(intent); } };
+    controller.start();
+    requestClinicBookingEntry(controller, entryRuntime);
+    requestClinicBookingEntry(controller, entryRuntime);
+    expect(runtime.requests).toHaveLength(0);
+    expect(opened).toHaveLength(0);
+    expect(runtime.href).toContain("booking=open");
+
+    const accepting = controller.accept();
+    await settle();
+    expect(runtime.requests[0].body).toMatchObject({ location, utm_source: "google_business_profile", utm_medium: "organic", consentAdUserData: "granted" });
+    expect(opened).toHaveLength(0);
+    acknowledgement.resolve(SOURCE_RESPONSE);
+    await accepting;
+    expect(opened).toEqual([{ location }]);
+    expect(runtime.href).not.toContain("booking=");
+    expect(runtime.navigations).toHaveLength(0);
+    requestClinicBookingEntry(controller, entryRuntime);
+    expect(opened).toHaveLength(1);
+  });
+
+  it.each(["napa", "vacaville"] as const)("opens %s normally after declining measurement", async location => {
+    const runtime = new FakeRuntime();
+    runtime.href = `https://experiencerella.com/locations/${location}?booking=open&utm_source=sms&utm_medium=sms`;
+    const controller = new AestheticsAttributionController(runtime);
+    const opened: unknown[] = [];
+    controller.start();
+    requestClinicBookingEntry(controller, { currentHref: runtime.currentHref, replaceHref: runtime.replaceHref, open: (intent: unknown) => { opened.push(intent); } });
+    await controller.deny();
+    expect(opened).toEqual([{ location }]);
+    expect(runtime.requests.every(request => request.body.consentAdUserData === "denied" && !("utm_source" in request.body))).toBe(true);
+    expect(runtime.href).not.toContain("booking=");
+  });
+
+  it("does not open a stale entry when the visitor navigates away during a cookie choice", async () => {
+    const runtime = new FakeRuntime();
+    runtime.href = "https://experiencerella.com/locations/napa?booking=open&utm_source=sms&utm_medium=sms";
+    const controller = new AestheticsAttributionController(runtime);
+    const opened: unknown[] = [];
+    controller.start();
+    requestClinicBookingEntry(controller, { currentHref: runtime.currentHref, replaceHref: runtime.replaceHref, open: (intent: unknown) => { opened.push(intent); } });
+    runtime.href = "https://experiencerella.com/services";
+    controller.reconcileNavigation();
+    await controller.deny();
+    expect(opened).toHaveLength(0);
+  });
+
+  it("keeps a pending entry through controller effect replay", async () => {
+    const runtime = new FakeRuntime();
+    runtime.href = "https://experiencerella.com/locations/napa?booking=open&utm_source=sms&utm_medium=sms";
+    const opened: unknown[] = [];
+    const entryRuntime = { currentHref: runtime.currentHref, replaceHref: runtime.replaceHref, open: (intent: unknown) => { opened.push(intent); } };
+    const first = new AestheticsAttributionController(runtime);
+    first.start();
+    requestClinicBookingEntry(first, entryRuntime);
+    first.destroy();
+    const replayed = new AestheticsAttributionController(runtime);
+    replayed.start();
+    requestClinicBookingEntry(replayed, entryRuntime);
+    await replayed.deny();
+    expect(opened).toEqual([{ location: "napa" }]);
+  });
+});
 
 describe("paid aesthetics eligibility and URL boundaries", () => {
   it("covers Next marketing routes while classifying retained WordPress sitemap pages separately", async () => {

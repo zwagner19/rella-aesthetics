@@ -3,6 +3,8 @@
 import { Suspense, useEffect, useRef, useState } from "react";
 import { usePathname, useSearchParams } from "next/navigation";
 import { registerAestheticsBookingPreparation } from "@/lib/aesthetics-booking-boundary";
+import { requestClinicBookingEntry } from "@/lib/clinic-booking-entry";
+import { useGuidedBooking } from "@/components/guided-booking/BookingExperienceProvider";
 import {
   AESTHETICS_CONSENT_CHANNEL,
   AestheticsAttributionController,
@@ -35,8 +37,7 @@ function AestheticsAttributionConsentClient() {
   const acceptRef = useRef<HTMLButtonElement | null>(null);
   const pathname = usePathname();
   const search = useSearchParams()?.toString();
-
-  useEffect(() => { controllerRef.current?.reconcileNavigation(); }, [pathname, search]);
+  const openBooking = useGuidedBooking()?.open;
 
   useEffect(() => {
     let channel: BroadcastChannel | null = null;
@@ -168,6 +169,19 @@ function AestheticsAttributionConsentClient() {
       if (controllerRef.current === controller) controllerRef.current = null;
     };
   }, []);
+
+  useEffect(() => {
+    const controller = controllerRef.current;
+    if (!controller) return;
+    controller.reconcileNavigation();
+    if (openBooking) {
+      requestClinicBookingEntry(controller, {
+        currentHref: () => window.location.href,
+        replaceHref: href => window.history.replaceState(window.history.state, "", href),
+        open: openBooking,
+      });
+    }
+  }, [pathname, search, openBooking]);
 
   if (view.mode === "hidden") return null;
 
