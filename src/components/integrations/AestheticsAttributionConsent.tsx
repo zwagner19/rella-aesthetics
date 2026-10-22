@@ -171,16 +171,25 @@ function AestheticsAttributionConsentClient() {
   }, []);
 
   useEffect(() => {
-    const controller = controllerRef.current;
-    if (!controller) return;
-    controller.reconcileNavigation();
-    if (openBooking) {
-      requestClinicBookingEntry(controller, {
-        currentHref: () => window.location.href,
-        replaceHref: href => window.history.replaceState(window.history.state, "", href),
-        open: openBooking,
-      });
+    function reconcileEntry() {
+      const controller = controllerRef.current;
+      if (!controller) return;
+      controller.reconcileNavigation();
+      if (openBooking) {
+        requestClinicBookingEntry(controller, {
+          currentHref: () => window.location.href,
+          replaceHref: href => window.history.replaceState(window.history.state, "", href),
+          open: openBooking,
+        });
+      }
     }
+    reconcileEntry();
+    window.addEventListener("hashchange", reconcileEntry);
+    window.addEventListener("popstate", reconcileEntry);
+    return () => {
+      window.removeEventListener("hashchange", reconcileEntry);
+      window.removeEventListener("popstate", reconcileEntry);
+    };
   }, [pathname, search, openBooking]);
 
   if (view.mode === "hidden") return null;

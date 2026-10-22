@@ -254,6 +254,57 @@ describe("clinic booking-link entry and source consent", () => {
     await replayed.deny();
     expect(opened).toEqual([{ location: "napa" }]);
   });
+
+  it("opens a same-document legacy entry once while sharing the in-flight source capture", async () => {
+    const runtime = new FakeRuntime();
+    runtime.href = "https://experiencerella.com/?utm_source=referral&utm_medium=referral";
+    runtime.setChoice("granted");
+    const acknowledgement = deferredResponse();
+    runtime.responses.push(acknowledgement.promise);
+    const controller = new AestheticsAttributionController(runtime);
+    const opened: unknown[] = [];
+    const entryRuntime = { currentHref: runtime.currentHref, replaceHref: runtime.replaceHref, open: (intent: unknown) => { opened.push(intent); } };
+    controller.start();
+    await settle();
+    expect(runtime.requests).toHaveLength(1);
+
+    runtime.href += "#book-now";
+    // Browsers can dispatch both popstate and hashchange for one history move.
+    for (let event = 0; event < 2; event += 1) {
+      controller.reconcileNavigation();
+      requestClinicBookingEntry(controller, entryRuntime);
+    }
+    await settle();
+    expect(runtime.requests).toHaveLength(1);
+    expect(opened).toEqual([]);
+    acknowledgement.resolve(SOURCE_RESPONSE);
+    await controller.prepareBooking();
+    expect(opened).toEqual([{}]);
+    expect(runtime.href).toBe("https://experiencerella.com/");
+    controller.reconcileNavigation();
+    requestClinicBookingEntry(controller, entryRuntime);
+    expect(runtime.requests).toHaveLength(1);
+    expect(opened).toHaveLength(1);
+  });
+
+  it("opens a later same-document legacy entry with measurement already declined", async () => {
+    const runtime = new FakeRuntime();
+    runtime.href = "https://experiencerella.com/";
+    runtime.setChoice("denied");
+    const controller = new AestheticsAttributionController(runtime);
+    const opened: unknown[] = [];
+    const entryRuntime = { currentHref: runtime.currentHref, replaceHref: runtime.replaceHref, open: (intent: unknown) => { opened.push(intent); } };
+    controller.start();
+    await settle();
+    runtime.href += "#book-now";
+    for (let event = 0; event < 2; event += 1) {
+      controller.reconcileNavigation();
+      requestClinicBookingEntry(controller, entryRuntime);
+    }
+    expect(opened).toEqual([{}]);
+    expect(runtime.requests.every(request => request.body.consentAdUserData === "denied" && !("utm_source" in request.body))).toBe(true);
+    expect(runtime.href).toBe("https://experiencerella.com/");
+  });
 });
 
 describe("paid aesthetics eligibility and URL boundaries", () => {
