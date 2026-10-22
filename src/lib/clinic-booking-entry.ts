@@ -13,15 +13,17 @@ export function clinicBookingEntry(href: string): {
     return null;
   }
   const location = /^\/locations\/(napa|vacaville)\/?$/.exec(url.pathname)?.[1];
+  const legacyChooser = url.pathname === "/" && url.hash === "#book-now" && !url.searchParams.has("booking");
+  const clinicEntry = !!location && url.searchParams.getAll("booking").length === 1 && url.searchParams.get("booking") === "open";
   if (
     url.protocol !== "https:" || url.username || url.password || url.port ||
     !isApprovedAestheticsPage(url.hostname, url.pathname) ||
-    !location || url.searchParams.getAll("booking").length !== 1 ||
-    url.searchParams.get("booking") !== "open"
+    (!legacyChooser && !clinicEntry)
   ) return null;
 
-  const intent: BookingIntent = { location: location as "napa" | "vacaville" };
+  const intent: BookingIntent = location ? { location: location as "napa" | "vacaville" } : {};
   url.searchParams.delete("booking");
+  if (legacyChooser) url.hash = "";
   return { intent, bookingHref: resolveBookingHref(intent), cleanHref: url.href };
 }
 

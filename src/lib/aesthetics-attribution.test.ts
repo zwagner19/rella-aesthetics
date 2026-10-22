@@ -160,6 +160,31 @@ async function settle() {
 }
 
 describe("clinic booking-link entry and source consent", () => {
+  it.each(["granted", "denied"] as const)("restores the existing Linktree anchor after a %s choice", async choice => {
+    const runtime = new FakeRuntime();
+    runtime.href = "https://experiencerella.com/#book-now";
+    runtime.referringHref = "https://linktr.ee/experiencerella";
+    runtime.responses.push(choice === "granted" ? SOURCE_RESPONSE : DENY_RESPONSE);
+    const controller = new AestheticsAttributionController(runtime);
+    const opened: unknown[] = [];
+    controller.start();
+    requestClinicBookingEntry(controller, {
+      currentHref: runtime.currentHref,
+      replaceHref: runtime.replaceHref,
+      open: intent => { opened.push(intent); },
+    });
+    expect(opened).toEqual([]);
+    expect(runtime.requests).toHaveLength(0);
+    if (choice === "granted") await controller.accept();
+    else await controller.deny();
+    await settle();
+    expect(opened).toEqual([{}]);
+    expect(runtime.href).toBe("https://experiencerella.com/");
+    if (choice === "granted") expect(runtime.requests[0].body).toMatchObject({ location: "unknown", utm_source: "other", utm_medium: "referral" });
+    else expect(runtime.requests.every(request => !Object.hasOwn(request.body, "sourceEvidence"))).toBe(true);
+    controller.destroy();
+  });
+
   it.each(["napa", "vacaville"] as const)("waits for a %s source acknowledgement before opening the existing modal", async location => {
     const runtime = new FakeRuntime();
     runtime.href = `https://experiencerella.com/locations/${location}?booking=open&utm_source=google_business_profile&utm_medium=organic`;
