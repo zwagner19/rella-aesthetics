@@ -9,6 +9,7 @@ import {
   type ReactNode,
 } from "react";
 import type { BookingIntent } from "@/lib/booking-routes";
+import { setPublicAnalyticsBookingState } from "@/lib/public-analytics-parent";
 import {
   createDefaultBackend,
   emitGuidedBookingEvent,
@@ -46,6 +47,7 @@ export function BookingExperienceProvider({
   );
 
   const open = useCallback((next: BookingIntent = {}) => {
+    setPublicAnalyticsBookingState(true);
     resolvedBackend.setOwnedPackageContext?.(false);
     setIntent(next);
     setIsOpen(true);
@@ -57,6 +59,7 @@ export function BookingExperienceProvider({
   }, [resolvedBackend]);
 
   const close = useCallback(() => {
+    setPublicAnalyticsBookingState(false);
     setIsOpen(false);
   }, []);
 

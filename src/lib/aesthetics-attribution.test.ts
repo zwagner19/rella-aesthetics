@@ -12,6 +12,8 @@ import {
   AESTHETICS_ATTRIBUTION_ENDPOINT,
   AESTHETICS_CONSENT_COOKIE,
   AESTHETICS_SOURCE_CONSENT_COOKIE,
+  AESTHETICS_ANALYTICS_CONSENT_COOKIE,
+  hasAestheticsAnalyticsConsent,
   AestheticsAttributionController,
   aestheticsSourceEvidence,
   cleanAestheticsBookingHref,
@@ -143,6 +145,7 @@ class FakeRuntime implements AestheticsAttributionRuntime {
       const handle = `rvh_${"A".repeat(43)}`;
       this.cookies.set(AD_ATTRIBUTION_REVOCATION_COOKIE, handle);
       this.cookies.set(AESTHETICS_SOURCE_CONSENT_COOKIE, `v1.granted.${Math.floor(NOW / 1000)}.${handle}`);
+      this.cookies.set(AESTHETICS_ANALYTICS_CONSENT_COOKIE, `v1.granted.${Math.floor(NOW / 1000)}.${handle}`);
     }
   }
 }
@@ -1046,5 +1049,28 @@ describe("bounded all-channel source evidence", () => {
     expect(view()?.phase).toBe(nextChoice === "granted" ? "choice" : "denied");
     if (nextChoice === "granted") await expect(controller.prepareBooking()).rejects.toThrow("Choose whether to accept cookies");
     else expect(runtime.requests.at(-1)?.body).not.toHaveProperty("sourceEvidence");
+  });
+});
+
+
+describe("explicit isolated analytics purpose", () => {
+  it("re-prompts an older source grant without silently enabling Google", () => {
+    const runtime = new FakeRuntime(); runtime.setChoice("granted");
+    runtime.cookies.delete(AESTHETICS_ANALYTICS_CONSENT_COOKIE);
+    const controller = new AestheticsAttributionController(runtime);
+    const view = observe(controller); controller.start();
+    expect(view()?.phase).toBe("choice");
+    expect(hasAestheticsAnalyticsConsent(runtime.cookieHeader(), NOW)).toBe(false);
+    expect(runtime.requests).toHaveLength(0);
+  });
+  it("requires a fresh saved purpose and clears it immediately on withdrawal", async () => {
+    const runtime = new FakeRuntime(); runtime.responses.push(SOURCE_RESPONSE, DENY_RESPONSE);
+    const controller = new AestheticsAttributionController(runtime); controller.start();
+    await controller.accept();
+    expect(hasAestheticsAnalyticsConsent(runtime.cookieHeader(), NOW)).toBe(true);
+    const work = controller.deny();
+    expect(hasAestheticsAnalyticsConsent(runtime.cookieHeader(), NOW)).toBe(false);
+    expect(runtime.cookies.has(AESTHETICS_ANALYTICS_CONSENT_COOKIE)).toBe(false);
+    await work;
   });
 });

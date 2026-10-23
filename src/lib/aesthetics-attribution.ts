@@ -32,6 +32,10 @@ export const AESTHETICS_CONSENT_COOKIE =
 // WordPress, and ask for the wider purpose before collecting other sources.
 export const AESTHETICS_SOURCE_CONSENT_COOKIE =
   "__Host-rella_source_consent_v1";
+// Fresh explicit permission for isolated Google visitor analytics. Older
+// first-party source receipts must not silently enable this additional purpose.
+export const AESTHETICS_ANALYTICS_CONSENT_COOKIE =
+  "__Host-rella_analytics_consent_v1";
 export const AD_ATTRIBUTION_REVOCATION_COOKIE =
   "rella_ad_attribution_revoke";
 export const AD_USER_DATA_DENIED_COOKIE = "rella_ad_user_data_denied";
@@ -356,6 +360,13 @@ function hasSourceConsent(header: string, nowMs: number): boolean {
       === `${readCookie(header, AESTHETICS_CONSENT_COOKIE)}.${handle}`;
 }
 
+export function hasAestheticsAnalyticsConsent(header: string, nowMs: number): boolean {
+  const handle = readRevocationHandle(header);
+  return hasSourceConsent(header, nowMs) && !hasDeniedSentinel(header)
+    && readCookie(header, AESTHETICS_ANALYTICS_CONSENT_COOKIE)
+      === `${readCookie(header, AESTHETICS_CONSENT_COOKIE)}.${handle}`;
+}
+
 function hasDeniedSentinel(header: string): boolean {
   return readCookie(header, AD_USER_DATA_DENIED_COOKIE) === "1";
 }
@@ -527,7 +538,8 @@ export class AestheticsAttributionController {
       return;
     }
 
-    if (receipt === "granted" && sourceGranted) {
+    if (receipt === "granted" && sourceGranted
+      && hasAestheticsAnalyticsConsent(cookieHeader, this.runtime.now())) {
       this.choice = "granted";
       if (eligibleEntry) {
         this.phase = "granting";
@@ -599,7 +611,8 @@ export class AestheticsAttributionController {
     const handle = wasDenied
       ? this.rotateRevocationHandle(predecessor)
       : this.ensureRevocationHandle();
-    if (!handle || !this.clearDeniedSentinel() || !this.persistSourceChoice(handle)) {
+    if (!handle || !this.clearDeniedSentinel() || !this.persistSourceChoice(handle)
+      || !this.persistAnalyticsChoice(handle)) {
       await this.failClosed(
         "Cookies remain off because this browser could not save the setting.",
       );
@@ -738,6 +751,15 @@ export class AestheticsAttributionController {
 
   private clearSourceChoice(): void {
     this.runtime.writeCookie(`${AESTHETICS_SOURCE_CONSENT_COOKIE}=; Max-Age=0; Path=/; SameSite=Lax; Secure`);
+    this.runtime.writeCookie(`${AESTHETICS_ANALYTICS_CONSENT_COOKIE}=; Max-Age=0; Path=/; SameSite=Lax; Secure`);
+  }
+
+  private persistAnalyticsChoice(handle: string): boolean {
+    const receipt = readCookie(this.runtime.cookieHeader(), AESTHETICS_CONSENT_COOKIE);
+    this.runtime.writeCookie(
+      `${AESTHETICS_ANALYTICS_CONSENT_COOKIE}=${receipt}.${handle}; Max-Age=${CONSENT_MAX_AGE_SECONDS}; Path=/; SameSite=Lax; Secure`,
+    );
+    return hasAestheticsAnalyticsConsent(this.runtime.cookieHeader(), this.runtime.now());
   }
 
   private setDeniedSentinel(): boolean {

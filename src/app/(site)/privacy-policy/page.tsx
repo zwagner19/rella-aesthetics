@@ -15,7 +15,7 @@ export default function PrivacyPolicyPage() {
         </h1>
         <div className="prose prose-lg text-silver max-w-none space-y-6">
           <p>
-            <strong className="text-silver-dark">Last Updated:</strong> October 21, 2026
+            <strong className="text-silver-dark">Last Updated:</strong> October 22, 2026
           </p>
           <p>
             Rella Aesthetics (&ldquo;we,&rdquo; &ldquo;us,&rdquo; or &ldquo;our&rdquo;) respects your privacy and is
@@ -53,6 +53,16 @@ export default function PrivacyPolicyPage() {
             treatment details in this measurement request.
           </p>
           <p>
+            If you accept, Google Analytics also counts visits, sessions, and views of general page
+            groups, such as our homepage or a clinic page. It runs in a separate, invisible document
+            that cannot read our booking or contact forms. Google receives general page labels and
+            limited traffic-source categories, along with its browser and session identifiers and
+            standard connection information. We do not send treatment-specific page addresses,
+            search text, booking details, contact information, or payment information to this visitor
+            analytics service. Its cookies last up to 30 days; advertising signals and personalization
+            are disabled for this collection.
+          </p>
+          <p>
             For Google ad visits, one approved click identifier may also be stored in encrypted form.
             An eligible confirmed booking may be reported to Google using that identifier, a generic
             booking timestamp, and an opaque conversion reference. Patient contact information,
@@ -63,7 +73,7 @@ export default function PrivacyPolicyPage() {
             supports withdrawal without placing the ad click identifier in a cookie or booking link.
             If you decline or later turn cookies off, Rella does not capture a new traffic source or ad
             click identifier and asks the booking system to revoke the measurement covered by that
-            choice. Your ability to
+            choice. Visitor analytics stops and its cookies are cleared. Your ability to
             view the page, request care, and book an appointment does not depend on accepting.
           </p>
 

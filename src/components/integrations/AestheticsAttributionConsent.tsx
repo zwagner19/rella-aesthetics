@@ -4,6 +4,7 @@ import { Suspense, useEffect, useRef, useState } from "react";
 import { usePathname, useSearchParams } from "next/navigation";
 import { registerAestheticsBookingPreparation } from "@/lib/aesthetics-booking-boundary";
 import { requestClinicBookingEntry } from "@/lib/clinic-booking-entry";
+import { PublicAnalyticsParent } from "@/lib/public-analytics-parent";
 import { useGuidedBooking } from "@/components/guided-booking/BookingExperienceProvider";
 import {
   AESTHETICS_CONSENT_CHANNEL,
@@ -34,6 +35,11 @@ export function AestheticsAttributionConsent() {
 function AestheticsAttributionConsentClient() {
   const [view, setView] = useState(INITIAL_VIEW);
   const controllerRef = useRef<AestheticsAttributionController | null>(null);
+  const analyticsRef = useRef<PublicAnalyticsParent | null>(null);
+  const viewRef = useRef(INITIAL_VIEW);
+  const bookingOpen = useGuidedBooking()?.isOpen ?? false;
+  const bookingOpenRef = useRef(bookingOpen);
+  useEffect(() => { bookingOpenRef.current = bookingOpen; }, [bookingOpen]);
   const acceptRef = useRef<HTMLButtonElement | null>(null);
   const pathname = usePathname();
   const search = useSearchParams()?.toString();
@@ -58,7 +64,13 @@ function AestheticsAttributionConsentClient() {
       createBrowserAestheticsAttributionRuntime(publish),
     );
     controllerRef.current = controller;
-    const unsubscribe = controller.subscribe(setView);
+    const analytics = new PublicAnalyticsParent();
+    analyticsRef.current = analytics;
+    const unsubscribe = controller.subscribe((next) => {
+      viewRef.current = next;
+      analytics.reconcile(next, bookingOpenRef.current);
+      setView(next);
+    });
     const unregisterPreparation = registerAestheticsBookingPreparation(() => controller.prepareBooking());
 
     function sanitizeBookingLinks() {
@@ -154,6 +166,8 @@ function AestheticsAttributionConsentClient() {
 
     return () => {
       observer?.disconnect();
+      analytics.destroy();
+      analyticsRef.current = null;
       channel?.removeEventListener("message", handleChannelMessage);
       channel?.close();
       document.removeEventListener("click", handleDocumentClick, {
@@ -192,6 +206,10 @@ function AestheticsAttributionConsentClient() {
     };
   }, [pathname, search, openBooking]);
 
+  useEffect(() => {
+    analyticsRef.current?.reconcile(viewRef.current, bookingOpen);
+  }, [bookingOpen, pathname, search]);
+
   if (view.mode === "hidden") return null;
 
   if (view.mode === "reopen") {
@@ -224,8 +242,8 @@ function AestheticsAttributionConsentClient() {
         Cookies
       </h2>
       <p id="rella-aesthetics-cookie-copy" className={styles.copy}>
-        Accept cookies to help us understand how you found Rella and whether
-        your visit leads to a booked appointment. Booking and care are unchanged. {" "}
+        Accept cookies for Google Analytics visit counts and to understand how
+        you found Rella and booked. Booking and care are unchanged. {" "}
         <a href="/privacy-policy">
           Privacy policy
         </a>
