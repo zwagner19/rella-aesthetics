@@ -162,6 +162,12 @@ describe("collector", () => {
       ),
     ).toBe(true);
     expect(JSON.stringify(send.mock.calls)).not.toContain("private");
+    const beforeResize = send.mock.calls.length;
+    win.innerWidth = 1200;
+    listeners.get("resize")!(new Event("resize"));
+    click();
+    vi.advanceTimersByTime(15000);
+    expect(send).toHaveBeenCalledTimes(beforeResize);
     doc.cookie = "";
     click();
     tracker.startBooking();

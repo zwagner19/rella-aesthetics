@@ -97,17 +97,12 @@ export class WebsiteInsights {
         : "desktop";
   }
   private handleViewportChange = () => {
-    // A changed breakpoint is a different layout; never overlay its coordinates.
+    // Stop this page's geometry at a layout change; resizing is not a new view.
     if (this.width && this.width !== this.viewport()) {
       this.flush();
-      this.page =
-        this.permitted() && insightPage(window.location.pathname)
-          ? this.create("page")
-          : null;
+      this.page = null;
       this.width = this.viewport();
-      this.dirty = Boolean(this.page);
-      this.scroll();
-      this.flush();
+      this.dirty = false;
     }
   };
   private create(kind: InsightSample["kind"]): InsightSample {
