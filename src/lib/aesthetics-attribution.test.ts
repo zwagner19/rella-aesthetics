@@ -1074,3 +1074,114 @@ describe("explicit isolated analytics purpose", () => {
     await work;
   });
 });
+
+describe("denial retries belong to the consent generation that scheduled them", () => {
+  async function failedDenial() {
+    const runtime = new FakeRuntime();
+    runtime.setChoice("denied");
+    runtime.cookies.set(AD_ATTRIBUTION_REVOCATION_COOKIE, `rvh_${"A".repeat(43)}`);
+    runtime.httpFailures = 1;
+    const controller = new AestheticsAttributionController(runtime);
+    const view = observe(controller);
+    controller.start();
+    await settle();
+    expect(runtime.requests).toHaveLength(1);
+    expect(runtime.timers.size).toBe(1);
+    const retry = [...runtime.timers.values()][0];
+    return { runtime, controller, view, retry };
+  }
+
+  function replaceWithGrant(runtime: FakeRuntime, rotateHandle = true) {
+    const receipt = `v1.granted.${Math.floor(NOW / 1000) + 1}`;
+    const handle = `rvh_${(rotateHandle ? "B" : "A").repeat(43)}`;
+    runtime.cookies.set(AESTHETICS_CONSENT_COOKIE, receipt);
+    runtime.cookies.set(AD_ATTRIBUTION_REVOCATION_COOKIE, handle);
+    runtime.cookies.set(AESTHETICS_SOURCE_CONSENT_COOKIE, `${receipt}.${handle}`);
+    runtime.cookies.set(AESTHETICS_ANALYTICS_CONSENT_COOKIE, `${receipt}.${handle}`);
+    runtime.cookies.delete(AD_USER_DATA_DENIED_COOKIE);
+    return handle;
+  }
+
+  it("cancels an old retry when another document's fresh grant is reconciled and acknowledged", async () => {
+    const { runtime, controller, view, retry } = await failedDenial();
+    const freshHandle = replaceWithGrant(runtime);
+    runtime.href += "?utm_source=google&utm_medium=organic";
+    runtime.responses.push(SOURCE_RESPONSE);
+    controller.handleRemoteGrantAcknowledged();
+    await settle();
+    expect(view()?.phase).toBe("granted");
+    expect(runtime.timers.size).toBe(0);
+    const count = runtime.requests.length;
+    retry();
+    await settle();
+    expect(runtime.requests).toHaveLength(count);
+    expect(runtime.requests.filter(request => request.body.consentAdUserData === "denied")
+      .every(request => request.body.revocationHandle !== freshHandle)).toBe(true);
+    controller.destroy();
+  });
+
+  it.each([false, true])("does not revoke a changed shared grant before this tab receives a notification (rotated=%s)", async rotate => {
+    const { runtime, controller, retry } = await failedDenial();
+    replaceWithGrant(runtime, rotate);
+    retry();
+    await settle();
+    expect(runtime.requests).toHaveLength(1);
+    controller.destroy();
+  });
+
+  it("does not bind a late failed denial response to a fresh grant that arrived while it was pending", async () => {
+    const runtime = new FakeRuntime();
+    runtime.setChoice("denied");
+    runtime.cookies.set(AD_ATTRIBUTION_REVOCATION_COOKIE, `rvh_${"A".repeat(43)}`);
+    const pending = deferredResponse();
+    runtime.responses.push(pending.promise);
+    const controller = new AestheticsAttributionController(runtime);
+    controller.start();
+    await settle();
+    replaceWithGrant(runtime);
+    pending.resolve({});
+    await settle();
+    expect(runtime.requests).toHaveLength(1);
+    expect(runtime.timers.size).toBe(0);
+    controller.destroy();
+  });
+
+  it("checks the snapshot again immediately before a queued retry can send", async () => {
+    const { runtime, controller, retry } = await failedDenial();
+    retry();
+    replaceWithGrant(runtime);
+    await settle();
+    expect(runtime.requests).toHaveLength(1);
+    controller.destroy();
+  });
+
+  it("keeps retrying the original denied scope when consent has not changed", async () => {
+    const { runtime, controller, retry } = await failedDenial();
+    retry();
+    await settle();
+    expect(runtime.requests).toHaveLength(2);
+    expect(runtime.requests[1].body).toEqual(runtime.requests[0].body);
+    expect(runtime.requests[1].body.consentAdUserData).toBe("denied");
+    controller.destroy();
+  });
+
+  it("still finalizes the prior scope before opt-in when an obsolete retry is already queued", async () => {
+    const { runtime, controller, view, retry } = await failedDenial();
+    const oldHandle = runtime.cookies.get(AD_ATTRIBUTION_REVOCATION_COOKIE);
+    retry();
+    await controller.accept();
+    await settle();
+    expect(view()?.phase).toBe("granted");
+    expect(runtime.requests).toHaveLength(2);
+    expect(runtime.requests[1].body).toMatchObject({
+      consentAdUserData: "denied", revocationHandle: oldHandle,
+    });
+    expect(runtime.cookies.get(AD_ATTRIBUTION_REVOCATION_COOKIE)).not.toBe(oldHandle);
+    expect(hasAestheticsAnalyticsConsent(runtime.cookieHeader(), NOW)).toBe(true);
+    const count = runtime.requests.length;
+    retry();
+    await settle();
+    expect(runtime.requests).toHaveLength(count);
+    controller.destroy();
+  });
+});

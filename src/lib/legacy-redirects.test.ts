@@ -125,8 +125,9 @@ describe("legacy WordPress URL continuity", () => {
     expect(nextConfig.skipTrailingSlashRedirect).toBe(true);
     expect(configured).toHaveLength(legacyRedirects.length * 2);
     for (const { source, destination } of legacyRedirects) {
-      expect(configured).toContainEqual({ source, destination, permanent: true });
-      expect(configured).toContainEqual({ source: `${source}/`, destination, permanent: true });
+      const missing = [{ type: "host", value: "analytics\\.experiencerella\\.com" }];
+      expect(configured).toContainEqual({ source, destination, permanent: true, missing });
+      expect(configured).toContainEqual({ source: `${source}/`, destination, permanent: true, missing });
     }
   });
 });

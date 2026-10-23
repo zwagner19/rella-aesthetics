@@ -144,6 +144,13 @@ export interface AestheticsConsentMessage {
   version: 1;
 }
 
+interface DenialRetrySnapshot {
+  generation: number;
+  receipt: string | null;
+  handle: string | null;
+  sentinel: boolean;
+}
+
 type ApprovedPaidClick = Partial<Record<ClickField | GoogleIdField, string>>;
 type ApprovedEntry = ApprovedPaidClick & AestheticsSourceEvidence;
 
@@ -441,8 +448,10 @@ export class AestheticsAttributionController {
   private capturePromise: Promise<void> | null = null;
   private requestQueue: Promise<void> = Promise.resolve();
   private denialPromise: Promise<boolean> | null = null;
+  private denialRequestIsRetry = false;
   private denialRetryTimer: unknown | null = null;
   private denialRetryAttempt = 0;
+  private denialRetryGeneration = 0;
   private grantController: AbortController | null = null;
   private activeCaptureVersion: number | null = null;
 
@@ -461,10 +470,7 @@ export class AestheticsAttributionController {
   destroy(): void {
     this.destroyed = true;
     this.grantController?.abort();
-    if (this.denialRetryTimer !== null) {
-      this.runtime.clearTimer(this.denialRetryTimer);
-      this.denialRetryTimer = null;
-    }
+    this.cancelDenialRetry();
     this.listeners.clear();
     this.pendingEntry = null;
     this.pendingBookingAction = null;
@@ -491,10 +497,7 @@ export class AestheticsAttributionController {
       this.observedEntry = true;
       this.pendingBookingHref = null;
       this.pendingBookingAction = null;
-      if (this.denialRetryTimer !== null) {
-        this.runtime.clearTimer(this.denialRetryTimer);
-        this.denialRetryTimer = null;
-      }
+      this.cancelDenialRetry();
       this.setView("hidden", "hidden", "unknown", "");
       return;
     }
@@ -540,6 +543,7 @@ export class AestheticsAttributionController {
 
     if (receipt === "granted" && sourceGranted
       && hasAestheticsAnalyticsConsent(cookieHeader, this.runtime.now())) {
+      this.cancelDenialRetry();
       this.choice = "granted";
       if (eligibleEntry) {
         this.phase = "granting";
@@ -577,6 +581,7 @@ export class AestheticsAttributionController {
     const wasDenied =
       this.choice === "denied" ||
       hasDeniedSentinel(this.runtime.cookieHeader());
+    this.cancelDenialRetry();
 
     if (!this.persistChoice("granted")) {
       await this.failClosed(
@@ -638,6 +643,7 @@ export class AestheticsAttributionController {
 
   async deny(publish = true): Promise<void> {
     if (!this.active || this.destroyed) return;
+    this.cancelDenialRetry();
     this.persistChoice("denied");
     this.clearSourceChoice();
     this.choice = "denied";
@@ -845,9 +851,24 @@ export class AestheticsAttributionController {
     }
   }
 
-  private requestDenial(): Promise<boolean> {
-    if (this.denialPromise) return this.denialPromise;
-    const attemptedHandle = readRevocationHandle(this.runtime.cookieHeader());
+  private requestDenial(retry?: DenialRetrySnapshot): Promise<boolean> {
+    if (this.denialPromise) {
+      const pending = this.denialPromise;
+      // A fresh opt-in still needs a real denial preflight if an obsolete
+      // queued retry was skipped, rather than treating cancellation as proof.
+      if (!retry && this.denialRequestIsRetry) {
+        return pending.then(finalized => finalized || this.requestDenial());
+      }
+      return pending;
+    }
+    const cookies = this.runtime.cookieHeader();
+    const snapshot: DenialRetrySnapshot = retry ?? {
+      generation: this.denialRetryGeneration,
+      receipt: readCookie(cookies, AESTHETICS_CONSENT_COOKIE),
+      handle: readRevocationHandle(cookies),
+      sentinel: hasDeniedSentinel(cookies),
+    };
+    const attemptedHandle = snapshot.handle;
     const payload: DeniedPayload = {
       location: acquisitionLocation(safeUrl(this.runtime.currentHref())?.pathname ?? "/"),
       consentAdUserData: "denied",
@@ -855,6 +876,7 @@ export class AestheticsAttributionController {
     };
 
     const request = this.enqueue(async () => {
+      if (retry && !this.isCurrentDenialRetry(retry)) return false;
       const result = await this.postPayload(payload);
       const finalized = isDeniedAcknowledgement(result);
       if (finalized) this.denialRetryAttempt = 0;
@@ -862,21 +884,40 @@ export class AestheticsAttributionController {
     });
     this.denialPromise = request.finally(() => {
       this.denialPromise = null;
+      this.denialRequestIsRetry = false;
     });
+    this.denialRequestIsRetry = Boolean(retry);
     void this.denialPromise.then((finalized) => {
-      if (!finalized && this.choice === "denied") this.scheduleDenialRetry();
+      if (!finalized && this.isCurrentDenialRetry(snapshot)) this.scheduleDenialRetry(snapshot);
     });
     return this.denialPromise;
   }
 
-  private scheduleDenialRetry(): void {
-    if (this.denialRetryTimer !== null || this.destroyed || !this.active) return;
+  private scheduleDenialRetry(snapshot: DenialRetrySnapshot): void {
+    if (this.denialRetryTimer !== null || !this.isCurrentDenialRetry(snapshot)) return;
     const delay = Math.min(30_000, 1_000 * 2 ** this.denialRetryAttempt);
     this.denialRetryAttempt += 1;
     this.denialRetryTimer = this.runtime.setTimer(() => {
+      if (snapshot.generation !== this.denialRetryGeneration) return;
       this.denialRetryTimer = null;
-      void this.requestDenial();
+      if (this.isCurrentDenialRetry(snapshot)) void this.requestDenial(snapshot);
     }, delay);
+  }
+
+  private isCurrentDenialRetry(snapshot: DenialRetrySnapshot): boolean {
+    const cookies = this.runtime.cookieHeader();
+    return !this.destroyed && this.active && this.choice === "denied"
+      && snapshot.generation === this.denialRetryGeneration
+      && readCookie(cookies, AESTHETICS_CONSENT_COOKIE) === snapshot.receipt
+      && readRevocationHandle(cookies) === snapshot.handle
+      && hasDeniedSentinel(cookies) === snapshot.sentinel;
+  }
+
+  private cancelDenialRetry(): void {
+    this.denialRetryGeneration += 1;
+    if (this.denialRetryTimer !== null) this.runtime.clearTimer(this.denialRetryTimer);
+    this.denialRetryTimer = null;
+    this.denialRetryAttempt = 0;
   }
 
   private captureCurrentClick(
@@ -989,6 +1030,7 @@ export class AestheticsAttributionController {
 
       this.cleanLandingUrl();
       if (this.pendingEntry === capturedClick) this.pendingEntry = null;
+      this.cancelDenialRetry();
       this.phase = "granted";
       this.setView("reopen", "granted", "granted", "");
       this.runtime.publish({ grantAcknowledged: true, version: 1 });
@@ -1001,6 +1043,7 @@ export class AestheticsAttributionController {
   }
 
   private async failClosed(status: string): Promise<void> {
+    this.cancelDenialRetry();
     this.persistChoice("denied");
     this.clearSourceChoice();
     this.choice = "denied";
