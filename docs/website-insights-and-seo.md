@@ -25,3 +25,9 @@ Rollback website Worker origin to the prior ready artifact to stop collection; o
 - Original release validation: 790 full-suite tests before the additional social-image preservation assertion; final focused checks cover privacy contracts, consent, overlay exclusion, step deduplication, rotation, SEO fallbacks and original social artwork. Typecheck, production build and scoped lint passed; three pre-existing website lint warnings remain.
 
 Rollback origin: `rella-aesthetics-p2b5em39p-zwagner19s-projects.vercel.app` (`dpl_G6Y6rQseGJbmGYth9y8yh9eshLyw`); previous Worker `b83af4c6-ba3c-4870-8173-8a4b8f0f3222`. Keep shared weight-loss, booking and analytics aliases unchanged. The canonical HQ alias must be explicitly moved after a ready deployment; a Git deployment by itself does not move it.
+
+### Final live artifacts
+
+- Website: `13321440df6a8f86a9ff2804be02deb64e546d97`, ready production `dpl_DR5KTHSkqoL4LMBKNjB36a5GBzpr` / `rella-aesthetics-bi8gl1gm6-zwagner19s-projects.vercel.app`. Worker `1b95a319-6b75-49de-94a3-e7b1fb894860` and the controlled-launch QA alias point here. The final Vercel production build passed. A separate local rerun timed out prerendering `/services`; the earlier local build passed and the final remote build completed all routes. No live timeout was inferred from that local result.
+- HQ: PR 449 merged as `133a8dea427358767542bcce7c6251988163c223`, ready production `dpl_7JYWSdoGwzxV8Zh7JK7tbuUQP31H` / `rella-m66wj760i-zwagner19s-projects.vercel.app`. `rella-hq.vercel.app` explicitly moved and live report verified with step 3 labeled Review. Focused tests 15/15, typecheck, scoped lint and local/remote production builds passed.
+- Final website refinement: 9/9 focused tests, typecheck and lint (only three existing warnings) passed. Resize does not start a new page view. The existing report still excludes every QA record.
