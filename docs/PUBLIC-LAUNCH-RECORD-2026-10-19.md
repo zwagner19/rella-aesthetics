@@ -8,14 +8,71 @@ Amie’s homepage, global styles, fonts, imagery and site chrome remain preserve
 
 | Surface | Live or review reference |
 |---|---|
-| Website functional source | `ba2ef1061fa1c732f4dd576f1755585f1f87e452`, tree `a4c9431fc3a8c3ae7f3a29b48ae854b06368969d`, branch `codex/amie-shared-booking`. Restores consented GA4 visitor measurement in an isolated origin; retains clinic entries, design, policy and local SEO work. |
-| Website RELEASE | `dpl_8kHRxVkLawKXUm7rZ2CsjUYZ5ayt`, immutable host `rella-aesthetics-nyhfxsmfh-zwagner19s-projects.vercel.app`. The website uses permanent backend origin `https://book.experiencerella.com`. |
-| Website QA | `dpl_8kHRxVkLawKXUm7rZ2CsjUYZ5ayt`; [controlled preview](https://rella-aesthetics-controlled-launch-zwagner19s-projects.vercel.app/). The review alias serves the same immutable release and permanent booking backend as public. Source-entry auto-open is intentionally restricted to public apex/www hosts. |
-| Public edge | `rella-controlled-launch`, version `216f2386-6e80-426a-8a3c-763cfa1f8969`, deployed at 100% on October22 Pacific for isolated visitor analytics and scope-bound withdrawal retries; `EDGE_ENABLED` string `true`, origin pinned to the immutable RELEASE above. Only `experiencerella.com/*` and `www.experiencerella.com/*` are bound. |
+| Website functional source | `e4374952cdee95921ba135c2e979ae145e38f428`, tree `c34c62dc2daf49b5397c1c4782b576b4a5423b7c`, branch `codex/amie-shared-booking`. Restores consented GA4 visitor measurement in an isolated origin; retains clinic entries, design, policy and local SEO work. |
+| Website RELEASE | `dpl_G6Y6rQseGJbmGYth9y8yh9eshLyw`, immutable host `rella-aesthetics-p2b5em39p-zwagner19s-projects.vercel.app`. The website uses permanent backend origin `https://book.experiencerella.com`. |
+| Website QA | `dpl_G6Y6rQseGJbmGYth9y8yh9eshLyw`; [controlled preview](https://rella-aesthetics-controlled-launch-zwagner19s-projects.vercel.app/). The review alias serves the same immutable release and permanent booking backend as public. Source-entry auto-open is intentionally restricted to public apex/www hosts. |
+| Public edge | `rella-controlled-launch`, version `b83af4c6-ba3c-4870-8173-8a4b8f0f3222`, deployed at 100% on October22 Pacific for the exact retired Napa homepage redirect and clean sitemap; `EDGE_ENABLED` string `true`, origin pinned to the immutable RELEASE above. Only `experiencerella.com/*` and `www.experiencerella.com/*` are bound. |
 | Public booking backend | `dpl_CMRZ6Dhf1FL7TQAdXZY387F3qWJE`, source `dd891ba6c2642eb62364af5c9fa9ac0cebe6266d`, immutable host `rella-booking-p7opekuui-zwagner19s-projects.vercel.app`. Both booking aliases were read back on this exact deployment on October 21. Attribution PR69 and booking-restoration PR67 are merged into main. |
 | Rella HQ | October 21 read-only observation: the app alias is `dpl_DyH4LLzADSNWru5AvEnGpax9kfaw` / `e240ce54c8691b67d56058e3412dad95a98f4447`; the actual scheduler is `dpl_D1wRj3e3qjLfcKWvyYTEDSRGQpAV` / `38609f4`. Their booking/attribution cron code is identical. Neither was changed for the initial website source release. Historical inquiry bridge delivery proof remains below; it was not re-tested by this attribution task. |
 
 The website Vercel project’s shared production alias was not generally promoted. The fixed website RELEASE is served through the Worker, preserving the existing weight-loss website deployment. The GA4 restoration adds only the new DNS-only analytics subdomain and its ownership TXT. Apex/www, nameservers, mail records and the existing booking and weight-loss aliases are unchanged.
+
+## Retired Napa homepage redirect — October 22
+
+The owner explicitly authorized moving the old `/napa/` page to the current
+`/locations/napa` page, correcting old Napa links and verifying tracking. The
+Worker now sends exact `/napa` and `/napa/` GET/HEAD requests directly to
+`https://experiencerella.com/locations/napa` with a permanent308 before
+WordPress passthrough. Original source queries, repeated parameters and encoding
+are preserved. Apex/www and HTTPS are canonicalized in that same redirect;
+submitted bodies are rejected rather than replayed. The five treatment-specific
+WordPress landings, WordPress admin/assets and native booking APIs retain their
+routing. `EDGE_ENABLED=false` retains the prior rollback behavior.
+
+The sitemap now lists the current Napa canonical exactly once and omits both
+retired root forms. Its38 URLs retain all five treatment landing canonicals.
+No old root anchor was found in the current20-item WordPress menu or10 inspected
+public routes. Current Next navigation already uses the correct location URL;
+no visible navigation or other page content needed editing. Historic delivered
+messages and unknown third-party links are not claimed inventoried, but any
+such first-party `/napa` root destination is covered by the redirect.
+
+Yelp Napa's business-account website field and Specialties text still carried
+the old root. The exact current website URL and a URL-only Specialties correction
+were submitted through their normal forms. Yelp explicitly requires website
+changes to be reviewed. The website field after reload displays the homepage,
+and the text after reload still displays the old Napa path; approval/publication
+of these submissions is not established. The live redirect already routes their
+old root link correctly. No other business wording, contact information,
+categories or settings was intentionally changed.
+
+All780 website tests,104 focused sitemap/attribution checks, TypeScript, focused
+lint,68 Worker tests and independent Worker review passed. The exact Production
+artifact was READY in the intended team/project before edge publication and QA
+alias assignment. Both clinic pages retain the same78,375-byte CSS, SHA256
+`3edd30ce4b48b8a46fb5b2326098a10c514e61013752ff9fba1ddcc9f09d0630`.
+The booking, weight-loss and isolated analytics aliases were read back unchanged
+before and after release. No shared project promotion, booking/deposit runtime,
+Google Ads setting, uploader or appointment/payment change was made.
+
+Live HTTP readback passed eight apex/www GET/HEAD root redirects, each preserving
+the source query, followed by a200 canonical destination. The browser landed on
+Welcome to Napa House, consumed the campaign parameters through the existing
+consent boundary, and mounted one isolated analytics frame with no Google tag
+in its parent. The automated browser paused the hidden document. The owner then
+opened the old tagged URL on a normal phone, confirmed Napa House and accepted
+cookies. Google Realtime subsequently showed new Napa views and session starts.
+Those are rolling shared-property totals, not all QA and not individual-device
+proof. No fake ad click or native booking/conversion was created.
+
+Evidence: [HTTP redirects and sitemap](../../../outputs/rella-napa-root-live-redirect-verification-2026-10-22.json),
+[design/artifact check](../../../outputs/rella-napa-root-stage-verification-2026-10-22.json),
+[browser destination](../../../outputs/rella-napa-root-browser-check-2026-10-22.json),
+[Google receipt](../../../outputs/rella-napa-root-ga4-receipt-2026-10-22.json),
+[Yelp submission limits](../../../outputs/rella-napa-yelp-link-correction-2026-10-22.json),
+[WordPress link audit](../../../outputs/rella-wordpress-napa-root-link-audit-2026-10-22.json).
+Immediate Worker rollback is `216f2386-6e80-426a-8a3c-763cfa1f8969`, which restores
+the previous marketing artifact and its old Napa-root passthrough.
 
 ## Booking-entry attribution repair — October 22
 
