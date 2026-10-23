@@ -72,9 +72,17 @@ const nextConfig: NextConfig = {
   async redirects() {
     // Keep moved WordPress URLs in one audited source of truth. Both forms are
     // explicit so every historical URL reaches its replacement in one hop.
+    // Config redirects run before proxy, so the isolated analytics origin must
+    // reach its deny-by-default guard without taking any legacy redirect.
     return legacyRedirects.flatMap(({ source, destination }) => [
-      { source: `${source}/`, destination, permanent: true as const },
-      { source, destination, permanent: true as const },
+      {
+        source: `${source}/`, destination, permanent: true as const,
+        missing: [{ type: "host" as const, value: "analytics\\.experiencerella\\.com" }],
+      },
+      {
+        source, destination, permanent: true as const,
+        missing: [{ type: "host" as const, value: "analytics\\.experiencerella\\.com" }],
+      },
     ]);
   },
 };

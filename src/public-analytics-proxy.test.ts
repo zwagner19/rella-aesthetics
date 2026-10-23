@@ -1,13 +1,52 @@
 import { describe, expect, it } from "vitest";
 import { NextRequest } from "next/server";
-import { unstable_doesMiddlewareMatch } from "next/experimental/testing/server";
+import { unstable_doesMiddlewareMatch, unstable_getResponseFromNextConfig } from "next/experimental/testing/server";
 import { config, proxy } from "./proxy";
+import nextConfig from "../next.config";
+import legacyRedirects from "../legacy-redirects.json";
 
 const ORIGIN = "https://analytics.experiencerella.com";
 const request = (path: string, host = "analytics.experiencerella.com") =>
   new NextRequest(`${ORIGIN}${path}`, { headers: { host } });
 
 describe("isolated analytics origin", () => {
+  it("excludes the exact analytics host from every configured legacy redirect", async () => {
+    const redirects = await nextConfig.redirects!();
+    expect(redirects).toHaveLength(legacyRedirects.length * 2);
+    for (const { source, destination } of legacyRedirects) {
+      for (const path of [source, `${source}/`]) {
+        const redirect = redirects.find(rule => rule.source === path);
+        expect(redirect, path).toMatchObject({
+          destination, permanent: true,
+          missing: [{ type: "host", value: "analytics\\.experiencerella\\.com" }],
+        });
+      }
+    }
+  });
+
+  it.each(["/botox", "/botox/", "/napa", "/napa/", "/sitemap_index.xml"])(
+    "reaches the analytics guard without a config redirect for %s",
+    async path => {
+      const response = await unstable_getResponseFromNextConfig({
+        url: `${ORIGIN}${path}`, nextConfig,
+      });
+      expect(response.headers.get("location")).toBeNull();
+      expect(proxy(request(path)).status).toBe(404);
+    },
+  );
+
+  it.each([
+    "experiencerella.com", "www.experiencerella.com", "weightloss.experiencerella.com",
+    "rella-napa-botox-release.vercel.app", "rella-aesthetics.vercel.app",
+    "analytics.experiencerella.com.evil.com", "analyticsXexperiencerellaXcom",
+  ])("preserves the legacy redirect and query on other hosts: %s", async host => {
+    const response = await unstable_getResponseFromNextConfig({
+      url: `https://${host}/botox/?utm_source=google`, nextConfig,
+    });
+    expect(response.status).toBe(308);
+    expect(response.headers.get("location")).toBe(`https://${host.toLowerCase()}/services/botox?utm_source=google`);
+  });
+
   it.each(["/api/public-analytics/frame", "/api/public-analytics/clear"])(
     "permits only the exact document endpoint %s",
     path => {
