@@ -4,6 +4,7 @@ import { Suspense, useEffect, useRef, useState } from "react";
 import { usePathname, useSearchParams } from "next/navigation";
 import { registerAestheticsBookingPreparation } from "@/lib/aesthetics-booking-boundary";
 import { requestClinicBookingEntry } from "@/lib/clinic-booking-entry";
+import { WebsiteInsights } from "@/lib/website-insights";
 import { PublicAnalyticsParent } from "@/lib/public-analytics-parent";
 import { useGuidedBooking } from "@/components/guided-booking/BookingExperienceProvider";
 import {
@@ -65,10 +66,12 @@ function AestheticsAttributionConsentClient() {
     );
     controllerRef.current = controller;
     const analytics = new PublicAnalyticsParent();
+    const insights = new WebsiteInsights();
     analyticsRef.current = analytics;
     const unsubscribe = controller.subscribe((next) => {
       viewRef.current = next;
       analytics.reconcile(next, bookingOpenRef.current);
+      insights.reconcile(next);
       setView(next);
     });
     const unregisterPreparation = registerAestheticsBookingPreparation(() => controller.prepareBooking());
@@ -167,6 +170,7 @@ function AestheticsAttributionConsentClient() {
     return () => {
       observer?.disconnect();
       analytics.destroy();
+      insights.destroy();
       analyticsRef.current = null;
       channel?.removeEventListener("message", handleChannelMessage);
       channel?.close();
@@ -242,8 +246,8 @@ function AestheticsAttributionConsentClient() {
         Cookies
       </h2>
       <p id="rella-aesthetics-cookie-copy" className={styles.copy}>
-        Accept cookies for Google Analytics visit counts and to understand how
-        you found Rella and booked. Booking and care are unchanged. {" "}
+        Allow Google Analytics visits, ad attribution, and Rella’s click, scroll and
+        booking-step counts. No session recordings or form entries. {" "}
         <a href="/privacy-policy">
           Privacy policy
         </a>

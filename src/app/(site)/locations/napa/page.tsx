@@ -1,9 +1,10 @@
+import { withWebsiteSeo } from "@/lib/website-seo";
 import type { Metadata } from "next";
 import { NapaHousePage } from "@/components/location/NapaHousePage";
 import { locations } from "@/lib/data";
 import { localBusinessSchema } from "@/lib/schemas";
 
-export const metadata: Metadata = {
+const defaultMetadata: Metadata = {
   title: "Napa House Med Spa | Downtown Napa",
   description:
     "Visit Rella Aesthetics Napa House at 1541 3rd St in downtown Napa — consultation-led aesthetics, wellness, and hospitality-first care.",
@@ -36,4 +37,8 @@ export default function NapaPage() {
       <NapaHousePage />
     </>
   );
+}
+
+export async function generateMetadata(): Promise<Metadata> {
+  return withWebsiteSeo("/locations/napa", defaultMetadata);
 }

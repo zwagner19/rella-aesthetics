@@ -63,6 +63,16 @@ export default function PrivacyPolicyPage() {
             are disabled for this collection.
           </p>
           <p>
+            With your measurement permission, Rella also counts clicks in coarse areas of our
+            homepage and clinic pages, how far those pages are scrolled, and which booking steps
+            are reached. These first-party counts use temporary random page or attempt references,
+            not a persistent visitor profile. They exclude recordings, page text, form entries,
+            treatment and provider selections, and appointment or payment identifiers. Clicks
+            inside forms and the booking overlay are not collected. Reports cover up to 30 days;
+            older snapshots are removed on an hourly schedule. Turning measurement off stops new
+            counts. These unlinked counts cannot be matched back to your identity for deletion.
+          </p>
+          <p>
             For Google ad visits, one approved click identifier may also be stored in encrypted form.
             An eligible confirmed booking may be reported to Google using that identifier, a generic
             booking timestamp, and an opaque conversion reference. Patient contact information,

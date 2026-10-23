@@ -1,3 +1,4 @@
+import { withWebsiteSeo } from "@/lib/website-seo";
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
@@ -5,7 +6,7 @@ import { BookTrigger } from "@/components/guided-booking/BookTrigger";
 import { locations } from "@/lib/data";
 import { localBusinessSchema } from "@/lib/schemas";
 
-export const metadata: Metadata = {
+const defaultMetadata: Metadata = {
   title: "Vacaville Med Spa | Hours, Address & Booking",
   description:
     "Visit Rella Aesthetics at 542 Main St in downtown Vacaville. Explore services, hours, directions, and city-pinned booking.",
@@ -370,4 +371,8 @@ export default function VacavillePage() {
       </section>
     </>
   );
+}
+
+export async function generateMetadata(): Promise<Metadata> {
+  return withWebsiteSeo("/locations/vacaville", defaultMetadata);
 }

@@ -1,3 +1,4 @@
+import { withWebsiteSeo } from "@/lib/website-seo";
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
@@ -15,7 +16,7 @@ const BOOKING_HREF = resolveBookingHref({
 });
 const clinic = locations.vacaville;
 
-export const metadata: Metadata = {
+const defaultMetadata: Metadata = {
   title: "HydraFacial in Vacaville | Pricing & Booking",
   description:
     "Compare Signature, Deluxe and Platinum HydraFacial in Vacaville. Browse the live menu for current services and availability.",
@@ -74,7 +75,7 @@ const serviceSchema = {
   "@id": `${CANONICAL}#service`,
   name: "HydraFacial in Vacaville",
   serviceType: "HydraFacial skin treatment",
-  description: metadata.description,
+  description: defaultMetadata.description,
   url: CANONICAL,
   image: "https://experiencerella.com/images/service-hydrafacial.jpg",
   provider: {
@@ -336,4 +337,8 @@ export default function VacavilleHydraFacialPage() {
       </section>
     </>
   );
+}
+
+export async function generateMetadata(): Promise<Metadata> {
+  return withWebsiteSeo("/vacaville/hydrafacial", defaultMetadata);
 }

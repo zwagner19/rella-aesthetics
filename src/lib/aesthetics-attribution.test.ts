@@ -1,3 +1,4 @@
+import { INSIGHTS_COOKIE } from "./website-insights-contract";
 import { describe, expect, it } from "vitest";
 import { readdirSync } from "node:fs";
 import { createRequire } from "node:module";
@@ -146,6 +147,7 @@ class FakeRuntime implements AestheticsAttributionRuntime {
       this.cookies.set(AD_ATTRIBUTION_REVOCATION_COOKIE, handle);
       this.cookies.set(AESTHETICS_SOURCE_CONSENT_COOKIE, `v1.granted.${Math.floor(NOW / 1000)}.${handle}`);
       this.cookies.set(AESTHETICS_ANALYTICS_CONSENT_COOKIE, `v1.granted.${Math.floor(NOW / 1000)}.${handle}`);
+      this.cookies.set(INSIGHTS_COOKIE, `v1.granted.${Math.floor(NOW / 1000)}.${handle}`);
     }
   }
 }
@@ -1098,6 +1100,7 @@ describe("denial retries belong to the consent generation that scheduled them", 
     runtime.cookies.set(AD_ATTRIBUTION_REVOCATION_COOKIE, handle);
     runtime.cookies.set(AESTHETICS_SOURCE_CONSENT_COOKIE, `${receipt}.${handle}`);
     runtime.cookies.set(AESTHETICS_ANALYTICS_CONSENT_COOKIE, `${receipt}.${handle}`);
+    runtime.cookies.set(INSIGHTS_COOKIE, `${receipt}.${handle}`);
     runtime.cookies.delete(AD_USER_DATA_DENIED_COOKIE);
     return handle;
   }
@@ -1183,5 +1186,19 @@ describe("denial retries belong to the consent generation that scheduled them", 
     await settle();
     expect(runtime.requests).toHaveLength(count);
     controller.destroy();
+  });
+});
+
+
+describe("first-party UX purpose consent", () => {
+  it("asks a previously consenting visitor again before the new purpose", () => {
+    const runtime = new FakeRuntime(); runtime.setChoice("granted"); runtime.cookies.delete(INSIGHTS_COOKIE);
+    const controller = new AestheticsAttributionController(runtime); const view = observe(controller); controller.start();
+    expect(view()?.phase).toBe("choice"); expect(runtime.requests).toHaveLength(0); controller.destroy();
+  });
+  it("clears the new purpose when measurement is declined", async () => {
+    const runtime = new FakeRuntime(); runtime.setChoice("granted"); runtime.responses.push(DENY_RESPONSE);
+    const controller = new AestheticsAttributionController(runtime); controller.start(); await controller.deny();
+    expect(runtime.cookies.has(INSIGHTS_COOKIE)).toBe(false); controller.destroy();
   });
 });

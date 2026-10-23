@@ -1,3 +1,4 @@
+import { withWebsiteSeo } from "@/lib/website-seo";
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
@@ -15,7 +16,7 @@ const BOOKING_HREF = resolveBookingHref({
 });
 const clinic = locations.vacaville;
 
-export const metadata: Metadata = {
+const defaultMetadata: Metadata = {
   title: "Vacaville Laser Treatments | IPL & Resurfacing",
   description:
     "Compare laser treatment pathways at Rella Vacaville, then use the online booking category to schedule the required Initial Laser Consult.",
@@ -74,7 +75,7 @@ const serviceSchema = {
   "@id": `${CANONICAL}#service`,
   name: "Laser Skin Treatments in Vacaville",
   serviceType: "Laser and light-based aesthetic consultation and treatment",
-  description: metadata.description,
+  description: defaultMetadata.description,
   url: CANONICAL,
   image: "https://experiencerella.com/images/service-laser.jpg",
   provider: {
@@ -357,4 +358,8 @@ export default function VacavilleLaserPage() {
       </section>
     </>
   );
+}
+
+export async function generateMetadata(): Promise<Metadata> {
+  return withWebsiteSeo("/vacaville/laser", defaultMetadata);
 }

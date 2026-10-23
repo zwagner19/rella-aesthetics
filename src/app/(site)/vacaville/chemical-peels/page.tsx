@@ -1,3 +1,4 @@
+import { withWebsiteSeo } from "@/lib/website-seo";
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
@@ -15,7 +16,7 @@ const BOOKING_HREF = resolveBookingHref({
 });
 const clinic = locations.vacaville;
 
-export const metadata: Metadata = {
+const defaultMetadata: Metadata = {
   title: "Chemical Peels in Vacaville | Options & Booking",
   description:
     "Explore chemical peels and recovery planning at Rella Vacaville. Browse the live menu for current peel services and availability.",
@@ -100,7 +101,7 @@ const serviceSchema = {
   "@id": `${CANONICAL}#service`,
   name: "Chemical Peels in Vacaville",
   serviceType: "Chemical peel consultation and treatment",
-  description: metadata.description,
+  description: defaultMetadata.description,
   url: CANONICAL,
   image: "https://experiencerella.com/images/service-peels.jpg",
   provider: {
@@ -321,4 +322,8 @@ export default function VacavilleChemicalPeelsPage() {
       </section>
     </>
   );
+}
+
+export async function generateMetadata(): Promise<Metadata> {
+  return withWebsiteSeo("/vacaville/chemical-peels", defaultMetadata);
 }

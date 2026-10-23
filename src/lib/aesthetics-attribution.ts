@@ -1,3 +1,4 @@
+import { INSIGHTS_COOKIE } from "./website-insights-contract";
 export const AESTHETICS_ATTRIBUTION_ENDPOINT =
   "https://book.experiencerella.com/api/booking-v2/attribution";
 export const AESTHETICS_BOOKING_ORIGIN = "https://book.experiencerella.com";
@@ -542,7 +543,8 @@ export class AestheticsAttributionController {
     }
 
     if (receipt === "granted" && sourceGranted
-      && hasAestheticsAnalyticsConsent(cookieHeader, this.runtime.now())) {
+      && hasAestheticsAnalyticsConsent(cookieHeader, this.runtime.now())
+      && readCookie(cookieHeader, INSIGHTS_COOKIE) === readCookie(cookieHeader, AESTHETICS_ANALYTICS_CONSENT_COOKIE)) {
       this.cancelDenialRetry();
       this.choice = "granted";
       if (eligibleEntry) {
@@ -617,7 +619,7 @@ export class AestheticsAttributionController {
       ? this.rotateRevocationHandle(predecessor)
       : this.ensureRevocationHandle();
     if (!handle || !this.clearDeniedSentinel() || !this.persistSourceChoice(handle)
-      || !this.persistAnalyticsChoice(handle)) {
+      || !this.persistAnalyticsChoice(handle) || !this.persistInsightsChoice(handle)) {
       await this.failClosed(
         "Cookies remain off because this browser could not save the setting.",
       );
@@ -755,7 +757,15 @@ export class AestheticsAttributionController {
     return hasSourceConsent(this.runtime.cookieHeader(), this.runtime.now());
   }
 
+  private persistInsightsChoice(handle: string): boolean {
+    const receipt = readCookie(this.runtime.cookieHeader(), AESTHETICS_CONSENT_COOKIE);
+    const value = `${receipt}.${handle}`;
+    this.runtime.writeCookie(`${INSIGHTS_COOKIE}=${value}; Max-Age=${CONSENT_MAX_AGE_SECONDS}; Path=/; SameSite=Lax; Secure`);
+    return readCookie(this.runtime.cookieHeader(), INSIGHTS_COOKIE) === value;
+  }
+
   private clearSourceChoice(): void {
+    this.runtime.writeCookie(`${INSIGHTS_COOKIE}=; Max-Age=0; Path=/; SameSite=Lax; Secure`);
     this.runtime.writeCookie(`${AESTHETICS_SOURCE_CONSENT_COOKIE}=; Max-Age=0; Path=/; SameSite=Lax; Secure`);
     this.runtime.writeCookie(`${AESTHETICS_ANALYTICS_CONSENT_COOKIE}=; Max-Age=0; Path=/; SameSite=Lax; Secure`);
   }

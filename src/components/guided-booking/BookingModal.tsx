@@ -7,6 +7,7 @@ import {
   useRef,
   useState,
 } from "react";
+import { recordBookingInsight } from "@/lib/website-insights";
 import type { BookingIntent } from "@/lib/booking-routes";
 import type { BookingLocation } from "@/lib/booking-routes";
 import { createSharedPackageClient, type PackageIntent, type PackageOffering } from "@/lib/guided-booking/package-client";
@@ -80,6 +81,11 @@ export function BookingModal({
   const [times, setTimes] = useState<GuidedSlot[]>([]);
   const [loadingMeta, setLoadingMeta] = useState(false);
   const allProvidersChosen = providersComplete(state);
+
+  useEffect(() => {
+    recordBookingInsight(GUIDED_BOOKING_STEPS.indexOf(state.step) + 1, state.locationSlug,
+      packageRequest ? "package" : state.confirmationPending ? "pending" : state.confirmationId ? "confirmed" : "open");
+  }, [state.step, state.locationSlug, state.confirmationPending, state.confirmationId, packageRequest]);
 
   useEffect(() => {
     if (contentRef.current) contentRef.current.scrollTop = 0;

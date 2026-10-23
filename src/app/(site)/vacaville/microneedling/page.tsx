@@ -1,3 +1,4 @@
+import { withWebsiteSeo } from "@/lib/website-seo";
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
@@ -15,7 +16,7 @@ const BOOKING_HREF = resolveBookingHref({
 });
 const clinic = locations.vacaville;
 
-export const metadata: Metadata = {
+const defaultMetadata: Metadata = {
   title: "Microneedling in Vacaville | Consult & Options",
   description:
     "Explore microneedling at Rella Aesthetics in Vacaville. Browse the live menu for current services, consultations and availability.",
@@ -108,7 +109,7 @@ const serviceSchema = {
   "@id": `${CANONICAL}#service`,
   name: "Microneedling in Vacaville",
   serviceType: "Microneedling consultation and treatment",
-  description: metadata.description,
+  description: defaultMetadata.description,
   url: CANONICAL,
   image: "https://experiencerella.com/images/service-microneedling.jpg",
   provider: {
@@ -332,4 +333,8 @@ export default function VacavilleMicroneedlingPage() {
       </section>
     </>
   );
+}
+
+export async function generateMetadata(): Promise<Metadata> {
+  return withWebsiteSeo("/vacaville/microneedling", defaultMetadata);
 }

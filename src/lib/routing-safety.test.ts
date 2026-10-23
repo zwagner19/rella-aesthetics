@@ -33,9 +33,10 @@ describe("no public CTA points at /booking", () => {
 });
 
 describe("employee-only Rella HQ is outside the public website", () => {
-  it("keeps HQ outside public navigation, with only the signed server inquiry connector allowed", () => {
+  it("keeps HQ outside public navigation, with only explicit server connectors allowed", () => {
     const connector = "lib/lead-hq.ts";
-    const offenders = FILES.filter((p) => rel(p) !== connector &&
+    const serverConnectors = new Set([connector, "app/api/website-insights/route.ts", "lib/website-seo.ts"]);
+    const offenders = FILES.filter((p) => !serverConnectors.has(rel(p)) &&
       /rella-hq(?:-[a-z0-9-]+)?\.vercel\.app|rella-hq/i.test(
         readFileSync(p, "utf8"),
       ),
@@ -54,6 +55,11 @@ describe("employee-only Rella HQ is outside the public website", () => {
     expect(serverSource).toContain('from "node:crypto"');
     expect(serverSource).not.toMatch(/["']use client["']/);
     expect(serverSource).toContain("process.env.LEAD_INBOX_WEBSITE_WEBHOOK_SECRET");
+    expect(readFileSync(join(SRC, "lib/website-seo.ts"), "utf8")).toContain('import "server-only"');
+    const insights = readFileSync(join(SRC, "app/api/website-insights/route.ts"), "utf8");
+    expect(insights).toContain('from "node:crypto"');
+    expect(insights).toContain('website-insights-v1.');
+    expect(FILES.filter(p => /["']use client["']/.test(readFileSync(p, "utf8")) && /website-seo|lead-hq/.test(readFileSync(p, "utf8"))).map(rel)).toEqual([]);
   });
 });
 

@@ -1,3 +1,4 @@
+import { withWebsiteSeo } from "@/lib/website-seo";
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
@@ -15,7 +16,7 @@ const BOOKING_HREF = resolveBookingHref({
 });
 const clinic = locations.vacaville;
 
-export const metadata: Metadata = {
+const defaultMetadata: Metadata = {
   title: "Facials in Vacaville | Skin Consult & Options",
   description:
     "Explore facials and HydraFacial at Rella Aesthetics in downtown Vacaville. Browse the live menu for current services and availability.",
@@ -104,7 +105,7 @@ const serviceSchema = {
   "@id": `${CANONICAL}#service`,
   name: "Professional Facials in Vacaville",
   serviceType: "Professional facial consultation and cosmetic skin-care services",
-  description: metadata.description,
+  description: defaultMetadata.description,
   url: CANONICAL,
   image: "https://experiencerella.com/images/service-facials.jpg",
   provider: {
@@ -334,4 +335,8 @@ export default function VacavilleFacialsPage() {
       </section>
     </>
   );
+}
+
+export async function generateMetadata(): Promise<Metadata> {
+  return withWebsiteSeo("/vacaville/facials", defaultMetadata);
 }

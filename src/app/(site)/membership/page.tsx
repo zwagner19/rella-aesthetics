@@ -1,9 +1,10 @@
+import { withWebsiteSeo } from "@/lib/website-seo";
 import type { Metadata } from "next";
 import { FaqAccordion, FaqSchema } from "@/components/blocks/FaqAccordion";
 import { Button } from "@/components/ui/Button";
 import { membershipTiers } from "@/lib/data";
 
-export const metadata: Metadata = {
+const defaultMetadata: Metadata = {
   title: "2026 Injectable Memberships",
   description:
     "Compare Rella's 2026 Tox, Filler, and Tox + Filler memberships, including monthly dues, member rates, benefits, and one-year terms.",
@@ -107,4 +108,8 @@ export default function MembershipPage() {
       </section>
     </>
   );
+}
+
+export async function generateMetadata(): Promise<Metadata> {
+  return withWebsiteSeo("/membership", defaultMetadata);
 }
