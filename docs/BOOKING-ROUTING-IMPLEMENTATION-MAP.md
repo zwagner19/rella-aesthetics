@@ -1,8 +1,12 @@
 # Canonical booking routing map
 
-The website does not implement booking. Every public booking CTA resolves through
-`src/lib/booking-routes.ts`; the patient booking application remains
-`https://book.experiencerella.com`.
+Current as of October 18, 2026: ordinary `BookTrigger` CTAs render Amie's
+in-site booking interface, backed by the shared `rella-booking` APIs. Native
+booking, payment rules and durable outcomes remain owned by that backend.
+`src/lib/booking-routes.ts` still supplies canonical hrefs and fallbacks;
+campaign/direct-link and weight-loss CTA families must be audited separately.
+See [GO-LIVE-AUDIT-HANDOFF.md](GO-LIVE-AUDIT-HANDOFF.md) for the current branches,
+owner decisions and prelaunch verification requirements.
 
 ## Approved destinations
 
@@ -49,9 +53,12 @@ shell from ordinary Book CTAs (`BookingExperienceProvider` + `BookTrigger`).
 - Steps: location → treatments → review → provider → datetime → complete.
 - Catalog is fail-closed against verified `rella-booking` aesthetics entries
   (location/service slugs only — no Boulevard URNs in the website client).
-- Live Boulevard availability, deposits, payment, and appointment create remain
-  owned by `book.experiencerella.com`. The default website backend is **handoff**
-  and never calls createCart/reserve/checkout/payment.
+- Live Boulevard availability, deposit enforcement, payment and appointment
+  creation remain owned by the paired `rella-booking` backend. The default
+  website adapter is the shared live adapter, using the same-origin bridge for
+  session creation, reservation/release, payment and checkout. It is not the
+  earlier handoff-only demonstration. Package purchase/ownership use a separate
+  same-origin package bridge and private backend session.
 - Opens and confirmed bookings are tracked separately; conversion remains owned
   by the booking app after verified Boulevard success.
 - Weight-loss CTAs still navigate to `book.rellaweightloss.com` (no modal).

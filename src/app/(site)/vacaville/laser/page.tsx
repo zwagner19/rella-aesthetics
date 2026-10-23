@@ -1,3 +1,4 @@
+import { withWebsiteSeo } from "@/lib/website-seo";
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
@@ -15,7 +16,7 @@ const BOOKING_HREF = resolveBookingHref({
 });
 const clinic = locations.vacaville;
 
-export const metadata: Metadata = {
+const defaultMetadata: Metadata = {
   title: "Vacaville Laser Treatments | IPL & Resurfacing",
   description:
     "Compare laser treatment pathways at Rella Vacaville, then use the online booking category to schedule the required Initial Laser Consult.",
@@ -49,7 +50,7 @@ const faqs = [
   {
     question: "Which laser services are listed at Rella Vacaville?",
     answer:
-      "The current Vacaville online laser category lists the Initial Laser Consult. Laser hair removal, IPL, resurfacing, tattoo removal, spider-vein treatment, CoolPeel, and packages may be discussed with the team, but their availability should not be inferred from the online menu.",
+      "Vacaville's live laser menu includes the Initial Laser Consult, IPL, CoolPeel, resurfacing, laser hair removal, tattoo removal, and spider-vein treatment. Browse the live menu for current services and availability, and review consultation requirements before selecting treatment.",
   },
   {
     question: "How much downtime should I expect?",
@@ -74,7 +75,7 @@ const serviceSchema = {
   "@id": `${CANONICAL}#service`,
   name: "Laser Skin Treatments in Vacaville",
   serviceType: "Laser and light-based aesthetic consultation and treatment",
-  description: metadata.description,
+  description: defaultMetadata.description,
   url: CANONICAL,
   image: "https://experiencerella.com/images/service-laser.jpg",
   provider: {
@@ -174,7 +175,7 @@ export default function VacavilleLaserPage() {
               </Button>
             </div>
             <p className="mt-5 text-xs leading-6 text-ink/70">
-              This button opens Rella&apos;s live Vacaville laser category, which currently lists the Initial Laser Consult.
+              This button opens Rella&apos;s live Vacaville laser category. Browse current services and availability, including the Initial Laser Consult.
             </p>
           </div>
 
@@ -201,7 +202,7 @@ export default function VacavilleLaserPage() {
 
       <TrustStrip
         ariaLabel="Rella Vacaville laser visit facts"
-        items={["Initial consult online", "Device selected later", "Current public pricing", "Downtown Vacaville"]}
+        items={["Live laser menu", "Device selected later", "Current public pricing", "Downtown Vacaville"]}
       />
 
       <section className="py-20 md:py-28" aria-labelledby="vacaville-laser-options">
@@ -214,7 +215,7 @@ export default function VacavilleLaserPage() {
               Different concerns need different paths.
             </h2>
             <p className="text-lg font-light leading-relaxed text-ink/70">
-              Rella may discuss light-based treatment, resurfacing, hair removal, and targeted concerns. The current online category starts with the Initial Laser Consult so availability and fit are reviewed first.
+              Rella may discuss light-based treatment, resurfacing, hair removal, and targeted concerns. Browse the live menu for current services and availability, and start with the Initial Laser Consult when required.
             </p>
           </div>
           <div className="grid gap-5 sm:grid-cols-2">
@@ -295,7 +296,7 @@ export default function VacavilleLaserPage() {
           <div className="border-l-4 border-rose bg-rose-blush p-7 md:p-10">
             <p className="mb-3 text-[0.6875rem] font-bold uppercase tracking-[0.18em] text-rose-text">Live booking chooser</p>
             <p className="mb-6 text-lg leading-8 text-silver-dark">
-              The button below opens Vacaville&apos;s laser category. Its current online option is the Initial Laser Consult; review the professional, timing, and booking terms before confirming.
+              The button below opens Vacaville&apos;s live laser category, including the Initial Laser Consult. Review the selected service, professional, timing, and booking terms before confirming.
             </p>
             <Button disableHover href={BOOKING_HREF} data-cta="service-booking" className="rounded-full">
               Book Initial Laser Consult
@@ -357,4 +358,8 @@ export default function VacavilleLaserPage() {
       </section>
     </>
   );
+}
+
+export async function generateMetadata(): Promise<Metadata> {
+  return withWebsiteSeo("/vacaville/laser", defaultMetadata);
 }

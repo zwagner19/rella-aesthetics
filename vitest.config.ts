@@ -3,7 +3,7 @@ import { fileURLToPath } from "node:url";
 
 export default defineConfig({
   resolve: {
-    alias: { "@": fileURLToPath(new URL("./src", import.meta.url)) },
+    alias: { "server-only": fileURLToPath(new URL("./tests/stubs/server-only.ts", import.meta.url)), "@": fileURLToPath(new URL("./src", import.meta.url)) },
   },
   test: {
     // NOTE (Wave 3): this previously read `src/**/*.test.ts`, which silently

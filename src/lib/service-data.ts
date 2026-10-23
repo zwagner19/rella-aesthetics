@@ -116,14 +116,14 @@ export const servicePages: ServicePageData[] = [
   {
     slug: "chemical-peels",
     title: "Chemical Peels",
-    metaTitle: "Chemical Peels in Vacaville, CA",
-    metaDescription: "Review consultation-led peel care in Vacaville and book the Universal Peel currently listed in Rella's online category.",
+    metaTitle: "Chemical Peels in Vacaville & Napa CA",
+    metaDescription: "Explore consultation-led chemical peel care in Vacaville and Napa. Browse Rella's live menu for current options and availability.",
     heroEyebrow: "Skin Care",
     heroTitle: "Chemical Peels",
-    heroDescription: "Consultation-led peel options in Vacaville, selected around your skin, goals, and expected recovery.",
+    heroDescription: "Consultation-led peel options in Vacaville and Napa, selected around your skin, goals, and expected recovery.",
     whatItIs: {
       heading: "What Is a Chemical Peel?",
-      body: "Chemical peels use controlled solutions to exfoliate the skin. Rella's current Vacaville online category lists Universal Peel; call the team to ask about other formulations. The appropriate option depends on your skin, concerns, recent treatments, and expected recovery.",
+      body: "Chemical peels use controlled solutions to exfoliate the skin. Browse Rella's live menu at your preferred clinic for current peel options and availability. The appropriate option depends on your skin, concerns, recent treatments, and expected recovery.",
     },
     whoItsFor: {
       heading: "Who Is It For?",
@@ -149,7 +149,7 @@ export const servicePages: ServicePageData[] = [
     },
     pricing: {
       heading: "Pricing",
-      body: "Peel pricing depends on the selected product and whether a single treatment or series is appropriate. Rella will review the current Vacaville option and total before you book or treat.",
+      body: "Peel pricing depends on the selected product and whether a single treatment or series is appropriate. Rella will review the current options and total before you book or treat.",
     },
     faq: [
       { question: "How many peels do I need?", answer: "That depends on the selected product, your skin response, and your goals. The team will explain whether a single treatment or series is appropriate before you decide." },
@@ -158,7 +158,7 @@ export const servicePages: ServicePageData[] = [
     ],
     image: "/images/treatments/chemical-peel.webp",
     imageAlt: "A Rella provider applying an in-clinic facial treatment",
-    availableLocations: ["vacaville"],
+    availableLocations: ["vacaville", "napa"],
   },
   {
     slug: "facials",
@@ -255,7 +255,7 @@ export const servicePages: ServicePageData[] = [
   {
     slug: "microneedling",
     title: "Microneedling",
-    metaTitle: "Microneedling in Vacaville, CA",
+    metaTitle: "Microneedling in Vacaville & Napa CA",
     metaDescription: "Explore clinician-guided microneedling at Rella Aesthetics, with candidacy, device settings, recovery, and treatment planning reviewed first.",
     heroEyebrow: "Skin Care",
     heroTitle: "Microneedling",
@@ -297,7 +297,7 @@ export const servicePages: ServicePageData[] = [
     ],
     image: "/images/treatments/microneedling-aftercare.webp",
     imageAlt: "A patient checking her skin in a mirror after treatment",
-    availableLocations: ["vacaville"],
+    availableLocations: ["vacaville", "napa"],
   },
   {
     slug: "iv-hydration",
@@ -426,12 +426,12 @@ export const servicePages: ServicePageData[] = [
     pricing: {
       heading: "Pricing",
       body: "Program cost depends on the care plan, medication choice, labs, and follow-up needs. Rella will explain the applicable options and costs before you decide.",
-      note: "The medical qualification consultation requires no card and does not guarantee treatment, a prescription, or a specific medication.",
+      note: "The medical qualification consultation requires a $100 reservation deposit and does not guarantee treatment, a prescription, or a specific medication. After the attended consultation, the deposit is applied toward treatment or account credit, or refunded if the patient is not a candidate or chooses not to proceed.",
     },
     faq: [
       { question: "What happens during the first consultation?", answer: "The 30-minute phone consultation with Zachary Wagner, DO, is used to review relevant history, goals, prior attempts, and safety considerations and determine whether you medically qualify to proceed. It does not guarantee a prescription or a specific medication." },
       { question: "Does Rella offer semaglutide or other GLP-1 options?", answer: "GLP-1 medications may be discussed when clinically appropriate. The appropriate medication, source, dosing, and availability depend on your history and current clinical circumstances." },
-      { question: "Do I need a card to see consultation times?", answer: "No. The 30-minute medical qualification phone consultation does not require a card." },
+      { question: "Is a reservation deposit required for the consultation?", answer: "Yes. A $100 reservation deposit is required when you book. After the attended consultation, it is applied toward treatment or account credit, or refunded if you are not a candidate or choose not to proceed." },
       { question: "How much weight can I lose?", answer: "Results vary by person, treatment plan, health factors, and follow-through. Rella does not promise a specific result and will discuss realistic expectations for the plan being considered." },
     ],
     image: "/images/treatments/medical-weight-loss.webp",

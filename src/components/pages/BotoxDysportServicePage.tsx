@@ -383,7 +383,7 @@ export function BotoxDysportServicePage() {
           <div className="grid gap-16 lg:grid-cols-2 lg:gap-0">
             <article className="lg:border-r lg:border-rule lg:pr-12">
               <ClinicLocationPhoto visual={vacavilleVisual} />
-              <h3 className="text-2xl font-medium tracking-[-0.01em] text-ink">Vacaville</h3>
+              <h3 className="text-2xl font-medium tracking-[-0.01em] text-ink"><Link href="/vacaville/botox">Vacaville</Link></h3>
               <p className="mt-3 text-sm font-light leading-relaxed text-silver">
                 {locations.vacaville.address}
                 <br />
@@ -401,7 +401,7 @@ export function BotoxDysportServicePage() {
 
             <article className="lg:pl-12">
               <ClinicLocationPhoto visual={napaVisual} />
-              <h3 className="text-2xl font-medium tracking-[-0.01em] text-ink">Napa House</h3>
+              <h3 className="text-2xl font-medium tracking-[-0.01em] text-ink"><a href="/napa/botox/">Napa House</a></h3>
               <p className="mt-3 text-sm font-light leading-relaxed text-silver">
                 {locations.napa.address}
                 <br />

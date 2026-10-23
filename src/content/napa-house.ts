@@ -3,6 +3,7 @@
  * Sources: repo `locations.napa`, `content/team`, `service-data.availableLocations`,
  * and read-only live-site audit notes. Do not invent amenities, parking, or hours.
  */
+import { locations } from "@/lib/data";
 
 export const napaHouseIdentity = {
   brand: "Rella Aesthetics",
@@ -18,15 +19,8 @@ export const napaHousePractical = {
   phoneTel: "+17073582928",
   mapUrl: "https://maps.google.com/?q=1541+3rd+St+Napa+CA+94559",
   googleReviewUrl: "https://g.page/r/CcUDgqqvRr8MEBM/review",
-  /**
-   * Hours from repo `locations.napa` (what this Next app already publishes).
-   * Live WordPress Napa pages also publish Wed–Sat / conflicting schema — flagged in report.
-   */
-  hours: [
-    "Monday–Friday: 9am–5pm",
-    "Saturday: 9am–1pm",
-    "Sunday: Closed",
-  ],
+  /** Owner-approved hours shared with contact copy and structured data. */
+  hours: locations.napa.hours,
 } as const;
 
 /**
@@ -34,15 +28,15 @@ export const napaHousePractical = {
  * Peels + microneedling remain Vacaville-only in service-data — not claimed here as Napa exclusives.
  */
 export const napaHouseCategories = [
-  { label: "Injectables", href: "/services/injectables" },
-  { label: "Skin", href: "/services/skin" },
-  { label: "Lasers", href: "/services/lasers" },
-  { label: "Wellness", href: "/services/iv-hydration" },
-  { label: "Weight", href: "/services/weight-loss" },
+  { label: "Injectables", href: "/napa/botox/", ariaLabel: "Injectables: Botox and Dysport in Napa" },
+  { label: "Skin", href: "/napa/facials", ariaLabel: "Skin: Facials in Napa" },
+  { label: "Lasers", href: "/napa/laser/", ariaLabel: "Lasers: Laser treatments in Napa" },
+  { label: "Wellness" },
+  { label: "Weight" },
 ] as const;
 
 /**
- * Provider preview — Wagner, Warda, Devyn only (Zach refinement).
+ * Owner-approved Napa team preview, using the existing team-directory records.
  * Equal visual weight; no staffing notes.
  */
 export const napaHousePeople = [
@@ -60,6 +54,21 @@ export const napaHousePeople = [
     name: "Devyn Pickett",
     role: "Aesthetic RN",
     image: "/images/team/devyn.jpg",
+  },
+  {
+    name: "Marisa Avalos",
+    role: "Aesthetic RN",
+    image: "/images/team/marisa-avalos.jpg",
+  },
+  {
+    name: "Natalie",
+    role: "Esthetician",
+    image: "/images/team/natalie.jpg",
+  },
+  {
+    name: "Hailey Butler",
+    role: "Medical Assistant",
+    image: "/images/team/hailey-butler.jpg",
   },
 ] as const;
 

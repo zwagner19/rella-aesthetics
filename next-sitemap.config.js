@@ -7,7 +7,11 @@ const publicRoutes = [
   "/locations/napa",
   "/locations/vacaville",
   "/membership",
-  "/napa/botox",
+  "/napa/botox/",
+  "/napa/filler/",
+  "/napa/hydrafacial/",
+  "/napa/hyperhidrosis/",
+  "/napa/laser/",
   "/napa/facials",
   "/payment-plans",
   "/privacy-policy",
@@ -44,6 +48,8 @@ module.exports = {
   // checked-in sitemap reproducible and avoids sending crawlers a false signal.
   autoLastmod: false,
   exclude: [
+    "/napa",
+    "/napa/",
     "/studio",
     "/studio/**",
     "/blog",
@@ -75,6 +81,14 @@ module.exports = {
     additionalSitemaps: [],
   },
   transform: async (config, path) => {
+    // These five treatment pages still belong to WordPress, whose canonical URLs
+    // retain their slash. Normalize build-discovered Next routes to that same
+    // public URL, without changing slashless URLs for the new site.
+    const wordpressPath = [
+      "/napa/botox", "/napa/filler", "/napa/hydrafacial",
+      "/napa/hyperhidrosis", "/napa/laser",
+    ].includes(path.replace(/\/$/, ""));
+    const canonicalPath = wordpressPath ? `${path.replace(/\/$/, "")}/` : path;
     const priorityMap = {
       "/": 1.0,
       "/services": 0.9,
@@ -99,10 +113,11 @@ module.exports = {
     };
 
     return {
-      loc: path,
+      loc: canonicalPath,
+      ...(wordpressPath ? { trailingSlash: true } : {}),
       changefreq: path.startsWith("/blog") ? "daily" : config.changefreq,
       priority:
-        priorityMap[path] ??
+        priorityMap[wordpressPath ? path.replace(/\/$/, "") : path] ??
         (path.startsWith("/services/") ? 0.8 : config.priority),
       lastmod: config.autoLastmod ? new Date().toISOString() : undefined,
     };

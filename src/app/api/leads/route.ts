@@ -3,9 +3,12 @@ import {
   GHL_API_BASE,
   GHL_API_VERSION,
   buildGhlContactBody,
+  normalizePhone,
 } from "@/lib/ghl";
 import { EXTRA_CONTACT_INTERESTS } from "@/lib/contact-intents";
 import { services } from "@/lib/data";
+import { LeadReceiptSignalError, leadConsentTags, persistLeadConsent, readLeadConsent, signalLeadReceipt, validLeadReceiptField } from "@/lib/lead-consent";
+import { deliverLeadToHq, LeadHqDeliveryError, leadHqConfigured } from "@/lib/lead-hq";
 
 interface LeadPayload {
   name?: string;
@@ -15,6 +18,8 @@ interface LeadPayload {
   location?: string;
   message?: string;
   website?: string;
+  consent?: unknown;
+  submissionId?: string;
 }
 
 const limits = {
@@ -60,7 +65,15 @@ function clinicTag(location: string): string {
 }
 
 export async function POST(req: NextRequest) {
+  let deliveryStarted = false;
   try {
+    if (req.headers.get("sec-fetch-site") === "cross-site"
+      || (req.headers.get("origin") && req.headers.get("origin") !== new URL(req.url).origin)) {
+      return NextResponse.json({ error: "Request not allowed" }, { status: 403 });
+    }
+    if (!req.headers.get("content-type")?.startsWith("application/json")) {
+      return NextResponse.json({ error: "JSON required" }, { status: 415 });
+    }
     const rawBody: unknown = await req.json();
     const body: LeadPayload =
       rawBody && typeof rawBody === "object" ? rawBody : {};
@@ -106,14 +119,22 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    const consent = readLeadConsent(body.consent, Boolean(phone));
+    const submissionId = clean(body.submissionId, 36);
+    if (!consent || !/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(submissionId)) {
+      return NextResponse.json({ error: "Please review your contact consent before sending." }, { status: 400 });
+    }
+
     const GHL_API_KEY = process.env.GHL_API_KEY ?? "";
     const GHL_LOCATION_ID = process.env.GHL_LOCATION_ID ?? "";
     const GHL_CF_SERVICE = process.env.GHL_CUSTOM_FIELD_SERVICE_ID ?? "";
     const GHL_CF_LOCATION = process.env.GHL_CUSTOM_FIELD_LOCATION_ID ?? "";
     const GHL_CF_MESSAGE = process.env.GHL_CUSTOM_FIELD_MESSAGE_ID ?? "";
+    const GHL_CF_RECEIPT = process.env.GHL_CUSTOM_FIELD_RECEIPT_ID ?? "";
 
     // A prospect must never see success unless the CRM accepted the contact.
-    if (!GHL_API_KEY || !GHL_LOCATION_ID) {
+    if (!GHL_API_KEY || !GHL_LOCATION_ID || !leadHqConfigured()
+      || !validLeadReceiptField(GHL_CF_RECEIPT, [GHL_CF_SERVICE, GHL_CF_LOCATION, GHL_CF_MESSAGE])) {
       return NextResponse.json(
         { error: "Contact form is temporarily unavailable" },
         { status: 503 },
@@ -158,6 +179,7 @@ export async function POST(req: NextRequest) {
       Authorization: `Bearer ${GHL_API_KEY}`,
       Version: GHL_API_VERSION,
     };
+    deliveryStarted = true;
     const ghlRes = await fetch(`${GHL_API_BASE}/contacts/upsert`, {
       method: "POST",
       headers: requestHeaders,
@@ -166,32 +188,67 @@ export async function POST(req: NextRequest) {
     });
 
     const responseText = await ghlRes.text();
-    let result: { contact?: { id?: string }; id?: string } = {};
+    let result: { contact?: { id?: unknown; locationId?: unknown; email?: unknown; phone?: unknown } } | null = null;
     try {
-      result = responseText ? JSON.parse(responseText) : {};
+      result = responseText ? JSON.parse(responseText) : null;
     } catch {
-      result = {};
+      result = null;
     }
 
     if (!ghlRes.ok) {
       console.error("GHL contact upsert failed", { status: ghlRes.status });
+      // An upstream server error can arrive after the contact was saved.
+      // Keep that outcome pending rather than inviting another submission.
+      if (ghlRes.status >= 500) {
+        return NextResponse.json({ accepted: false, pending: true }, { status: 202 });
+      }
       return NextResponse.json(
         { error: "Contact form is temporarily unavailable" },
         { status: 502 },
       );
     }
 
-    const contactId = result.contact?.id ?? result.id;
-    if (!contactId) {
-      console.error("GHL contact upsert returned no contact ID");
+    const contact = result?.contact;
+    const contactId = contact?.id;
+    if (typeof contactId !== "string" || !contactId || contactId.length > 256
+      || contact?.locationId !== GHL_LOCATION_ID) {
+      console.error("GHL contact upsert identity unverified");
       return NextResponse.json(
-        { error: "Contact form is temporarily unavailable" },
-        { status: 502 },
+        { accepted: false, pending: true },
+        { status: 202 },
       );
+    }
+
+    const replyContact = { email: email || null, phone: phone ? normalizePhone(phone) : null };
+    const nativeEmail = typeof contact.email === "string" ? contact.email.trim().toLowerCase() : "";
+    const nativePhone = typeof contact.phone === "string" ? normalizePhone(contact.phone).replace(/\D/g, "") : "";
+    const submittedPhone = replyContact.phone?.replace(/\D/g, "") ?? "";
+    const channelMatches = {
+      email: Boolean(email) && email === nativeEmail,
+      phone: Boolean(submittedPhone) && submittedPhone === nativePhone,
+    };
+    if (!channelMatches.email && !channelMatches.phone) {
+      return NextResponse.json({ accepted: false, pending: true }, { status: 202 });
+    }
+
+    // GHL may match one existing contact and retain a different second channel.
+    // Preserve the submitted reply details without changing or merging profiles.
+    const receipt = await persistLeadConsent({ contactId, submissionId, choice: consent, phoneProvided: Boolean(phone),
+      replyContact, channelMatches, inquiry: { name, serviceInterest: service, clinicPreference: location, message },
+      headers: requestHeaders });
+    // HQ receives the immutable inquiry before mutable CRM tags/markers. A
+    // collision still reaches Ayano for review, with unsafe reply links omitted.
+    await deliverLeadToHq({ receipt, contactId, locationId: GHL_LOCATION_ID, choice: consent,
+      replyContact, channelMatches, inquiry: { name, serviceInterest: service, clinicPreference: location, message } });
+    // This requests staff review even when duplicate profiles conflict. It does
+    // not grant marketing permission or claim that every reply channel saved.
+    await signalLeadReceipt({ contactId, locationId: GHL_LOCATION_ID, fieldId: GHL_CF_RECEIPT, receipt, headers: requestHeaders });
+    if ((email && !channelMatches.email) || (phone && !channelMatches.phone)) {
+      return NextResponse.json({ accepted: false, pending: true }, { status: 202 });
     }
 
     const tags = [
-      "website-lead",
+      ...leadConsentTags(consent),
       interestTag(service),
       clinicTag(location),
     ].filter(Boolean);
@@ -201,16 +258,26 @@ export async function POST(req: NextRequest) {
       body: JSON.stringify({ tags }),
       signal: AbortSignal.timeout(8_000),
     });
+    const tagResult: unknown = tagRes.ok ? await tagRes.json().catch(() => null) : null;
+    const savedTags = tagResult && typeof tagResult === "object" && "tags" in tagResult
+      ? tagResult.tags : null;
 
-    // The lead is already persisted, so a tag failure must not invite duplicates.
-    if (!tagRes.ok) {
-      console.error("GHL contact tagging failed", { status: tagRes.status });
+    // The contact/receipt are already saved. A routing failure needs verification,
+    // never another lead submission or an unverified follow-up promise.
+    if (!tagRes.ok || !Array.isArray(savedTags)
+      || !savedTags.every(tag => typeof tag === "string")
+      || !tags.every(tag => savedTags.includes(tag))) {
+      console.error("GHL contact tagging unverified", { status: tagRes.status });
+      return NextResponse.json({ accepted: false, pending: true }, { status: 202 });
     }
 
     return NextResponse.json({ success: true, accepted: true });
   } catch (error) {
     const errorName = error instanceof Error ? error.name : "UnknownError";
-    console.error("Lead submission failed", { errorName });
+    console.error("Lead submission failed", { errorName,
+      ...(error instanceof LeadReceiptSignalError || error instanceof LeadHqDeliveryError ? { stage: error.stage } : {}),
+    });
+    if (deliveryStarted) return NextResponse.json({ accepted: false, pending: true }, { status: 202 });
     return NextResponse.json(
       { error: "Contact form is temporarily unavailable" },
       { status: 500 },

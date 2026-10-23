@@ -1,9 +1,6 @@
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { SkipNav } from "@/components/layout/SkipNav";
-import { GhlChatWidget } from "@/components/integrations/GhlChatWidget";
-import { GoogleAnalytics } from "@/components/integrations/GoogleAnalytics";
-import { MetaPixel } from "@/components/integrations/MetaPixel";
 import { MobileConversionBar } from "@/components/layout/MobileConversionBar";
 
 /**
@@ -18,10 +15,10 @@ import { MobileConversionBar } from "@/components/layout/MobileConversionBar";
 export default function SiteLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <>
-      {/* Direct GA + Meta belong to ordinary marketing routes ONLY. Moved here
-          from the root layout so the campaign group cannot inherit them. */}
-      <GoogleAnalytics />
-      <MetaPixel />
+      {/* Booking opens in this document on every site route. Keep browser
+          marketing and chat loaders outside this document for the controlled
+          launch, regardless of configured integration IDs. Existing paid
+          landing pages retain their bounded first-party attribution path. */}
       <SkipNav />
       <Header />
       <main
@@ -32,7 +29,6 @@ export default function SiteLayout({ children }: Readonly<{ children: React.Reac
         {children}
       </main>
       <Footer />
-      <GhlChatWidget />
       <MobileConversionBar />
     </>
   );
