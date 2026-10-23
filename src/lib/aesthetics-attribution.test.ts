@@ -323,7 +323,7 @@ describe("paid aesthetics eligibility and URL boundaries", () => {
     const require = createRequire(import.meta.url);
     const sitemap = require("../../next-sitemap.config.js") as { additionalPaths(config: unknown): Promise<Array<{ loc: string }>> };
     const sitemapPaths = (await sitemap.additionalPaths(sitemap)).map(item => item.loc);
-    // Sitemap discovery covers both applications. The edge keeps these six
+    // Sitemap discovery covers both applications. The edge keeps these five
     // pages on WordPress, so listing them must not expand the Next controller's
     // capture scope. Its existing /napa/botox implementation is still covered
     // independently by staticPages below.

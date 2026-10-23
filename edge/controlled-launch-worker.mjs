@@ -5,7 +5,7 @@
 export const SITE_ORIGIN_MARKER = "next-controlled-launch-v1";
 export const PUBLIC_ORIGIN = "https://experiencerella.com";
 export const WORDPRESS_LANDINGS = Object.freeze([
-  "/napa", "/napa/botox", "/napa/laser", "/napa/filler", "/napa/hydrafacial", "/napa/hyperhidrosis",
+  "/napa/botox", "/napa/laser", "/napa/filler", "/napa/hydrafacial", "/napa/hyperhidrosis",
 ]);
 const PUBLIC_HOSTS = new Set(["experiencerella.com", "www.experiencerella.com"]);
 const WP_PREFIXES = ["/wp-content", "/wp-includes", "/wp-json", "/wp-admin"];
@@ -70,12 +70,23 @@ export async function handleRequest(request, env = {}, fetcher = fetch) {
   if (!PUBLIC_HOSTS.has(publicUrl.hostname) || publicUrl.port
     || /%(?:2f|5c|00|2e)/i.test(publicUrl.pathname) || publicUrl.pathname.includes("\\")) return failure(400);
   const read = request.method === "GET" || request.method === "HEAD";
+  const oldNapaHome = publicUrl.pathname === "/napa" || publicUrl.pathname === "/napa/";
+  // Resolve the retired Napa homepage before WordPress passthrough. Preserve the
+  // incoming query (including source tags) and canonicalize host/protocol in the
+  // same hop. Never redirect or replay a submitted body into the new page.
+  if (oldNapaHome && read) {
+    const canonical = new URL(publicUrl); canonical.protocol = "https:";
+    canonical.hostname = "experiencerella.com";
+    canonical.pathname = "/locations/napa";
+    return new Response(null, { status: 308, headers: { Location: canonical.href, "Cache-Control": "no-store" } });
+  }
+  if (oldNapaHome) return failure(405);
   if (publicUrl.protocol !== "https:") {
     if (!read) return failure(400);
     const secure = new URL(publicUrl); secure.protocol = "https:";
     return new Response(null, { status: 308, headers: { Location: secure.href, "Cache-Control": "no-store" } });
   }
-  // Preserve same-host query strings on www, before WordPress's historical redirect can drop them.
+  // Preserve same-host query strings on www before WordPress can drop them.
   // Never redirect a POST/body to another host.
   if (publicUrl.hostname === "www.experiencerella.com" && read) {
     const canonical = new URL(publicUrl); canonical.hostname = "experiencerella.com";

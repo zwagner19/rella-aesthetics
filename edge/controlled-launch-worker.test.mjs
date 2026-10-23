@@ -21,6 +21,30 @@ test("disabled rollback performs one unchanged WordPress request, including POST
   assert.equal(await (await handleRequest(input, {}, io.fetcher)).text(), "WordPress");
   assert.equal(io.calls.length, 1); assert.equal(io.calls[0], input); assert.equal(await io.calls[0].text(), "synthetic");
 });
+for (const scheme of ["https", "http"]) for (const host of ["experiencerella.com", "www.experiencerella.com"])
+  for (const path of ["/napa", "/napa/"]) for (const method of ["GET", "HEAD"]) {
+    test(`retired Napa home ${scheme}://${host}${path} ${method} redirects once with original source query`, async () => {
+      const query = "?utm_source=email&utm_medium=email&gclid=TEST-local-only&booking=open&x=a%2Bb&x=second";
+      const io = fixture();
+      const result = await handleRequest(new Request(`${scheme}://${host}${path}${query}`, { method }), env, io.fetcher);
+      assert.equal(result.status, 308);
+      assert.equal(result.headers.get("Location"), `https://experiencerella.com/locations/napa${query}`);
+      assert.equal(result.headers.get("Cache-Control"), "no-store");
+      assert.equal(await result.text(), "");
+      assert.equal(io.calls.length, 0);
+    });
+  }
+test("retired Napa homepage does not replay submitted bodies or match treatment paths", async () => {
+  for (const path of ["/napa", "/napa/"]) {
+    const io = fixture();
+    const result = await handleRequest(new Request(`https://experiencerella.com${path}`, { method: "POST", body: "synthetic" }), env, io.fetcher);
+    assert.equal(result.status, 405); assert.equal(result.headers.get("Location"), null); assert.equal(io.calls.length, 0);
+  }
+  const input = new Request("https://experiencerella.com/napa/botox/?utm_source=email");
+  const io = fixture(new Response("WordPress"));
+  assert.equal(await (await handleRequest(input, env, io.fetcher)).text(), "WordPress");
+  assert.equal(io.calls[0], input);
+});
 for (const path of WORDPRESS_LANDINGS) for (const slash of ["", "/"]) {
   test(`preserves WordPress landing ${path}${slash} and its query without following or rewriting`, async () => {
     const input = new Request(`https://experiencerella.com${path}${slash}?gclid=TEST-readonly&utm_source=fixture`);
