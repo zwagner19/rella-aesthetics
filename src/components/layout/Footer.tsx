@@ -107,6 +107,9 @@ export function Footer() {
             <Link href="/terms" className="inline-flex min-h-11 items-center transition-opacity hover:opacity-70">
               Terms &amp; Conditions
             </Link>
+            <Link href="/promotional-terms" className="inline-flex min-h-11 items-center transition-opacity hover:opacity-70">
+              Promotional Terms &amp; Conditions
+            </Link>
             <Link href="/cancellation-policy" className="inline-flex min-h-11 items-center transition-opacity hover:opacity-70">
               Cancellation Policy
             </Link>

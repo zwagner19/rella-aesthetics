@@ -56,6 +56,7 @@ export const PUBLIC_LINKS = {
   treatments: "https://experiencerella.com/services/botox",
   privacy: "https://experiencerella.com/privacy-policy",
   terms: "https://experiencerella.com/terms",
+  promotionalTerms: "https://experiencerella.com/promotional-terms",
 } as const;
 
 /** Approved credential + trust lines (D5). Nothing further may be claimed. */
