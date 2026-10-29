@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   alternates: { canonical: "/promotional-terms" },
 };
 
-// Owner-supplied policy text and approved August 1, 2026 dates.
+// Owner-supplied policy text and approved effective/updated dates.
 const sections = [
   {
     "heading": "1. General Promotional Terms",
@@ -149,7 +149,7 @@ export default function PromotionalTermsPage() {
               </div>
             </section>
           ))}
-          <p className="text-sm text-silver">Last Updated: August 1, 2026</p>
+          <p className="text-sm text-silver">Last Updated: October 28, 2026</p>
         </div>
       </div>
     </article>
