@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   alternates: { canonical: "/promotional-terms" },
 };
 
-// Owner-supplied policy text. Dates remain placeholders until approved.
+// Owner-supplied policy text and approved August 1, 2026 dates.
 const sections = [
   {
     "heading": "1. General Promotional Terms",
@@ -125,7 +125,7 @@ export default function PromotionalTermsPage() {
             Rella Aesthetics | Vacaville &amp; Napa, California
           </p>
           <p className="mt-2 text-sm leading-relaxed text-silver">
-            Effective Date: [INSERT DATE]
+            Effective Date: August 1, 2026
           </p>
         </header>
         <div className="space-y-10 text-base font-light leading-relaxed text-ink md:space-y-12 md:text-lg">
@@ -149,7 +149,7 @@ export default function PromotionalTermsPage() {
               </div>
             </section>
           ))}
-          <p className="text-sm text-silver">Last Updated: [INSERT DATE]</p>
+          <p className="text-sm text-silver">Last Updated: August 1, 2026</p>
         </div>
       </div>
     </article>
