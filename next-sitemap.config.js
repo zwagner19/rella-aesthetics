@@ -15,6 +15,7 @@ const publicRoutes = [
   "/napa/facials",
   "/payment-plans",
   "/privacy-policy",
+  "/promotional-terms",
   "/private-parties",
   "/services",
   "/services/botox",

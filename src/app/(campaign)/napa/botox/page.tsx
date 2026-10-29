@@ -295,6 +295,7 @@ export default function NapaBotoxLandingPage() {
               <a href={PUBLIC_LINKS.treatments}>Explore treatments</a>
               <a href={PUBLIC_LINKS.privacy}>Privacy Policy</a>
               <a href={PUBLIC_LINKS.terms}>Terms &amp; Conditions</a>
+              <a href={PUBLIC_LINKS.promotionalTerms}>Promotional Terms &amp; Conditions</a>
               <span style={{ color: "var(--nb-muted)" }}>&copy; 2026 Rella Aesthetics</span>
             </div>
           </div>
