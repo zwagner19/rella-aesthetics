@@ -31,3 +31,11 @@ The owner supplied the full policy and approved August 1, 2026 for both Effectiv
 - No global styles, navigation, booking logic or deposit settings changed.
 
 Evidence in the parent workspace outputs: `promotional-terms-live-verification-2026-10-28.json`, `promotional-terms-live.html`, and `promotional-terms-live-{mobile,desktop}.jpg`.
+
+## Owner date clarification — October 29, 2026
+
+The owner clarified that Effective Date stays August 1, 2026 and Last Updated should be yesterday, October 28, 2026. This supersedes the initial Last Updated value above. Application commit `6b9201f` changes only that displayed date and its source comment; the legal language, design, footer integration and deposit behavior are unchanged.
+
+The corrected application is Vercel deployment `dpl_6shJd3HHXHNLM1Er7czYXkb2fpdz`, `rella-aesthetics-iy975q8ca-zwagner19s-projects.vercel.app`. The controlled-launch Worker origin and QA alias now use it; Worker version `558f6232-9cf2-4ce0-ad23-3c2f5e794195` serves 100% of traffic. Booking, analytics and weight-loss aliases retain their previous deployments. Immediate rollback is Worker version `e19915db-bb3f-45bf-8582-c791cdd5892d`.
+
+Production build and page lint passed. The staged and public HTML match all 65 supplied content lines with the two approved dates substituted, with one H1, 10 sections and the footer link retained. Evidence: parent workspace `outputs/promotional-terms-dates-live-2026-10-29.html` and `outputs/verify-promotional-dates-2026-10-29.py`.
