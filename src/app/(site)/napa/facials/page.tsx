@@ -211,7 +211,7 @@ export default function NapaFacialsPage() {
               Start with your skin. Then choose the service.
             </h2>
             <p className="text-lg font-light leading-relaxed text-ink/70">
-              A skin consult and HydraFacial are a few ways to start. Browse the live menu for the full range of current facial services and availability.
+              A skin consult and <a href="/napa/hydrafacial/" className="hover:underline focus-visible:underline">HydraFacial</a> are a few ways to start. Browse the live menu for the full range of current facial services and availability.
             </p>
           </div>
           <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-6">
