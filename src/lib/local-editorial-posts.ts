@@ -1,3 +1,5 @@
+import { MEMBER_TOUCH_UP } from "@/lib/napa-botox-facts";
+
 export type EditorialSection = {
   readonly id: string;
   readonly heading: string;
@@ -57,7 +59,7 @@ export const LOCAL_EDITORIAL_POSTS: readonly LocalEditorialPost[] = [
       "A transparent guide to Rella Napa's Botox, Dysport, membership, and booking-deposit pricing—plus the questions that determine your actual treatment total.",
     category: "Injectables",
     publishedAt: "2026-08-03T12:00:00-07:00",
-    modifiedAt: "2026-10-20T12:00:00-07:00",
+    modifiedAt: "2026-10-30T09:45:06-07:00",
     authorName: "Rella Aesthetics",
     readingTime: "7 minute read",
     coverImage: "/images/treatments/botox-dysport.webp",
@@ -153,7 +155,8 @@ export const LOCAL_EDITORIAL_POSTS: readonly LocalEditorialPost[] = [
         heading: "What happens at a new-patient tox visit",
         paragraphs: [
           "The Napa new-patient appointment is scheduled for 30 minutes. The visit starts with a consultation, a review of goals and relevant history, and an assessment of facial movement and anatomy. If treatment is appropriate and you want to proceed, the consultation and treatment can happen in the same appointment.",
-          "Results are not immediate and individual response varies. The current Rella guidance is that softening may appear in several days and full effect is assessed around two weeks. Rella's current Napa follow-up policy includes a complimentary two-week touch-up of up to six units when appropriate.",
+          "Results are not immediate and individual response varies. The current Rella guidance is that softening may appear in several days and full effect is assessed around two weeks.",
+          MEMBER_TOUCH_UP.answer,
         ],
       },
       {
@@ -181,6 +184,7 @@ export const LOCAL_EDITORIAL_POSTS: readonly LocalEditorialPost[] = [
       },
     ],
     faqs: [
+      { question: MEMBER_TOUCH_UP.question, answer: MEMBER_TOUCH_UP.answer },
       {
         question: "How much is Botox per unit in Napa?",
         answer:
