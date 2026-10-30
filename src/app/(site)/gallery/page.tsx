@@ -1,3 +1,4 @@
+import { withWebsiteSeo } from "@/lib/website-seo";
 import type { Metadata } from "next";
 import { resolveBookingHref } from "@/lib/booking-routes";
 import { Button } from "@/components/ui/Button";
@@ -7,7 +8,7 @@ import { PatientResultImageGallery } from "@/components/blocks/PatientResultImag
 import { approvedPatientResultImages } from "@/content/results";
 import { testimonials } from "@/lib/data";
 
-export const metadata: Metadata = {
+const defaultMetadata: Metadata = {
   title: "Natural Results & Before and After Photos",
   description:
     "Learn how Rella Aesthetics approaches natural looking results and responsible before and after photography in Vacaville and Napa.",
@@ -110,4 +111,8 @@ export default function GalleryPage() {
       </section>
     </>
   );
+}
+
+export async function generateMetadata(): Promise<Metadata> {
+  return withWebsiteSeo("/gallery", defaultMetadata);
 }

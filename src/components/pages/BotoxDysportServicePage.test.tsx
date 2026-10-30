@@ -31,6 +31,8 @@ describe("BotoxDysportServicePage editorial refinement", () => {
   });
 
   it("preserves verified pricing, timing, FAQ, and booking CTAs", () => {
+    expect(html).toContain('<a href="/vacaville/botox">Vacaville</a>');
+    expect(html).toContain('<a href="/napa/botox/">Napa House</a>');
     expect(html).toContain(`${PRICING.botoxPerUnit}`);
     expect(html).toContain(`${PRICING.dysportPerUnit}`);
     expect(html).toContain(`${PRICING.memberBotoxPerUnit}/unit`);

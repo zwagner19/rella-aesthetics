@@ -1,5 +1,5 @@
 import { renderToStaticMarkup } from "react-dom/server";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import { Footer } from "@/components/layout/Footer";
 import { Header, navLinks } from "@/components/layout/Header";
 import { MobileNav } from "@/components/layout/MobileNav";
@@ -9,10 +9,10 @@ import GiveawayTermsPage, {
 } from "./(site)/giveaway-terms-and-conditions/page";
 import NapaLocationPage from "./(site)/locations/napa/page";
 import VacavilleLocationPage, {
-  metadata as vacavilleMetadata,
+  generateMetadata as getVacavilleMetadata,
 } from "./(site)/locations/vacaville/page";
 import PaymentPlansPage, {
-  metadata as paymentMetadata,
+  generateMetadata as getPaymentMetadata,
 } from "./(site)/payment-plans/page";
 import TermsPage, { metadata as termsMetadata } from "./(site)/terms/page";
 import { GET as getUpcomingEvents } from "./(site)/upcoming-events/route";
@@ -20,6 +20,8 @@ import LegacyBookingConfirmationPage, {
   metadata as legacyBookingMetadata,
 } from "./(site)/wpbc-booking-received/page";
 import { GET as getLocationsKml } from "./locations.kml/route";
+
+vi.mock("@/lib/website-seo", () => ({ withWebsiteSeo: (_path: string, defaults: unknown) => Promise.resolve(defaults) }));
 
 describe("preserved public records", () => {
   it("keeps legal terms canonical and aligned with the current cancellation policy", () => {
@@ -43,10 +45,10 @@ describe("preserved public records", () => {
     expect(html).toContain("up to 50 units every 3 months");
   });
 
-  it("restores the primary Payment Plans destination and Cherry information", () => {
+  it("restores the primary Payment Plans destination and Cherry information", async () => {
     const html = renderToStaticMarkup(<PaymentPlansPage />);
 
-    expect(paymentMetadata.alternates?.canonical).toBe("/payment-plans");
+    expect((await getPaymentMetadata()).alternates?.canonical).toBe("/payment-plans");
     expect(html).toContain("Payment Plans");
     expect(html).toContain("Cherry Financing");
     expect(html).toContain('id="all"');
@@ -135,7 +137,7 @@ describe("internal SEO navigation", () => {
     expect(footer).not.toContain(">Education<");
   });
 
-  it("lists Napa House offerings without linking to category or city-guide pages", () => {
+  it("links Napa House offerings to the approved local treatment pages", () => {
     const html = renderToStaticMarkup(<NapaLocationPage />);
 
     expect(html).toContain("Injectables");
@@ -148,11 +150,12 @@ describe("internal SEO navigation", () => {
     expect(html).not.toContain('href="/services/lasers"');
     expect(html).not.toContain('href="/services/iv-hydration"');
     expect(html).not.toContain('href="/services/weight-loss"');
-    expect(html).not.toContain('href="/napa/botox"');
-    expect(html).not.toContain('href="/napa/facials"');
+    expect(html).toContain('href="/napa/botox/"');
+    expect(html).toContain('href="/napa/facials"');
+    expect(html).toContain('href="/napa/laser/"');
   });
 
-  it("lists Vacaville care categories without linking to the older city guides", () => {
+  it("links Vacaville care categories to the approved local treatment pages", () => {
     const html = renderToStaticMarkup(<VacavilleLocationPage />);
 
     expect(html).toContain("Injectables");
@@ -164,20 +167,20 @@ describe("internal SEO navigation", () => {
     expect(html).toContain("https://maps.google.com/?q=542+Main+St+Vacaville+CA+95688");
     expect(html).toContain("Book Vacaville");
 
+    for (const slug of ["botox", "facials", "laser"]) {
+      expect(html).toContain(`href="/vacaville/${slug}"`);
+    }
     for (const slug of [
-      "botox",
       "chemical-peels",
-      "facials",
       "filler",
       "hydrafacial",
-      "laser",
       "microneedling",
     ]) {
       expect(html).not.toContain(`href="/vacaville/${slug}"`);
     }
   });
 
-  it("lets the root title template add the brand only once", () => {
-    expect(vacavilleMetadata.title).toBe("Vacaville Med Spa | Hours, Address & Booking");
+  it("lets the root title template add the brand only once", async () => {
+    expect((await getVacavilleMetadata()).title).toBe("Vacaville Med Spa | Hours, Address & Booking");
   });
 });

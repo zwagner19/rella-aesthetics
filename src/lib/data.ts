@@ -19,7 +19,7 @@ export const services = [
     slug: "chemical-peels",
     title: "Chemical Peels",
     category: "Skin Care",
-    description: "Universal Peel is currently available for Vacaville online booking; call Rella to ask about other peel options.",
+    description: "Explore the current peel menu at each clinic and choose an option with guidance from the Rella team.",
     image: "/images/treatments/chemical-peel.webp",
     imageAlt: "A Rella provider applying an in-clinic facial treatment",
   },
@@ -126,17 +126,12 @@ export const locations = {
     state: "CA",
     zip: "94559",
     phone: "707.358.2928",
-    hours: ["Monday–Friday: 9am–5pm", "Saturday: 9am–1pm", "Sunday: Closed"],
+    hours: ["Wednesday–Saturday: 9am–5pm", "Sunday–Tuesday: Closed"],
     openingHours: [
       {
-        dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+        dayOfWeek: ["Wednesday", "Thursday", "Friday", "Saturday"],
         opens: "09:00",
         closes: "17:00",
-      },
-      {
-        dayOfWeek: ["Saturday"],
-        opens: "09:00",
-        closes: "13:00",
       },
     ],
     mapUrl: "https://maps.google.com/?q=1541+3rd+St+Napa+CA+94559",

@@ -1,6 +1,7 @@
 import type { BookingLocation } from "@/lib/booking-routes";
 import {
   ALLOWS_MULTI_TREATMENT,
+  MAX_GUIDED_TREATMENTS,
   getGuidedLocation,
   mapIntentToTreatmentKey,
   resolveGuidedTreatment,
@@ -14,10 +15,11 @@ import type {
 import { GUIDED_BOOKING_STEPS } from "./types";
 
 export const initialGuidedBookingState: GuidedBookingState = {
+  treatments: [],
   step: "location",
   locationSlug: null,
   selectedTreatmentKeys: [],
-  providerId: null,
+  providerIds: {},
   date: "",
   slot: null,
   search: "",
@@ -31,6 +33,8 @@ export const initialGuidedBookingState: GuidedBookingState = {
     lastName: "",
     email: "",
     phone: "",
+    assessmentContactConsent: false,
+    marketingConsent: false,
   },
 };
 
@@ -98,14 +102,25 @@ export function selectLocation(
   const keepTreatments = state.selectedTreatmentKeys.filter((key) =>
     key.startsWith(`${locationSlug}/`),
   );
+  const sameLocation = state.locationSlug === locationSlug;
 
   return {
     ...state,
     locationSlug,
+    ownedPackageServiceKey: sameLocation ? state.ownedPackageServiceKey : undefined,
+    // The menu-loading effect runs when the location changes. Keep its result
+    // when a client returns to the location step and chooses that location again.
+    treatments: sameLocation ? state.treatments : [],
+    quote: undefined,
     selectedTreatmentKeys: keepTreatments,
-    providerId: null,
+    providerIds: {},
+    schedule: undefined,
+    reservationExpiresAt: undefined,
     date: "",
     slot: null,
+    availabilityUnverified: true,
+    expandedCategories: sameLocation ? state.expandedCategories : [],
+    search: sameLocation ? state.search : "",
     error: null,
     step: "treatments",
   };
@@ -122,6 +137,7 @@ export function toggleTreatment(
   const treatment = resolveGuidedTreatment(
     state.locationSlug,
     treatmentKey.split("/")[1] ?? "",
+    state.treatments,
   );
   if (!treatment || treatment.key !== treatmentKey) {
     return {
@@ -137,15 +153,23 @@ export function toggleTreatment(
     selected.clear();
     selected.add(treatmentKey);
   } else {
+    if (selected.size >= MAX_GUIDED_TREATMENTS) return {
+      ...state, error: `Choose up to ${MAX_GUIDED_TREATMENTS} treatments for one visit.`,
+    };
     selected.add(treatmentKey);
   }
 
   return {
     ...state,
     selectedTreatmentKeys: [...selected],
-    providerId: null,
+    ownedPackageServiceKey: selected.size === 1 && selected.has(state.ownedPackageServiceKey ?? "") ? state.ownedPackageServiceKey : undefined,
+    quote: undefined,
+    providerIds: Object.fromEntries(Object.entries(state.providerIds).filter(([key]) => selected.has(key))),
+    schedule: undefined,
+    reservationExpiresAt: undefined,
     date: "",
     slot: null,
+    availabilityUnverified: true,
     error: null,
   };
 }
@@ -159,9 +183,14 @@ export function removeTreatment(
     selectedTreatmentKeys: state.selectedTreatmentKeys.filter(
       (key) => key !== treatmentKey,
     ),
-    providerId: null,
+    ownedPackageServiceKey: state.ownedPackageServiceKey === treatmentKey ? undefined : state.ownedPackageServiceKey,
+    quote: undefined,
+    providerIds: Object.fromEntries(Object.entries(state.providerIds).filter(([key]) => key !== treatmentKey)),
+    schedule: undefined,
+    reservationExpiresAt: undefined,
     date: "",
     slot: null,
+    availabilityUnverified: true,
     error: null,
   };
 }
@@ -207,6 +236,10 @@ export function goToStep(
     };
   }
 
+  if ((step === "datetime" || step === "complete") && !providersComplete(state)) return {
+    ...state, step: "provider", error: "Choose a provider for each treatment to continue.",
+  };
+
   return { ...state, step, error: null };
 }
 
@@ -217,15 +250,29 @@ export function goBack(state: GuidedBookingState): GuidedBookingState {
 
 export function selectProvider(
   state: GuidedBookingState,
+  treatmentKey: string,
   providerId: string,
 ): GuidedBookingState {
+  if (!state.selectedTreatmentKeys.includes(treatmentKey)) return {
+    ...state, error: "Choose this treatment before selecting its provider.",
+  };
+  if (state.providerIds[treatmentKey] === providerId) return state;
   return {
     ...state,
-    providerId,
+    providerIds: { ...state.providerIds, [treatmentKey]: providerId },
+    schedule: undefined,
+    reservationExpiresAt: undefined,
+    quote: undefined,
     date: "",
     slot: null,
+    availabilityUnverified: true,
     error: null,
   };
+}
+
+export function providersComplete(state: GuidedBookingState): boolean {
+  return state.selectedTreatmentKeys.length > 0
+    && state.selectedTreatmentKeys.every(key => Boolean(state.providerIds[key]));
 }
 
 export function selectDate(
@@ -235,14 +282,14 @@ export function selectDate(
   if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) {
     return { ...state, error: "Choose a valid date." };
   }
-  return { ...state, date, slot: null, error: null };
+  return { ...state, date, slot: null, schedule: undefined, reservationExpiresAt: undefined, error: null };
 }
 
 export function selectSlot(
   state: GuidedBookingState,
   slot: GuidedSlot,
 ): GuidedBookingState {
-  return { ...state, slot, error: null };
+  return { ...state, slot, schedule: undefined, reservationExpiresAt: undefined, error: null };
 }
 
 export function updateClient(
@@ -256,13 +303,17 @@ export function updateClient(
   };
 }
 
-export function clientLooksComplete(client: GuidedBookingState["client"]): boolean {
+export function contactFieldsLookComplete(client: GuidedBookingState["client"]): boolean {
   return (
     client.firstName.trim().length >= 1 &&
     client.lastName.trim().length >= 1 &&
     /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(client.email.trim()) &&
     client.phone.replace(/\D/g, "").length >= 10
   );
+}
+
+export function clientLooksComplete(client: GuidedBookingState["client"]): boolean {
+  return contactFieldsLookComplete(client) && client.assessmentContactConsent === true;
 }
 
 export function progressLabel(step: GuidedBookingStep): string {

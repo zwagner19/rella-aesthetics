@@ -15,7 +15,7 @@ export default function PrivacyPolicyPage() {
         </h1>
         <div className="prose prose-lg text-silver max-w-none space-y-6">
           <p>
-            <strong className="text-silver-dark">Last Updated:</strong> September 2026
+            <strong className="text-silver-dark">Last Updated:</strong> October 22, 2026
           </p>
           <p>
             Rella Aesthetics (&ldquo;we,&rdquo; &ldquo;us,&rdquo; or &ldquo;our&rdquo;) respects your privacy and is
@@ -44,19 +44,46 @@ export default function PrivacyPolicyPage() {
             your information.
           </p>
 
-          <h2 className="font-medium text-xl text-silver-dark mt-8">Cookies and Ad Measurement</h2>
+          <h2 className="font-medium text-xl text-silver-dark mt-8">Cookies and Measurement</h2>
           <p>
-            On the Napa Botox advertising page, Rella asks before using a Google ad click identifier
-            to determine whether that visit leads to a booked appointment. If you accept, the approved
-            identifier is sent directly to Rella&apos;s first-party booking system and stored there in
-            encrypted form. The capture request does not include your name, email address, phone number,
-            or treatment details.
+            Rella asks before measuring how you found our website and whether your visit leads to a
+            confirmed appointment. If you accept, our first-party booking system saves a limited source
+            category, such as search, social media, email, or a referral. We do not send full referring
+            URLs, search terms, freeform campaign text, your name, email address, phone number, or
+            treatment details in this measurement request.
+          </p>
+          <p>
+            If you accept, Google Analytics also counts visits, sessions, and views of general page
+            groups, such as our homepage or a clinic page. It runs in a separate, invisible document
+            that cannot read our booking or contact forms. Google receives general page labels and
+            limited traffic-source categories, along with its browser and session identifiers and
+            standard connection information. We do not send treatment-specific page addresses,
+            search text, booking details, contact information, or payment information to this visitor
+            analytics service. Its cookies last up to 30 days; advertising signals and personalization
+            are disabled for this collection.
+          </p>
+          <p>
+            With your measurement permission, Rella also counts clicks in coarse areas of our
+            homepage and clinic pages, how far those pages are scrolled, and which booking steps
+            are reached. These first-party counts use temporary random page or attempt references,
+            not a persistent visitor profile. They exclude recordings, page text, form entries,
+            treatment and provider selections, and appointment or payment identifiers. Clicks
+            inside forms and the booking overlay are not collected. Reports cover up to 30 days;
+            older snapshots are removed on an hourly schedule. Turning measurement off stops new
+            counts. These unlinked counts cannot be matched back to your identity for deletion.
+          </p>
+          <p>
+            For Google ad visits, one approved click identifier may also be stored in encrypted form.
+            An eligible confirmed booking may be reported to Google using that identifier, a generic
+            booking timestamp, and an opaque conversion reference. Patient contact information,
+            treatment details, and payment information are not included in that export.
           </p>
           <p>
             A first-party cookie records your choice for up to 30 days. An opaque first-party handle
             supports withdrawal without placing the ad click identifier in a cookie or booking link.
-            If you decline or later turn cookies off, Rella does not store a new ad click identifier and
-            asks the booking system to revoke any identifier covered by that choice. Your ability to
+            If you decline or later turn cookies off, Rella does not capture a new traffic source or ad
+            click identifier and asks the booking system to revoke the measurement covered by that
+            choice. Visitor analytics stops and its cookies are cleared. Your ability to
             view the page, request care, and book an appointment does not depend on accepting.
           </p>
 

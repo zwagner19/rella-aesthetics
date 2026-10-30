@@ -30,13 +30,19 @@ export function Header() {
   const mobileMenuButtonRef = useRef<HTMLButtonElement>(null);
   const closeMobileNav = useCallback(() => {
     setMobileOpen(false);
-    window.requestAnimationFrame(() => mobileMenuButtonRef.current?.focus());
+    window.requestAnimationFrame(() => {
+      if (document.querySelector(
+        '[role="dialog"][aria-modal="true"]:not(#mobile-navigation):not([hidden]):not([aria-hidden="true"])',
+      )) return;
+      mobileMenuButtonRef.current?.focus();
+    });
   }, []);
   const bookingHref = resolveBookingHref({});
 
   useEffect(() => {
     if (!isEditorialHeroRoute) {
-      setScrolled(true);
+      // Scroll state only affects editorial heroes; ordinary pages already
+      // derive their solid header from isEditorialHeroRoute.
       return;
     }
 

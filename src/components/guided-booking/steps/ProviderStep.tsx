@@ -1,17 +1,17 @@
 "use client";
 
-import type { GuidedProvider } from "@/lib/guided-booking";
+import type { GuidedProviderGroup } from "@/lib/guided-booking";
 
 export function ProviderStep({
-  providers,
-  selectedId,
+  groups,
+  selectedIds,
   loading,
   onSelect,
 }: {
-  providers: GuidedProvider[];
-  selectedId: string | null;
+  groups: Array<GuidedProviderGroup & { displayName: string }>;
+  selectedIds: Record<string, string>;
   loading: boolean;
-  onSelect: (id: string) => void;
+  onSelect: (treatmentKey: string, id: string) => void;
 }) {
   return (
     <div className="space-y-4">
@@ -20,8 +20,8 @@ export function ProviderStep({
           Choose a provider
         </h3>
         <p className="mt-2 text-sm font-light text-silver">
-          Any available offers the widest choice of times. Named providers appear
-          when Boulevard eligibility is available for this path.
+          Choose any available provider or a preferred provider for each
+          treatment. We’ll find times that work for your complete visit.
         </p>
       </div>
 
@@ -30,15 +30,19 @@ export function ProviderStep({
           Loading providers…
         </p>
       ) : (
-        <ul className="space-y-3">
-          {providers.map((provider) => {
-            const active = selectedId === provider.id;
+        groups.map((group) => (
+          <section key={group.treatmentKey} className="space-y-3">
+            <h4 className="font-medium text-ink">{group.displayName}</h4>
+            <ul className="space-y-3">
+          {group.providers.map((provider) => {
+            const active = selectedIds[group.treatmentKey] === provider.id;
             return (
               <li key={provider.id}>
                 <button
                   type="button"
-                  onClick={() => onSelect(provider.id)}
+                  onClick={() => onSelect(group.treatmentKey, provider.id)}
                   aria-pressed={active}
+                  aria-label={`${provider.displayName} for ${group.displayName}`}
                   className={`flex w-full items-start gap-3 rounded-sm border px-4 py-4 text-left ${
                     active
                       ? "border-ink bg-ink text-white"
@@ -77,7 +81,9 @@ export function ProviderStep({
               </li>
             );
           })}
-        </ul>
+            </ul>
+          </section>
+        ))
       )}
     </div>
   );

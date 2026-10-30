@@ -27,7 +27,10 @@ export function MobileNav({ links, isOpen, onClose }: MobileNavProps) {
 
     return () => {
       document.body.style.overflow = previousOverflow;
-      if (previousActiveElement instanceof HTMLElement) {
+      const activeOverlay = document.querySelector(
+        '[role="dialog"][aria-modal="true"]:not(#mobile-navigation):not([hidden]):not([aria-hidden="true"])',
+      );
+      if (!activeOverlay && previousActiveElement instanceof HTMLElement) {
         previousActiveElement.focus();
       }
     };
