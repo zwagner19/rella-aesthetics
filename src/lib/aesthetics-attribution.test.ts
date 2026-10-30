@@ -367,9 +367,15 @@ describe("paid aesthetics eligibility and URL boundaries", () => {
     ).toBe(false);
   });
 
-  it("requires exactly one bounded Google click ID", () => {
+  it("normalizes the documented GCLID/GBRAID pair while rejecting conflicting or malformed IDs", () => {
     expect(hasEligibleAestheticsPaidClick("?gclid=valid.click-1")).toBe(true);
     expect(hasEligibleAestheticsPaidClick("?gbraid=valid_click~2")).toBe(true);
+    expect(hasEligibleAestheticsPaidClick("?gclid=one&gbraid=two")).toBe(true);
+    expect(hasEligibleAestheticsPaidClick("?gbraid=two&gclid=one")).toBe(true);
+    expect(hasEligibleAestheticsPaidClick("?gclid=one&gbraid=bad%20value")).toBe(false);
+    expect(hasEligibleAestheticsPaidClick("?gclid=one&gbraid=two&gbraid=three")).toBe(false);
+    expect(hasEligibleAestheticsPaidClick("?gclid=one&gbraid=two&wbraid=three")).toBe(false);
+    expect(hasEligibleAestheticsPaidClick("?gbraid=one&wbraid=two")).toBe(false);
     expect(hasEligibleAestheticsPaidClick("?campaignid=123")).toBe(false);
     expect(hasEligibleAestheticsPaidClick("?gclid=a&wbraid=b")).toBe(false);
     expect(hasEligibleAestheticsPaidClick("?gclid=a&gclid=b")).toBe(false);
@@ -398,6 +404,41 @@ describe("paid aesthetics eligibility and URL boundaries", () => {
 });
 
 describe("consent-safe aesthetics capture", () => {
+  it.each(["napa", "vacaville"])("keeps the paired Google click through consent and booking at %s", async clinic => {
+    const runtime = new FakeRuntime();
+    runtime.href = `https://experiencerella.com/locations/${clinic}?gbraid=Fixture.Braid&gclid=Fixture.Click&gad_campaignid=123`;
+    runtime.referringHref = "https://www.google.com/";
+    const acknowledgement = deferredResponse();
+    runtime.responses.push(acknowledgement.promise);
+    const controller = new AestheticsAttributionController(runtime);
+    controller.start();
+    expect(runtime.requests).toHaveLength(0);
+    const accepting = controller.accept();
+    await settle();
+    expect(runtime.requests[0].body).toMatchObject({
+      location: clinic, consentAdUserData: "granted", gclid: "Fixture.Click", campaignid: "123",
+      sourceEvidence: "google_click", utm_source: "google", utm_medium: "cpc",
+    });
+    expect(runtime.requests[0].body).not.toHaveProperty("gbraid");
+    expect(runtime.requests[0].body).not.toHaveProperty("wbraid");
+    expect(runtime.href).toContain("gclid=");
+    let ready = false;
+    const booking = controller.prepareBooking().then(() => { ready = true; });
+    await settle();
+    expect(ready).toBe(false);
+    acknowledgement.resolve(GRANT_RESPONSE);
+    await accepting;
+    await booking;
+    expect(runtime.href).not.toMatch(/gclid|gbraid|campaignid/);
+    expect(runtime.cookieWrites.join("\n")).not.toMatch(/Fixture.Click|Fixture.Braid/);
+  });
+
+  it.each(["?gclid=a&wbraid=b", "?gbraid=a&wbraid=b", "?gclid=a&gclid=b", "?gclid=bad%20id"])("does not relabel a rejected click as organic: %s", search => {
+    expect(aestheticsSourceEvidence(search, "https://www.google.com/")).toEqual({
+      sourceEvidence: "utm", utm_source: "other", utm_medium: "unknown",
+    });
+  });
+
   it.each([
     ["/", "unknown"], ["/services", "unknown"], ["/contact", "unknown"],
     ["/services/microneedling", "unknown"], ["/napa/facials", "napa"],
