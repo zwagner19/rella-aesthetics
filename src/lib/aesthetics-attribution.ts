@@ -15,7 +15,7 @@ const AESTHETICS_PUBLIC_PATHS = new Set([
   "/services/lasers", "/services/skin", "/vacaville/botox", "/vacaville/filler",
   "/vacaville/laser", "/vacaville/facials", "/vacaville/hydrafacial",
   "/vacaville/chemical-peels", "/vacaville/microneedling", "/blog", "/blog/botox-cost-napa",
-  "/giveaway-terms-and-conditions",
+  "/giveaway-terms-and-conditions", "/promotional-terms",
 ]);
 const AESTHETICS_PUBLIC_HOSTS = new Set(["experiencerella.com", "www.experiencerella.com"]);
 type AcquisitionLocation = "napa" | "vacaville" | "unknown";
@@ -218,7 +218,14 @@ function approvedPaidClick(search: string): ApprovedPaidClick | null {
     approved[field] = value;
     clickCount += 1;
   }
-  if (clickCount !== 1) return null;
+  // Google can append GCLID and GBRAID to the same arrival. Normalize that
+  // documented pair to GCLID for our legacy single-click uploader. Never join
+  // identifiers across arrivals, accept two braids, or relax value validation.
+  if (clickCount === 2 && approved.gclid && approved.gbraid && !approved.wbraid) {
+    delete approved.gbraid;
+  } else if (clickCount !== 1) {
+    return null;
+  }
 
   for (const field of GOOGLE_ID_FIELDS) {
     const values = params.getAll(field);
@@ -296,13 +303,22 @@ function sourceFromReferrer(referrer: string): AestheticsSourceEvidence {
 /** Classify locally; raw referrers, paths and freeform UTM values never leave this function. */
 export function aestheticsSourceEvidence(search: string, referrer = ""): AestheticsSourceEvidence {
   if (approvedPaidClick(search)) return { sourceEvidence: "google_click", utm_source: "google", utm_medium: "cpc" };
-  return approvedUtmSource(search) ?? sourceFromReferrer(referrer);
+  return approvedUtmSource(search) ?? rejectedClickSource(search) ?? sourceFromReferrer(referrer);
+}
+
+function rejectedClickSource(search: string): AestheticsSourceEvidence | null {
+  const params = new URLSearchParams(search);
+  // A rejected explicit click must not silently become an organic visit.
+  // Keep uncertainty coarse; no rejected identifier is persisted or exported.
+  return CLICK_FIELDS.some(field => params.has(field))
+    ? { sourceEvidence: "utm", utm_source: "other", utm_medium: "unknown" }
+    : null;
 }
 
 function approvedExplicitEntry(search: string): ApprovedEntry | null {
   const click = approvedPaidClick(search);
   if (click) return { ...click, sourceEvidence: "google_click", utm_source: "google", utm_medium: "cpc" };
-  return approvedUtmSource(search);
+  return approvedUtmSource(search) ?? rejectedClickSource(search);
 }
 
 export function hasEligibleAestheticsPaidClick(search: string): boolean {
