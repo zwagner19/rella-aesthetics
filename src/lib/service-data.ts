@@ -1,3 +1,5 @@
+import { MEMBER_TOUCH_UP } from "@/lib/napa-botox-facts";
+
 export interface ServicePageData {
   slug: string;
   title: string;
@@ -57,6 +59,7 @@ export const servicePages: ServicePageData[] = [
       note: "Your provider will map the recommended units and total before treatment. Rella accepts Allē rewards for Botox and Aspire rewards for Dysport; bring your account information to the visit. Any booking deposit is separate from per-unit treatment pricing.",
     },
     faq: [
+      { question: MEMBER_TOUCH_UP.question, answer: MEMBER_TOUCH_UP.answer },
       { question: "Does Botox hurt?", answer: "Sensation varies by person and treatment area. The injections use fine needles, and your provider can discuss comfort needs and the expected visit length before treatment." },
       { question: "How long does Botox last?", answer: "Results typically last 3–4 months, but timing varies by person, treatment area, and plan." },
       { question: "Will I look frozen?", answer: "Your provider will discuss your desired movement, treatment areas, product-specific dosing, and placement before treatment. Individual results vary." },

@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { FaqAccordion, FaqSchema } from "@/components/blocks/FaqAccordion";
 import { Button } from "@/components/ui/Button";
 import { membershipTiers } from "@/lib/data";
+import { MEMBER_TOUCH_UP } from "@/lib/napa-botox-facts";
 
 const defaultMetadata: Metadata = {
   title: "2026 Injectable Memberships",
@@ -12,6 +13,7 @@ const defaultMetadata: Metadata = {
 };
 
 const faq = [
+  { question: MEMBER_TOUCH_UP.question, answer: MEMBER_TOUCH_UP.answer },
   { question: "Which injectable memberships are available?", answer: "Rella's approved 2026 public injectable options are Tox at $30/month, Filler at $40/month, and Tox + Filler at $50/month. Each has a one-year commitment." },
   { question: "What are the Tox member rates?", answer: "Tox and Tox + Filler members pay $13/unit for Botox and $4.40/unit for Dysport. Standard pricing is $18/unit for Botox and $6/unit for Dysport." },
   { question: "What are the Filler member rates?", answer: "Filler and Tox + Filler members pay $600 per Restylane syringe. Juvederm member rates are $600 or $700 depending on the product; the team can review the exact product-specific rate before treatment." },

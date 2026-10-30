@@ -82,11 +82,18 @@ export const NAPA = {
   parkingCopy: "Street & garage parking within one block",
 } as const;
 
-/** Verified clinical expectations (reusable copy, live site July 2026). */
+/** Member follow-up benefit clarified by the owner on October 30, 2026. */
+export const MEMBER_TOUCH_UP = {
+  question: "Are complimentary Botox or Dysport touch-ups included for members?",
+  answer:
+    "This benefit is for members only: up to 6 Botox units or 18 Dysport units, when clinically appropriate, in an area treated at the original appointment. The touch-up must take place within four weeks of that treatment; complimentary units are not available after four weeks or for a new treatment area.",
+} as const;
+
+/** Clinical expectations and owner-approved member follow-up copy. */
 export const RESULTS = {
   onset: "Results appear in 4–7 days, full effect by two weeks",
   duration: "Typically lasts 3–4 months",
-  touchUp: "Complimentary two-week touch-up, up to 6 units",
+  touchUp: "Members-only touch-up within four weeks; see FAQ for limits",
   consult: "Free in-person consultation with every first visit",
   dysportOnset: "Dysport can show results a little sooner (2–5 days)",
 } as const;
@@ -109,7 +116,11 @@ export const FAQS: readonly Faq[] = [
   },
   {
     q: "How long do results last?",
-    a: "You’ll see softening in 4–7 days with full effect around two weeks. Results typically last 3–4 months, and we include a complimentary two-week touch-up of up to 6 units.",
+    a: "You’ll see softening in 4–7 days with full effect around two weeks. Results typically last 3–4 months.",
+  },
+  {
+    q: MEMBER_TOUCH_UP.question,
+    a: MEMBER_TOUCH_UP.answer,
   },
   {
     q: "Botox® or Dysport — which is right for me?",
