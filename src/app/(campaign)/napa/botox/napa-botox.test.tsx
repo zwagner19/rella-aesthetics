@@ -32,10 +32,10 @@ describe("pricing canon is stated exactly", () => {
     expect(decoded).toMatch(/Botox® is \$18\/unit and Dysport \$6\/unit/);
   });
 
-  it("member pricing is $13 and $4.40 per unit, clearly labelled as membership pricing", () => {
-    expect(decoded).toMatch(/2026 Tox Membership[\s\S]*\$13\/unit[\s\S]*\$4\.40\/unit/);
+  it("member pricing is $13 and $4.33 per unit, clearly labelled as membership pricing", () => {
+    expect(decoded).toMatch(/2026 Tox Membership[\s\S]*\$13\/unit[\s\S]*\$4\.33\/unit/);
     expect(PRICING.memberBotoxPerUnit).toBe("$13");
-    expect(PRICING.memberDysportPerUnit).toBe("$4.40");
+    expect(PRICING.memberDysportPerUnit).toBe("$4.33");
   });
 
   it("membership is $30/month with a one-year commitment", () => {
@@ -45,7 +45,8 @@ describe("pricing canon is stated exactly", () => {
 
   it("NEVER repeats the superseded $13 / $4.33 figures as STANDARD pricing", () => {
     // The old service-data copy read "Botox: $13/unit | Dysport: $4.33/unit".
-    expect(decoded).not.toContain("$4.33");
+    expect(PRICING.dysportPerUnit).toBe("$6");
+    expect(decoded).not.toContain("$4.40");
     expect(decoded).not.toMatch(/Botox[®\s:]*\$13\s*\/\s*unit(?![\s\S]{0,40}[Mm]ember)/);
   });
 
@@ -91,7 +92,7 @@ describe("visit facts", () => {
     expect(html).toContain(CANCELLATION_POLICY_URL);
     // No invented cancellation/no-show fee amount beyond the retained deposit.
     const fees = decoded.match(/\$\d+(\.\d+)?/g) ?? [];
-    const allowed = new Set(["$18", "$6", "$13", "$4.40", "$30", "$100"]);
+    const allowed = new Set(["$18", "$6", "$13", "$4.33", "$30", "$100"]);
     expect(fees.filter((f) => !allowed.has(f))).toEqual([]);
   });
 });

@@ -1,6 +1,7 @@
 const publicRoutes = [
   "/",
   "/about",
+  "/blog/botox-cost-napa",
   "/cancellation-policy",
   "/contact",
   "/gallery",

@@ -146,7 +146,7 @@ export const membershipTiers = [
     period: "month",
     benefits: [
       "Botox at $13/unit",
-      "Dysport at $4.40/unit",
+      "Dysport at $4.33/unit",
       "1 complimentary Signature HydraFacial*",
       "10% off retail",
       "One-year membership commitment",
@@ -171,7 +171,7 @@ export const membershipTiers = [
     period: "month",
     benefits: [
       "Botox at $13/unit",
-      "Dysport at $4.40/unit",
+      "Dysport at $4.33/unit",
       "Restylane at $600/syringe",
       "Juvederm at $600–$700, depending on product",
       "1 complimentary Deluxe HydraFacial*",

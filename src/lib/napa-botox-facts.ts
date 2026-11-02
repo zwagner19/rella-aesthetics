@@ -26,7 +26,7 @@ export const PRICING = {
   dysportPerUnit: "$6",
   /** 2026 Tox Membership pricing. */
   memberBotoxPerUnit: "$13",
-  memberDysportPerUnit: "$4.40",
+  memberDysportPerUnit: "$4.33",
   membershipMonthly: "$30",
   membershipCommitment: "one year",
 } as const;
