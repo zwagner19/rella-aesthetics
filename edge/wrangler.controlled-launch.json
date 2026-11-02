@@ -21,7 +21,7 @@
   ],
   "vars": {
     "EDGE_ENABLED": "true",
-    "ORIGIN_HOST": "rella-aesthetics-hizt7tgxg-zwagner19s-projects.vercel.app"
+    "ORIGIN_HOST": "rella-aesthetics-opeqx9zh0-zwagner19s-projects.vercel.app"
   },
   "observability": {
     "enabled": false
