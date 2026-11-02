@@ -1,3 +1,4 @@
+import { withWebsiteSeo } from "@/lib/website-seo";
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
@@ -5,7 +6,7 @@ import { BookTrigger } from "@/components/guided-booking/BookTrigger";
 import { locations } from "@/lib/data";
 import { localBusinessSchema } from "@/lib/schemas";
 
-export const metadata: Metadata = {
+const defaultMetadata: Metadata = {
   title: "Vacaville Med Spa | Hours, Address & Booking",
   description:
     "Visit Rella Aesthetics at 542 Main St in downtown Vacaville. Explore services, hours, directions, and city-pinned booking.",
@@ -14,7 +15,13 @@ export const metadata: Metadata = {
 
 const loc = locations.vacaville;
 
-const categories = ["Injectables", "Skin", "Lasers", "Wellness", "Weight"] as const;
+const categories = [
+  { label: "Injectables", href: "/vacaville/botox", ariaLabel: "Injectables: Botox and Dysport in Vacaville" },
+  { label: "Skin", href: "/vacaville/facials", ariaLabel: "Skin: Facials in Vacaville" },
+  { label: "Lasers", href: "/vacaville/laser", ariaLabel: "Lasers: Laser treatments in Vacaville" },
+  { label: "Wellness" },
+  { label: "Weight" },
+] as const;
 
 /** Primary Vacaville staff from the verified team directory. */
 const vacavillePeople = [
@@ -194,10 +201,14 @@ export default function VacavillePage() {
           <ul className="border-t border-rule" role="list">
             {categories.map((category) => (
               <li
-                key={category}
+                key={category.label}
                 className="border-b border-rule py-3.5 text-xl font-medium tracking-[-0.01em] text-ink md:py-4 md:text-2xl"
               >
-                {category}
+                {"href" in category ? (
+                  <a href={category.href} aria-label={category.ariaLabel} className="block">
+                    {category.label}
+                  </a>
+                ) : category.label}
               </li>
             ))}
           </ul>
@@ -360,4 +371,8 @@ export default function VacavillePage() {
       </section>
     </>
   );
+}
+
+export async function generateMetadata(): Promise<Metadata> {
+  return withWebsiteSeo("/locations/vacaville", defaultMetadata);
 }

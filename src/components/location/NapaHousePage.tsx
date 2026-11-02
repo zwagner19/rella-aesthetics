@@ -146,7 +146,11 @@ export function NapaHousePage() {
                 key={category.label}
                 className="border-b border-rule py-3.5 text-xl font-medium tracking-[-0.01em] text-ink md:py-4 md:text-2xl"
               >
-                {category.label}
+                {"href" in category ? (
+                  <a href={category.href} aria-label={category.ariaLabel} className="block">
+                    {category.label}
+                  </a>
+                ) : category.label}
               </li>
             ))}
           </ul>

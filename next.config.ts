@@ -45,6 +45,13 @@ const nextConfig: NextConfig = {
   async headers() {
     return [
       {
+        source: "/:path*",
+        // The controlled-launch edge verifies this marker AND the exact public
+        // canonical on successful HTML before stripping alias-only noindex.
+        // A marker alone never makes APIs, errors, or private pages indexable.
+        headers: [{ key: "X-Rella-Site-Origin", value: "next-controlled-launch-v1" }],
+      },
+      {
         source: "/napa/botox",
         headers: [{ key: "X-Rella-Origin", value: "next-marketing-wave3" }],
       },
@@ -53,15 +60,29 @@ const nextConfig: NextConfig = {
         has: [{ type: "host", value: "(?<vercelhost>.*\\.vercel\\.app)" }],
         headers: [{ key: "X-Robots-Tag", value: "noindex" }],
       },
+      // Private endpoints remain excluded even after the public domain moves.
+      // These rules run last so the host-only preview rule cannot weaken them.
+      ...["/api/:path*", "/studio/:path*", "/booking"].map((source) => ({
+        source,
+        headers: [{ key: "X-Robots-Tag", value: "noindex, nofollow" }],
+      })),
     ];
   },
 
   async redirects() {
     // Keep moved WordPress URLs in one audited source of truth. Both forms are
     // explicit so every historical URL reaches its replacement in one hop.
+    // Config redirects run before proxy, so the isolated analytics origin must
+    // reach its deny-by-default guard without taking any legacy redirect.
     return legacyRedirects.flatMap(({ source, destination }) => [
-      { source: `${source}/`, destination, permanent: true as const },
-      { source, destination, permanent: true as const },
+      {
+        source: `${source}/`, destination, permanent: true as const,
+        missing: [{ type: "host" as const, value: "analytics\\.experiencerella\\.com" }],
+      },
+      {
+        source, destination, permanent: true as const,
+        missing: [{ type: "host" as const, value: "analytics\\.experiencerella\\.com" }],
+      },
     ]);
   },
 };

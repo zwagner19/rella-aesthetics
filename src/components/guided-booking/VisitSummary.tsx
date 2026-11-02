@@ -7,6 +7,7 @@ import {
 } from "@/lib/guided-booking";
 import type { GuidedBookingState } from "@/lib/guided-booking";
 import { getGuidedLocation } from "@/lib/guided-booking";
+import { formatScheduledStart } from "@/lib/guided-booking/schedule";
 
 export function VisitSummary({
   state,
@@ -22,7 +23,7 @@ export function VisitSummary({
     .map((key) => {
       const [, service] = key.split("/");
       if (!state.locationSlug || !service) return null;
-      return resolveGuidedTreatment(state.locationSlug, service);
+      return resolveGuidedTreatment(state.locationSlug, service, state.treatments);
     })
     .filter(Boolean);
 
@@ -62,10 +63,18 @@ export function VisitSummary({
                 {treatment.durationCopy ? (
                   <p className="text-xs text-silver">{treatment.durationCopy}</p>
                 ) : null}
-                <p className="mt-1 text-xs text-silver">
-                  {paymentRuleLabel(treatment)}
-                </p>
-                {treatment.depositCents != null ? (
+                {state.schedule?.filter(item => item.treatmentKey === treatment.key).map(item => (
+                  <p key={item.treatmentKey} className="mt-1 text-xs text-silver">
+                    {formatScheduledStart(item)}
+                    {item.providerName ? <span className="block">{item.providerName}</span> : null}
+                  </p>
+                ))}
+                {state.step !== "treatments" ? (
+                  <p className="mt-1 text-xs text-silver">
+                    {state.selectedTreatmentKeys.length > 1 ? "Amount confirmed for your complete visit before payment" : paymentRuleLabel(treatment)}
+                  </p>
+                ) : null}
+                {state.step !== "treatments" && state.selectedTreatmentKeys.length === 1 && treatment.depositCents != null ? (
                   <p className="sr-only">
                     Deposit {formatDeposit(treatment.depositCents)}
                   </p>
@@ -76,6 +85,7 @@ export function VisitSummary({
                   type="button"
                   className="shrink-0 text-[0.625rem] font-bold uppercase tracking-[0.14em] text-rose"
                   onClick={() => onRemove(treatment.key)}
+                  aria-label={`Remove ${treatment.displayName}`}
                 >
                   Remove
                 </button>

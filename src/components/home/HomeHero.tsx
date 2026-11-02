@@ -12,8 +12,9 @@ export function HomeHero() {
           src="/images/clinic/rella_two_locations_with_text_4k.png"
           alt="Napa Transformation House and Rella Vacaville, joined as Rella Aesthetics"
           fill
-          priority
-          unoptimized
+          loading="eager"
+          fetchPriority="high"
+          quality={75}
           className="object-cover"
           sizes="100vw"
         />

@@ -27,7 +27,8 @@ describe("medical-weight-loss conversion foundation", () => {
     expect(weightLossHtml).toContain("Vacaville");
     expect(weightLossHtml).toContain("Napa");
     expect(weightLossHtml).toContain("30-minute phone consultation");
-    expect(weightLossHtml).toContain("No card required");
+    expect(weightLossHtml).toContain("$100 reservation deposit");
+    expect(weightLossHtml).not.toContain("No card required");
     expect(weightLossHtml).toContain("Zachary Wagner, DO");
     expect(weightLossHtml).toContain("ABOM-certified physician");
     expect(weightLossHtml).toContain("semaglutide or tirzepatide");

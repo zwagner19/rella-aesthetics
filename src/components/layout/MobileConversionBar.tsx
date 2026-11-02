@@ -17,6 +17,7 @@ const EXCLUDED_PATHS = new Set([
   "/giveaway-terms-and-conditions",
   "/napa/botox",
   "/privacy-policy",
+  "/promotional-terms",
   "/services/weight-loss",
   "/terms",
   "/wpbc-booking-received",
