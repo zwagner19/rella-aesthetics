@@ -30,7 +30,7 @@ describe("generated sitemap contract", () => {
     expect(locations).toContain("/napa/facials");
     expect(locations).not.toContain("/services/weight-loss");
     expect(locations).not.toContain("/blog");
-    expect(locations).not.toContain("/blog/botox-cost-napa");
+    expect(locations).toContain("/blog/botox-cost-napa");
     for (const slug of [
       "botox",
       "chemical-peels",
