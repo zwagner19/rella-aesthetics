@@ -1,5 +1,6 @@
 import "server-only";
 import type { Metadata } from "next";
+import { unstable_cache } from "next/cache";
 import catalog from "./website-seo-catalog.json";
 
 // Keep the root layout's approved social artwork when a page has no override.
@@ -20,6 +21,40 @@ export function validPublishedSeo(value: unknown): value is PublishedSeo {
   );
 }
 
+// Cache the handled result, not the raw fetch. Next's fetch revalidation runs
+// outside the caller's catch and drops its AbortSignal on background refreshes.
+// Keeping fetch uncached inside this callback bounds every attempt, including
+// response-body reads, and makes outages a short-lived fallback cache entry.
+const readPublishedSeo = unstable_cache(async (path: string): Promise<PublishedSeo | null> => {
+  const signal = AbortSignal.timeout(1200);
+  try {
+    const response = await fetch(
+      `https://rella-hq.vercel.app/api/public/website-seo?path=${encodeURIComponent(path)}`,
+      {
+        cache: "no-store",
+        signal,
+        redirect: "error",
+      },
+    );
+    if (!response.ok) {
+      console.warn("[website-seo] Optional metadata unavailable", { path, reason: "http", status: response.status });
+      return null;
+    }
+    const value: unknown = await response.json();
+    // A successful null response is HQ's explicit restore-defaults contract.
+    if (value === null) return null;
+    if (!validPublishedSeo(value)) {
+      console.warn("[website-seo] Optional metadata unavailable", { path, reason: "invalid-payload" });
+      return null;
+    }
+    return { title: value.title, description: value.description };
+  } catch {
+    // Never log the upstream error object, URL, response body, or credentials.
+    console.warn("[website-seo] Optional metadata unavailable", { path, reason: signal.aborted ? "timeout" : "request" });
+    return null;
+  }
+}, ["website-seo-v2"], { revalidate: 60 });
+
 /** Runtime overrides affect metadata only. Source defaults survive outages and resets. */
 export async function withWebsiteSeo(
   path: string,
@@ -27,17 +62,8 @@ export async function withWebsiteSeo(
 ): Promise<Metadata> {
   if (!catalog.some((page) => page.path === path)) return defaults;
   try {
-    const response = await fetch(
-      `https://rella-hq.vercel.app/api/public/website-seo?path=${encodeURIComponent(path)}`,
-      {
-        next: { revalidate: 60 },
-        signal: AbortSignal.timeout(1200),
-        redirect: "error",
-      },
-    );
-    if (!response.ok) return defaults;
-    const value: unknown = await response.json();
-    if (!validPublishedSeo(value)) return defaults;
+    const value = await readPublishedSeo(path);
+    if (!value) return defaults;
     return {
       ...defaults,
       title: { absolute: value.title },
