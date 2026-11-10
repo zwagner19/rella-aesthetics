@@ -14,5 +14,8 @@ describe("privacy policy", () => {
     expect(html).toContain("Patient contact information");
     expect(html).toContain("not included in that export");
     expect(html).toContain("does not depend on accepting");
+    expect(html).toContain("when you tap our phone number");
+    expect(html).toContain("not the click identifier itself");
+    expect(html).toContain("Global Privacy Control");
   });
 });

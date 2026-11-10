@@ -1,6 +1,7 @@
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { SkipNav } from "@/components/layout/SkipNav";
+import { CallTapRecorder } from "@/components/integrations/CallTapRecorder";
 import { MobileConversionBar } from "@/components/layout/MobileConversionBar";
 
 /**
@@ -19,6 +20,10 @@ export default function SiteLayout({ children }: Readonly<{ children: React.Reac
           marketing and chat loaders outside this document for the controlled
           launch, regardless of configured integration IDs. Existing paid
           landing pages retain their bounded first-party attribution path. */}
+      {/* Reports clinic phone-link taps to Rella's booking host (source
+          category only, first-party, no third-party loader) so phone callers
+          can be matched to their source. */}
+      <CallTapRecorder />
       <SkipNav />
       <Header />
       <main

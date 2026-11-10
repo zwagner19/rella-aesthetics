@@ -86,6 +86,14 @@ export default function PrivacyPolicyPage() {
             choice. Visitor analytics stops and its cookies are cleared. Your ability to
             view the page, request care, and book an appointment does not depend on accepting.
           </p>
+          <p>
+            On our other pages, when you tap our phone number, the site tells Rella&apos;s first-party
+            booking system how the visit started: marketing tags in the link, whether it came from an
+            ad click (not the click identifier itself), the name of the website that referred you, and
+            the pages involved. It does not include your name, phone number, or a cookie, and the record
+            is deleted after 35 days. Rella uses it only to learn which sources lead to phone calls. It
+            is not sent if your browser uses Global Privacy Control or you declined ad measurement.
+          </p>
 
           <h2 className="font-medium text-xl text-silver-dark mt-8">Contact Us</h2>
           <p>
