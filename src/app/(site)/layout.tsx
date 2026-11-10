@@ -1,6 +1,7 @@
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { SkipNav } from "@/components/layout/SkipNav";
+import { CallTapRecorder } from "@/components/integrations/CallTapRecorder";
 import { GhlChatWidget } from "@/components/integrations/GhlChatWidget";
 import { GoogleAnalytics } from "@/components/integrations/GoogleAnalytics";
 import { MetaPixel } from "@/components/integrations/MetaPixel";
@@ -22,6 +23,9 @@ export default function SiteLayout({ children }: Readonly<{ children: React.Reac
           from the root layout so the campaign group cannot inherit them. */}
       <GoogleAnalytics />
       <MetaPixel />
+      {/* Reports clinic phone-link taps to Rella's booking host (source
+          category only) so phone callers can be matched to their source. */}
+      <CallTapRecorder />
       <SkipNav />
       <Header />
       <main id="main" className="flex-1 pb-20 xl:pb-0" data-site-motion="true">
