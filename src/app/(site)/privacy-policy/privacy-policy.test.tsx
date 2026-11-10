@@ -12,5 +12,8 @@ describe("privacy policy", () => {
     expect(html).toContain("stored there in encrypted form");
     expect(html).toContain("does not include your name");
     expect(html).toContain("does not depend on accepting");
+    expect(html).toContain("when you tap our phone number");
+    expect(html).toContain("not the click identifier itself");
+    expect(html).toContain("Global Privacy Control");
   });
 });
