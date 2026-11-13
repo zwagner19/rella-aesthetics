@@ -17,7 +17,7 @@ export function parseDashboard(value: unknown): { dashboard: Dashboard; expiresA
         if (!['Napa', 'Vacaville'].includes(String(item.clinic)) || !['upcoming', 'completed', 'cancelled', 'past'].includes(String(item.status))) throw new Error('unavailable');
       } else if (name === 'memberships') {
         text(item.name); date(item.nextPayment, true);
-        if (!['Active', 'Paused', 'Cancelled', 'Past due'].includes(String(item.status)) || typeof item.agreementAvailable !== 'boolean') throw new Error('unavailable');
+        if (!['Active', 'Paused', 'Cancelled', 'Past due', 'Concluded'].includes(String(item.status)) || typeof item.agreementAvailable !== 'boolean') throw new Error('unavailable');
       } else {
         text(item.title); date(item.expiresOn, true);
         if (!Number.isInteger(item.remaining) || (item.remaining as number) < 0 || !Array.isArray(item.eligibleClinics) || item.eligibleClinics.some(c => !['Napa', 'Vacaville'].includes(c))) throw new Error('unavailable');

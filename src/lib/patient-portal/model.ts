@@ -8,7 +8,7 @@ export type Appointment = {
   startsAt: string; status: 'upcoming' | 'completed' | 'cancelled' | 'past';
 };
 export type Membership = {
-  key: string; name: string; status: 'Active' | 'Paused' | 'Cancelled' | 'Past due';
+  key: string; name: string; status: 'Active' | 'Paused' | 'Cancelled' | 'Past due' | 'Concluded';
   nextPayment: string | null; agreementAvailable: boolean;
 };
 export type Voucher = {
