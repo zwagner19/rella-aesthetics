@@ -29,19 +29,21 @@ export default function PatientPortal({ enabled }: { enabled: boolean }) {
   const [message, setMessage] = useState('');
   const [account, setAccount] = useState<Dashboard | null>(null);
   const [expiresAt, setExpiresAt] = useState<number | null>(null);
+  const phase = useRef<'contact' | 'challenge' | 'authenticated'>('contact');
   const generation = useRef(0), controller = useRef<AbortController | null>(null);
   const begin = useCallback(() => { controller.current?.abort(); controller.current = new AbortController(); return { current: ++generation.current, signal: controller.current.signal }; }, []);
   const refresh = useCallback(async () => {
-    if (!enabled) return;
+    if (!enabled || document.hidden) return;
     const job = begin(); setBusy(true); setAccount(null);
     try {
       const result = await request('dashboard', undefined, job.signal);
       if (job.current !== generation.current) return;
       const parsed = parseDashboard(result);
-      setAccount(parsed.dashboard); setExpiresAt(parsed.expiresAt); setMessage('');
+      phase.current = 'authenticated';
+      setAccount(document.hidden ? null : parsed.dashboard); setExpiresAt(parsed.expiresAt); setMessage('');
     } catch (error) {
       if (job.current === generation.current) {
-        setAccount(null); setExpiresAt(null); setStep('contact');
+        phase.current = 'contact'; setAccount(null); setExpiresAt(null); setStep('contact');
         const key = error instanceof Error ? error.message : 'unavailable';
         setMessage(key === 'session_required' ? '' : messages[key] ?? messages.unavailable);
       }
@@ -51,8 +53,12 @@ export default function PatientPortal({ enabled }: { enabled: boolean }) {
     // The initial fetch never supplies fixture data on failure.
     const timer = window.setTimeout(() => { void refresh(); }, 0);
     const visibility = () => {
-      if (document.hidden) { begin(); setAccount(null); setBusy(false); }
-      else void refresh();
+      // Opening an inbox must not replace a pending code challenge with an
+      // authenticated dashboard read, which would clear its challenge cookie.
+      if (document.hidden) {
+        setAccount(null);
+        if (phase.current !== 'challenge') { begin(); setBusy(false); }
+      } else if (phase.current !== 'challenge') void refresh();
     };
     const pagehide = () => { begin(); setAccount(null); };
     const pageshow = (event: PageTransitionEvent) => { if (event.persisted) void refresh(); };
@@ -61,11 +67,12 @@ export default function PatientPortal({ enabled }: { enabled: boolean }) {
   }, [begin, refresh]);
   useEffect(() => {
     if (!expiresAt) return;
-    const timer = window.setTimeout(() => { begin(); setAccount(null); setExpiresAt(null); setStep('contact'); setCode(''); setBusy(false); setMessage(messages.session_required); }, Math.max(0, expiresAt - Date.now()));
+    const timer = window.setTimeout(() => { begin(); phase.current = 'contact'; setAccount(null); setExpiresAt(null); setStep('contact'); setCode(''); setBusy(false); setMessage(messages.session_required); }, Math.max(0, expiresAt - Date.now()));
     return () => clearTimeout(timer);
   }, [begin, expiresAt]);
   async function submit(event: FormEvent) {
     event.preventDefault(); if (busy || !enabled) return;
+    phase.current = 'challenge';
     const job = begin(); setBusy(true); setMessage('');
     try {
       const result = await request(step === 'contact' ? 'start' : 'verify', step === 'contact' ? { method, contact } : { code }, job.signal);
@@ -73,15 +80,17 @@ export default function PatientPortal({ enabled }: { enabled: boolean }) {
       if (typeof result.expiresAt !== 'number' || result.expiresAt <= Date.now()) throw new Error('unavailable');
       setExpiresAt(result.expiresAt); setContact(''); setCode('');
       if (step === 'contact') { if (result.state !== 'code_required') throw new Error('unavailable'); setStep('code'); }
-      else { if (result.state !== 'authenticated') throw new Error('unavailable'); await refresh(); }
+      else { if (result.state !== 'authenticated') throw new Error('unavailable'); phase.current = 'authenticated'; await refresh(); }
     } catch (error) {
       if (job.current === generation.current) {
         const key = error instanceof Error ? error.message : 'unavailable'; setMessage(messages[key] ?? messages.unavailable); setCode('');
-        if (['session_required', 'verification_required'].includes(key)) { setStep('contact'); setExpiresAt(null); }
+        if (step === 'contact') phase.current = 'contact';
+        if (['session_required', 'verification_required'].includes(key)) { phase.current = 'contact'; setStep('contact'); setExpiresAt(null); }
       }
     } finally { if (job.current === generation.current) setBusy(false); }
   }
   async function signOut() {
+    phase.current = 'contact';
     const job = begin(); setAccount(null); setExpiresAt(null); setStep('contact'); setCode(''); setContact(''); setBusy(true); setMessage('');
     try { await request('logout', {}, job.signal); if (job.current === generation.current) setMessage('You’re signed out.'); }
     catch { if (job.current === generation.current) setMessage('Your details are hidden. We couldn’t confirm sign-out with the server. Close this window and sign out of Boulevard if you opened it separately.'); }
