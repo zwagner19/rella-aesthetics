@@ -50,6 +50,8 @@ module.exports = {
   // checked-in sitemap reproducible and avoids sending crawlers a false signal.
   autoLastmod: false,
   exclude: [
+    "/patient-portal",
+    "/patient-portal/**",
     "/napa",
     "/napa/",
     "/studio",

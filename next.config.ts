@@ -45,6 +45,14 @@ const nextConfig: NextConfig = {
   async headers() {
     return [
       {
+        source: "/patient-portal/:path*",
+        headers: [
+          { key: "Cache-Control", value: "no-store, private, max-age=0" },
+          { key: "Referrer-Policy", value: "no-referrer" },
+          { key: "X-Robots-Tag", value: "noindex, nofollow, noarchive" },
+        ],
+      },
+      {
         source: "/:path*",
         // The controlled-launch edge verifies this marker AND the exact public
         // canonical on successful HTML before stripping alias-only noindex.
