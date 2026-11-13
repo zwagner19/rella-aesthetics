@@ -1,4 +1,4 @@
-import type { BookingLocation } from "@/lib/booking-routes";
+import { createSharedBookingBackend } from "./shared-backend";
 import type {
   AvailabilityResult,
   GuidedBookingBackend,
@@ -42,8 +42,8 @@ function mockSlotsForDate(date: string): GuidedSlot[] {
 export function createMockBackend(): GuidedBookingBackend {
   return {
     mode: "mock",
-    async listProviders() {
-      return [
+    async listProviders(input) {
+      const providers = [
         ANY_PROVIDER,
         {
           id: "mock-provider-a",
@@ -58,6 +58,7 @@ export function createMockBackend(): GuidedBookingBackend {
           anyAvailable: false,
         },
       ];
+      return input.treatmentKeys.map(treatmentKey => ({ treatmentKey, providers }));
     },
     async loadAvailability() {
       const dates = [1, 2, 3, 5, 6, 8, 9].map(isoDateOffset);
@@ -84,39 +85,6 @@ export function createMockBackend(): GuidedBookingBackend {
   };
 }
 
-/**
- * Production/preview path for the marketing site until Boulevard Client API
- * credentials (or a CORS-safe rella-booking read API) are available here.
- *
- * - Never invents live availability.
- * - Never calls createCart / reserve / checkout / payment.
- * - Completion is a handoff to book.experiencerella.com.
- */
-export function createHandoffBackend(): GuidedBookingBackend {
-  return {
-    mode: "handoff",
-    async listProviders(input: {
-      locationSlug: BookingLocation;
-      treatmentKeys: string[];
-    }) {
-      void input;
-      return [ANY_PROVIDER];
-    },
-    async loadAvailability() {
-      return {
-        dates: [],
-        nextAvailable: [],
-        live: false,
-        message:
-          "Live calendar times load in Rella’s secure booking app (Boulevard). Continue to choose a real slot — nothing here is inventing availability.",
-      };
-    },
-    async loadTimesForDate() {
-      return [];
-    },
-  };
-}
-
 export function createDefaultBackend(): GuidedBookingBackend {
-  return createHandoffBackend();
+  return createSharedBookingBackend();
 }

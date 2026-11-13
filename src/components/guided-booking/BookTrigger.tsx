@@ -37,6 +37,9 @@ export function BookTrigger({
   const external = forceExternal || isWeightLoss || !booking;
 
   function handleClick(event: MouseEvent<HTMLAnchorElement>) {
+    // The first-party consent boundary can hold this click before React runs.
+    // Keep its source mounted (including mobile navigation) until it resumes.
+    if (event.defaultPrevented) return;
     onClick?.(event);
     if (event.defaultPrevented) return;
     if (external) return;

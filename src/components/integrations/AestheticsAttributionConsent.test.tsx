@@ -13,14 +13,16 @@ const controller = readFileSync(
 );
 
 describe("aesthetics attribution integration boundaries", () => {
-  it("is mounted only in the exact-pilot campaign route group", () => {
+  it("mounts one shared first-party boundary above route groups", () => {
+    const root = readFileSync(join(ROOT, "app", "layout.tsx"), "utf8");
     const site = readFileSync(join(ROOT, "app", "(site)", "layout.tsx"), "utf8");
     const campaign = readFileSync(
       join(ROOT, "app", "(campaign)", "layout.tsx"),
       "utf8",
     );
+    expect(root.match(/<AestheticsAttributionConsent \/>/g)).toHaveLength(1);
     expect(site).not.toContain("AestheticsAttributionConsent");
-    expect(campaign.match(/<AestheticsAttributionConsent \/>/g)).toHaveLength(1);
+    expect(campaign).not.toContain("AestheticsAttributionConsent");
     expect(campaign).not.toMatch(
       /CampaignGtm|GoogleAnalytics|MetaPixel|GhlChatWidget|CallRail/,
     );

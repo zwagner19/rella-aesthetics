@@ -1,3 +1,4 @@
+import { withWebsiteSeo } from "@/lib/website-seo";
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
@@ -15,15 +16,15 @@ const BOOKING_HREF = resolveBookingHref({
 });
 const clinic = locations.vacaville;
 
-export const metadata: Metadata = {
+const defaultMetadata: Metadata = {
   title: "Facials in Vacaville | Skin Consult & Options",
   description:
-    "Compare the two facial options currently available for online booking at Rella Aesthetics in downtown Vacaville.",
+    "Explore facials and HydraFacial at Rella Aesthetics in downtown Vacaville. Browse the live menu for current services and availability.",
   alternates: { canonical: CANONICAL },
   openGraph: {
     title: "Professional Facials in Vacaville | Rella Aesthetics",
     description:
-      "A skin consult or Signature HydraFacial booking path in downtown Vacaville.",
+      "Skin consultations, HydraFacial and facial options in downtown Vacaville, with current availability in the live booking menu.",
     url: CANONICAL,
     type: "website",
     images: [
@@ -53,7 +54,7 @@ const visitSteps = [
   },
   {
     title: "Select",
-    body: "Compare the two current online options and confirm the exact steps, products, enhancements, and total for the chosen service.",
+    body: "Compare the live facial menu and confirm the exact steps, products, enhancements, and total for the chosen service.",
   },
   {
     title: "Experience",
@@ -69,7 +70,7 @@ const faqs = [
   {
     question: "Which facial options are listed at Rella Vacaville?",
     answer:
-      "Rella's current Vacaville online facial category lists an Initial Skin Health Consult and Signature HydraFacial. Inventory can change, so confirm the selected service in the booking flow.",
+      "Vacaville's facial options include a skin consult, Signature, Deluxe and Platinum HydraFacial, microdermabrasion, and dermaplaning. Browse the live menu for current services and availability.",
   },
   {
     question: "How do I choose the right facial?",
@@ -84,7 +85,7 @@ const faqs = [
   {
     question: "How is a professional facial different from HydraFacial?",
     answer:
-      "HydraFacial is a branded multi-step service. Vacaville's online facial category currently lists Signature HydraFacial alongside the Initial Skin Health Consult. The team can explain the included steps or discuss other facial services by phone.",
+      "HydraFacial is a branded multi-step service, with Signature, Deluxe and Platinum options in Vacaville's live menu. The team can explain how their included steps compare with other facial services.",
   },
   {
     question: "Can a facial replace medical care for acne or another skin condition?",
@@ -104,7 +105,7 @@ const serviceSchema = {
   "@id": `${CANONICAL}#service`,
   name: "Professional Facials in Vacaville",
   serviceType: "Professional facial consultation and cosmetic skin-care services",
-  description: metadata.description,
+  description: defaultMetadata.description,
   url: CANONICAL,
   image: "https://experiencerella.com/images/service-facials.jpg",
   provider: {
@@ -155,7 +156,7 @@ export default function VacavilleFacialsPage() {
               Facials in Vacaville, with a plan first.
             </h1>
             <p className="mb-8 max-w-[650px] text-lg font-light leading-relaxed text-silver-dark md:text-xl">
-              Compare the two facial options currently available online around your skin, recent treatments, goals, and schedule—then choose in Rella&apos;s booking flow.
+              Explore facial options around your skin, recent treatments, goals, and schedule—then browse the live menu for current services and availability.
             </p>
             <div className="flex flex-col gap-3 sm:flex-row">
               <Button disableHover href={BOOKING_HREF} data-cta="service-booking" className="rounded-full">
@@ -193,20 +194,20 @@ export default function VacavilleFacialsPage() {
 
       <TrustStrip
         ariaLabel="Rella Vacaville professional facial visit facts"
-        items={["Two online options", "30-minute skin consult", "45-minute Signature HydraFacial", "Current total confirmed"]}
+        items={["Live facial menu", "30-minute skin consult", "45-minute Signature HydraFacial", "Current total confirmed"]}
       />
 
       <section className="py-20 md:py-28" aria-labelledby="vacaville-facial-options">
         <div className="mx-auto max-w-[1120px] px-6 md:px-8">
           <div className="mb-12 max-w-[810px]">
             <p className="mb-4 text-[0.6875rem] font-bold uppercase tracking-[0.2em] text-rose-text">
-              Current Vacaville menu
+              Explore Vacaville facials
             </p>
             <h2 id="vacaville-facial-options" className="mb-5 text-3xl font-medium tracking-[-0.04em] text-rose-text md:text-5xl">
               Start with your skin. Then choose the service.
             </h2>
             <p className="text-lg font-light leading-relaxed text-ink/70">
-              The online category currently lists a skin consult and Signature HydraFacial. Call Rella before booking if you need another facial option.
+              A skin consult and Signature HydraFacial are a few ways to start. Browse the live menu for Deluxe, Platinum and other current facial services and availability.
             </p>
           </div>
           <div className="grid gap-5 md:grid-cols-2">
@@ -257,7 +258,7 @@ export default function VacavilleFacialsPage() {
           <div>
             <p className="mb-4 text-[0.6875rem] font-bold uppercase tracking-[0.2em] text-rose-text">A clear booking chooser</p>
             <h2 id="vacaville-facial-booking" className="mb-5 text-3xl font-medium tracking-[-0.04em] text-rose-text md:text-5xl">
-              Choose a skin consult or Signature HydraFacial.
+              Find your facial in the live menu.
             </h2>
             <p className="text-lg font-light leading-relaxed text-ink/70">
               The verified booking path opens Vacaville&apos;s facial category with the clinic selected. You choose the service, professional, and appointment in the secure booking flow.
@@ -334,4 +335,8 @@ export default function VacavilleFacialsPage() {
       </section>
     </>
   );
+}
+
+export async function generateMetadata(): Promise<Metadata> {
+  return withWebsiteSeo("/vacaville/facials", defaultMetadata);
 }

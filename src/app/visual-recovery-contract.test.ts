@@ -34,8 +34,10 @@ describe("PR14 visual recovery contract", () => {
   it("keeps the campaign shell visually and analytically isolated", () => {
     const campaignLayout = source("app/(campaign)/layout.tsx");
     const campaignPage = source("app/(campaign)/napa/botox/page.tsx");
+    const rootLayout = source("app/layout.tsx");
 
-    expect(campaignLayout).toContain("AestheticsAttributionConsent");
+    expect(campaignLayout).not.toContain("AestheticsAttributionConsent");
+    expect(rootLayout.match(/<AestheticsAttributionConsent\s*\/>/g)).toHaveLength(1);
     expect(campaignLayout).not.toMatch(
       /GoogleAnalytics|MetaPixel|CampaignGtm|GhlChatWidget/,
     );

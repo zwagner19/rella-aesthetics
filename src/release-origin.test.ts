@@ -186,7 +186,7 @@ describe("BLOCKED on the release alias — the whole application surface", () =>
     "/api/leads", "/api/revalidate", "/booking",
     "/locations/napa", "/services/botox", "/wp-admin/", "/napa/botox/extra",
     "/about", "/contact", "/blog", "/membership", "/gallery",
-    "/napa/botoxx", "/brand/other.svg", "/_next/image", "/sitemap.xml",
+    "/napa/botoxx", "/brand/other.svg", "/sitemap.xml",
   ];
   for (const p of BLOCKED) {
     it(`404s ${p}`, () => {

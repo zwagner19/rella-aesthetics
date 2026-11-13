@@ -1,3 +1,4 @@
+import { withWebsiteSeo } from "@/lib/website-seo";
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
@@ -5,7 +6,7 @@ import { BookTrigger } from "@/components/guided-booking/BookTrigger";
 import { locations } from "@/lib/data";
 import { localBusinessSchema } from "@/lib/schemas";
 
-export const metadata: Metadata = {
+const defaultMetadata: Metadata = {
   title: "Vacaville Med Spa | Hours, Address & Booking",
   description:
     "Visit Rella Aesthetics at 542 Main St in downtown Vacaville. Explore services, hours, directions, and city-pinned booking.",
@@ -14,7 +15,15 @@ export const metadata: Metadata = {
 
 const loc = locations.vacaville;
 
-const categories = ["Injectables", "Skin", "Lasers", "Wellness", "Weight"] as const;
+const categories = [
+  { label: "Botox & Dysport", href: "/vacaville/botox", ariaLabel: "Botox and Dysport in Vacaville" },
+  { label: "Lip & Dermal Filler", href: "/vacaville/filler", ariaLabel: "Lip and dermal filler in Vacaville" },
+  { label: "Facials", href: "/vacaville/facials", ariaLabel: "Facials in Vacaville" },
+  { label: "Chemical Peels", href: "/vacaville/chemical-peels", ariaLabel: "Chemical peels in Vacaville" },
+  { label: "Lasers", href: "/vacaville/laser", ariaLabel: "Lasers: Laser treatments in Vacaville" },
+  { label: "Wellness" },
+  { label: "Weight" },
+] as const;
 
 /** Primary Vacaville staff from the verified team directory. */
 const vacavillePeople = [
@@ -101,7 +110,7 @@ export default function VacavillePage() {
             Rella Aesthetics
           </p>
           <h1 className="max-w-[14ch] text-[clamp(2.4rem,6.5vw,4.75rem)] font-medium leading-[1.05] tracking-[-0.03em] text-white">
-            Welcome to Rella Vacaville
+            Medical Spa in Vacaville, CA
           </h1>
           <p className="mt-6 max-w-[26rem] text-base font-light leading-relaxed text-white/85 md:text-lg">
             Personalized aesthetic and wellness care, thoughtfully designed around you — right in
@@ -194,10 +203,14 @@ export default function VacavillePage() {
           <ul className="border-t border-rule" role="list">
             {categories.map((category) => (
               <li
-                key={category}
+                key={category.label}
                 className="border-b border-rule py-3.5 text-xl font-medium tracking-[-0.01em] text-ink md:py-4 md:text-2xl"
               >
-                {category}
+                {"href" in category ? (
+                  <a href={category.href} aria-label={category.ariaLabel} className="block">
+                    {category.label}
+                  </a>
+                ) : category.label}
               </li>
             ))}
           </ul>
@@ -360,4 +373,8 @@ export default function VacavillePage() {
       </section>
     </>
   );
+}
+
+export async function generateMetadata(): Promise<Metadata> {
+  return withWebsiteSeo("/locations/vacaville", defaultMetadata);
 }

@@ -34,6 +34,8 @@ describe("DermalFillersServicePage refinement", () => {
   });
 
   it("removes all public filler price figures", () => {
+    expect(html).toContain('<a href="/vacaville/filler">Vacaville</a>');
+    expect(html).toContain('<a href="/napa/filler/">Napa House</a>');
     expect(html).not.toContain("$840");
     expect(html).not.toContain("$540");
     expect(html).not.toContain("$960");

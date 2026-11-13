@@ -1,3 +1,4 @@
+import { withWebsiteSeo } from "@/lib/website-seo";
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
@@ -5,7 +6,7 @@ import { Button } from "@/components/ui/Button";
 import { resolveBookingHref } from "@/lib/booking-routes";
 import { physicianOwnerSchema } from "@/lib/schemas";
 
-export const metadata: Metadata = {
+const defaultMetadata: Metadata = {
   title: "About Rella Aesthetics & Dr. Zachary Wagner",
   description:
     "Meet Dr. Zachary Wagner, founder and owner of Rella Aesthetics and Rella's medical weight-loss physician, serving Vacaville and Napa.",
@@ -219,4 +220,8 @@ export default function AboutPage() {
       </section>
     </>
   );
+}
+
+export async function generateMetadata(): Promise<Metadata> {
+  return withWebsiteSeo("/about", defaultMetadata);
 }

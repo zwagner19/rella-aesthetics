@@ -36,6 +36,7 @@ describe("the complete non-booking link matrix targets verified public destinati
     "https://experiencerella.com/services/botox",
     "https://experiencerella.com/privacy-policy",
     "https://experiencerella.com/terms",
+    "https://experiencerella.com/promotional-terms",
     "https://experiencerella.com/cancellation-policy",
   ]);
 
@@ -62,14 +63,16 @@ describe("the complete non-booking link matrix targets verified public destinati
 });
 
 describe("exact-Napa browser marketing suppression", () => {
-  it("mounts the first-party consent controller and no marketing loader", () => {
+  it("inherits the persistent first-party controller and no marketing loader", () => {
     const campaign = readFileSync(join(APP, "(campaign)", "layout.tsx"), "utf8");
-    expect(campaign).toContain("AestheticsAttributionConsent");
+    expect(campaign).not.toContain("AestheticsAttributionConsent");
     expect(campaign).not.toMatch(
       /CampaignGtm|GoogleAnalytics|MetaPixel|GhlChatWidget|CallRail/,
     );
     const site = readFileSync(join(APP, "(site)", "layout.tsx"), "utf8");
     expect(site).not.toContain("AestheticsAttributionConsent");
+    const root = readFileSync(join(APP, "layout.tsx"), "utf8");
+    expect(root.match(/<AestheticsAttributionConsent\s*\/>/g)).toHaveLength(1);
   });
 
   it("has no browser tracker or conversion sink in any reachable source", () => {
@@ -136,13 +139,13 @@ describe("every Wave 3 contract is preserved", () => {
     expect(decoded).toContain("$18 / unit");
     expect(decoded).toContain("$6 / unit");
     expect(decoded).toMatch(/\$13\/unit/);
-    expect(decoded).toMatch(/\$4\.40\/unit/);
+    expect(decoded).toMatch(/\$4\.33\/unit/);
     expect(decoded).toMatch(/\$30\/month/);
-    expect(decoded).not.toContain("$4.33");
+    expect(decoded).not.toContain("$4.40");
   });
 
   it("deposit language unchanged and still separate from per-unit pricing", () => {
-    expect(decoded).toMatch(/Boulevard will charge a \$50 deposit when you confirm your appointment/);
+    expect(decoded).toMatch(/Boulevard will charge a \$100 deposit when you confirm your appointment/);
     expect(decoded).toContain("separate from per-unit treatment pricing");
   });
 

@@ -32,10 +32,10 @@ describe("pricing canon is stated exactly", () => {
     expect(decoded).toMatch(/Botox® is \$18\/unit and Dysport \$6\/unit/);
   });
 
-  it("member pricing is $13 and $4.40 per unit, clearly labelled as membership pricing", () => {
-    expect(decoded).toMatch(/2026 Tox Membership[\s\S]*\$13\/unit[\s\S]*\$4\.40\/unit/);
+  it("member pricing is $13 and $4.33 per unit, clearly labelled as membership pricing", () => {
+    expect(decoded).toMatch(/2026 Tox Membership[\s\S]*\$13\/unit[\s\S]*\$4\.33\/unit/);
     expect(PRICING.memberBotoxPerUnit).toBe("$13");
-    expect(PRICING.memberDysportPerUnit).toBe("$4.40");
+    expect(PRICING.memberDysportPerUnit).toBe("$4.33");
   });
 
   it("membership is $30/month with a one-year commitment", () => {
@@ -45,7 +45,8 @@ describe("pricing canon is stated exactly", () => {
 
   it("NEVER repeats the superseded $13 / $4.33 figures as STANDARD pricing", () => {
     // The old service-data copy read "Botox: $13/unit | Dysport: $4.33/unit".
-    expect(decoded).not.toContain("$4.33");
+    expect(PRICING.dysportPerUnit).toBe("$6");
+    expect(decoded).not.toContain("$4.40");
     expect(decoded).not.toMatch(/Botox[®\s:]*\$13\s*\/\s*unit(?![\s\S]{0,40}[Mm]ember)/);
   });
 
@@ -72,21 +73,26 @@ describe("visit facts", () => {
     expect(decoded).not.toMatch(/\d\s*minutes\S/);
   });
 
-  it("states the $50 deposit is charged at confirmation, by Boulevard", () => {
-    expect(decoded).toMatch(/Boulevard will charge a \$50 deposit when you confirm your appointment/);
+  it("states the $100 deposit is charged at confirmation, by Boulevard", () => {
+    expect(decoded).toMatch(/Boulevard will charge a \$100 deposit when you confirm your appointment/);
     expect(decoded).toMatch(/charged by Boulevard when you confirm/);
   });
 
-  it("makes no refund, credit, or deposit-application promise", () => {
-    expect(decoded).not.toMatch(/refundable|refunded|credited|applied toward|goes toward|transferable/i);
+  it("states the deposit is applied only to completed treatment", () => {
+    expect(decoded).toMatch(/applied to your completed treatment/i);
+    expect(decoded).not.toMatch(/refundable|refunded|credited|goes toward|transferable/i);
   });
 
   it("states only the verified 48-hour policy, and invents no other fee", () => {
+    expect(CANCELLATION_POLICY).toBe(
+      "Please give at least 48 hours’ notice if you need to cancel or reschedule. Rella may retain your $100 " +
+      "deposit for changes within 48 hours or a no-show. Emergencies are reviewed individually.",
+    );
     expect(decoded).toContain(CANCELLATION_POLICY);
     expect(html).toContain(CANCELLATION_POLICY_URL);
     // No invented cancellation/no-show fee amount beyond the retained deposit.
     const fees = decoded.match(/\$\d+(\.\d+)?/g) ?? [];
-    const allowed = new Set(["$18", "$6", "$13", "$4.40", "$30", "$50"]);
+    const allowed = new Set(["$18", "$6", "$13", "$4.33", "$30", "$100"]);
     expect(fees.filter((f) => !allowed.has(f))).toEqual([]);
   });
 });

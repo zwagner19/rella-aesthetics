@@ -79,7 +79,7 @@ export const treatmentEditorialBySlug: Readonly<
     approachHeadline: "We read your skin before we treat it.",
     approachLead: RELLA_APPROACH_LEAD,
     approachBody:
-      "Peel selection follows assessment — your skin, recent treatments, and expected recovery — not a one-depth-fits-all menu. Universal Peel is currently listed for Vacaville online booking; ask the team about other formulations.",
+      "Peel selection follows assessment — your skin, recent treatments, and expected recovery — not a one-depth-fits-all menu. Browse the live menu at your preferred clinic for current peel options and availability.",
     experienceHeading: "How the visit unfolds",
     experienceSteps: [
       {
@@ -104,15 +104,15 @@ export const treatmentEditorialBySlug: Readonly<
       },
     ],
     glance: [
-      { label: "Location", value: "Vacaville online booking" },
-      { label: "Listed option", value: "Universal Peel" },
+      { label: "Locations", value: "Vacaville and Napa" },
+      { label: "Options", value: "Browse the live menu" },
       { label: "Downtime", value: "Varies by product and response" },
       { label: "Plan", value: "Single treatment or series" },
     ],
     focusImage: "/images/treatments/chemical-peel.webp",
     focusImageAlt: "A Rella provider applying an in-clinic facial treatment",
     finalCtaBody:
-      "Book in Vacaville to review whether a peel is appropriate for your skin and goals.",
+      "Choose a clinic to review whether a peel is appropriate for your skin and goals.",
   },
   facials: {
     slug: "facials",
@@ -252,7 +252,7 @@ export const treatmentEditorialBySlug: Readonly<
       },
     ],
     glance: [
-      { label: "Location", value: "Vacaville" },
+      { label: "Locations", value: "Vacaville and Napa" },
       { label: "Treatment", value: "Controlled microchannels" },
       { label: "Plan", value: "Device, depth, and area specific" },
       { label: "Recovery", value: "Redness and sensitivity possible" },
@@ -264,7 +264,7 @@ export const treatmentEditorialBySlug: Readonly<
       "Approved photography that includes microneedling, shared with permission. Individual results vary.",
     resultMatch: /microneedling/i,
     finalCtaBody:
-      "Book in Vacaville to learn whether microneedling is appropriate for your skin and goals.",
+      "Choose a clinic to learn whether microneedling is appropriate for your skin and goals.",
   },
   "iv-hydration": {
     slug: "iv-hydration",
@@ -305,13 +305,12 @@ export const treatmentEditorialBySlug: Readonly<
       { label: "Treatment", value: "Clinician-guided IV" },
       { label: "Screening", value: "Required before treatment" },
       { label: "Delivery", value: "Monitored infusion" },
-      { label: "Booking", value: "Call-assisted" },
+      { label: "Booking", value: "Browse the live menu" },
     ],
     focusImage: "/images/treatments/iv-hydration.webp",
     focusImageAlt: "A Rella-branded IV hydration bag prepared in the clinic",
-    callAssisted: true,
     finalCtaBody:
-      "Call Rella, name your preferred clinic, and ask about IV hydration availability and next steps.",
+      "Choose your preferred clinic to browse IV hydration services and availability. Clinical screening is still required before treatment.",
   },
   "laser-treatments": {
     slug: "laser-treatments",

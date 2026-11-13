@@ -12,6 +12,7 @@
  */
 
 import { createClient } from "@sanity/client";
+import { locations } from "../src/lib/data";
 
 const projectId = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID;
 const dataset = process.env.NEXT_PUBLIC_SANITY_DATASET || "production";
@@ -45,7 +46,7 @@ async function seed() {
     zip: "95688",
     phone: "707.358.2928",
     email: "hello@experiencerella.com",
-    hours: ["Monday–Friday: 9am–5pm", "Saturday: 9am–1pm"],
+    hours: [...locations.vacaville.hours],
   });
   console.log("✓ Location: Vacaville");
 
@@ -60,7 +61,7 @@ async function seed() {
     zip: "94559",
     phone: "707.358.2928",
     email: "hello@experiencerella.com",
-    hours: ["Monday–Friday: 9am–5pm", "Saturday: 9am–1pm"],
+    hours: [...locations.napa.hours],
   });
   console.log("✓ Location: Napa");
 

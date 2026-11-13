@@ -1,10 +1,42 @@
+import { INSIGHTS_COOKIE } from "./website-insights-contract";
 export const AESTHETICS_ATTRIBUTION_ENDPOINT =
   "https://book.experiencerella.com/api/booking-v2/attribution";
 export const AESTHETICS_BOOKING_ORIGIN = "https://book.experiencerella.com";
-export const AESTHETICS_PILOT_PATH = "/napa/botox";
+
+// Public entry points only. A booking, private tool, unknown path or the
+// separate weight-loss surface must never activate this consent controller.
+const AESTHETICS_PUBLIC_PATHS = new Set([
+  "/", "/about", "/contact", "/gallery", "/membership", "/payment-plans",
+  "/private-parties", "/team", "/terms", "/privacy-policy", "/cancellation-policy",
+  "/locations/napa", "/locations/vacaville", "/napa/botox", "/napa/facials",
+  "/services", "/services/botox", "/services/dermal-fillers", "/services/chemical-peels",
+  "/services/facials", "/services/hydrafacial", "/services/microneedling",
+  "/services/iv-hydration", "/services/laser-treatments", "/services/injectables",
+  "/services/lasers", "/services/skin", "/vacaville/botox", "/vacaville/filler",
+  "/vacaville/laser", "/vacaville/facials", "/vacaville/hydrafacial",
+  "/vacaville/chemical-peels", "/vacaville/microneedling", "/blog", "/blog/botox-cost-napa",
+  "/giveaway-terms-and-conditions", "/promotional-terms",
+]);
+const AESTHETICS_PUBLIC_HOSTS = new Set(["experiencerella.com", "www.experiencerella.com"]);
+type AcquisitionLocation = "napa" | "vacaville" | "unknown";
+
+function acquisitionLocation(pathname: string): AcquisitionLocation {
+  const path = normalizedPath(pathname);
+  if (path.startsWith("/napa/") || path === "/locations/napa") return "napa";
+  if (path.startsWith("/vacaville/") || path === "/locations/vacaville") return "vacaville";
+  return "unknown";
+}
 
 export const AESTHETICS_CONSENT_COOKIE =
   "__Host-rella_napa_aesthetics_consent_v1";
+// The older shared choice described Google Ads only. Keep its format for
+// WordPress, and ask for the wider purpose before collecting other sources.
+export const AESTHETICS_SOURCE_CONSENT_COOKIE =
+  "__Host-rella_source_consent_v1";
+// Fresh explicit permission for isolated Google visitor analytics. Older
+// first-party source receipts must not silently enable this additional purpose.
+export const AESTHETICS_ANALYTICS_CONSENT_COOKIE =
+  "__Host-rella_analytics_consent_v1";
 export const AD_ATTRIBUTION_REVOCATION_COOKIE =
   "rella_ad_attribution_revoke";
 export const AD_USER_DATA_DENIED_COOKIE = "rella_ad_user_data_denied";
@@ -50,6 +82,22 @@ const RECEIPT_RE = /^v1\.(granted|denied)\.(\d{10})$/;
 
 type ClickField = (typeof CLICK_FIELDS)[number];
 type GoogleIdField = (typeof GOOGLE_ID_FIELDS)[number];
+const SOURCE_VALUES = [
+  "google", "google_business_profile", "bing", "yahoo", "duckduckgo", "facebook", "instagram",
+  "tiktok", "youtube", "linkedin", "email", "newsletter", "sms", "partner", "referral",
+  "other", "direct_or_unknown",
+] as const;
+const MEDIUM_VALUES = [
+  "cpc", "ppc", "paid_search", "organic", "paid_social", "social", "email",
+  "sms", "referral", "none", "unknown",
+] as const;
+type Source = (typeof SOURCE_VALUES)[number];
+type Medium = (typeof MEDIUM_VALUES)[number];
+export interface AestheticsSourceEvidence {
+  sourceEvidence: "google_click" | "utm" | "referrer" | "direct_or_unknown";
+  utm_source: Source;
+  utm_medium: Medium;
+}
 export type AestheticsConsentChoice = "unknown" | "granted" | "denied";
 export type AestheticsConsentPhase =
   | "hidden"
@@ -74,6 +122,7 @@ export interface AttributionFetchResponse {
 
 export interface AestheticsAttributionRuntime {
   currentHref(): string;
+  referrer?(): string;
   hostname(): string;
   cookieHeader(): string;
   writeCookie(value: string): void;
@@ -96,9 +145,17 @@ export interface AestheticsConsentMessage {
   version: 1;
 }
 
-type ApprovedPaidClick = Partial<Record<ClickField | GoogleIdField, string>>;
+interface DenialRetrySnapshot {
+  generation: number;
+  receipt: string | null;
+  handle: string | null;
+  sentinel: boolean;
+}
 
-interface GrantedPayload extends ApprovedPaidClick {
+type ApprovedPaidClick = Partial<Record<ClickField | GoogleIdField, string>>;
+type ApprovedEntry = ApprovedPaidClick & AestheticsSourceEvidence;
+
+interface GrantedPayload extends ApprovedEntry {
   location: string;
   consentAdUserData: "granted";
   revocationHandle: string;
@@ -137,13 +194,13 @@ function normalizedPath(pathname: string): string {
   return path.length > 1 ? path.replace(/\/+$/, "") : path;
 }
 
-export function isApprovedAestheticsPilotPage(
+export function isApprovedAestheticsPage(
   hostname: string,
   pathname: string,
 ): boolean {
   return (
-    hostname === "experiencerella.com" &&
-    normalizedPath(pathname) === AESTHETICS_PILOT_PATH
+    AESTHETICS_PUBLIC_HOSTS.has(hostname) &&
+    AESTHETICS_PUBLIC_PATHS.has(normalizedPath(pathname))
   );
 }
 
@@ -161,7 +218,14 @@ function approvedPaidClick(search: string): ApprovedPaidClick | null {
     approved[field] = value;
     clickCount += 1;
   }
-  if (clickCount !== 1) return null;
+  // Google can append GCLID and GBRAID to the same arrival. Normalize that
+  // documented pair to GCLID for our legacy single-click uploader. Never join
+  // identifiers across arrivals, accept two braids, or relax value validation.
+  if (clickCount === 2 && approved.gclid && approved.gbraid && !approved.wbraid) {
+    delete approved.gbraid;
+  } else if (clickCount !== 1) {
+    return null;
+  }
 
   for (const field of GOOGLE_ID_FIELDS) {
     const values = params.getAll(field);
@@ -178,6 +242,83 @@ function approvedPaidClick(search: string): ApprovedPaidClick | null {
   }
 
   return approved;
+}
+
+function approvedUtmSource(search: string): AestheticsSourceEvidence | null {
+  const params = new URLSearchParams(search);
+  const fields = ["utm_source", "utm_medium", "utm_campaign", "utm_term", "utm_content"];
+  if (!fields.some(field => params.has(field))) return null;
+  const unknown: AestheticsSourceEvidence = { sourceEvidence: "utm", utm_source: "other", utm_medium: "unknown" };
+  if (fields.some(field => params.getAll(field).length > 1)) return unknown;
+  const sources = params.getAll("utm_source");
+  const mediums = params.getAll("utm_medium");
+  const aliases: Readonly<Record<string, Source>> = {
+    fb: "facebook", "facebook.com": "facebook",
+    ig: "instagram", "instagram.com": "instagram",
+    gbp: "google_business_profile", gmb: "google_business_profile",
+    "linkedin.com": "linkedin",
+  };
+  const rawSource = sources[0]?.trim().toLowerCase() ?? "other";
+  let source = aliases[rawSource] ?? rawSource;
+  const medium = mediums[0]?.trim().toLowerCase().replace(/-/g, "_") ?? "unknown";
+  if (!(SOURCE_VALUES as readonly string[]).includes(source)
+    || !(MEDIUM_VALUES as readonly string[]).includes(medium)
+    || source === "direct_or_unknown") return unknown;
+  // Only these finite campaign aliases are interpreted, never stored. Other
+  // campaign/content/term values cannot become patient or treatment telemetry.
+  if (source === "google" && ["gbp", "gmb", "google_business_profile"].includes(params.get("utm_campaign")?.trim().toLowerCase() ?? "")) {
+    source = "google_business_profile";
+  }
+  return { sourceEvidence: "utm", utm_source: source as Source, utm_medium: medium as Medium };
+}
+
+function sourceFromReferrer(referrer: string): AestheticsSourceEvidence {
+  const unknown: AestheticsSourceEvidence = {
+    sourceEvidence: "direct_or_unknown", utm_source: "direct_or_unknown", utm_medium: "none",
+  };
+  const url = safeUrl(referrer);
+  if (!url || !["https:", "http:"].includes(url.protocol) || url.username || url.password) return unknown;
+  const host = url.hostname.toLowerCase();
+  if (["experiencerella.com", "rellaweightloss.com"].some(domain => host === domain || host.endsWith(`.${domain}`))) return unknown;
+  const searchHosts: ReadonlyArray<readonly [string, Source]> = [
+    ["google.com", "google"], ["google.ca", "google"], ["google.co.uk", "google"],
+    ["google.com.au", "google"], ["google.de", "google"], ["google.fr", "google"],
+    ["google.co.in", "google"], ["google.co.jp", "google"],
+    ["bing.com", "bing"], ["yahoo.com", "yahoo"], ["duckduckgo.com", "duckduckgo"],
+  ];
+  for (const [domain, source] of searchHosts) {
+    if (host === domain || host === `www.${domain}` || (source === "yahoo" && host === "search.yahoo.com")) {
+      return { sourceEvidence: "referrer", utm_source: source, utm_medium: "organic" };
+    }
+  }
+  for (const source of ["facebook", "instagram", "tiktok", "youtube", "linkedin"] as const) {
+    const domain = `${source}.com`;
+    if (host === domain || host.endsWith(`.${domain}`)) {
+      return { sourceEvidence: "referrer", utm_source: source, utm_medium: "social" };
+    }
+  }
+  return { sourceEvidence: "referrer", utm_source: "other", utm_medium: "referral" };
+}
+
+/** Classify locally; raw referrers, paths and freeform UTM values never leave this function. */
+export function aestheticsSourceEvidence(search: string, referrer = ""): AestheticsSourceEvidence {
+  if (approvedPaidClick(search)) return { sourceEvidence: "google_click", utm_source: "google", utm_medium: "cpc" };
+  return approvedUtmSource(search) ?? rejectedClickSource(search) ?? sourceFromReferrer(referrer);
+}
+
+function rejectedClickSource(search: string): AestheticsSourceEvidence | null {
+  const params = new URLSearchParams(search);
+  // A rejected explicit click must not silently become an organic visit.
+  // Keep uncertainty coarse; no rejected identifier is persisted or exported.
+  return CLICK_FIELDS.some(field => params.has(field))
+    ? { sourceEvidence: "utm", utm_source: "other", utm_medium: "unknown" }
+    : null;
+}
+
+function approvedExplicitEntry(search: string): ApprovedEntry | null {
+  const click = approvedPaidClick(search);
+  if (click) return { ...click, sourceEvidence: "google_click", utm_source: "google", utm_medium: "cpc" };
+  return approvedUtmSource(search) ?? rejectedClickSource(search);
 }
 
 export function hasEligibleAestheticsPaidClick(search: string): boolean {
@@ -234,6 +375,22 @@ function readRevocationHandle(header: string): string | null {
   return value && REVOCATION_HANDLE_RE.test(value) ? value : null;
 }
 
+function hasSourceConsent(header: string, nowMs: number): boolean {
+  const handle = readRevocationHandle(header);
+  // A withdrawal and later legacy WordPress grant rotate the handle. They
+  // cannot revive a broader grant whose purpose marker WordPress cannot clear.
+  return handle !== null && readAestheticsConsentChoice(header, nowMs) === "granted"
+    && readCookie(header, AESTHETICS_SOURCE_CONSENT_COOKIE)
+      === `${readCookie(header, AESTHETICS_CONSENT_COOKIE)}.${handle}`;
+}
+
+export function hasAestheticsAnalyticsConsent(header: string, nowMs: number): boolean {
+  const handle = readRevocationHandle(header);
+  return hasSourceConsent(header, nowMs) && !hasDeniedSentinel(header)
+    && readCookie(header, AESTHETICS_ANALYTICS_CONSENT_COOKIE)
+      === `${readCookie(header, AESTHETICS_CONSENT_COOKIE)}.${handle}`;
+}
+
 function hasDeniedSentinel(header: string): boolean {
   return readCookie(header, AD_USER_DATA_DENIED_COOKIE) === "1";
 }
@@ -262,14 +419,16 @@ function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null;
 }
 
-function isGrantedAcknowledgement(value: unknown): boolean {
+function isGrantedAcknowledgement(value: unknown, sourceOnly: boolean): boolean {
   return (
     isRecord(value) &&
     value.ok === true &&
     typeof value.attributionId === "string" &&
     value.attributionId.length > 0 &&
     value.consentAdUserData === "granted" &&
-    value.clickIdentifiersStored === true
+    (sourceOnly
+      ? value.sourceStored === true && value.clickIdentifiersStored === false
+      : value.clickIdentifiersStored === true)
   );
 }
 
@@ -285,9 +444,10 @@ function isDeniedAcknowledgement(value: unknown): boolean {
 }
 
 /**
- * Consent state machine for the exact Napa campaign pilot. Raw click IDs exist
- * only in a short-lived grant payload and are never written to browser storage,
- * analytics globals, logs, or booking URLs.
+ * Consent state machine for the public aesthetics entry points. A pending
+ * bounded entry survives soft navigation in memory only; it is discarded on
+ * withdrawal or departure from this public surface. Nothing is persisted or
+ * transmitted before explicit advertising consent, and no page path is sent.
  */
 export class AestheticsAttributionController {
   private view: AestheticsConsentView = HIDDEN_VIEW;
@@ -299,10 +459,16 @@ export class AestheticsAttributionController {
   private lastHref = "";
   private navigationVersion = 0;
   private pendingBookingHref: string | null = null;
+  private pendingBookingAction: (() => void) | null = null;
+  private pendingEntry: { fields: ApprovedEntry; location: AcquisitionLocation } | null = null;
+  private observedEntry = false;
+  private capturePromise: Promise<void> | null = null;
   private requestQueue: Promise<void> = Promise.resolve();
   private denialPromise: Promise<boolean> | null = null;
+  private denialRequestIsRetry = false;
   private denialRetryTimer: unknown | null = null;
   private denialRetryAttempt = 0;
+  private denialRetryGeneration = 0;
   private grantController: AbortController | null = null;
   private activeCaptureVersion: number | null = null;
 
@@ -321,11 +487,10 @@ export class AestheticsAttributionController {
   destroy(): void {
     this.destroyed = true;
     this.grantController?.abort();
-    if (this.denialRetryTimer !== null) {
-      this.runtime.clearTimer(this.denialRetryTimer);
-      this.denialRetryTimer = null;
-    }
+    this.cancelDenialRetry();
     this.listeners.clear();
+    this.pendingEntry = null;
+    this.pendingBookingAction = null;
   }
 
   reconcileNavigation(): void {
@@ -334,40 +499,47 @@ export class AestheticsAttributionController {
     const url = safeUrl(href);
     if (
       !url ||
-      !isApprovedAestheticsPilotPage(this.runtime.hostname(), url.pathname)
+      url.protocol !== "https:" || url.username || url.password || url.port ||
+      !isApprovedAestheticsPage(this.runtime.hostname(), url.pathname)
     ) {
       this.active = false;
       this.choice = "unknown";
       this.phase = "hidden";
       this.grantController?.abort();
-      if (this.denialRetryTimer !== null) {
-        this.runtime.clearTimer(this.denialRetryTimer);
-        this.denialRetryTimer = null;
-      }
+      this.lastHref = "";
+      this.navigationVersion += 1;
+      this.pendingEntry = null;
+      // Do not reuse a document's original referrer after visiting a private
+      // surface. Only a new explicit public campaign entry can replace it.
+      this.observedEntry = true;
+      this.pendingBookingHref = null;
+      this.pendingBookingAction = null;
+      this.cancelDenialRetry();
       this.setView("hidden", "hidden", "unknown", "");
       return;
     }
 
+    const incomingEntry = approvedExplicitEntry(url.search);
     if (href !== this.lastHref) {
       this.lastHref = href;
-      this.navigationVersion += 1;
-      this.grantController?.abort();
+      if (!this.observedEntry || (incomingEntry && JSON.stringify(incomingEntry) !== JSON.stringify(this.pendingEntry?.fields))) {
+        this.navigationVersion += 1;
+        this.grantController?.abort();
+        this.pendingEntry = {
+          fields: incomingEntry ?? aestheticsSourceEvidence(url.search, this.runtime.referrer?.() ?? ""),
+          location: acquisitionLocation(url.pathname),
+        };
+      }
+      this.observedEntry = true;
     }
 
-    const eligibleClick = hasEligibleAestheticsPaidClick(url.search);
+    const eligibleEntry = this.pendingEntry !== null;
     const cookieHeader = this.runtime.cookieHeader();
     const receipt = readAestheticsConsentChoice(cookieHeader, this.runtime.now());
+    const sourceGranted = hasSourceConsent(cookieHeader, this.runtime.now());
     const sentinelPresent = hasDeniedSentinel(cookieHeader);
     const handlePresent = readRevocationHandle(cookieHeader) !== null;
-    this.active =
-      eligibleClick || receipt !== "unknown" || sentinelPresent || handlePresent;
-
-    if (!this.active) {
-      this.choice = "unknown";
-      this.phase = "hidden";
-      this.setView("hidden", "hidden", "unknown", "");
-      return;
-    }
+    this.active = true;
 
     if (
       receipt === "denied" ||
@@ -375,18 +547,23 @@ export class AestheticsAttributionController {
       (receipt === "unknown" && handlePresent)
     ) {
       this.choice = "denied";
+      this.pendingEntry = null;
+      this.clearSourceChoice();
       this.phase = "denied";
       this.persistChoice("denied");
       this.setDeniedSentinel();
-      if (eligibleClick) this.cleanLandingUrl();
+      if (eligibleEntry) this.cleanLandingUrl();
       this.setView("reopen", "denied", "denied", "");
       void this.requestDenial();
       return;
     }
 
-    if (receipt === "granted") {
+    if (receipt === "granted" && sourceGranted
+      && hasAestheticsAnalyticsConsent(cookieHeader, this.runtime.now())
+      && readCookie(cookieHeader, INSIGHTS_COOKIE) === readCookie(cookieHeader, AESTHETICS_ANALYTICS_CONSENT_COOKIE)) {
+      this.cancelDenialRetry();
       this.choice = "granted";
-      if (eligibleClick) {
+      if (eligibleEntry) {
         this.phase = "granting";
         this.setView(
           "panel",
@@ -422,6 +599,7 @@ export class AestheticsAttributionController {
     const wasDenied =
       this.choice === "denied" ||
       hasDeniedSentinel(this.runtime.cookieHeader());
+    this.cancelDenialRetry();
 
     if (!this.persistChoice("granted")) {
       await this.failClosed(
@@ -456,16 +634,16 @@ export class AestheticsAttributionController {
     const handle = wasDenied
       ? this.rotateRevocationHandle(predecessor)
       : this.ensureRevocationHandle();
-    if (!handle || !this.clearDeniedSentinel()) {
+    if (!handle || !this.clearDeniedSentinel() || !this.persistSourceChoice(handle)
+      || !this.persistAnalyticsChoice(handle) || !this.persistInsightsChoice(handle)) {
       await this.failClosed(
         "Cookies remain off because this browser could not save the setting.",
       );
       return;
     }
 
-    const url = safeUrl(this.runtime.currentHref());
-    const click = url ? approvedPaidClick(url.search) : null;
-    if (!click) {
+    const entry = this.pendingEntry?.fields;
+    if (!entry) {
       this.phase = "granted";
       this.setView("reopen", "granted", "granted", "");
       this.runtime.publish({ grantAcknowledged: true, version: 1 });
@@ -477,14 +655,17 @@ export class AestheticsAttributionController {
       this.navigationVersion,
       handle,
       predecessor,
-      click,
+      entry,
     );
   }
 
   async deny(publish = true): Promise<void> {
     if (!this.active || this.destroyed) return;
+    this.cancelDenialRetry();
     this.persistChoice("denied");
+    this.clearSourceChoice();
     this.choice = "denied";
+    this.pendingEntry = null;
     this.phase = "denying";
     const sentinelPersisted = this.setDeniedSentinel();
     this.grantController?.abort();
@@ -527,7 +708,7 @@ export class AestheticsAttributionController {
     this.reconcileNavigation();
   }
 
-  guardBookingNavigation(href: string): boolean {
+  guardBookingNavigation(href: string, continueInSite?: () => void): boolean {
     if (!isAestheticsBookingHref(href) || !this.active) return false;
     if (
       this.phase !== "choice" &&
@@ -538,6 +719,7 @@ export class AestheticsAttributionController {
       return false;
     }
     this.pendingBookingHref = cleanAestheticsBookingHref(href);
+    this.pendingBookingAction = continueInSite ?? null;
     const status =
       this.phase === "choice"
         ? "Choose whether to accept cookies, then booking will continue."
@@ -546,6 +728,18 @@ export class AestheticsAttributionController {
           : "Finishing your cookie choice before booking...";
     this.setView("panel", this.phase, this.choice, status);
     return true;
+  }
+
+  /** Cart linkage must wait for a consented capture already in flight. */
+  async prepareBooking(): Promise<void> {
+    this.reconcileNavigation();
+    let awaited: Promise<void> | null = null;
+    while (this.capturePromise && this.capturePromise !== awaited) {
+      awaited = this.capturePromise;
+      await awaited;
+    }
+    if (!this.active || this.destroyed || this.phase === "granted" || this.phase === "denied") return;
+    throw new Error(this.view.status || "Choose whether to accept cookies, then booking will continue.");
   }
 
   private setView(
@@ -569,6 +763,35 @@ export class AestheticsAttributionController {
         this.runtime.now(),
       ) === choice
     );
+  }
+
+  private persistSourceChoice(handle: string): boolean {
+    const receipt = readCookie(this.runtime.cookieHeader(), AESTHETICS_CONSENT_COOKIE);
+    this.runtime.writeCookie(
+      `${AESTHETICS_SOURCE_CONSENT_COOKIE}=${receipt}.${handle}; Max-Age=${CONSENT_MAX_AGE_SECONDS}; Path=/; SameSite=Lax; Secure`,
+    );
+    return hasSourceConsent(this.runtime.cookieHeader(), this.runtime.now());
+  }
+
+  private persistInsightsChoice(handle: string): boolean {
+    const receipt = readCookie(this.runtime.cookieHeader(), AESTHETICS_CONSENT_COOKIE);
+    const value = `${receipt}.${handle}`;
+    this.runtime.writeCookie(`${INSIGHTS_COOKIE}=${value}; Max-Age=${CONSENT_MAX_AGE_SECONDS}; Path=/; SameSite=Lax; Secure`);
+    return readCookie(this.runtime.cookieHeader(), INSIGHTS_COOKIE) === value;
+  }
+
+  private clearSourceChoice(): void {
+    this.runtime.writeCookie(`${INSIGHTS_COOKIE}=; Max-Age=0; Path=/; SameSite=Lax; Secure`);
+    this.runtime.writeCookie(`${AESTHETICS_SOURCE_CONSENT_COOKIE}=; Max-Age=0; Path=/; SameSite=Lax; Secure`);
+    this.runtime.writeCookie(`${AESTHETICS_ANALYTICS_CONSENT_COOKIE}=; Max-Age=0; Path=/; SameSite=Lax; Secure`);
+  }
+
+  private persistAnalyticsChoice(handle: string): boolean {
+    const receipt = readCookie(this.runtime.cookieHeader(), AESTHETICS_CONSENT_COOKIE);
+    this.runtime.writeCookie(
+      `${AESTHETICS_ANALYTICS_CONSENT_COOKIE}=${receipt}.${handle}; Max-Age=${CONSENT_MAX_AGE_SECONDS}; Path=/; SameSite=Lax; Secure`,
+    );
+    return hasAestheticsAnalyticsConsent(this.runtime.cookieHeader(), this.runtime.now());
   }
 
   private setDeniedSentinel(): boolean {
@@ -639,6 +862,7 @@ export class AestheticsAttributionController {
       const response = await this.runtime.fetch(AESTHETICS_ATTRIBUTION_ENDPOINT, {
         method: "POST",
         credentials: "include",
+        referrerPolicy: "origin",
         keepalive: true,
         signal: requestController.signal,
         headers: { "Content-Type": "application/json" },
@@ -653,16 +877,32 @@ export class AestheticsAttributionController {
     }
   }
 
-  private requestDenial(): Promise<boolean> {
-    if (this.denialPromise) return this.denialPromise;
-    const attemptedHandle = readRevocationHandle(this.runtime.cookieHeader());
+  private requestDenial(retry?: DenialRetrySnapshot): Promise<boolean> {
+    if (this.denialPromise) {
+      const pending = this.denialPromise;
+      // A fresh opt-in still needs a real denial preflight if an obsolete
+      // queued retry was skipped, rather than treating cancellation as proof.
+      if (!retry && this.denialRequestIsRetry) {
+        return pending.then(finalized => finalized || this.requestDenial());
+      }
+      return pending;
+    }
+    const cookies = this.runtime.cookieHeader();
+    const snapshot: DenialRetrySnapshot = retry ?? {
+      generation: this.denialRetryGeneration,
+      receipt: readCookie(cookies, AESTHETICS_CONSENT_COOKIE),
+      handle: readRevocationHandle(cookies),
+      sentinel: hasDeniedSentinel(cookies),
+    };
+    const attemptedHandle = snapshot.handle;
     const payload: DeniedPayload = {
-      location: "napa",
+      location: acquisitionLocation(safeUrl(this.runtime.currentHref())?.pathname ?? "/"),
       consentAdUserData: "denied",
       ...(attemptedHandle ? { revocationHandle: attemptedHandle } : {}),
     };
 
     const request = this.enqueue(async () => {
+      if (retry && !this.isCurrentDenialRetry(retry)) return false;
       const result = await this.postPayload(payload);
       const finalized = isDeniedAcknowledgement(result);
       if (finalized) this.denialRetryAttempt = 0;
@@ -670,35 +910,69 @@ export class AestheticsAttributionController {
     });
     this.denialPromise = request.finally(() => {
       this.denialPromise = null;
+      this.denialRequestIsRetry = false;
     });
+    this.denialRequestIsRetry = Boolean(retry);
     void this.denialPromise.then((finalized) => {
-      if (!finalized && this.choice === "denied") this.scheduleDenialRetry();
+      if (!finalized && this.isCurrentDenialRetry(snapshot)) this.scheduleDenialRetry(snapshot);
     });
     return this.denialPromise;
   }
 
-  private scheduleDenialRetry(): void {
-    if (this.denialRetryTimer !== null || this.destroyed || !this.active) return;
+  private scheduleDenialRetry(snapshot: DenialRetrySnapshot): void {
+    if (this.denialRetryTimer !== null || !this.isCurrentDenialRetry(snapshot)) return;
     const delay = Math.min(30_000, 1_000 * 2 ** this.denialRetryAttempt);
     this.denialRetryAttempt += 1;
     this.denialRetryTimer = this.runtime.setTimer(() => {
+      if (snapshot.generation !== this.denialRetryGeneration) return;
       this.denialRetryTimer = null;
-      void this.requestDenial();
+      if (this.isCurrentDenialRetry(snapshot)) void this.requestDenial(snapshot);
     }, delay);
   }
 
-  private async captureCurrentClick(
+  private isCurrentDenialRetry(snapshot: DenialRetrySnapshot): boolean {
+    const cookies = this.runtime.cookieHeader();
+    return !this.destroyed && this.active && this.choice === "denied"
+      && snapshot.generation === this.denialRetryGeneration
+      && readCookie(cookies, AESTHETICS_CONSENT_COOKIE) === snapshot.receipt
+      && readRevocationHandle(cookies) === snapshot.handle
+      && hasDeniedSentinel(cookies) === snapshot.sentinel;
+  }
+
+  private cancelDenialRetry(): void {
+    this.denialRetryGeneration += 1;
+    if (this.denialRetryTimer !== null) this.runtime.clearTimer(this.denialRetryTimer);
+    this.denialRetryTimer = null;
+    this.denialRetryAttempt = 0;
+  }
+
+  private captureCurrentClick(
     navigationVersion: number,
     preparedHandle?: string,
     predecessor: string | null = null,
-    preparedClick?: ApprovedPaidClick,
+    preparedClick?: ApprovedEntry,
+  ): Promise<void> {
+    if (this.capturePromise && this.activeCaptureVersion === navigationVersion) return this.capturePromise;
+    const work = this.performCapture(navigationVersion, preparedHandle, predecessor, preparedClick);
+    this.capturePromise = work;
+    const clear = () => { if (this.capturePromise === work) this.capturePromise = null; };
+    void work.then(clear, clear);
+    return work;
+  }
+
+  private async performCapture(
+    navigationVersion: number,
+    preparedHandle?: string,
+    predecessor: string | null = null,
+    preparedClick?: ApprovedEntry,
   ): Promise<void> {
     if (this.destroyed || this.choice !== "granted") return;
     if (this.activeCaptureVersion === navigationVersion) return;
     this.activeCaptureVersion = navigationVersion;
     try {
       const url = safeUrl(this.runtime.currentHref());
-      const click = preparedClick ?? (url ? approvedPaidClick(url.search) : null);
+      const capturedClick = this.pendingEntry;
+      const click = preparedClick ?? capturedClick?.fields;
       if (!url || !click) {
         this.phase = "granted";
         this.setView("reopen", "granted", "granted", "");
@@ -711,9 +985,10 @@ export class AestheticsAttributionController {
         );
         return;
       }
+      const grantedReceipt = readCookie(this.runtime.cookieHeader(), AESTHETICS_CONSENT_COOKIE);
 
       const payload: GrantedPayload = {
-        location: "napa",
+        location: capturedClick?.location ?? acquisitionLocation(url.pathname),
         consentAdUserData: "granted",
         revocationHandle: handle,
         ...(predecessor ? { revocationPredecessorHandle: predecessor } : {}),
@@ -729,20 +1004,44 @@ export class AestheticsAttributionController {
             this.runtime.cookieHeader(),
             this.runtime.now(),
           ) !== "granted" ||
+          readCookie(this.runtime.cookieHeader(), AESTHETICS_CONSENT_COOKIE) !== grantedReceipt ||
+          !hasSourceConsent(this.runtime.cookieHeader(), this.runtime.now()) ||
           readRevocationHandle(this.runtime.cookieHeader()) !== handle
         ) {
           return false;
         }
         return isGrantedAcknowledgement(
           await this.postPayload(payload, controller),
+          click.sourceEvidence !== "google_click",
         );
       });
       if (this.grantController === controller) this.grantController = null;
       if (this.destroyed || this.choice !== "granted") return;
+      if (navigationVersion !== this.navigationVersion) return;
+      const currentCookies = this.runtime.cookieHeader();
+      if (readCookie(currentCookies, AESTHETICS_CONSENT_COOKIE) !== grantedReceipt
+        || readRevocationHandle(currentCookies) !== handle
+        || !hasSourceConsent(currentCookies, this.runtime.now())) {
+        this.clearSourceChoice();
+        if (readAestheticsConsentChoice(currentCookies, this.runtime.now()) === "denied"
+          || hasDeniedSentinel(currentCookies)) {
+          this.pendingEntry = null;
+          this.choice = "denied";
+          this.phase = "denied";
+          this.setView("reopen", "denied", "denied", "");
+          void this.requestDenial();
+        } else {
+          // A late response from another consent generation must not clean a
+          // new URL or release a booking waiting on the current choice.
+          this.choice = "unknown";
+          this.phase = "choice";
+          this.setView("panel", "choice", "unknown", "Your cookie choice changed. Choose again before booking.");
+        }
+        return;
+      }
 
       if (
         !acknowledged ||
-        navigationVersion !== this.navigationVersion ||
         hasDeniedSentinel(this.runtime.cookieHeader())
       ) {
         this.phase = "error";
@@ -756,6 +1055,8 @@ export class AestheticsAttributionController {
       }
 
       this.cleanLandingUrl();
+      if (this.pendingEntry === capturedClick) this.pendingEntry = null;
+      this.cancelDenialRetry();
       this.phase = "granted";
       this.setView("reopen", "granted", "granted", "");
       this.runtime.publish({ grantAcknowledged: true, version: 1 });
@@ -768,8 +1069,11 @@ export class AestheticsAttributionController {
   }
 
   private async failClosed(status: string): Promise<void> {
+    this.cancelDenialRetry();
     this.persistChoice("denied");
+    this.clearSourceChoice();
     this.choice = "denied";
+    this.pendingEntry = null;
     this.phase = "error";
     this.setDeniedSentinel();
     this.grantController?.abort();
@@ -781,8 +1085,11 @@ export class AestheticsAttributionController {
 
   private flushPendingBooking(): void {
     const href = this.pendingBookingHref;
+    const action = this.pendingBookingAction;
     this.pendingBookingHref = null;
-    if (href) this.runtime.navigate(cleanAestheticsBookingHref(href));
+    this.pendingBookingAction = null;
+    if (action) action();
+    else if (href) this.runtime.navigate(cleanAestheticsBookingHref(href));
   }
 }
 
@@ -791,6 +1098,7 @@ export function createBrowserAestheticsAttributionRuntime(
 ): AestheticsAttributionRuntime {
   return {
     currentHref: () => window.location.href,
+    referrer: () => document.referrer,
     hostname: () => window.location.hostname,
     cookieHeader: () => document.cookie,
     writeCookie: (value) => {

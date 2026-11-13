@@ -1,3 +1,5 @@
+import { MEMBER_TOUCH_UP } from "@/lib/napa-botox-facts";
+
 export type EditorialSection = {
   readonly id: string;
   readonly heading: string;
@@ -50,14 +52,14 @@ export const LOCAL_EDITORIAL_POSTS: readonly LocalEditorialPost[] = [
   {
     slug: "botox-cost-napa",
     title: "Botox in Napa: 2026 Pricing, Membership, and What to Expect",
-    seoTitle: "Botox Cost in Napa: 2026 Pricing Guide",
+    seoTitle: "Botox Cost in Napa: Prices & Membership",
     seoDescription:
-      "See Rella Napa's current Botox and Dysport prices, 2026 membership math, booking deposit, visit details, and what determines your total.",
+      "Compare Rella Napa's Botox and Dysport pricing, membership savings and rewards. Learn what affects your treatment total and which questions to ask before booking.",
     excerpt:
       "A transparent guide to Rella Napa's Botox, Dysport, membership, and booking-deposit pricing—plus the questions that determine your actual treatment total.",
     category: "Injectables",
     publishedAt: "2026-08-03T12:00:00-07:00",
-    modifiedAt: "2026-09-04T12:00:00-07:00",
+    modifiedAt: "2026-11-02T12:00:00-08:00",
     authorName: "Rella Aesthetics",
     readingTime: "7 minute read",
     coverImage: "/images/treatments/botox-dysport.webp",
@@ -67,13 +69,13 @@ export const LOCAL_EDITORIAL_POSTS: readonly LocalEditorialPost[] = [
     dek:
       "The per-unit number matters, but it is not the whole quote. Here is the current Rella Napa pricing and the practical math to review before you book.",
     answerFirst:
-      "Rella's current published Napa price is $18 per unit for Botox® and $6 per unit for Dysport. The 2026 Tox Membership is $30 per month with a one-year commitment; members pay $13 per unit for Botox and $4.40 per unit for Dysport. A $50 booking deposit is charged when a new-patient tox appointment is confirmed, and it is separate from treatment pricing.",
+      "Rella's current published Napa price is $18 per unit for Botox® and $6 per unit for Dysport. The 2026 Tox Membership is $30 per month with a one-year commitment; members pay $13 per unit for Botox and $4.33 per unit for Dysport. A $100 booking deposit is charged when a new-patient tox appointment is confirmed and is applied to the completed treatment.",
     keyFacts: [
       "Downtown Napa: 1541 3rd St, Napa, CA 94559",
-      "Clinic hours: Monday–Friday, 9am–5pm; Saturday, 9am–1pm",
+      "Clinic hours: Wednesday–Saturday, 9am–5pm; Sunday–Tuesday: Closed",
       "New-patient tox visit: 30 minutes",
-      "Free in-person consultation with the first visit",
-      "Botox® and Dysport rewards programs accepted",
+      "Consultation and treatment in one visit when clinically appropriate",
+      "Allē rewards work with member Botox pricing; Aspire rewards work with member Dysport pricing",
       "Your provider reviews the proposed units and total before treatment",
     ],
     priceRows: [
@@ -99,13 +101,13 @@ export const LOCAL_EDITORIAL_POSTS: readonly LocalEditorialPost[] = [
       },
       {
         item: "Member Dysport",
-        publicPrice: "$4.40/unit",
-        whatItMeans: "$1.60 less per unit than the standard price",
+        publicPrice: "$4.33/unit",
+        whatItMeans: "$1.67 less per unit than the standard price",
       },
       {
         item: "New-patient booking deposit",
-        publicPrice: "$50",
-        whatItMeans: "Charged at confirmation; separate from treatment pricing",
+        publicPrice: "$100",
+        whatItMeans: "Charged at confirmation and applied to completed treatment",
       },
     ],
     sections: [
@@ -113,7 +115,7 @@ export const LOCAL_EDITORIAL_POSTS: readonly LocalEditorialPost[] = [
         id: "per-unit-versus-total",
         heading: "Why the per-unit price is not your final total",
         paragraphs: [
-          "Botox and Dysport are priced by the unit, but the responsible total comes after an in-person assessment. Your anatomy, the muscles and areas being considered, your goals, prior treatment, and the product selected all affect the plan.",
+          "Your provider reviews your goals, medical history and facial anatomy before recommending a treatment plan. They explain the proposed product, treatment areas, expected cost, risks and aftercare before you decide whether to proceed.",
           "That is why this guide does not publish a one-size-fits-all package total or promise a particular unit count. At Rella Napa, the provider maps the proposed plan and explains the expected treatment total before anything is treated.",
         ],
         bullets: [
@@ -128,16 +130,16 @@ export const LOCAL_EDITORIAL_POSTS: readonly LocalEditorialPost[] = [
         id: "botox-versus-dysport",
         heading: "Botox vs. Dysport: do not compare the unit prices alone",
         paragraphs: [
-          "The $18 Botox and $6 Dysport numbers can look dramatically different on a menu, but the products are measured differently. A Dysport unit is not a one-for-one substitute for a Botox unit, so the lower unit price does not mean the same plan automatically costs one-third as much.",
+          "Botox and Dysport units are not interchangeable. Compare the complete treatment plan and total cost rather than the price of one unit. Results and duration vary from person to person.",
           "The useful comparison is the complete proposed plan: product, unit count, treatment areas, and total. Your provider can explain why one product may be recommended and show the math before treatment.",
         ],
       },
       {
         id: "booking-deposit",
-        heading: "What the $50 booking deposit is—and is not",
+        heading: "How the $100 booking deposit works",
         paragraphs: [
-          "A card is required to book the 30-minute new-patient tox visit. A $50 deposit is charged when the appointment is confirmed. Card details are handled by the secure booking provider and are not stored on Rella's servers.",
-          "The deposit is separate from the per-unit Botox or Dysport treatment price. Rella does not describe it as credited, refundable, transferable, or automatically applied to treatment unless a separately approved policy says so. If you need to cancel, review the current cancellation policy before the 48-hour window.",
+          "A card is required to book the 30-minute new-patient tox visit. A $100 deposit is charged when the appointment is confirmed and is applied to the completed treatment. Card details are handled by the secure booking provider and are not stored on Rella's servers.",
+          "Your provider still reviews the product, proposed unit count, and full treatment total with you before treatment. If you need to cancel or reschedule, review the current 48-hour cancellation policy.",
         ],
       },
       {
@@ -145,7 +147,7 @@ export const LOCAL_EDITORIAL_POSTS: readonly LocalEditorialPost[] = [
         heading: "The 2026 Tox Membership math",
         paragraphs: [
           "The membership is $30 per month with a one-year commitment, which is $360 in dues over twelve months. The current member price is $13 per Botox unit instead of $18, a difference of $5 per unit. On price difference alone, 72 Botox units across the year equals $360 in per-unit savings.",
-          "For Dysport, the member price is $4.40 instead of $6, a difference of $1.60 per unit. On that price difference alone, 225 Dysport units across the year equals $360. This is transparent arithmetic, not a treatment recommendation: actual product choice, unit use, timing, and eligibility vary. Review the complete membership terms before enrolling.",
+          "For Dysport, the member price is $4.33 instead of $6, a difference of $1.67 per unit. On that price difference alone, 216 Dysport units across the year saves $360.72, just exceeding the $360 annual dues. This is transparent arithmetic, not a treatment recommendation: actual product choice, unit use, timing, and eligibility vary. Review the complete membership terms before enrolling.",
         ],
       },
       {
@@ -153,7 +155,8 @@ export const LOCAL_EDITORIAL_POSTS: readonly LocalEditorialPost[] = [
         heading: "What happens at a new-patient tox visit",
         paragraphs: [
           "The Napa new-patient appointment is scheduled for 30 minutes. The visit starts with a consultation, a review of goals and relevant history, and an assessment of facial movement and anatomy. If treatment is appropriate and you want to proceed, the consultation and treatment can happen in the same appointment.",
-          "Results are not immediate and individual response varies. The current Rella guidance is that softening may appear in several days and full effect is assessed around two weeks. Rella's current Napa follow-up policy includes a complimentary two-week touch-up of up to six units when appropriate.",
+          "Results and duration vary from person to person.",
+          MEMBER_TOUCH_UP.answer,
         ],
       },
       {
@@ -175,12 +178,13 @@ export const LOCAL_EDITORIAL_POSTS: readonly LocalEditorialPost[] = [
         id: "visit-napa",
         heading: "Booking Botox in downtown Napa",
         paragraphs: [
-          "Rella Aesthetics Napa is at 1541 3rd St, Napa, CA 94559, with street and garage parking within one block. Current clinic hours are Monday through Friday, 9am to 5pm, and Saturday, 9am to 1pm. Online booking is available at any time, even when the clinic is closed.",
+          "Rella Aesthetics Napa is at 1541 3rd St, Napa, CA 94559. The clinic is open Wednesday through Saturday, 9am to 5pm, and closed Sunday through Tuesday. Online booking is available at any time, even when the clinic is closed.",
           "If you already know you want a new-patient tox visit, use the Napa-specific booking path. If you still have a pricing or membership question, call Rella at (707) 358-2928 before confirming.",
         ],
       },
     ],
     faqs: [
+      { question: MEMBER_TOUCH_UP.question, answer: MEMBER_TOUCH_UP.answer },
       {
         question: "How much is Botox per unit in Napa?",
         answer:
@@ -189,7 +193,7 @@ export const LOCAL_EDITORIAL_POSTS: readonly LocalEditorialPost[] = [
       {
         question: "How much is Dysport per unit at Rella Napa?",
         answer:
-          "The current standard price is $6 per Dysport unit. Tox members pay $4.40 per unit. Botox and Dysport units are measured differently, so compare the full proposed plan rather than the unit prices alone.",
+          "The current standard price is $6 per Dysport unit. Tox members pay $4.33 per unit. Botox and Dysport units are measured differently, so compare the full proposed plan rather than the unit prices alone.",
       },
       {
         question: "How much will my Botox appointment cost in total?",
@@ -197,9 +201,9 @@ export const LOCAL_EDITORIAL_POSTS: readonly LocalEditorialPost[] = [
           "The total depends on the product, areas, anatomy, goals, and proposed unit count. Your provider reviews the plan and expected total before treatment.",
       },
       {
-        question: "Is the $50 deposit part of the Botox price?",
+        question: "Is the $100 deposit applied to my Botox or Dysport treatment?",
         answer:
-          "No. It is a booking deposit charged when the new-patient appointment is confirmed in Rella's secure booking experience, and it is separate from per-unit treatment pricing.",
+          "Yes. It is charged when the new-patient appointment is confirmed in Rella's secure booking experience and is applied to the completed treatment. Your provider reviews the proposed unit count and remaining total before treatment.",
       },
       {
         question: "Is the Rella Tox Membership month-to-month?",
@@ -209,11 +213,11 @@ export const LOCAL_EDITORIAL_POSTS: readonly LocalEditorialPost[] = [
       {
         question: "Does Rella Napa accept Botox and Dysport rewards?",
         answer:
-          "Yes. Rella accepts Allē for Botox® and Aspire for Dysport. Bring your account information to the visit so the team can help apply available rewards.",
+          "Yes. Allē rewards can be used with member Botox pricing, and Aspire rewards can be used with member Dysport pricing. Bring your account information to the visit so the team can help apply available rewards.",
       },
     ],
     reviewedAgainst:
-      "Pricing and booking facts are current as of August 3, 2026 and were reviewed against Rella's July 24 public pricing record and July 26 Napa tox operating decisions.",
+      "Pricing, membership, rewards and visit details confirmed by Rella on November 2, 2026.",
   },
 ] as const;
 

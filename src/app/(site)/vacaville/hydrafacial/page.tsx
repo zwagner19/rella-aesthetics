@@ -1,3 +1,4 @@
+import { withWebsiteSeo } from "@/lib/website-seo";
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
@@ -15,15 +16,15 @@ const BOOKING_HREF = resolveBookingHref({
 });
 const clinic = locations.vacaville;
 
-export const metadata: Metadata = {
+const defaultMetadata: Metadata = {
   title: "HydraFacial in Vacaville | Pricing & Booking",
   description:
-    "Review Vacaville HydraFacial pricing, book the currently listed Signature service online, or call Rella about other tiers.",
+    "Compare Signature, Deluxe and Platinum HydraFacial in Vacaville. Browse the live menu for current services and availability.",
   alternates: { canonical: CANONICAL },
   openGraph: {
     title: "HydraFacial in Vacaville | Rella Aesthetics",
     description:
-      "Signature HydraFacial online booking, published tier context, and treatment planning in downtown Vacaville.",
+      "Signature, Deluxe and Platinum HydraFacial options, online booking, and treatment planning in downtown Vacaville.",
     url: CANONICAL,
     type: "website",
     images: [
@@ -39,17 +40,17 @@ const faqs = [
   {
     question: "How much is a HydraFacial at Rella Vacaville?",
     answer:
-      "Rella's approved public pricing lists Signature at $240, Deluxe at $300, and Platinum at $390. The current Vacaville online facial category exposes Signature only; call Rella to confirm availability before planning around another tier.",
+      "Rella's approved public pricing lists Signature at $240, Deluxe at $300, and Platinum at $390. Browse the live Vacaville menu for current tier details and availability before choosing.",
   },
   {
     question: "How long does a HydraFacial appointment take?",
     answer:
-      "Signature and Deluxe are listed as 45-minute services, and Platinum is listed as 75 minutes. Only Signature is currently exposed for Vacaville online booking; confirm other availability by phone.",
+      "Signature and Deluxe are listed as 45-minute services, and Platinum is listed as 75 minutes. Review the selected tier's current details and availability in the live Vacaville menu.",
   },
   {
     question: "Which HydraFacial tier should I choose?",
     answer:
-      "The booking button opens Vacaville's facial category, where Signature is the currently listed HydraFacial. Call Rella if you want to discuss whether another tier is available and appropriate for your skin goals, sensitivities, recent treatments, and schedule.",
+      "The booking button opens Vacaville's live facial menu, including Signature, Deluxe and Platinum HydraFacial. Call Rella if you want help comparing tiers around your skin goals, sensitivities, recent treatments, and schedule.",
   },
   {
     question: "Is there downtime after a HydraFacial?",
@@ -74,7 +75,7 @@ const serviceSchema = {
   "@id": `${CANONICAL}#service`,
   name: "HydraFacial in Vacaville",
   serviceType: "HydraFacial skin treatment",
-  description: metadata.description,
+  description: defaultMetadata.description,
   url: CANONICAL,
   image: "https://experiencerella.com/images/service-hydrafacial.jpg",
   provider: {
@@ -109,13 +110,13 @@ const tiers = [
     price: "$300",
     name: "Deluxe",
     timing: "45 minutes",
-    body: "A published reference tier that is not currently exposed in Vacaville's online menu. Call Rella to confirm availability and current details.",
+    body: "A HydraFacial option in Vacaville's live facial menu. Review the current details and availability before selecting an appointment.",
   },
   {
     price: "$390",
     name: "Platinum",
     timing: "75 minutes",
-    body: "A published reference tier that is not currently exposed in Vacaville's online menu. Call Rella to confirm availability and current details.",
+    body: "A HydraFacial option in Vacaville's live facial menu. Review the current details and availability before selecting an appointment.",
   },
 ] as const;
 
@@ -165,7 +166,7 @@ export default function VacavilleHydraFacialPage() {
               HydraFacial in Vacaville.
             </h1>
             <p className="mb-8 max-w-[650px] text-lg font-light leading-relaxed text-silver-dark md:text-xl">
-              Review three published tiers, book the currently listed Signature HydraFacial online, or call Rella to ask about another option.
+              Compare Signature, Deluxe and Platinum HydraFacial, then browse the live menu for current services and availability.
             </p>
             <div className="flex flex-col gap-3 sm:flex-row">
               <Button disableHover href={BOOKING_HREF} data-cta="service-booking" className="rounded-full">
@@ -203,7 +204,7 @@ export default function VacavilleHydraFacialPage() {
 
       <TrustStrip
         ariaLabel="Rella Vacaville HydraFacial visit facts"
-        items={["Skin goals first", "Signature listed online", "Other tiers by phone", "Downtown Vacaville"]}
+        items={["Skin goals first", "Live HydraFacial menu", "Compare three tiers", "Downtown Vacaville"]}
       />
 
       <section className="py-20 md:py-28" aria-labelledby="vacaville-hydrafacial-pricing">
@@ -213,10 +214,10 @@ export default function VacavilleHydraFacialPage() {
               Current public pricing
             </p>
             <h2 id="vacaville-hydrafacial-pricing" className="mb-5 text-3xl font-medium tracking-[-0.04em] text-rose-text md:text-5xl">
-              Three published tiers. One currently online.
+              Three HydraFacial tiers to compare.
             </h2>
             <p className="text-lg font-light leading-relaxed text-ink/70">
-              Signature is currently exposed in Vacaville&apos;s online facial category. Deluxe and Platinum remain reference options here; call Rella to confirm whether either is available before choosing.
+              Signature, Deluxe and Platinum are listed in Vacaville&apos;s live facial menu. Review each tier&apos;s current details and availability before choosing.
             </p>
           </div>
           <div className="grid gap-5 md:grid-cols-3">
@@ -263,16 +264,16 @@ export default function VacavilleHydraFacialPage() {
           <div>
             <p className="mb-4 text-[0.6875rem] font-bold uppercase tracking-[0.2em] text-rose-text">A direct first step</p>
             <h2 id="vacaville-hydrafacial-booking" className="mb-5 text-3xl font-medium tracking-[-0.04em] text-rose-text md:text-5xl">
-              Book Signature in the live menu.
+              Choose your HydraFacial in the live menu.
             </h2>
             <p className="text-lg font-light leading-relaxed text-ink/70">
-              Rella&apos;s live Vacaville facial category currently lists Signature HydraFacial and the Initial Skin Health Consult. Call the team about Deluxe or Platinum rather than assuming online availability.
+              Browse Signature, Deluxe and Platinum HydraFacial alongside other Vacaville facial services. The live menu shows current details and availability.
             </p>
           </div>
           <div className="border-l-4 border-rose bg-rose-blush p-7 md:p-10">
             <p className="mb-3 text-[0.6875rem] font-bold uppercase tracking-[0.18em] text-rose-text">Live Rella booking handoff</p>
             <p className="mb-6 text-lg leading-8 text-silver-dark">
-              The facial chooser shows the current services first. Select Signature to review its description, professionals, timing, and booking terms.
+              The facial chooser shows the current services first. Select a tier to review its description, professionals, timing, and booking terms.
             </p>
             <Button disableHover href={BOOKING_HREF} data-cta="service-booking" className="rounded-full">
               Browse Facial Booking
@@ -312,10 +313,10 @@ export default function VacavilleHydraFacialPage() {
       <section className="bg-rose py-20 text-center text-white" aria-labelledby="vacaville-hydrafacial-next-step">
         <div className="mx-auto max-w-[720px] px-6">
           <h2 id="vacaville-hydrafacial-next-step" className="mb-4 text-3xl font-medium tracking-[-0.035em] md:text-5xl">
-            Start with Signature in Vacaville.
+            Find your HydraFacial in Vacaville.
           </h2>
           <p className="mb-8 text-lg font-light leading-relaxed text-white">
-            Open the live Vacaville facial chooser to review Signature and its booking terms, or call Rella if you want help comparing other options.
+            Open the live Vacaville facial chooser to compare tiers and their booking terms, or call Rella if you want help choosing.
           </p>
           <div className="flex flex-col justify-center gap-3 sm:flex-row">
             <Button disableHover href={BOOKING_HREF} data-cta="service-booking" className="rounded-full bg-white !text-rose-text">
@@ -336,4 +337,8 @@ export default function VacavilleHydraFacialPage() {
       </section>
     </>
   );
+}
+
+export async function generateMetadata(): Promise<Metadata> {
+  return withWebsiteSeo("/vacaville/hydrafacial", defaultMetadata);
 }

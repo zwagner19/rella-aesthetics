@@ -1,3 +1,4 @@
+import { withWebsiteSeo } from "@/lib/website-seo";
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
@@ -15,7 +16,7 @@ const BOOKING_HREF = resolveBookingHref({
 });
 const clinic = locations.vacaville;
 
-export const metadata: Metadata = {
+const defaultMetadata: Metadata = {
   title: "Lip & Dermal Filler in Vacaville | Pricing Guide",
   description:
     "Explore current dermal filler pricing, product and treatment-plan factors, and Vacaville-specific booking at Rella Aesthetics, 542 Main St.",
@@ -74,7 +75,7 @@ const serviceSchema = {
   "@id": `${CANONICAL}#service`,
   name: "Lip and Dermal Filler in Vacaville",
   serviceType: "Dermal filler consultation and treatment",
-  description: metadata.description,
+  description: defaultMetadata.description,
   url: CANONICAL,
   image: "https://experiencerella.com/images/service-fillers.jpg",
   provider: {
@@ -317,4 +318,8 @@ export default function VacavilleFillerPage() {
       </section>
     </>
   );
+}
+
+export async function generateMetadata(): Promise<Metadata> {
+  return withWebsiteSeo("/vacaville/filler", defaultMetadata);
 }
