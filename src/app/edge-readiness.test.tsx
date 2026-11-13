@@ -36,6 +36,7 @@ describe("the complete non-booking link matrix targets verified public destinati
     "https://experiencerella.com/services/botox",
     "https://experiencerella.com/privacy-policy",
     "https://experiencerella.com/terms",
+    "https://experiencerella.com/promotional-terms",
     "https://experiencerella.com/cancellation-policy",
   ]);
 
@@ -138,9 +139,9 @@ describe("every Wave 3 contract is preserved", () => {
     expect(decoded).toContain("$18 / unit");
     expect(decoded).toContain("$6 / unit");
     expect(decoded).toMatch(/\$13\/unit/);
-    expect(decoded).toMatch(/\$4\.40\/unit/);
+    expect(decoded).toMatch(/\$4\.33\/unit/);
     expect(decoded).toMatch(/\$30\/month/);
-    expect(decoded).not.toContain("$4.33");
+    expect(decoded).not.toContain("$4.40");
   });
 
   it("deposit language unchanged and still separate from per-unit pricing", () => {
