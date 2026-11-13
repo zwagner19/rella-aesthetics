@@ -7,8 +7,8 @@ const error = (status = 503, code = 'unavailable', logout = false) => Response.j
 export async function bridgePatient(request: Request, operation: string, fetcher: typeof fetch = fetch) {
   const logout = operation === 'logout';
   try {
-    if (!['dashboard', 'start', 'verify', 'logout'].includes(operation)) return error(404);
-    if (request.method !== (operation === 'dashboard' ? 'GET' : 'POST') || new URL(request.url).search) return error(400, 'invalid_request');
+    if (!['dashboard', 'session', 'start', 'verify', 'select', 'logout'].includes(operation)) return error(404);
+    if (request.method !== (['dashboard', 'session'].includes(operation) ? 'GET' : 'POST') || new URL(request.url).search) return error(400, 'invalid_request');
     // An explicit origin prevents accepting arbitrary Host headers or sibling origins.
     const origin = process.env.PATIENT_PORTAL_PUBLIC_ORIGIN;
     if (!origin || new URL(request.url).origin !== origin || (request.method === 'POST' && request.headers.get('origin') !== origin)
@@ -29,7 +29,7 @@ export async function bridgePatient(request: Request, operation: string, fetcher
       while (true) { const part = await reader.read(); if (part.done) break; size += part.value.length; if (size > 4096) { await reader.cancel(); return error(413, 'invalid_request'); } chunks.push(part.value); }
       body = Buffer.concat(chunks).toString('utf8');
       const parsed = JSON.parse(body);
-      const allowed = operation === 'start' ? ['method', 'contact'] : operation === 'verify' ? ['code'] : [];
+      const allowed = operation === 'start' ? ['method', 'contact'] : operation === 'verify' ? ['code'] : operation === 'select' ? ['profileKey'] : [];
       if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed) || Object.keys(parsed).some(k => !allowed.includes(k))) return error(400, 'invalid_request');
     }
     const cookies = (request.headers.get('cookie') ?? '').split(';').map(x => x.trim()).filter(x => x.startsWith(`${COOKIE}=`));

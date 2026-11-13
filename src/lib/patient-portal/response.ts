@@ -26,3 +26,21 @@ export function parseDashboard(value: unknown): { dashboard: Dashboard; expiresA
   }
   return { dashboard: dashboard as Dashboard, expiresAt: result.expiresAt };
 }
+
+export type ProfileChoice = { key: string; label: string };
+export function parseSession(value: unknown): { state: 'code_required' | 'profile_required' | 'authenticated'; expiresAt: number; profiles: ProfileChoice[] } {
+  const result = object(value);
+  if (!['code_required', 'profile_required', 'authenticated'].includes(String(result.state)) || typeof result.expiresAt !== 'number'
+    || result.expiresAt <= Date.now() || result.expiresAt > Date.now() + (result.state === 'authenticated' ? 31 : 11) * 60_000) throw new Error('unavailable');
+  const profiles: ProfileChoice[] = [];
+  if (result.state === 'profile_required') {
+    if (!Array.isArray(result.profiles) || result.profiles.length < 2 || result.profiles.length > 8) throw new Error('unavailable');
+    for (const entry of result.profiles) {
+      const p = object(entry);
+      if (Object.keys(p).some(k => !['key', 'label'].includes(k)) || typeof p.key !== 'string' || !/^[A-Za-z0-9_-]{43}$/.test(p.key)
+        || profiles.some(x => x.key === p.key) || typeof p.label !== 'string' || !p.label.trim() || p.label.length > 180 || /[\u0000-\u001f]/.test(p.label)) throw new Error('unavailable');
+      profiles.push({ key: p.key, label: p.label });
+    }
+  }
+  return { state: result.state as 'code_required' | 'profile_required' | 'authenticated', expiresAt: result.expiresAt, profiles };
+}

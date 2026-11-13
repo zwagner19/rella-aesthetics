@@ -22,3 +22,9 @@ describe('dashboard response boundary',()=>{
  it('rejects missing collections and expired responses',()=>{expect(()=>parseDashboard({dashboard:{},expiresAt:Date.now()+60000})).toThrow();expect(()=>parseDashboard({dashboard:EMPTY_DASHBOARD,expiresAt:1})).toThrow();});
  it('rejects malformed dates and unexpected clinic names',()=>{const d={...EMPTY_DASHBOARD,appointments:{status:'ready',items:[{key:'a',service:'Example',provider:'Example',startsAt:'bad',clinic:'Napa',status:'upcoming'}]}};expect(()=>parseDashboard({dashboard:d,expiresAt:Date.now()+60000})).toThrow();});
 });
+
+describe('profile selection bridge',()=>{
+ it('forwards only an opaque profile choice',async()=>{setup();const fetcher=vi.fn(async()=>Response.json({state:'authenticated'}));const result=await bridgePatient(request('select',{profileKey:'p'.repeat(43)}),'select',fetcher);expect(result.status).toBe(200);expect((fetcher.mock.calls[0] as unknown as [string,RequestInit])[1].body).toBe(JSON.stringify({profileKey:'p'.repeat(43)}));});
+ it('rejects a client ID mixed into a profile choice',async()=>{setup();const fetcher=vi.fn();expect((await bridgePatient(request('select',{profileKey:'p'.repeat(43),clientId:'other'}),'select',fetcher)).status).toBe(400);expect(fetcher).not.toHaveBeenCalled();});
+ it('allows a private session-state read without sending another code',async()=>{setup();const fetcher=vi.fn(async()=>Response.json({state:'code_required'}));const r=new Request(`${origin}/api/patient/session`,{headers:{'x-vercel-forwarded-for':'192.0.2.1'}});expect((await bridgePatient(r,'session',fetcher)).status).toBe(200);expect((fetcher.mock.calls[0] as unknown as [string,RequestInit])[0]).toBe('https://rella-booking-example.vercel.app/api/patient/session');});
+});
