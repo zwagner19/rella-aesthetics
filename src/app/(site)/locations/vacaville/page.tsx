@@ -16,8 +16,10 @@ const defaultMetadata: Metadata = {
 const loc = locations.vacaville;
 
 const categories = [
-  { label: "Injectables", href: "/vacaville/botox", ariaLabel: "Injectables: Botox and Dysport in Vacaville" },
-  { label: "Skin", href: "/vacaville/facials", ariaLabel: "Skin: Facials in Vacaville" },
+  { label: "Botox & Dysport", href: "/vacaville/botox", ariaLabel: "Botox and Dysport in Vacaville" },
+  { label: "Lip & Dermal Filler", href: "/vacaville/filler", ariaLabel: "Lip and dermal filler in Vacaville" },
+  { label: "Facials", href: "/vacaville/facials", ariaLabel: "Facials in Vacaville" },
+  { label: "Chemical Peels", href: "/vacaville/chemical-peels", ariaLabel: "Chemical peels in Vacaville" },
   { label: "Lasers", href: "/vacaville/laser", ariaLabel: "Lasers: Laser treatments in Vacaville" },
   { label: "Wellness" },
   { label: "Weight" },
@@ -108,7 +110,7 @@ export default function VacavillePage() {
             Rella Aesthetics
           </p>
           <h1 className="max-w-[14ch] text-[clamp(2.4rem,6.5vw,4.75rem)] font-medium leading-[1.05] tracking-[-0.03em] text-white">
-            Welcome to Rella Vacaville
+            Medical Spa in Vacaville, CA
           </h1>
           <p className="mt-6 max-w-[26rem] text-base font-light leading-relaxed text-white/85 md:text-lg">
             Personalized aesthetic and wellness care, thoughtfully designed around you — right in

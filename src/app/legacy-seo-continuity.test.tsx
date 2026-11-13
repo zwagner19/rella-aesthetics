@@ -158,8 +158,8 @@ describe("internal SEO navigation", () => {
   it("links Vacaville care categories to the approved local treatment pages", () => {
     const html = renderToStaticMarkup(<VacavilleLocationPage />);
 
-    expect(html).toContain("Injectables");
-    expect(html).toContain("Skin");
+    expect(html).toContain("Botox &amp; Dysport");
+    expect(html).toContain("Facials");
     expect(html).toContain("Lasers");
     expect(html).toContain("Wellness");
     expect(html).toContain(">Weight<");
@@ -167,12 +167,10 @@ describe("internal SEO navigation", () => {
     expect(html).toContain("https://maps.google.com/?q=542+Main+St+Vacaville+CA+95688");
     expect(html).toContain("Book Vacaville");
 
-    for (const slug of ["botox", "facials", "laser"]) {
+    for (const slug of ["botox", "filler", "facials", "chemical-peels", "laser"]) {
       expect(html).toContain(`href="/vacaville/${slug}"`);
     }
     for (const slug of [
-      "chemical-peels",
-      "filler",
       "hydrafacial",
       "microneedling",
     ]) {
