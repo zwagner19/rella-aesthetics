@@ -15,7 +15,7 @@ export const PUBLIC_ANALYTICS_PAGE_GROUPS = [
 ] as const;
 export const PUBLIC_ANALYTICS_SOURCES = [
   "direct_or_unknown", "google", "google_business_profile", "bing", "yahoo",
-  "duckduckgo", "facebook", "instagram", "tiktok", "youtube", "linkedin",
+  "duckduckgo", "facebook", "instagram", "tiktok", "youtube", "linkedin", "yelp",
   "email", "newsletter", "sms", "partner", "referral", "other",
 ] as const;
 export const PUBLIC_ANALYTICS_MEDIA = [
