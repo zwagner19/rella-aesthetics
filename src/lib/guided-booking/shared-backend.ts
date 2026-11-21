@@ -27,6 +27,7 @@ export function createSharedBookingBackend(): GuidedBookingBackend {
   let expiresAt: string | undefined;
   let paymentAttached = false;
   let recordedConsent: string | undefined;
+  let recoveryPhone: string | undefined;
   let uncertain = false;
   let uncertaintyMessage: string | undefined;
   let completion: Completion | undefined;
@@ -54,6 +55,7 @@ export function createSharedBookingBackend(): GuidedBookingBackend {
     expiresAt = undefined;
     paymentAttached = false;
     recordedConsent = undefined;
+    recoveryPhone = undefined;
     sessionOwnedPackageContext = false;
     uncertain = false;
     uncertaintyMessage = undefined;
@@ -99,6 +101,31 @@ export function createSharedBookingBackend(): GuidedBookingBackend {
       throw new BookingRequestError(typeof data.reason === "string" ? data.reason : "unverified_response", message, definitive);
     }
     return data;
+  }
+
+  /**
+   * Abandoned-booking early phone capture. Runs only after this cart's consent
+   * receipt is verified with marketing=true, once per mobile number per cart.
+   * Fire-and-forget: never awaited, never surfaces errors, never blocks booking.
+   * Goes through the same-origin bridge as consent so the HttpOnly cart cookie
+   * (and the cart id it carries) applies.
+   */
+  function captureRecoveryContact(client: { phone: string; marketingConsent: boolean }) {
+    if (client.marketingConsent !== true || sessionOwnedPackageContext || !recordedConsent) return;
+    const digits = String(client.phone ?? "").replace(/\D/g, "");
+    const national = digits.length === 11 && digits.startsWith("1") ? digits.slice(1) : digits;
+    if (national.length !== 10 || recoveryPhone === national) return;
+    recoveryPhone = national;
+    try {
+      void fetch("/api/booking-v2/bridge/recovery-contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ phoneNumber: client.phone.trim() }),
+        credentials: "same-origin",
+        cache: "no-store",
+        keepalive: true,
+      }).catch(() => undefined);
+    } catch { /* never affects booking */ }
   }
 
   async function startSession(loc: BookingLocation) {
@@ -306,11 +333,16 @@ export function createSharedBookingBackend(): GuidedBookingBackend {
         requireVerifiedSession();
         if (!reservedSlot || !selection) throw new Error("Choose and reserve a time first.");
         const payload = consentPayload(client);
-        if (recordedConsent === JSON.stringify(payload)) return;
+        if (recordedConsent === JSON.stringify(payload)) {
+          // Same verified receipt; the mobile number may still have changed.
+          captureRecoveryContact(client);
+          return;
+        }
         // A changed receipt may have been stored even if its response is lost.
         recordedConsent = undefined;
         const data = await call("consent", payload);
         recordedConsent = verifyConsentReceipt(data.consent, client);
+        captureRecoveryContact(client);
       });
     },
     attachPayment(token) {

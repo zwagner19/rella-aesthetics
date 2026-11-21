@@ -8,7 +8,7 @@ describe("contact form intent", () => {
   it("shows both approved consent sentences with unchecked native controls and preserves email-only inquiries", () => {
     const html = renderToStaticMarkup(<ContactForm />);
     expect(html).toContain(ASSESSMENT_CONTACT_CONSENT);
-    expect(html).toContain(MARKETING_CONSENT);
+    expect(html).toContain(MARKETING_CONSENT.replaceAll("&", "&amp;"));
     const checks = html.match(/<input[^>]*type="checkbox"[^>]*>/g)!;
     expect(checks).toHaveLength(2);
     expect(checks[0]).toContain('name="operationalConsent"');

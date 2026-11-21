@@ -56,7 +56,7 @@ describe("multi-treatment presentation", () => {
     const complete = renderToStaticMarkup(<CompleteStep state={state} mode="live" onChange={() => {}} submitting={false} onLiveComplete={async () => {}} />);
     expect(complete).toContain("Total booking deposit: $73.50");
     expect(complete).toContain(ASSESSMENT_CONTACT_CONSENT);
-    expect(complete).toContain(MARKETING_CONSENT);
+    expect(complete).toContain(MARKETING_CONSENT.replaceAll("&", "&amp;"));
     expect(complete).toContain("Complete your contact details to continue.");
     expect(complete).not.toContain("Confirm booking");
     const consented = renderToStaticMarkup(<CompleteStep state={{ ...state, client: {

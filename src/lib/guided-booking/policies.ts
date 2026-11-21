@@ -16,16 +16,25 @@ export const GUIDED_DEPOSIT_SUMMARY =
 export const ASSESSMENT_CONTACT_CONSENT =
   "I ask Rella Aesthetics to contact me by phone, email, or text about my inquiry, booking, or requested services. Messages may be sent using automated technology. Message and data rates may apply. Reply STOP to stop texts or HELP for help. This consent applies only to contact about my inquiry, booking, or requested services.";
 
+/**
+ * Optional marketing box. It explicitly covers texts about unfinished bookings
+ * (abandoned-booking recovery). Changing it requires a new policy version here
+ * AND in rella-booking's operational-consent registry.
+ */
 export const MARKETING_CONSENT =
-  "Send me occasional deals and promotions. (Optional)";
+  "Text me occasional deals, promotions and reminders about unfinished bookings from Rella Aesthetics. Msg & data rates may apply. Msg frequency varies. Reply STOP to opt out. Consent is not required to book. (Optional)";
 
-export const CONTACT_CONSENT_POLICY_VERSION = "rella-booking-consent-2026-10-19-v2";
+export const CONTACT_CONSENT_POLICY_VERSION = "rella-booking-consent-2026-11-21-v3";
 
 /** Preserve exact receipt text for forms already open during the copy rollout. */
 export const CONTACT_CONSENT_POLICIES = {
   "rella-booking-consent-2026-10-19-v1": {
     operational: ASSESSMENT_CONTACT_CONSENT,
     marketing: "Optional: I agree to receive recurring promotional calls and text messages, including through automated technology, from Rella Aesthetics at the number provided. Consent is not a condition of purchase. Message frequency varies. Message and data rates may apply. Reply STOP to opt out or HELP for help.",
+  },
+  "rella-booking-consent-2026-10-19-v2": {
+    operational: ASSESSMENT_CONTACT_CONSENT,
+    marketing: "Send me occasional deals and promotions. (Optional)",
   },
   [CONTACT_CONSENT_POLICY_VERSION]: { operational: ASSESSMENT_CONTACT_CONSENT, marketing: MARKETING_CONSENT },
 } as const;

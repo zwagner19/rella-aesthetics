@@ -86,3 +86,21 @@ it("preserves the anonymous visitor bucket cookie through the marketing bridge",
   expect(response.headers.get("set-cookie")).toContain("Secure");
   expect(response.headers.get("set-cookie")).not.toContain("Domain=");
 });
+it("proxies early recovery capture like consent: same-origin only, cookie-bound cart, phone-only body", async () => {
+  const token = Buffer.from(JSON.stringify({ c: "urn:blvd:Cart:recovery" })).toString("base64url") + ".signature";
+  const cookie = `rella_cart_auth=${token}; patient-name=private`;
+  const network = vi.spyOn(globalThis, "fetch").mockResolvedValue(Response.json({ ok: true, captured: false }));
+  const response = await bookingBridge(request("recovery-contact", { phoneNumber: "707-555-0142" }, undefined, cookie), "recovery-contact");
+  expect(await response.json()).toEqual({ ok: true, captured: false });
+  expect(String(network.mock.calls[0][0])).toBe("https://book.experiencerella.com/api/booking-v2/recovery-contact");
+  const init = network.mock.calls[0][1]!;
+  expect(JSON.parse(String(init.body))).toEqual({ phoneNumber: "707-555-0142", cartId: "urn:blvd:Cart:recovery" });
+  expect(init.headers).toMatchObject({ Origin: "https://book.experiencerella.com", Cookie: `rella_cart_auth=${token}` });
+  for (const body of [{ phoneNumber: "707-555-0142", cartId: "urn:blvd:Cart:other" }, { phoneNumber: 7075550142 }, {}, { phoneNumber: "7".repeat(33) }, { phoneNumber: "707-555-0142", name: "Private" }]) {
+    expect((await bookingBridge(request("recovery-contact", body, undefined, cookie), "recovery-contact")).status).toBe(400);
+  }
+  expect((await bookingBridge(request("recovery-contact", { phoneNumber: "707-555-0142" }, "https://evil.test", cookie), "recovery-contact")).status).toBe(403);
+  expect((await bookingBridge(request("recovery-contact", { phoneNumber: "707-555-0142" }), "recovery-contact")).status).toBe(409);
+  expect((await bookingBridge(new NextRequest("https://experiencerella.com/api/booking-v2/bridge/recovery-contact"), "recovery-contact")).status).toBe(405);
+  expect(network).toHaveBeenCalledTimes(1);
+});

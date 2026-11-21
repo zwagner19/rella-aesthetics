@@ -6,6 +6,7 @@ import {
   ASSESSMENT_CONTACT_CONSENT, MARKETING_CONSENT,
 } from "./index";
 import type { GuidedBookingState } from "./types";
+import { CONTACT_CONSENT_POLICIES, CONTACT_CONSENT_POLICY_VERSION } from "./policies";
 import { createPackageIdentityClient } from "./package-client";
 
 const services = [
@@ -94,7 +95,11 @@ describe("shared booking menu and state", () => {
     expect(clientLooksComplete({ ...client, assessmentContactConsent: false })).toBe(false);
     expect(clientLooksComplete({ ...client, marketingConsent: false })).toBe(true);
     expect(ASSESSMENT_CONTACT_CONSENT).toBe("I ask Rella Aesthetics to contact me by phone, email, or text about my inquiry, booking, or requested services. Messages may be sent using automated technology. Message and data rates may apply. Reply STOP to stop texts or HELP for help. This consent applies only to contact about my inquiry, booking, or requested services.");
-    expect(MARKETING_CONSENT).toBe("Send me occasional deals and promotions. (Optional)");
+    expect(MARKETING_CONSENT).toBe("Text me occasional deals, promotions and reminders about unfinished bookings from Rella Aesthetics. Msg & data rates may apply. Msg frequency varies. Reply STOP to opt out. Consent is not required to book. (Optional)");
+    expect(CONTACT_CONSENT_POLICY_VERSION).toBe("rella-booking-consent-2026-11-21-v3");
+    // Prior wording stays registered verbatim so already-open forms still validate.
+    expect(CONTACT_CONSENT_POLICIES["rella-booking-consent-2026-10-19-v2"].marketing).toBe("Send me occasional deals and promotions. (Optional)");
+    expect(CONTACT_CONSENT_POLICIES[CONTACT_CONSENT_POLICY_VERSION]).toEqual({ operational: ASSESSMENT_CONTACT_CONSENT, marketing: MARKETING_CONSENT });
   });
   it("keeps owned context for one verified service and clears it for uncovered or location changes", () => {
     const owned: GuidedBookingState = { ...bootstrapFromIntent({ location: "napa" }), treatments: catalog,
@@ -179,10 +184,87 @@ describe("complete shared multi-treatment backend contract", () => {
     await backend.attachPayment!("opaque-token");
     expect(await backend.complete!({ ...choices, slot, client: noMarketing })).toMatchObject({ ok: true });
     expect(calls.filter(call => call.operation === "consent").map(call => call.body)).toEqual([
-      { policyVersion: "rella-booking-consent-2026-10-19-v2", operational: true, marketing: false },
+      { policyVersion: "rella-booking-consent-2026-11-21-v3", operational: true, marketing: false },
     ]);
     expect(calls.slice(-3).map(call => call.operation)).toEqual(["consent", "payment", "checkout"]);
     expect(Object.keys((calls.at(-1)!.body!.info as object))).toEqual(["firstName", "lastName", "email", "phoneNumber"]);
+  });
+  describe("abandoned-booking early phone capture", () => {
+    const recovery = (calls: Request[]) => calls.filter(call => call.operation === "recovery-contact");
+    it("sends the mobile number once, through the same-origin bridge, only after a verified marketing=true receipt", async () => {
+      const calls = backendResponses(); const backend = createDefaultBackend();
+      await backend.loadAvailability(input); await backend.reserve!(slot);
+      await backend.recordConsent!(client);
+      const ops = calls.map(call => call.operation);
+      expect(ops.indexOf("recovery-contact")).toBe(ops.indexOf("consent") + 1);
+      expect(recovery(calls)).toEqual([expect.objectContaining({ method: "POST", body: { phoneNumber: "7073582928" } })]);
+      const init = vi.mocked(fetch).mock.calls.find(([url]) => String(url) === "/api/booking-v2/bridge/recovery-contact")![1]!;
+      expect(init).toMatchObject({ credentials: "same-origin", keepalive: true });
+      // Same number (any formatting) never resends; a changed number sends once more.
+      await backend.recordConsent!({ ...client, phone: "(707) 358-2928" });
+      await backend.recordConsent!(client);
+      expect(recovery(calls)).toHaveLength(1);
+      await backend.recordConsent!({ ...client, phone: "707-555-0142" });
+      expect(recovery(calls).map(call => call.body)).toEqual([{ phoneNumber: "7073582928" }, { phoneNumber: "707-555-0142" }]);
+      expect(calls.filter(call => call.operation === "consent")).toHaveLength(1);
+      await backend.attachPayment!("token");
+      expect(await backend.complete!({ ...input, slot, client: { ...client, phone: "707-555-0142" } })).toMatchObject({ ok: true });
+    });
+    it("is never awaited and its failures never reach the booking path", async () => {
+      const calls = backendResponses();
+      const base = vi.mocked(fetch).getMockImplementation()!;
+      for (const failure of ["hang", "reject", "503", "404"] as const) {
+        vi.mocked(fetch).mockImplementation(async (url, init) => {
+          if (String(url).endsWith("/recovery-contact")) {
+            calls.push({ operation: "recovery-contact", method: "POST", query: new URLSearchParams() });
+            if (failure === "hang") return new Promise<Response>(() => undefined);
+            if (failure === "reject") throw new Error("offline");
+            if (failure === "404") return Response.json({ ok: false, reason: "not_enabled" }, { status: 404 });
+            return Response.json({ ok: false }, { status: 503 });
+          }
+          return base(url, init);
+        });
+        const fresh = createDefaultBackend();
+        await fresh.loadAvailability(input); await fresh.reserve!(slot);
+        await expect(fresh.recordConsent!(client)).resolves.toBeUndefined();
+        await fresh.attachPayment!("token");
+        expect(await fresh.complete!({ ...input, slot, client })).toEqual({ ok: true, confirmationId: "confirmed" });
+      }
+      expect(recovery(calls)).toHaveLength(4);
+    });
+    it("does not call when marketing is false, consent is unverified, the phone is not a full number, or the visit is an owned package", async () => {
+      const calls = backendResponses(); const backend = createDefaultBackend();
+      await backend.loadAvailability(input); await backend.reserve!(slot);
+      await backend.recordConsent!({ ...client, marketingConsent: false });
+      await backend.recordConsent!({ ...client, marketingConsent: false, phone: "707-555-0142" });
+      expect(recovery(calls)).toHaveLength(0);
+
+      const failed = backendResponses({ failConsent: true }); const unverified = createDefaultBackend();
+      await unverified.loadAvailability(input); await unverified.reserve!(slot);
+      await expect(unverified.recordConsent!(client)).rejects.toThrow();
+      expect(recovery(failed)).toHaveLength(0);
+
+      const invalid = backendResponses({ invalidConsent: true }); const mismatched = createDefaultBackend();
+      await mismatched.loadAvailability(input); await mismatched.reserve!(slot);
+      await expect(mismatched.recordConsent!(client)).rejects.toThrow();
+      expect(recovery(invalid)).toHaveLength(0);
+
+      const short = backendResponses(); const partial = createDefaultBackend();
+      await partial.loadAvailability(input); await partial.reserve!(slot);
+      await partial.recordConsent!({ ...client, phone: "555-0142" });
+      expect(recovery(short)).toHaveLength(0);
+
+      const ownedCalls = backendResponses(); const owned = createDefaultBackend();
+      await owned.listTreatments!("napa"); owned.setOwnedPackageContext!(true);
+      await owned.loadAvailability(input); await owned.reserve!(slot); await owned.recordConsent!(client);
+      expect(recovery(ownedCalls)).toHaveLength(0);
+    });
+    it("captures again for a new cart after a fresh session starts", async () => {
+      const calls = backendResponses(); const backend = createDefaultBackend();
+      await backend.loadAvailability(input); await backend.reserve!(slot); await backend.recordConsent!(client);
+      await backend.loadAvailability(input); await backend.reserve!({ ...slot, id: "different-time" }); await backend.recordConsent!(client);
+      expect(recovery(calls)).toHaveLength(2);
+    });
   });
   it.each(["invalidConsent", "failConsent"] as const)("stops before payment when consent persistence is unverified: %s", async failure => {
     const calls = backendResponses({ [failure]: true }); const backend = createDefaultBackend();
@@ -355,7 +437,7 @@ describe("complete shared multi-treatment backend contract", () => {
     await backend.recordConsent!(client); await backend.attachPayment!("opaque-vault-token");
     const result = await backend.complete!({ ...multi, slot, client });
     expect(result).toEqual({ ok: true, confirmationId: "confirmed" });
-    expect(calls.map(call => call.operation)).toEqual(["menu", "menu", "selection", "selection", "times", "reserve", "consent", "payment", "checkout"]);
+    expect(calls.map(call => call.operation)).toEqual(["menu", "menu", "selection", "selection", "times", "reserve", "consent", "recovery-contact", "payment", "checkout"]);
     expect(calls.find(call => call.operation === "checkout")?.body).toEqual({
       info: { firstName: "Fixture", lastName: "User", email: "fixture@example.test", phoneNumber: "7073582928" },
     });
@@ -420,7 +502,7 @@ describe("complete shared multi-treatment backend contract", () => {
     expect(results[0]).toEqual(results[1]);
     await backend.recordConsent!(client);
     await Promise.all([backend.attachPayment!("token"), backend.attachPayment!("token")]);
-    expect(calls.map(call => call.operation)).toEqual(["menu", "menu", "selection", "reserve", "consent", "payment"]);
+    expect(calls.map(call => call.operation)).toEqual(["menu", "menu", "selection", "reserve", "consent", "recovery-contact", "payment"]);
   });
   it("starts a fresh cart when returning from a successful reservation to choose another time", async () => {
     const calls = backendResponses(); const backend = createDefaultBackend();
