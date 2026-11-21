@@ -16,7 +16,9 @@ import {
   AESTHETICS_ANALYTICS_CONSENT_COOKIE,
   hasAestheticsAnalyticsConsent,
   AestheticsAttributionController,
+  aestheticsCampaignLabels,
   aestheticsSourceEvidence,
+  boundedCampaignLabel,
   cleanAestheticsBookingHref,
   hasEligibleAestheticsPaidClick,
   isApprovedAestheticsPage,
@@ -861,6 +863,14 @@ describe("bounded all-channel source evidence", () => {
     ["?utm_source=arbitrary-brand&utm_medium=cpc", "https://www.google.com/search", "utm", "other", "unknown"],
     ["", "https://www.google.com.evil.test/search", "referrer", "other", "referral"],
     ["", "https://person:secret@google.com/search", "direct_or_unknown", "direct_or_unknown", "none"],
+    ["?utm_source=yelp&utm_medium=organic&utm_campaign=yelp_napa", "", "utm", "yelp", "organic"],
+    ["?utm_source=Yelp&utm_medium=referral", "", "utm", "yelp", "referral"],
+    ["", "https://www.yelp.com/biz/rella-aesthetics-napa", "referrer", "yelp", "referral"],
+    ["", "https://m.yelp.com/biz/rella", "referrer", "yelp", "referral"],
+    ["", "https://yelp.com.evil.test/biz", "referrer", "other", "referral"],
+    ["?utm_source=google&utm_medium=organic&utm_campaign=gbp_post_napa_botox_nov", "", "utm", "google_business_profile", "organic"],
+    ["?utm_source=google&utm_medium=organic&utm_campaign=gmb-offer", "", "utm", "google_business_profile", "organic"],
+    ["?utm_source=google&utm_medium=organic&utm_campaign=gbpx", "", "utm", "google", "organic"],
   ])("classifies only finite evidence from %s and %s", (search, referrer, evidence, source, medium) => {
     expect(aestheticsSourceEvidence(search, referrer)).toEqual({
       sourceEvidence: evidence, utm_source: source, utm_medium: medium,
@@ -1241,5 +1251,98 @@ describe("first-party UX purpose consent", () => {
     const runtime = new FakeRuntime(); runtime.setChoice("granted"); runtime.responses.push(DENY_RESPONSE);
     const controller = new AestheticsAttributionController(runtime); controller.start(); await controller.deny();
     expect(runtime.cookies.has(INSIGHTS_COOKIE)).toBe(false); controller.destroy();
+  });
+});
+
+describe("bounded campaign labels", () => {
+  it.each([
+    ["gbp_post_napa_botox_nov", "gbp_post_napa_botox_nov"],
+    ["  Yelp_Napa ", "yelp_napa"],
+    ["Holiday Promo+2026", "holiday_promo_2026"],
+    ["spring.v2-a", "spring.v2-a"],
+    ["person@example.com", null],
+    ["https://example.com/x", null],
+    ["call-7075550100", null],
+    ["-leading-dash", null],
+    ["a".repeat(101), null],
+    ["", null],
+  ])("normalizes %j to %j", (raw, expected) => {
+    expect(boundedCampaignLabel(raw)).toBe(expected);
+  });
+
+  it("never reads utm_term and drops duplicated labels", () => {
+    expect(aestheticsCampaignLabels("?utm_campaign=a&utm_campaign=b&utm_content=hero&utm_term=private-condition"))
+      .toEqual({ utm_content: "hero" });
+  });
+
+  it.each([
+    [
+      "/?utm_source=google&utm_medium=organic&utm_campaign=gbp_post_napa_botox_nov",
+      "unknown",
+      { sourceEvidence: "utm", utm_source: "google_business_profile", utm_medium: "organic", utm_campaign: "gbp_post_napa_botox_nov" },
+    ],
+    [
+      "/locations/napa?utm_source=yelp&utm_medium=organic&utm_campaign=yelp_napa",
+      "napa",
+      { sourceEvidence: "utm", utm_source: "yelp", utm_medium: "organic", utm_campaign: "yelp_napa" },
+    ],
+    [
+      "/?gclid=bounded-click&utm_source=google&utm_medium=cpc&utm_campaign=napa_tox_search&utm_content=ad_a&utm_term=private-condition",
+      "unknown",
+      { sourceEvidence: "google_click", utm_source: "google", utm_medium: "cpc", gclid: "bounded-click", utm_campaign: "napa_tox_search", utm_content: "ad_a" },
+    ],
+  ])("sends bounded campaign labels for %s only after consent", async (path, location, expected) => {
+    const runtime = new FakeRuntime();
+    runtime.href = `https://experiencerella.com${path}`;
+    runtime.responses.push(expected.sourceEvidence === "google_click" ? GRANT_RESPONSE : SOURCE_RESPONSE);
+    const controller = new AestheticsAttributionController(runtime);
+    controller.start();
+    expect(runtime.requests).toHaveLength(0);
+    expect(runtime.cookieWrites).toHaveLength(0);
+    await controller.accept();
+    expect(runtime.requests).toHaveLength(1);
+    expect(runtime.requests[0].body).toEqual({
+      location, consentAdUserData: "granted",
+      revocationHandle: expect.stringMatching(/^rvh_[A-Za-z0-9_-]{43}$/),
+      ...expected,
+    });
+    expect(JSON.stringify([runtime.requests[0].body, runtime.cookieWrites])).not.toMatch(/private-condition|utm_term/);
+  });
+
+  it("keeps the first-touch labels across soft navigation before consent", async () => {
+    const runtime = new FakeRuntime();
+    runtime.href = "https://experiencerella.com/locations/napa?utm_source=yelp&utm_medium=organic&utm_campaign=yelp_napa";
+    runtime.responses.push(SOURCE_RESPONSE);
+    const controller = new AestheticsAttributionController(runtime);
+    controller.start();
+    runtime.href = "https://experiencerella.com/services/botox";
+    controller.reconcileNavigation();
+    runtime.href = "https://experiencerella.com/napa/botox";
+    controller.reconcileNavigation();
+    await controller.accept();
+    expect(runtime.requests[0].body).toMatchObject({
+      location: "napa", utm_source: "yelp", utm_medium: "organic", utm_campaign: "yelp_napa",
+    });
+  });
+
+  it("does not attach labels to an unrecognized or campaign-only link", async () => {
+    const runtime = new FakeRuntime();
+    runtime.href = "https://experiencerella.com/?utm_campaign=private-condition";
+    runtime.responses.push(SOURCE_RESPONSE);
+    const controller = new AestheticsAttributionController(runtime);
+    controller.start();
+    await controller.accept();
+    expect(runtime.requests[0].body).not.toHaveProperty("utm_campaign");
+    expect(runtime.requests[0].body).toMatchObject({ utm_source: "other", utm_medium: "unknown" });
+  });
+
+  it("sends no labels when the visitor declines", async () => {
+    const runtime = new FakeRuntime();
+    runtime.href = "https://experiencerella.com/?utm_source=yelp&utm_medium=organic&utm_campaign=yelp_napa";
+    runtime.responses.push(DENY_RESPONSE);
+    const controller = new AestheticsAttributionController(runtime);
+    controller.start();
+    await controller.deny();
+    expect(JSON.stringify(runtime.requests.map(request => request.body))).not.toMatch(/yelp|utm_/);
   });
 });

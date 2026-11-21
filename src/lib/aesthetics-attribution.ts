@@ -84,7 +84,7 @@ type ClickField = (typeof CLICK_FIELDS)[number];
 type GoogleIdField = (typeof GOOGLE_ID_FIELDS)[number];
 const SOURCE_VALUES = [
   "google", "google_business_profile", "bing", "yahoo", "duckduckgo", "facebook", "instagram",
-  "tiktok", "youtube", "linkedin", "email", "newsletter", "sms", "partner", "referral",
+  "tiktok", "youtube", "linkedin", "yelp", "email", "newsletter", "sms", "partner", "referral",
   "other", "direct_or_unknown",
 ] as const;
 const MEDIUM_VALUES = [
@@ -97,6 +97,39 @@ export interface AestheticsSourceEvidence {
   sourceEvidence: "google_click" | "utm" | "referrer" | "direct_or_unknown";
   utm_source: Source;
   utm_medium: Medium;
+}
+// Rella-authored link labels only. utm_term stays local: it usually carries a
+// search keyword, which can describe a patient's condition or treatment.
+type CampaignLabelField = "utm_campaign" | "utm_content";
+export type AestheticsCampaignLabels = Partial<Record<CampaignLabelField, string>>;
+const CAMPAIGN_LABEL_FIELDS: readonly CampaignLabelField[] = ["utm_campaign", "utm_content"];
+const CAMPAIGN_LABEL_RE = /^[a-z0-9][a-z0-9._-]{0,99}$/;
+
+/**
+ * Normalize one Rella-authored campaign label (utm_campaign/utm_content) to a
+ * bounded slug: lowercase, spaces/plus to underscores, [a-z0-9._-] only, at
+ * most 100 characters. Anything else (emails, URLs, free text, long digit runs
+ * that could be a phone number) is dropped rather than guessed. The booking
+ * server re-validates with the same rule; labels are sent only after consent.
+ */
+export function boundedCampaignLabel(raw: string | null | undefined): string | null {
+  if (typeof raw !== "string") return null;
+  const value = raw.trim().toLowerCase().replace(/[\s+]+/g, "_");
+  if (!CAMPAIGN_LABEL_RE.test(value) || /\d{7,}/.test(value)) return null;
+  return value;
+}
+
+/** Bounded campaign labels from a landing query string; duplicates are dropped. */
+export function aestheticsCampaignLabels(search: string): AestheticsCampaignLabels {
+  const params = new URLSearchParams(search);
+  const labels: AestheticsCampaignLabels = {};
+  for (const field of CAMPAIGN_LABEL_FIELDS) {
+    const values = params.getAll(field);
+    if (values.length !== 1) continue;
+    const label = boundedCampaignLabel(values[0]);
+    if (label) labels[field] = label;
+  }
+  return labels;
 }
 export type AestheticsConsentChoice = "unknown" | "granted" | "denied";
 export type AestheticsConsentPhase =
@@ -153,7 +186,7 @@ interface DenialRetrySnapshot {
 }
 
 type ApprovedPaidClick = Partial<Record<ClickField | GoogleIdField, string>>;
-type ApprovedEntry = ApprovedPaidClick & AestheticsSourceEvidence;
+type ApprovedEntry = ApprovedPaidClick & AestheticsSourceEvidence & AestheticsCampaignLabels;
 
 interface GrantedPayload extends ApprovedEntry {
   location: string;
@@ -264,9 +297,11 @@ function approvedUtmSource(search: string): AestheticsSourceEvidence | null {
   if (!(SOURCE_VALUES as readonly string[]).includes(source)
     || !(MEDIUM_VALUES as readonly string[]).includes(medium)
     || source === "direct_or_unknown") return unknown;
-  // Only these finite campaign aliases are interpreted, never stored. Other
-  // campaign/content/term values cannot become patient or treatment telemetry.
-  if (source === "google" && ["gbp", "gmb", "google_business_profile"].includes(params.get("utm_campaign")?.trim().toLowerCase() ?? "")) {
+  // Google Business Profile links are tagged utm_source=google with a gbp/gmb
+  // campaign, either exactly or as a prefix such as "gbp_post_napa_botox_nov".
+  const campaign = params.get("utm_campaign")?.trim().toLowerCase() ?? "";
+  if (source === "google" && (["gbp", "gmb", "google_business_profile"].includes(campaign)
+    || /^(gbp|gmb)[_-]/.test(campaign))) {
     source = "google_business_profile";
   }
   return { sourceEvidence: "utm", utm_source: source as Source, utm_medium: medium as Medium };
@@ -291,6 +326,9 @@ function sourceFromReferrer(referrer: string): AestheticsSourceEvidence {
       return { sourceEvidence: "referrer", utm_source: source, utm_medium: "organic" };
     }
   }
+  if (host === "yelp.com" || host.endsWith(".yelp.com")) {
+    return { sourceEvidence: "referrer", utm_source: "yelp", utm_medium: "referral" };
+  }
   for (const source of ["facebook", "instagram", "tiktok", "youtube", "linkedin"] as const) {
     const domain = `${source}.com`;
     if (host === domain || host.endsWith(`.${domain}`)) {
@@ -300,7 +338,11 @@ function sourceFromReferrer(referrer: string): AestheticsSourceEvidence {
   return { sourceEvidence: "referrer", utm_source: "other", utm_medium: "referral" };
 }
 
-/** Classify locally; raw referrers, paths and freeform UTM values never leave this function. */
+/**
+ * Classify locally; raw referrers, paths, utm_term and unbounded UTM values
+ * never leave this function. Bounded campaign/content labels are attached only
+ * to explicit UTM or Google-click entries (see aestheticsCampaignLabels).
+ */
 export function aestheticsSourceEvidence(search: string, referrer = ""): AestheticsSourceEvidence {
   if (approvedPaidClick(search)) return { sourceEvidence: "google_click", utm_source: "google", utm_medium: "cpc" };
   return approvedUtmSource(search) ?? rejectedClickSource(search) ?? sourceFromReferrer(referrer);
@@ -317,8 +359,21 @@ function rejectedClickSource(search: string): AestheticsSourceEvidence | null {
 
 function approvedExplicitEntry(search: string): ApprovedEntry | null {
   const click = approvedPaidClick(search);
-  if (click) return { ...click, sourceEvidence: "google_click", utm_source: "google", utm_medium: "cpc" };
-  return approvedUtmSource(search) ?? rejectedClickSource(search);
+  if (click) {
+    return {
+      ...click, sourceEvidence: "google_click", utm_source: "google", utm_medium: "cpc",
+      ...aestheticsCampaignLabels(search),
+    };
+  }
+  const utm = approvedUtmSource(search);
+  // Labels ride only with a recognized source/medium pair. An unrecognized,
+  // duplicated or campaign-only link is not treated as a Rella-authored label.
+  if (utm) {
+    return utm.utm_source === "other" && utm.utm_medium === "unknown"
+      ? utm
+      : { ...utm, ...aestheticsCampaignLabels(search) };
+  }
+  return rejectedClickSource(search);
 }
 
 export function hasEligibleAestheticsPaidClick(search: string): boolean {
