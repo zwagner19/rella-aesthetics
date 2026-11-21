@@ -19,7 +19,7 @@ function cartId(cookie: string): string | null {
     return typeof value.c === "string" && /^urn:blvd:Cart:[A-Za-z0-9_-]{1,64}$/.test(value.c) ? value.c : null;
   } catch { return null; }
 }
-const OPERATIONS: Record<string, string> = { menu: "cart", selection: "selection", times: "cart", reserve: "reserve", release: "release", payment: "payment", consent: "consent", checkout: "checkout", complete: "complete" };
+const OPERATIONS: Record<string, string> = { menu: "cart", selection: "selection", times: "cart", reserve: "reserve", release: "release", payment: "payment", consent: "consent", checkout: "checkout", complete: "complete", "recovery-contact": "recovery-contact" };
 export async function bookingBridge(req: NextRequest, operation: string): Promise<Response> {
   const catalogRead = operation === "menu" && req.method === "GET";
   const path = catalogRead ? "menu" : OPERATIONS[operation];
@@ -48,6 +48,8 @@ export async function bookingBridge(req: NextRequest, operation: string): Promis
       if (Object.keys(payload).some(k => !["location", "consentAdUserData", "packageOwned"].includes(k))) return Response.json({ ok: false }, { status: 400 });
       payload.menu = true;
     } else {
+      if (operation === "recovery-contact" && (Object.keys(payload).some(k => k !== "phoneNumber")
+        || typeof payload.phoneNumber !== "string" || payload.phoneNumber.length > 32)) return Response.json({ ok: false }, { status: 400 });
       const id = cartId(cookie);
       if (!id) return Response.json({ ok: false, reason: "session_expired" }, { status: 409 });
       if (req.method === "GET") {

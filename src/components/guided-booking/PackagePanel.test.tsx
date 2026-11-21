@@ -71,7 +71,7 @@ describe("package presentation", () => {
       firstName: "Test", lastName: "Client", email: "test@example.test", phone: "7075550100", assessmentContactConsent: false, marketingConsent: false,
     } }} />);
     expect(html).toContain(ASSESSMENT_CONTACT_CONSENT);
-    expect(html).toContain(MARKETING_CONSENT);
+    expect(html).toContain(MARKETING_CONSENT.replaceAll("&", "&amp;"));
     const checkboxes = (html.match(/<input\b[^>]*>/g) ?? []).filter(input => input.includes('type="checkbox"'));
     expect(checkboxes).toHaveLength(2);
     expect(checkboxes[0]).toContain('required=""');
