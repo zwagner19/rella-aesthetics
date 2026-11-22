@@ -50,6 +50,39 @@ const RECEIPT_RE = /^v1\.(granted|denied)\.(\d{10})$/;
 
 type ClickField = (typeof CLICK_FIELDS)[number];
 type GoogleIdField = (typeof GOOGLE_ID_FIELDS)[number];
+// Rella-authored link labels only. utm_term stays local: it usually carries a
+// search keyword, which can describe a patient's condition or treatment.
+type CampaignLabelField = "utm_campaign" | "utm_content";
+export type AestheticsCampaignLabels = Partial<Record<CampaignLabelField, string>>;
+const CAMPAIGN_LABEL_FIELDS: readonly CampaignLabelField[] = ["utm_campaign", "utm_content"];
+const CAMPAIGN_LABEL_RE = /^[a-z0-9][a-z0-9._-]{0,99}$/;
+
+/**
+ * Normalize one Rella-authored campaign label (utm_campaign/utm_content) to a
+ * bounded slug: lowercase, spaces/plus to underscores, [a-z0-9._-] only, at
+ * most 100 characters. Anything else (emails, URLs, free text, long digit runs
+ * that could be a phone number) is dropped rather than guessed. The booking
+ * server re-validates with the same rule; labels are sent only after consent.
+ */
+export function boundedCampaignLabel(raw: string | null | undefined): string | null {
+  if (typeof raw !== "string") return null;
+  const value = raw.trim().toLowerCase().replace(/[\s+]+/g, "_");
+  if (!CAMPAIGN_LABEL_RE.test(value) || /\d{7,}/.test(value)) return null;
+  return value;
+}
+
+/** Bounded campaign labels from a landing query string; duplicates are dropped. */
+export function aestheticsCampaignLabels(search: string): AestheticsCampaignLabels {
+  const params = new URLSearchParams(search);
+  const labels: AestheticsCampaignLabels = {};
+  for (const field of CAMPAIGN_LABEL_FIELDS) {
+    const values = params.getAll(field);
+    if (values.length !== 1) continue;
+    const label = boundedCampaignLabel(values[0]);
+    if (label) labels[field] = label;
+  }
+  return labels;
+}
 export type AestheticsConsentChoice = "unknown" | "granted" | "denied";
 export type AestheticsConsentPhase =
   | "hidden"
@@ -97,8 +130,9 @@ export interface AestheticsConsentMessage {
 }
 
 type ApprovedPaidClick = Partial<Record<ClickField | GoogleIdField, string>>;
+type ApprovedGrantEntry = ApprovedPaidClick & AestheticsCampaignLabels;
 
-interface GrantedPayload extends ApprovedPaidClick {
+interface GrantedPayload extends ApprovedGrantEntry {
   location: string;
   consentAdUserData: "granted";
   revocationHandle: string;
@@ -178,6 +212,16 @@ function approvedPaidClick(search: string): ApprovedPaidClick | null {
   }
 
   return approved;
+}
+
+/**
+ * The approved Google click plus bounded campaign labels. Labels ride only with
+ * an approved click and only in the post-consent grant payload; denial and
+ * withdrawal requests never carry them.
+ */
+function approvedGrantEntry(search: string): ApprovedGrantEntry | null {
+  const click = approvedPaidClick(search);
+  return click ? { ...click, ...aestheticsCampaignLabels(search) } : null;
 }
 
 export function hasEligibleAestheticsPaidClick(search: string): boolean {
@@ -464,7 +508,7 @@ export class AestheticsAttributionController {
     }
 
     const url = safeUrl(this.runtime.currentHref());
-    const click = url ? approvedPaidClick(url.search) : null;
+    const click = url ? approvedGrantEntry(url.search) : null;
     if (!click) {
       this.phase = "granted";
       this.setView("reopen", "granted", "granted", "");
@@ -691,14 +735,14 @@ export class AestheticsAttributionController {
     navigationVersion: number,
     preparedHandle?: string,
     predecessor: string | null = null,
-    preparedClick?: ApprovedPaidClick,
+    preparedClick?: ApprovedGrantEntry,
   ): Promise<void> {
     if (this.destroyed || this.choice !== "granted") return;
     if (this.activeCaptureVersion === navigationVersion) return;
     this.activeCaptureVersion = navigationVersion;
     try {
       const url = safeUrl(this.runtime.currentHref());
-      const click = preparedClick ?? (url ? approvedPaidClick(url.search) : null);
+      const click = preparedClick ?? (url ? approvedGrantEntry(url.search) : null);
       if (!url || !click) {
         this.phase = "granted";
         this.setView("reopen", "granted", "granted", "");

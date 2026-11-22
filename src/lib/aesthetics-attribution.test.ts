@@ -5,6 +5,8 @@ import {
   AESTHETICS_ATTRIBUTION_ENDPOINT,
   AESTHETICS_CONSENT_COOKIE,
   AestheticsAttributionController,
+  aestheticsCampaignLabels,
+  boundedCampaignLabel,
   cleanAestheticsBookingHref,
   hasEligibleAestheticsPaidClick,
   isApprovedAestheticsPilotPage,
@@ -454,5 +456,92 @@ describe("consent-safe aesthetics capture", () => {
       revocationHandle: replacementHandle,
     });
     expect(grant?.body).not.toHaveProperty("revocationPredecessorHandle");
+  });
+});
+
+describe("bounded campaign labels", () => {
+  it.each([
+    ["napa_tox_search", "napa_tox_search"],
+    ["  Napa_Tox ", "napa_tox"],
+    ["Holiday Promo+2026", "holiday_promo_2026"],
+    ["spring.v2-a", "spring.v2-a"],
+    ["person@example.com", null],
+    ["https://example.com/x", null],
+    ["call-7075550100", null],
+    ["-leading-dash", null],
+    ["a".repeat(101), null],
+    ["", null],
+  ])("normalizes %j to %j", (raw, expected) => {
+    expect(boundedCampaignLabel(raw)).toBe(expected);
+  });
+
+  it("never reads utm_term and drops duplicated labels", () => {
+    expect(aestheticsCampaignLabels("?utm_campaign=a&utm_campaign=b&utm_content=hero&utm_term=private-condition"))
+      .toEqual({ utm_content: "hero" });
+  });
+
+  it("sends bounded campaign labels with an approved Google click only after consent", async () => {
+    const runtime = new FakeRuntime();
+    runtime.href = "https://experiencerella.com/napa/botox?gclid=bounded-click&campaignid=123" +
+      "&utm_source=google&utm_medium=cpc&utm_campaign=Napa%20Tox%20Search&utm_content=ad_a&utm_term=private-condition";
+    runtime.responses.push(GRANT_RESPONSE);
+    const controller = new AestheticsAttributionController(runtime);
+    controller.start();
+    expect(runtime.requests).toHaveLength(0);
+    expect(runtime.cookieWrites).toHaveLength(0);
+    await controller.accept();
+    expect(runtime.requests).toHaveLength(1);
+    expect(runtime.requests[0].body).toEqual({
+      location: "napa", consentAdUserData: "granted",
+      revocationHandle: expect.stringMatching(/^rvh_[A-Za-z0-9_-]{43}$/),
+      gclid: "bounded-click", campaignid: "123",
+      utm_campaign: "napa_tox_search", utm_content: "ad_a",
+    });
+    expect(JSON.stringify([runtime.requests[0].body, runtime.cookieWrites])).not.toMatch(/private-condition|utm_term|utm_source|utm_medium/);
+    // Labels are stripped from the landing URL with the click identifiers.
+    expect(runtime.href).toBe("https://experiencerella.com/napa/botox");
+  });
+
+  it("includes labels when remembered consent captures a new click", async () => {
+    const runtime = new FakeRuntime();
+    runtime.setChoice("granted");
+    runtime.href = "https://experiencerella.com/napa/botox?wbraid=remembered-click&utm_campaign=napa_pmax";
+    runtime.responses.push(GRANT_RESPONSE);
+    const controller = new AestheticsAttributionController(runtime);
+    controller.start();
+    await settle();
+    const grant = runtime.requests.find(({ body }) => body.consentAdUserData === "granted");
+    expect(grant?.body).toMatchObject({ wbraid: "remembered-click", utm_campaign: "napa_pmax" });
+  });
+
+  it("drops unsafe labels but still captures the click", async () => {
+    const runtime = new FakeRuntime();
+    runtime.href = "https://experiencerella.com/napa/botox?gclid=click-2&utm_campaign=person%40example.com&utm_content=call-7075550100";
+    runtime.responses.push(GRANT_RESPONSE);
+    const controller = new AestheticsAttributionController(runtime);
+    controller.start();
+    await controller.accept();
+    expect(runtime.requests[0].body).toMatchObject({ gclid: "click-2" });
+    expect(runtime.requests[0].body).not.toHaveProperty("utm_campaign");
+    expect(runtime.requests[0].body).not.toHaveProperty("utm_content");
+  });
+
+  it("sends nothing for a campaign-only link without an approved click", async () => {
+    const runtime = new FakeRuntime();
+    runtime.href = "https://experiencerella.com/napa/botox?utm_source=google&utm_medium=cpc&utm_campaign=napa_tox";
+    const controller = new AestheticsAttributionController(runtime);
+    controller.start();
+    await controller.accept();
+    expect(runtime.requests).toHaveLength(0);
+  });
+
+  it("sends no labels when the visitor declines", async () => {
+    const runtime = new FakeRuntime();
+    runtime.href = "https://experiencerella.com/napa/botox?gclid=declined-click&utm_campaign=napa_tox&utm_content=ad_a";
+    runtime.responses.push(DENY_RESPONSE);
+    const controller = new AestheticsAttributionController(runtime);
+    controller.start();
+    await controller.deny();
+    expect(JSON.stringify(runtime.requests.map(request => request.body))).not.toMatch(/napa_tox|ad_a|utm_|declined-click/);
   });
 });
