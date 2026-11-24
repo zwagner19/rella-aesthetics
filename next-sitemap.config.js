@@ -55,6 +55,7 @@ module.exports = {
   exclude: [
     "/napa",
     "/napa/",
+    "/gift-cards/**",
     "/studio",
     "/studio/**",
     "/blog",

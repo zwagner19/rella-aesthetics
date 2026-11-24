@@ -15,7 +15,7 @@ const AESTHETICS_PUBLIC_PATHS = new Set([
   "/services/lasers", "/services/lip-filler", "/services/co2-laser", "/services/skin", "/vacaville/botox", "/vacaville/filler",
   "/vacaville/laser", "/vacaville/facials", "/vacaville/hydrafacial",
   "/vacaville/chemical-peels", "/vacaville/microneedling", "/blog", "/blog/botox-cost-napa",
-  "/giveaway-terms-and-conditions", "/promotional-terms",
+  "/giveaway-terms-and-conditions", "/promotional-terms", "/gift-cards/black-friday",
 ]);
 const AESTHETICS_PUBLIC_HOSTS = new Set(["experiencerella.com", "www.experiencerella.com"]);
 type AcquisitionLocation = "napa" | "vacaville" | "unknown";
