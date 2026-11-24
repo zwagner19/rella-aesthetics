@@ -1,5 +1,5 @@
 import { BLACK_FRIDAY_2026, COPY, VIP_EXPERIENCES } from "@/lib/gift-cards/config";
-import { RellaMark } from "./RellaMark";
+import { RellaLogo } from "./RellaMark";
 import s from "./gift.module.css";
 
 type Props = {
@@ -15,7 +15,7 @@ export function VipPass({ passId, teaser = false, className }: Props) {
       <div className={s.passFrame}>
         <div className={s.passInner}>
           <div className={s.passHead}>
-            <RellaMark size={40} color="#1A1A1A" title="Rella" />
+            <RellaLogo height={36} color="#1A1A1A" title="Rella Aesthetics" />
             <div className={s.passId}>
               Pass ID
               <strong>{passId}</strong>

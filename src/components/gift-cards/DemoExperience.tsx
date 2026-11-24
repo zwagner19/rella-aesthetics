@@ -56,7 +56,7 @@ export function DemoExperience({ offer, onClose: parentClose }: { offer: GiftCar
   const controls = (
     <details className={s.demoControls} data-demo-controls open={controlsOpen}
       onToggle={(e) => { const o = e.currentTarget.open; if (o !== controlsOpen) setControlsChoice(o); }}>
-      <summary><strong>Demo controls</strong></summary>
+      <summary aria-label="Demo controls"><strong>{controlsOpen || !isPhone ? "Demo controls" : "Demo"}</strong></summary>
       <fieldset>
         <legend>Payment outcome</legend>
         <label><input type="radio" name="demo-pay" checked={payment === "approve"} onChange={() => setPayment("approve")} /> Approved</label>

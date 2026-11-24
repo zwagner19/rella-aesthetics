@@ -74,7 +74,6 @@
 .cardTop { display: flex; align-items: flex-start; justify-content: space-between; }
 .cardKicker { font-size: 10px; letter-spacing: .28em; text-transform: uppercase; font-weight: 500; opacity: .95; }
 .cardValue { font-size: clamp(34px, 7vw, 54px); font-weight: 300; line-height: 1; letter-spacing: -0.01em; }
-.cardBrand { position: absolute; right: 7.5%; bottom: 8%; font-size: 11px; letter-spacing: .42em; font-weight: 500; opacity: .9; }
 .cardMeta { margin-top: 6px; font-size: 11px; letter-spacing: .2em; text-transform: uppercase; font-weight: 500; }
 
 /* ── VIP pass ───────────────────────────────────────────────── */
@@ -95,9 +94,10 @@
 }
 .passFrame { border: 1px solid var(--g-gold); border-radius: 9px; padding: 4px; }
 .passInner { border: 1px solid var(--g-gold-soft); border-radius: 6px; padding: 26px 26px 22px; }
-.passHead { display: flex; justify-content: space-between; align-items: flex-start; }
+.passHead { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
+.passHead > svg { flex: none; }
 .passId { text-align: right; font-size: 9px; letter-spacing: .24em; color: var(--g-silver); text-transform: uppercase; }
-.passId strong { display: block; margin-top: 3px; font-size: 12px; letter-spacing: .14em; color: var(--g-ink); font-weight: 600; }
+.passId strong { display: block; margin-top: 3px; font-size: 12px; letter-spacing: .14em; white-space: nowrap; color: var(--g-ink); font-weight: 600; }
 .passBrand { margin: 22px 0 0; font-size: 30px; letter-spacing: .32em; font-weight: 600; color: var(--g-ink); line-height: 1; }
 .passTitle { margin: 8px 0 14px; font-size: 12px; letter-spacing: .34em; font-weight: 500; }
 .goldRule { width: 64px; height: 1px; background: var(--g-gold); border: 0; margin: 0 0 14px; }
@@ -127,7 +127,7 @@
   animation: fadeIn 420ms ease both;
 }
 .modal {
-  position: relative; width: 100%; max-width: 620px;
+  position: relative; z-index: 2; width: 100%; max-width: 620px;
   background: #fff; border-radius: 22px;
   padding: clamp(28px, 6vw, 52px) clamp(20px, 5vw, 48px);
   box-shadow: 0 40px 80px -40px rgba(26,26,26,.35);
@@ -281,8 +281,17 @@
 .demoControls legend { margin-bottom: 4px; font-weight: 500; }
 .demoControls label { margin-right: 12px; cursor: pointer; }
 @media (max-width: 640px) {
-  .demoControls { left: auto; right: 12px; bottom: 84px; width: auto; max-width: calc(100% - 24px); padding: 10px 14px; }
-  .demoControls[open] { left: 8px; right: 8px; }
+  /* Phones: collapsed to a small corner chip; the panel opens only on tap. */
+  .demoControls:not([open]) {
+    left: auto; right: 10px; bottom: 76px; width: auto; padding: 6px 10px; border-radius: 999px;
+    box-shadow: 0 6px 18px -10px rgba(26,26,26,.45);
+  }
+  .demoControls:not([open]) strong { font-size: 9px; letter-spacing: .16em; }
+  .demoControls:not([open]) summary::after { font-size: 12px; margin-left: 6px; }
+  .demoControls[open] { left: 8px; right: 8px; bottom: 76px; width: auto; }
+  /* Over a dialog the site's mobile booking bar is hidden, so sit in the very corner. */
+  :global(body:has([role="dialog"])) .demoControls:not([open]) { bottom: 10px; }
+  :global(body:has([role="dialog"])) .demoControls[open] { bottom: 10px; }
 }
 .sheet { text-align: left; }
 .sheet .h2 { margin-bottom: 6px; }
@@ -294,3 +303,6 @@
 .demoCard span { font-size: 10px; letter-spacing: .18em; text-transform: uppercase; color: var(--g-rose-deep); font-weight: 500; }
 .loadingBlock { display: flex; flex-direction: column; align-items: center; gap: 16px; padding: 36px 0 20px; text-align: center; }
 .loadingBlock .spinner { width: 28px; height: 28px; }
+@media (max-width: 400px) {
+  .passId strong { font-size: 10.5px; letter-spacing: .08em; }
+}

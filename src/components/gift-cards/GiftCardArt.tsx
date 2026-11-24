@@ -1,4 +1,4 @@
-import { RellaMark } from "./RellaMark";
+import { RellaLogo } from "./RellaMark";
 import s from "./gift.module.css";
 
 /**
@@ -9,14 +9,13 @@ export function GiftCardArt({ value, meta, kicker = "Gift Card" }: { value: stri
   return (
     <div className={s.card} role="img" aria-label={`Rella gift card, ${value}${meta ? `, ${meta}` : ""}`} data-pending-reference-photo="true">
       <div className={s.cardTop}>
-        <RellaMark size={42} color="#FFFFFF" title="" />
+        <RellaLogo height={40} color="#FFFFFF" title="" />
         <span className={s.cardKicker}>{kicker}</span>
       </div>
       <div>
         <div className={s.cardValue}>{value}</div>
         {meta ? <div className={s.cardMeta}>{meta}</div> : null}
       </div>
-      <span className={s.cardBrand} aria-hidden="true">RELLA</span>
     </div>
   );
 }

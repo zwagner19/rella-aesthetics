@@ -78,7 +78,7 @@ ${opts.body}
 
 function headerRow(assets: EmailAssets): string {
   return `<tr><td align="center" style="background:${C.rose};padding:28px 24px;">
-<img src="${esc(assets.logoUrl)}" width="44" height="44" alt="Rella" style="display:block;width:44px;height:44px;">
+<img src="${esc(assets.logoUrl)}" width="126" height="48" alt="Rella Aesthetics" style="display:block;width:126px;height:48px;margin:0 auto;">
 </td></tr>`;
 }
 
@@ -96,7 +96,7 @@ export function passTable(passId: string, assets: EmailAssets): string {
 <tr><td class="pass-inner" style="padding:28px 30px;">
   <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
   <tr>
-    <td valign="middle" width="52"><img src="${esc(assets.passMarkUrl)}" width="40" height="40" alt="Rella" style="display:block;width:40px;height:40px;"></td>
+    <td valign="middle" width="100"><img src="${esc(assets.passMarkUrl)}" width="94" height="36" alt="Rella Aesthetics" style="display:block;width:94px;height:36px;"></td>
     <td valign="middle" align="right" style="font-family:${FONT};font-size:10px;letter-spacing:2px;color:${C.charcoal};">PASS ID<br><span style="font-size:13px;letter-spacing:1.5px;color:${C.ink};font-weight:600;">${esc(passId)}</span></td>
   </tr>
   </table>

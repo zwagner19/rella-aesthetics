@@ -14,7 +14,7 @@ export async function GET(req: Request, ctx: { params: Promise<{ kind: string }>
   const host = (req.headers.get("host") ?? url.host).toLowerCase().split(":")[0];
   if (process.env.VERCEL_ENV === "production" || PRODUCTION_HOSTS.has(host)) return new Response("Not found", { status: 404 });
   const origin = `${url.protocol}//${req.headers.get("host") ?? url.host}`;
-  const assets = { logoUrl: `${origin}/gift-cards/rella-mark-white.png`, passMarkUrl: `${origin}/gift-cards/rella-mark-ink.png` };
+  const assets = { logoUrl: `${origin}/gift-cards/rella-logo-white.png`, passMarkUrl: `${origin}/gift-cards/rella-logo-ink.png` };
   const { kind } = await ctx.params;
   const offer = offerById("bf26-1000")!;
   let html: string;

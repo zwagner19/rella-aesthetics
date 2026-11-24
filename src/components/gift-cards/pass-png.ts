@@ -1,6 +1,6 @@
 "use client";
 import { BLACK_FRIDAY_2026, COPY, VIP_EXPERIENCES } from "@/lib/gift-cards/config";
-import { RELLA_MARK_PATH } from "./RellaMark";
+import { RELLA_LOGO_PATHS, RELLA_LOGO_VIEWBOX } from "./RellaMark";
 
 /** Draws the VIP Guest Pass to a 1080×1600 PNG (phone-wallpaper friendly) and downloads it. */
 export async function downloadPassPng(passId: string): Promise<void> {
@@ -30,11 +30,12 @@ export async function downloadPassPng(passId: string): Promise<void> {
   g.stroke();
 
   const L = x + 80;
+  const k = 92 / RELLA_LOGO_VIEWBOX.h;
   g.save();
-  g.translate(L - 29.3 * 0.82, y + 90 - 29.3 * 0.82);
-  g.scale(0.82, 0.82);
+  g.translate(L - RELLA_LOGO_VIEWBOX.x * k, y + 90 - RELLA_LOGO_VIEWBOX.y * k);
+  g.scale(k, k);
   g.fillStyle = "#1A1A1A";
-  g.fill(new Path2D(RELLA_MARK_PATH), "evenodd");
+  for (const d of RELLA_LOGO_PATHS) g.fill(new Path2D(d), "evenodd");
   g.restore();
 
   g.textAlign = "right";
