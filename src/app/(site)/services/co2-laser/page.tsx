@@ -152,7 +152,7 @@ const clinics = [
     key: "napa" as const,
     label: "Rella Aesthetics — Napa House",
     clinic: locations.napa,
-    note: "Book a laser consultation at Napa House; the team confirms which CO2 option is scheduled there for your plan.",
+    note: "Napa House offers CoolPeel and CO2 resurfacing; start with a laser consultation to choose the right depth.",
     detailHref: "/locations/napa",
     detailLabel: "Napa House clinic details",
   },
