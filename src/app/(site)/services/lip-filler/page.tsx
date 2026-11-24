@@ -240,7 +240,7 @@ export default function LipFillerPage() {
           </div>
           <div className="border border-white/25 bg-white/[0.04] p-7 md:p-9">
             <p className="mb-4 text-lg leading-8 text-white">
-              Rella&apos;s filler menu includes hyaluronic acid products from the Restylane and Juvéderm families. Your provider explains which product, if any, is appropriate for your lips, why, and what its labeling says about the area and expected duration.
+              Rella uses several hyaluronic acid lip fillers from the Restylane and Juvéderm families. Your provider explains which product, if any, is appropriate for your lips, why, and what its labeling says about the area and expected duration.
             </p>
             <p className="text-sm leading-7 text-white">
               The product follows the plan. You should not need to arrive knowing a brand name.
