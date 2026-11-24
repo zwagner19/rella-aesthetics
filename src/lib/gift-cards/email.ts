@@ -60,6 +60,7 @@ function shell(opts: { title: string; preheader: string; body: string }): string
     .px{padding-left:24px!important;padding-right:24px!important}
     .h1{font-size:30px!important;line-height:38px!important}
     .pass-inner{padding:22px 18px!important}
+    .pid{font-size:11px!important;letter-spacing:.5px!important}
   }
 </style>
 </head>
@@ -97,7 +98,7 @@ export function passTable(passId: string, assets: EmailAssets): string {
   <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
   <tr>
     <td valign="middle" width="100"><img src="${esc(assets.passMarkUrl)}" width="94" height="36" alt="Rella Aesthetics" style="display:block;width:94px;height:36px;"></td>
-    <td valign="middle" align="right" style="font-family:${FONT};font-size:10px;letter-spacing:2px;color:${C.charcoal};">PASS ID<br><span style="font-size:13px;letter-spacing:1.5px;color:${C.ink};font-weight:600;">${esc(passId)}</span></td>
+    <td valign="middle" align="right" style="font-family:${FONT};font-size:10px;letter-spacing:2px;color:${C.charcoal};">PASS ID<br><span class="pid" style="font-size:13px;letter-spacing:1.5px;color:${C.ink};font-weight:600;white-space:nowrap;">${esc(passId)}</span></td>
   </tr>
   </table>
   <p style="margin:22px 0 2px;font-family:${FONT};font-size:26px;line-height:30px;letter-spacing:8px;font-weight:600;color:${C.ink};">${COPY.pass.brand}</p>
