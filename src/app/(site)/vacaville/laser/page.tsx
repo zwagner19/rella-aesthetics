@@ -304,6 +304,9 @@ export default function VacavilleLaserPage() {
             <Link href="/services/laser-treatments" className="mt-6 block text-sm font-semibold text-rose-text underline decoration-rose-light underline-offset-4 hover:text-rose-text">
               Read the full laser-treatment guide →
             </Link>
+            <Link href="/services/co2-laser" className="mt-3 block text-sm font-semibold text-rose-text underline decoration-rose-light underline-offset-4 hover:text-rose-text">
+              Compare CO2 CoolPeel and CO2 resurfacing →
+            </Link>
           </div>
         </div>
       </section>
