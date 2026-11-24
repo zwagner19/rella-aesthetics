@@ -186,6 +186,14 @@ export function DermalFillersServicePage() {
                 <p className="mt-5 max-w-[22rem] text-base font-light leading-relaxed text-silver">
                   {area.body}
                 </p>
+                {index === 0 ? (
+                  <Link
+                    href="/services/lip-filler"
+                    className="mt-5 inline-flex text-[0.6875rem] font-bold uppercase tracking-[0.18em] text-ink underline-offset-4 hover:text-rose hover:underline"
+                  >
+                    Read the lip filler guide
+                  </Link>
+                ) : null}
               </article>
             ))}
           </div>
