@@ -21,6 +21,7 @@ const publicRoutes = [
   "/services",
   "/services/botox",
   "/services/chemical-peels",
+  "/services/co2-laser",
   "/services/dermal-fillers",
   "/services/facials",
   "/services/hydrafacial",

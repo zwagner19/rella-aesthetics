@@ -133,6 +133,12 @@ export function LasersCategoryPage() {
               </li>
             ))}
           </ul>
+          <Link
+            href="/services/co2-laser"
+            className="mt-10 inline-block text-[0.6875rem] font-bold uppercase tracking-[0.18em] text-ink underline decoration-rule underline-offset-4"
+          >
+            Compare CO2 CoolPeel and CO2 resurfacing
+          </Link>
         </div>
       </section>
 

@@ -12,7 +12,7 @@ const AESTHETICS_PUBLIC_PATHS = new Set([
   "/services", "/services/botox", "/services/dermal-fillers", "/services/chemical-peels",
   "/services/facials", "/services/hydrafacial", "/services/microneedling",
   "/services/iv-hydration", "/services/laser-treatments", "/services/injectables",
-  "/services/lasers", "/services/lip-filler", "/services/skin", "/vacaville/botox", "/vacaville/filler",
+  "/services/lasers", "/services/lip-filler", "/services/co2-laser", "/services/skin", "/vacaville/botox", "/vacaville/filler",
   "/vacaville/laser", "/vacaville/facials", "/vacaville/hydrafacial",
   "/vacaville/chemical-peels", "/vacaville/microneedling", "/blog", "/blog/botox-cost-napa",
   "/giveaway-terms-and-conditions", "/promotional-terms",
