@@ -8,6 +8,8 @@ import VacavilleFacialsPage from "@/app/(site)/vacaville/facials/page";
 import VacavilleHydrafacialPage from "@/app/(site)/vacaville/hydrafacial/page";
 import VacavilleLaserPage from "@/app/(site)/vacaville/laser/page";
 import VacavilleMicroneedlingPage from "@/app/(site)/vacaville/microneedling/page";
+import { mapIntentToTreatmentKey } from "@/lib/guided-booking/catalog";
+import type { GuidedTreatment } from "@/lib/guided-booking/types";
 
 async function renderService(slug: string): Promise<string> {
   const page = await ServicePage({ params: Promise.resolve({ slug }) });
@@ -55,6 +57,25 @@ describe("local pages describe the live booking catalog", () => {
     expect(html).toContain("Platinum");
     expect(html).toContain("Live facial menu");
     expect(html).not.toMatch(/three facial options|Three online options/);
+  });
+
+  it("opens the in-site Napa booking menu at the microneedling consult", () => {
+    const html = renderToStaticMarkup(<NapaMicroneedlingPage />);
+    const ctas = html.match(/<a[^>]*data-cta="service-booking"[^>]*>/g) ?? [];
+
+    expect(ctas).toHaveLength(2);
+    for (const cta of ctas) {
+      // Without the site shell the trigger renders its no-JS fallback link;
+      // inside the shell it opens the guided booking modal.
+      expect(cta).toContain("data-guided-booking");
+    }
+    expect(
+      mapIntentToTreatmentKey({
+        location: "napa",
+        service: "microneedling",
+        treatments: [{ key: "napa/microneedling-consult" } as GuidedTreatment],
+      }),
+    ).toBe("napa/microneedling-consult");
   });
 
   it("routes Napa microneedling to the Napa category without naming unconfirmed devices", () => {
