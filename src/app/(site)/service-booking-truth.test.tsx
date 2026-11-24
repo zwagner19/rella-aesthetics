@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import { renderToStaticMarkup } from "react-dom/server";
 import ServicePage from "@/app/(site)/services/[slug]/page";
 import NapaFacialsPage from "@/app/(site)/napa/facials/page";
+import NapaMicroneedlingPage from "@/app/(site)/napa/microneedling/page";
 import VacavilleChemicalPeelsPage from "@/app/(site)/vacaville/chemical-peels/page";
 import VacavilleFacialsPage from "@/app/(site)/vacaville/facials/page";
 import VacavilleHydrafacialPage from "@/app/(site)/vacaville/hydrafacial/page";
@@ -54,6 +55,21 @@ describe("local pages describe the live booking catalog", () => {
     expect(html).toContain("Platinum");
     expect(html).toContain("Live facial menu");
     expect(html).not.toMatch(/three facial options|Three online options/);
+  });
+
+  it("routes Napa microneedling to the Napa category without naming unconfirmed devices", () => {
+    const html = renderToStaticMarkup(<NapaMicroneedlingPage />);
+
+    expect(html).toContain(
+      'href="https://book.experiencerella.com/book?location=napa&amp;category=microneedling"',
+    );
+    expect(html).toContain("Microneedling in Downtown Napa");
+    expect(html).toContain("Standard &amp; RF microneedling");
+    expect(html).toContain("1541 3rd St");
+    expect(html).toContain('href="/locations/napa"');
+    expect(html).toContain('href="/napa/facials"');
+    expect(html).toContain('"@type":"FAQPage"');
+    expect(html).not.toMatch(/SkinPen|Skin Stylus|\$\d/);
   });
 
   it("includes Deluxe and Platinum in Vacaville facial discovery", () => {

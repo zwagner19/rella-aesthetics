@@ -9,7 +9,7 @@ const localTreatmentPages: Record<string, Partial<Record<BookingLocation, string
   facials: { vacaville: "/vacaville/facials", napa: "/napa/facials" },
   hydrafacial: { vacaville: "/vacaville/hydrafacial" },
   "laser-treatments": { vacaville: "/vacaville/laser" },
-  microneedling: { vacaville: "/vacaville/microneedling" },
+  microneedling: { vacaville: "/vacaville/microneedling", napa: "/napa/microneedling" },
 };
 const wordpressNapaTreatmentPages: Record<string, string> = {
   hydrafacial: "/napa/hydrafacial/",

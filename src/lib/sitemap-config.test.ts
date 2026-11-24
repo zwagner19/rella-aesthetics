@@ -28,6 +28,7 @@ describe("generated sitemap contract", () => {
     expect(locations).not.toContain("/napa/");
     expect(locations).toContain("/napa/botox/");
     expect(locations).toContain("/napa/facials");
+    expect(locations).toContain("/napa/microneedling");
     expect(locations).not.toContain("/services/weight-loss");
     expect(locations).not.toContain("/blog");
     expect(locations).toContain("/blog/botox-cost-napa");
@@ -62,6 +63,9 @@ describe("generated sitemap contract", () => {
     const ordinaryPage = await transform(config, "/napa/facials");
     expect(ordinaryPage?.loc).toBe("/napa/facials");
     expect(ordinaryPage).not.toHaveProperty("trailingSlash");
+    const napaMicroneedling = await transform(config, "/napa/microneedling");
+    expect(napaMicroneedling).toMatchObject({ loc: "/napa/microneedling", priority: 0.9 });
+    expect(napaMicroneedling).not.toHaveProperty("trailingSlash");
   });
 
   it("excludes noindex records, retired URLs, Studio, and the legacy booking launcher", () => {
