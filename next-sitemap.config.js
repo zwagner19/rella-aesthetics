@@ -28,6 +28,7 @@ const publicRoutes = [
   "/services/iv-hydration",
   "/services/laser-treatments",
   "/services/lasers",
+  "/services/lip-filler",
   "/services/microneedling",
   "/services/skin",
   "/team",

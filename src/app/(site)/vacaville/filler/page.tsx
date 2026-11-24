@@ -261,6 +261,9 @@ export default function VacavilleFillerPage() {
             <Link href="/services/dermal-fillers" className="text-sm font-semibold text-rose-text underline decoration-rose-light underline-offset-4 hover:text-rose-text">
               Read the full dermal filler guide →
             </Link>
+            <Link href="/services/lip-filler" className="mt-3 block text-sm font-semibold text-rose-text underline decoration-rose-light underline-offset-4 hover:text-rose-text">
+              Read the lip filler guide →
+            </Link>
           </div>
         </div>
       </section>
