@@ -26,6 +26,7 @@ describe("EditorialTreatmentPage propagation", () => {
       ["laser-treatments", "/vacaville/laser", "Vacaville"],
       ["laser-treatments", "/napa/laser/", "Napa House"],
       ["microneedling", "/vacaville/microneedling", "Vacaville"],
+      ["microneedling", "/napa/microneedling", "Napa House"],
     ];
     for (const [slug, href, name] of localPages) {
       const html = renderSlug(slug);

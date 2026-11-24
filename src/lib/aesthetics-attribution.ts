@@ -8,7 +8,7 @@ export const AESTHETICS_BOOKING_ORIGIN = "https://book.experiencerella.com";
 const AESTHETICS_PUBLIC_PATHS = new Set([
   "/", "/about", "/contact", "/gallery", "/membership", "/payment-plans",
   "/private-parties", "/team", "/terms", "/privacy-policy", "/cancellation-policy",
-  "/locations/napa", "/locations/vacaville", "/napa/botox", "/napa/facials",
+  "/locations/napa", "/locations/vacaville", "/napa/botox", "/napa/facials", "/napa/microneedling",
   "/services", "/services/botox", "/services/dermal-fillers", "/services/chemical-peels",
   "/services/facials", "/services/hydrafacial", "/services/microneedling",
   "/services/iv-hydration", "/services/laser-treatments", "/services/injectables",
