@@ -17,13 +17,15 @@ type Props = {
   initialSentTo?: string | null;
   banner?: React.ReactNode;
   onClose?: () => void;
+  /** DEMO route only: play confetti even with reduced motion; bump to replay. */
+  demoConfetti?: { replay: number };
 };
 
 /**
  * Celebration after a SERVER-VERIFIED payment. Callers must not render this
  * for pending/failed/cancelled purchases; the page decides from server state.
  */
-export function CelebrationModal({ passId, purchaserName, onSubmit, onSendLater, initialSentTo = null, banner, onClose }: Props) {
+export function CelebrationModal({ passId, purchaserName, onSubmit, onSendLater, initialSentTo = null, banner, onClose, demoConfetti }: Props) {
   const [sentTo, setSentTo] = useState<string | null>(initialSentTo);
   const [open, setOpen] = useState(true);
   const [downloadError, setDownloadError] = useState(false);
@@ -60,7 +62,7 @@ export function CelebrationModal({ passId, purchaserName, onSubmit, onSendLater,
 
   return (
     <div className={`${s.root} ${s.overlay}`}>
-      {sentTo ? null : <Confetti />}
+      {sentTo ? null : <Confetti key={demoConfetti?.replay ?? 0} ignoreReducedMotion={Boolean(demoConfetti)} />}
       <div ref={dialog} className={s.modal} role="dialog" aria-modal="true" aria-labelledby="celebration-title" tabIndex={-1}>
         {banner}
         <button type="button" className={s.close} onClick={close} aria-label="Close">

@@ -29,6 +29,7 @@ export function DemoExperience({ offer, onClose: parentClose }: { offer: GiftCar
   const [payment, setPayment] = useState<"approve" | "decline">("approve");
   const [email, setEmail] = useState<"deliver" | "fail">("deliver");
   const [stage, setStage] = useState<Stage>("review");
+  const [confettiReplay, setConfettiReplay] = useState(0);
   const dialog = useRef<HTMLDivElement>(null);
   // Expanded on desktop, collapsed on phones so it never covers the flow.
   const isPhone = useSyncExternalStore(subscribePhone, () => window.matchMedia(PHONE).matches, () => false);
@@ -79,7 +80,15 @@ export function DemoExperience({ offer, onClose: parentClose }: { offer: GiftCar
           key={offer.id}
           passId={DEMO_PASS_ID}
           purchaserName={DEMO_PURCHASER}
-          banner={banner}
+          banner={
+            <div className={s.demoBanner}>
+              DEMO · fixture data · nothing is charged, issued or sent
+              <button type="button" className={s.demoReplay} onClick={() => setConfettiReplay((n) => n + 1)}>
+                Replay confetti
+              </button>
+            </div>
+          }
+          demoConfetti={{ replay: confettiReplay }}
           onClose={onClose}
           onSubmit={async (v) => {
             await wait(1400);

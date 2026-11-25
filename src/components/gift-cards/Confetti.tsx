@@ -6,13 +6,15 @@ const COLORS = ["#F7A19A", "#F4B8B1", "#FBD9D5", "#F7F4EF", "#D9C39A", "#C9A86A"
 /**
  * One short, light burst from the two lower corners (about 2.6s), then clears.
  * Sits behind the celebration card so it frames the edges instead of covering
- * text. Renders nothing for prefers-reduced-motion.
+ * text. Renders nothing for prefers-reduced-motion, except on the preview-only
+ * DEMO route (`ignoreReducedMotion`) so reviewers with "Reduce motion" on can
+ * still see the design. Never set that flag in the real flow.
  */
-export function Confetti({ durationMs = 2600 }: { durationMs?: number }) {
+export function Confetti({ durationMs = 2600, ignoreReducedMotion = false }: { durationMs?: number; ignoreReducedMotion?: boolean }) {
   const ref = useRef<HTMLCanvasElement>(null);
   useEffect(() => {
     const canvas = ref.current;
-    if (!canvas || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    if (!canvas || (!ignoreReducedMotion && window.matchMedia("(prefers-reduced-motion: reduce)").matches)) return;
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
     const dpr = Math.min(window.devicePixelRatio || 1, 2);
@@ -94,7 +96,7 @@ export function Confetti({ durationMs = 2600 }: { durationMs?: number }) {
       cancelAnimationFrame(raf);
       window.removeEventListener("resize", resize);
     };
-  }, [durationMs]);
+  }, [durationMs, ignoreReducedMotion]);
   return (
     <canvas
       ref={ref}

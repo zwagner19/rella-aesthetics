@@ -42,6 +42,13 @@
   font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; font-weight: 500;
 }
 
+.demoReplay {
+  display: inline-block; margin-left: 12px; padding: 4px 0; border: 0; background: none; cursor: pointer;
+  font: inherit; letter-spacing: inherit; text-transform: inherit; color: #fff;
+  text-decoration: underline; text-underline-offset: 3px;
+}
+.demoReplay:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
+
 /* ── buttons ─────────────────────────────────────────────────── */
 .btn {
   display: inline-flex; align-items: center; justify-content: center; gap: 10px;
