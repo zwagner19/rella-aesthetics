@@ -284,7 +284,9 @@ export type BoulevardConfirmationInput = {
 };
 
 /**
- * Boulevard-widget path: a confirmation STAFF send by hand to the purchaser
+ * FALLBACK TEMPLATE ONLY (emergency Boulevard-widget path). The primary
+ * custom checkout sends renderPurchaserEmail automatically after a
+ * server-verified payment. This is a confirmation STAFF send by hand to the purchaser
  * once the package sale shows in Boulevard. Nothing here is sent
  * automatically, and the copy never says it was.
  */

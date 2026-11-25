@@ -95,9 +95,12 @@ export const BLACK_FRIDAY_2026 = Object.freeze({
  * IDs are Zach's (Boulevard dashboard, "Other Packages" category); do not
  * invent or edit them here without his confirmation.
  *
- * Purchase opens Boulevard's own booking widget for the chosen package. That
- * path has NO server-verified payment, so it never shows the celebration;
- * the VIP Guest Pass is staff-issued and arrives by email.
+ * PRIMARY path: Rella's own package checkout (RELLA_PACKAGE_KEYS below,
+ * BF_RELLA_CHECKOUT=1 on previews). The Boulevard booking widget
+ * (boulevardWidgetParams) is kept only as an EMERGENCY FALLBACK behind
+ * BF_BOULEVARD_WIDGET_CHECKOUT=1: it has no server-verified payment, so it
+ * never shows the celebration and the VIP Guest Pass is staff-issued.
+ * Integration contract: drafts/black-friday/checkout-integration-contract.md.
  */
 export type ClinicId = "napa" | "vacaville";
 

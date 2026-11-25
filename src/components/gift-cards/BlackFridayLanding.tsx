@@ -26,12 +26,22 @@ import s from "./gift.module.css";
  * chooser, then:
  *  - "rella":  Rella's own package checkout on this page. Payment is verified
  *    by the server, so a confirmed purchase shows the celebration. If that
- *    checkout cannot start, it falls back to Boulevard's widget.
+ *    checkout cannot start, it fails closed (phone note), or falls back to
+ *    Boulevard's widget only when the emergency flag is on.
  *  - "widget": Boulevard's own widget. No server-verified payment on that
  *    path, so no celebration is shown.
  * Either way the VIP Guest Pass is staff-issued by email.
  */
-export function BlackFridayLanding({ demo = false, checkout = "closed" }: { demo?: boolean; checkout?: BlackFridayCheckoutMode }) {
+export function BlackFridayLanding({
+  demo = false,
+  checkout = "closed",
+  widgetFallback = false,
+}: {
+  demo?: boolean;
+  checkout?: BlackFridayCheckoutMode;
+  /** Emergency fallback only (BF_BOULEVARD_WIDGET_CHECKOUT=1). Off: a checkout that can't start shows the phone note. */
+  widgetFallback?: boolean;
+}) {
   const onlineCheckout = checkout !== "closed";
   const [unavailable, setUnavailable] = useState<string | null>(null);
   const [demoOffer, setDemoOffer] = useState<GiftCardOffer | null>(null);
@@ -73,6 +83,11 @@ export function BlackFridayLanding({ demo = false, checkout = "closed" }: { demo
     if (!buying) return;
     const { offer, clinic } = buying;
     setBuying(null);
+    if (!widgetFallback) {
+      setHandedOff(null);
+      setUnavailable(offer.id);
+      return;
+    }
     void openWidget(offer, clinic);
   }
 
