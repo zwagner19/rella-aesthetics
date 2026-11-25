@@ -1,5 +1,5 @@
-import { offerById } from "@/lib/gift-cards/config";
-import { renderPurchaserEmail, renderRecipientEmail } from "@/lib/gift-cards/email";
+import { offerById, type ClinicId } from "@/lib/gift-cards/config";
+import { renderBoulevardConfirmationEmail, renderPurchaserEmail, renderRecipientEmail } from "@/lib/gift-cards/email";
 
 export const dynamic = "force-dynamic";
 
@@ -7,7 +7,8 @@ const PRODUCTION_HOSTS = new Set(["experiencerella.com", "www.experiencerella.co
 
 /**
  * Preview-only rendered email HTML with DEMO fixture data. Nothing is sent.
- * /gift-cards/black-friday/demo/email/recipient | purchaser | purchaser-sent
+ * /gift-cards/black-friday/demo/email/recipient | purchaser | purchaser-sent | boulevard-confirmation
+ * (boulevard-confirmation takes ?offer=bf26-1000|bf26-2100&clinic=napa|vacaville)
  */
 export async function GET(req: Request, ctx: { params: Promise<{ kind: string }> }) {
   const url = new URL(req.url);
@@ -42,6 +43,14 @@ export async function GET(req: Request, ctx: { params: Promise<{ kind: string }>
             ? { state: "not-sent", giftUrl: `${origin}/gift-cards/black-friday/demo#gift-link-demo` }
             : { state: "sent", recipientFirstName: "Ava", sentOn: "November 27, 2026" },
       },
+      assets,
+    ).html;
+  } else if (kind === "boulevard-confirmation") {
+    const chosen = offerById(url.searchParams.get("offer") ?? "bf26-1000");
+    const clinic = url.searchParams.get("clinic") ?? "napa";
+    if (!chosen || (clinic !== "napa" && clinic !== "vacaville")) return new Response("Not found", { status: 404 });
+    html = renderBoulevardConfirmationEmail(
+      { purchaserFirstName: "Demo", offer: chosen, clinicId: clinic as ClinicId, passId: "RELLA-VIP-DEMO-2026" },
       assets,
     ).html;
   } else return new Response("Not found", { status: 404 });

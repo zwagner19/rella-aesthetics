@@ -61,9 +61,9 @@ export const BLACK_FRIDAY_2026 = Object.freeze({
   },
   pass: {
     /** Last day to BOOK the chosen experience (end of day, Pacific). */
-    bookBy: { instant: Date.parse("2026-12-16T07:59:59.999Z"), label: "December 15, 2026" },
+    bookBy: { instant: Date.parse("2026-12-16T07:59:59.999Z"), label: "December 15, 2026", short: "Dec 15, 2026" },
     /** Last day to RECEIVE the chosen experience (end of day, Pacific). */
-    redeemBy: { instant: Date.parse("2027-02-01T07:59:59.999Z"), label: "January 31, 2027" },
+    redeemBy: { instant: Date.parse("2027-02-01T07:59:59.999Z"), label: "January 31, 2027", short: "Jan 31, 2027" },
     /** Recipient picks exactly one at redemption. */
     choose: 1,
   },
@@ -172,6 +172,8 @@ export const COPY = Object.freeze({
   /** Approved by Zach (Nov 25, 2026). */
   delivery: "Delivered as Rella account credit.",
   boulevardNote: "Your purchase is processed by Boulevard; your VIP Guest Pass will arrive by email.",
+  /** "Book by Dec 15, 2026 · Redeem by Jan 31, 2027" */
+  passDeadlines: "Book by Dec 15, 2026 · Redeem by Jan 31, 2027",
   landing: {
     eyebrow: "THE BLACK FRIDAY EVENT | NOVEMBER 27 – DECEMBER 1",
     headline: "The gift that gives a little more.",

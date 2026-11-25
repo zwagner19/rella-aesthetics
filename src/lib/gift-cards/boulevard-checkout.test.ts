@@ -31,3 +31,28 @@ describe("Black Friday Boulevard package checkout", () => {
     expect(boulevardWidgetCheckoutEnabled({ BF_BOULEVARD_WIDGET_CHECKOUT: "1", VERCEL_ENV: "preview" })).toBe(true);
   });
 });
+
+import { renderBoulevardConfirmationEmail } from "./email";
+import { offerById } from "./config";
+
+describe("Boulevard confirmation email (staff-sent)", () => {
+  const assets = { logoUrl: "https://example.test/w.png", passMarkUrl: "https://example.test/i.png" };
+  it("shows the offer, delivery line, clinic, pass, perks, deadlines, book CTA and terms", () => {
+    const { html, text } = renderBoulevardConfirmationEmail(
+      { purchaserFirstName: "Ava", offer: offerById("bf26-2100")!, clinicId: "vacaville", passId: "RELLA-VIP-TEST" },
+      assets,
+    );
+    for (const out of [html, text]) {
+      expect(out).toContain("$2,100 for $1,600");
+      expect(out).toContain("Delivered as Rella account credit.");
+      expect(out).toContain("Rella Vacaville");
+      expect(out).toContain("RELLA-VIP-TEST");
+      expect(out).toContain("https://book.experiencerella.com/book");
+      expect(out).toContain("https://experiencerella.com/promotional-terms");
+      expect(out).toContain("Complimentary Signature HydraFacial ($300 value)");
+    }
+    expect(text).toContain("Book by Dec 15, 2026 · Redeem by Jan 31, 2027");
+    expect(html).not.toMatch(/automatic|guarantee/i);
+    expect(html).not.toMatch(/#a34f49/i);
+  });
+});

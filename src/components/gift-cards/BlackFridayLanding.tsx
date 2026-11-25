@@ -126,9 +126,17 @@ export function BlackFridayLanding({ demo = false, boulevardWidget = false }: { 
               {COPY.vipSection.headline}
             </h2>
             <p className={s.vipBody}>{COPY.vipSection.body}</p>
+            <p className={s.vipDeadlines}>
+              {COPY.passDeadlines.split(" · ").map((part, i) => (
+                <span key={part}>
+                  {i ? " · " : null}
+                  <span className={s.nowrap}>{part}</span>
+                </span>
+              ))}
+            </p>
           </div>
           <div className={s.vipArt}>
-            <VipPass passId="Yours with purchase" teaser />
+            <VipPass passId="Yours with purchase" />
           </div>
         </div>
       </section>

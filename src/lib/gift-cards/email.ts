@@ -1,6 +1,8 @@
 import {
   BLACK_FRIDAY_2026,
+  BOULEVARD_CHECKOUT,
   COPY,
+  type ClinicId,
   VIP_EXPERIENCES,
   formatUsd,
   type GiftCardOffer,
@@ -270,6 +272,85 @@ ${footerRow()}`;
     "Your Rella team",
     `${BLACK_FRIDAY_2026.site} · ${BLACK_FRIDAY_2026.phone}`,
     `Offer terms: ${BLACK_FRIDAY_2026.offersTermsUrl}`,
+  ].join("\n");
+  return { subject, preheader, html: shell({ title: subject, preheader, body }), text };
+}
+
+export type BoulevardConfirmationInput = {
+  purchaserFirstName: string;
+  offer: GiftCardOffer;
+  clinicId: ClinicId;
+  passId: string;
+};
+
+/**
+ * Boulevard-widget path: a confirmation STAFF send by hand to the purchaser
+ * once the package sale shows in Boulevard. Nothing here is sent
+ * automatically, and the copy never says it was.
+ */
+export function renderBoulevardConfirmationEmail(i: BoulevardConfirmationInput, assets: EmailAssets) {
+  const clinic = BOULEVARD_CHECKOUT.clinics.find((c) => c.id === i.clinicId);
+  if (!clinic) throw Error("unknown-clinic");
+  const s = BLACK_FRIDAY_2026;
+  const offerLine = `${formatUsd(i.offer.valueCents)} for ${formatUsd(i.offer.priceCents)}`;
+  const subject = "Your Rella Black Friday purchase";
+  const preheader = `${offerLine}, delivered as Rella account credit, plus a VIP Guest Pass to share.`;
+  const row = (k: string, v: string) =>
+    `<tr><td valign="top" style="padding:11px 12px 11px 0;border-bottom:1px solid #E8E1D7;font-family:${FONT};font-size:12px;line-height:20px;letter-spacing:1.5px;text-transform:uppercase;color:${C.silver};white-space:nowrap;">${k}</td><td align="right" style="padding:11px 0;border-bottom:1px solid #E8E1D7;font-family:${FONT};font-size:14px;line-height:20px;color:${C.ink};font-weight:500;">${v}</td></tr>`;
+  const body = `${headerRow(assets)}
+<tr><td class="px" style="padding:44px 48px 8px;">
+  <h1 class="h1" style="margin:0 0 20px;font-family:${FONT};font-size:32px;line-height:40px;font-weight:500;font-style:italic;color:${C.ink};">Thank you, ${esc(i.purchaserFirstName)}.</h1>
+  ${p("Your Black Friday purchase is confirmed. Here are your details.")}
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:8px 0 18px;">
+    ${row("Offer", esc(i.offer.title))}
+    ${row("Purchased", esc(offerLine))}
+    ${row("Clinic", `Rella ${esc(clinic.name)}`)}
+    ${row("VIP Guest Pass", `Included &middot; <span class="pid-row" style="white-space:nowrap;">${esc(i.passId)}</span>`)}
+  </table>
+  <p style="margin:0 0 28px;font-family:${FONT};font-size:15px;line-height:24px;font-weight:600;color:${C.ink};">${esc(COPY.delivery)}</p>
+  <h2 style="margin:0 0 10px;font-family:${FONT};font-size:22px;line-height:30px;font-weight:500;font-style:italic;color:${C.ink};">${esc(COPY.vipSection.headline)}</h2>
+  ${p("Your purchase includes an exclusive Rella VIP Guest Pass to gift to a friend or family member. Share it with someone you love: they choose <strong>one</strong> of the six experiences below and mention their Pass ID when they book.", "margin-bottom:24px;")}
+</td></tr>
+<tr><td class="px" style="padding:0 48px 24px;">${passTable(i.passId, assets)}</td></tr>
+<tr><td class="px" style="padding:0 48px 22px;font-family:${FONT};font-size:12px;line-height:20px;letter-spacing:1.5px;text-transform:uppercase;font-weight:500;color:${C.ink};text-align:center;">
+  ${COPY.passDeadlines.split(" · ").map((part) => `<span style="white-space:nowrap;">${esc(part)}</span>`).join(" &middot; ")}
+</td></tr>
+<tr><td style="padding:0 24px 28px;">${button(s.bookingUrl, "Book Your Visit")}</td></tr>
+<tr><td class="px" style="padding:0 48px 44px;">
+  ${p("All treatments are subject to consultation and provider approval. Results vary.", `font-size:13px;line-height:20px;color:${C.silver};`)}
+  ${p(`Questions? Reply to this email or call us at ${s.phone}. <a href="${s.offersTermsUrl}" style="color:${C.ink};">View the offer terms</a>.`)}
+  ${p("With love,<br>Your Rella team", "margin:0;")}
+</td></tr>
+${footerRow()}`;
+  const text = [
+    `Thank you, ${i.purchaserFirstName}.`,
+    "Your Black Friday purchase is confirmed. Here are your details.",
+    "",
+    `Offer: ${i.offer.title}`,
+    `Purchased: ${offerLine}`,
+    `Clinic: Rella ${clinic.name}`,
+    `VIP Guest Pass: included (${i.passId})`,
+    COPY.delivery,
+    "",
+    COPY.vipSection.headline,
+    "Your purchase includes an exclusive Rella VIP Guest Pass to gift to a friend or family member. Share it with someone you love: they choose ONE of the six experiences below and mention their Pass ID when they book.",
+    "",
+    `RELLA VIP GUEST PASS · ${i.passId}`,
+    COPY.pass.line,
+    COPY.pass.heading,
+    ...VIP_EXPERIENCES.map((e) => `- ${e.label}`),
+    "Choose ONE experience.",
+    COPY.passDeadlines,
+    "",
+    `Book your visit: ${s.bookingUrl}`,
+    "",
+    "All treatments are subject to consultation and provider approval. Results vary.",
+    `Questions? Reply to this email or call us at ${s.phone}.`,
+    `Offer terms: ${s.offersTermsUrl}`,
+    "",
+    "With love,",
+    "Your Rella team",
+    `${s.site} · ${s.phone} · ${s.email}`,
   ].join("\n");
   return { subject, preheader, html: shell({ title: subject, preheader, body }), text };
 }
