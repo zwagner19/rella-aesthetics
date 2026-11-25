@@ -1,10 +1,20 @@
 "use client";
 import { useCallback, useState } from "react";
-import { BLACK_FRIDAY_2026, COPY, OFFERS, OFFER_TERMS_DRAFT, formatUsd, type ClinicId, type GiftCardOffer } from "@/lib/gift-cards/config";
+import {
+  BLACK_FRIDAY_2026,
+  COPY,
+  OFFERS,
+  OFFER_TERMS_DRAFT,
+  formatUsd,
+  type BlackFridayCheckoutMode,
+  type ClinicId,
+  type GiftCardOffer,
+} from "@/lib/gift-cards/config";
 import { ClinicChooser, openBoulevardPackage } from "./BoulevardCheckout";
 import { GiftCardArt } from "./GiftCardArt";
 import { VipPass } from "./VipPass";
 import { DemoExperience } from "./DemoExperience";
+import { RellaCheckout } from "./RellaCheckout";
 import s from "./gift.module.css";
 
 /**
@@ -12,22 +22,26 @@ import s from "./gift.module.css";
  * placeholder in config; while it is null the Purchase buttons fail closed.
  * Demo mode (preview-only route) runs the full flow on fixture data.
  *
- * `boulevardWidget` (server-gated, preview only) sends Purchase through a
- * clinic chooser into Boulevard's own widget for that clinic's package.
- * There is no server-verified payment on that path, so no celebration is
- * shown; the VIP Guest Pass is staff-issued by email.
+ * `checkout` (server-gated, preview only) sends Purchase through a clinic
+ * chooser, then:
+ *  - "rella":  Rella's own package checkout on this page. Payment is verified
+ *    by the server, so a confirmed purchase shows the celebration. If that
+ *    checkout cannot start, it falls back to Boulevard's widget.
+ *  - "widget": Boulevard's own widget. No server-verified payment on that
+ *    path, so no celebration is shown.
+ * Either way the VIP Guest Pass is staff-issued by email.
  */
-export function BlackFridayLanding({ demo = false, boulevardWidget = false }: { demo?: boolean; boulevardWidget?: boolean }) {
+export function BlackFridayLanding({ demo = false, checkout = "closed" }: { demo?: boolean; checkout?: BlackFridayCheckoutMode }) {
+  const onlineCheckout = checkout !== "closed";
   const [unavailable, setUnavailable] = useState<string | null>(null);
   const [demoOffer, setDemoOffer] = useState<GiftCardOffer | null>(null);
   const [choosing, setChoosing] = useState<GiftCardOffer | null>(null);
   const [opening, setOpening] = useState(false);
   const [handedOff, setHandedOff] = useState<string | null>(null);
+  const [buying, setBuying] = useState<{ offer: GiftCardOffer; clinic: ClinicId } | null>(null);
   const closeChooser = useCallback(() => setChoosing(null), []);
 
-  async function chooseClinic(clinic: ClinicId) {
-    if (!choosing || opening) return;
-    const offer = choosing;
+  async function openWidget(offer: GiftCardOffer, clinic: ClinicId) {
     setOpening(true);
     try {
       await openBoulevardPackage(offer, clinic);
@@ -42,9 +56,29 @@ export function BlackFridayLanding({ demo = false, boulevardWidget = false }: { 
     }
   }
 
+  function chooseClinic(clinic: ClinicId) {
+    if (!choosing || opening) return;
+    const offer = choosing;
+    if (checkout === "rella") {
+      setChoosing(null);
+      setHandedOff(null);
+      setBuying({ offer, clinic });
+      return;
+    }
+    void openWidget(offer, clinic);
+  }
+
+  /** Rella's checkout could not start (nothing charged): hand off to Boulevard's widget. */
+  function fallBackToWidget() {
+    if (!buying) return;
+    const { offer, clinic } = buying;
+    setBuying(null);
+    void openWidget(offer, clinic);
+  }
+
   function purchase(offer: GiftCardOffer) {
     if (demo) return setDemoOffer(offer);
-    if (boulevardWidget) {
+    if (onlineCheckout) {
       setUnavailable(null);
       setChoosing(offer);
       return;
@@ -97,7 +131,7 @@ export function BlackFridayLanding({ demo = false, boulevardWidget = false }: { 
                 type="button"
                 className={s.btn}
                 onClick={() => purchase(o)}
-                aria-haspopup={boulevardWidget ? "dialog" : undefined}
+                aria-haspopup={onlineCheckout ? "dialog" : undefined}
                 aria-describedby={unavailable === o.id || handedOff === o.id ? `${o.id}-note` : undefined}
               >
                 {o.cta}
@@ -162,7 +196,16 @@ export function BlackFridayLanding({ demo = false, boulevardWidget = false }: { 
         </div>
       </section>
 
-      {choosing ? <ClinicChooser offer={choosing} busy={opening} onChoose={chooseClinic} onClose={closeChooser} /> : null}
+      {choosing ? <ClinicChooser offer={choosing} busy={opening} ownCheckout={checkout === "rella"} onChoose={chooseClinic} onClose={closeChooser} /> : null}
+      {buying ? (
+        <RellaCheckout
+          key={`${buying.offer.id}/${buying.clinic}`}
+          offer={buying.offer}
+          clinic={buying.clinic}
+          onUnavailable={fallBackToWidget}
+          onClose={() => setBuying(null)}
+        />
+      ) : null}
       {demo ? <DemoExperience offer={demoOffer} onClose={() => setDemoOffer(null)} /> : null}
     </div>
   );

@@ -137,6 +137,52 @@ export function boulevardWidgetCheckoutEnabled(env: Record<string, string | unde
   return env.BF_BOULEVARD_WIDGET_CHECKOUT === "1" && env.VERCEL_ENV !== "production";
 }
 
+/**
+ * Rella's own package checkout (rella-booking `/api/package-booking/*`, reached
+ * through this site's same-origin bridge). It is a guest checkout: Rella's
+ * server builds a one-package Boulevard cart, re-checks the total, the card
+ * goes straight to Boulevard's vault through the isolated card frame, and the
+ * server reports a verified CONFIRMED purchase back to this page.
+ *
+ * Each key is the public catalog key for one of Zach's packages above:
+ * "package-" + first 24 hex of sha256("<clinic>|urn:blvd:ProductLocation:<uuid>").
+ * The test derives them from BOULEVARD_CHECKOUT.packages, so the two cannot drift.
+ */
+export const RELLA_PACKAGE_KEYS = Object.freeze({
+  "bf26-1000": { napa: "package-9c2ad2b1e927ce141d921986", vacaville: "package-3c9d086e41b1c7bfcdeedc06" },
+  "bf26-2100": { napa: "package-7f5534420e44b7687105ace8", vacaville: "package-36746b3030506098847f4d0a" },
+} satisfies Record<GiftCardOfferId, Record<ClinicId, string>>);
+
+export function rellaPackageKey(offerId: GiftCardOfferId, clinicId: ClinicId): string {
+  const key = RELLA_PACKAGE_KEYS[offerId]?.[clinicId];
+  if (!key) throw Error("unknown-package");
+  return key;
+}
+
+/**
+ * Fail-closed price check. The amount charged is always the server's quote;
+ * this refuses to continue unless that quote is exactly the advertised price.
+ */
+export function quoteMatchesOffer(offer: GiftCardOffer, quote: { totalCents: number; currency: string }): boolean {
+  return quote.currency === "USD" && Number.isSafeInteger(quote.totalCents) && quote.totalCents === offer.priceCents;
+}
+
+/**
+ * How Purchase behaves, decided on the server.
+ *  - "closed": fail closed, show the phone number (always in production until Zach's go-live yes).
+ *  - "rella":  Rella's own checkout, with Boulevard's widget as the fallback.
+ *  - "widget": Boulevard's own pop-up only (set BF_RELLA_CHECKOUT=0 to force it).
+ * Preview only: needs a non-production Vercel environment AND one of the flags.
+ */
+export type BlackFridayCheckoutMode = "closed" | "rella" | "widget";
+
+export function blackFridayCheckoutMode(env: Record<string, string | undefined> = process.env): BlackFridayCheckoutMode {
+  if (env.VERCEL_ENV === "production") return "closed";
+  const widget = env.BF_BOULEVARD_WIDGET_CHECKOUT === "1";
+  if (env.BF_RELLA_CHECKOUT === "0") return widget ? "widget" : "closed";
+  return widget || env.BF_RELLA_CHECKOUT === "1" ? "rella" : "closed";
+}
+
 export type VipExperienceId =
   | "member-tox"
   | "beauty-blend-iv"
@@ -172,6 +218,12 @@ export const COPY = Object.freeze({
   /** Approved by Zach (Nov 25, 2026). */
   delivery: "Delivered as Rella account credit.",
   boulevardNote: "Your purchase is processed by Boulevard; your VIP Guest Pass will arrive by email.",
+  /** Rella checkout: shown after a server-verified purchase. The pass is staff-sent. */
+  purchased: {
+    headline: "Surprise! You've unlocked a little extra.",
+    body: "Your purchase is complete, and we have something special for someone you love.",
+    secondary: "Your Rella VIP Guest Pass will arrive by email.",
+  },
   /** "Book by Dec 15, 2026 · Redeem by Jan 31, 2027" */
   passDeadlines: "Book by Dec 15, 2026 · Redeem by Jan 31, 2027",
   landing: {

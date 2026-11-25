@@ -79,11 +79,14 @@ const ADDRESS: Record<ClinicId, string> = {
 export function ClinicChooser({
   offer,
   busy,
+  ownCheckout = false,
   onChoose,
   onClose,
 }: {
   offer: GiftCardOffer;
   busy: boolean;
+  /** Rella's own checkout follows on this page (instead of Boulevard's pop-up). */
+  ownCheckout?: boolean;
   onChoose: (clinic: ClinicId) => void;
   onClose: () => void;
 }) {
@@ -149,7 +152,7 @@ export function ClinicChooser({
           ))}
         </div>
         <p className={s.chooserFoot} role="status" aria-live="polite">
-          {busy ? "Opening secure checkout…" : "Checkout opens in Boulevard, our booking system."}
+          {busy ? "Opening secure checkout…" : ownCheckout ? "Your account credit is added at the clinic you choose." : "Checkout opens in Boulevard, our booking system."}
         </p>
       </div>
     </div>

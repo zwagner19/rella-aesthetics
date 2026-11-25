@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { BlackFridayLanding } from "@/components/gift-cards/BlackFridayLanding";
-import { boulevardWidgetCheckoutEnabled } from "@/lib/gift-cards/config";
+import { blackFridayCheckoutMode } from "@/lib/gift-cards/config";
 
 export const metadata: Metadata = {
   title: "Black Friday Gift Cards",
@@ -12,5 +12,5 @@ export const metadata: Metadata = {
 };
 
 export default function BlackFridayGiftCardsPage() {
-  return <BlackFridayLanding boulevardWidget={boulevardWidgetCheckoutEnabled()} />;
+  return <BlackFridayLanding checkout={blackFridayCheckoutMode()} />;
 }
