@@ -20,7 +20,7 @@ export async function downloadPassPng(passId: string): Promise<void> {
   // Same family as the gift card art: Rella pink surface, 18px-equivalent radius,
   // inset white hairline, white logo top-left, tracked kicker top-right.
   const x = 90, y = 110, w = W - 180, h = H - 220;
-  const INK = "#1A1A1A";
+  const ON_PINK = "#FFFFFF"; // all text on pink is white (owner decision), one weight up
   g.fillStyle = "#F7A19A";
   roundRect(g, x, y, w, h, 35);
   g.fill();
@@ -39,26 +39,26 @@ export async function downloadPassPng(passId: string): Promise<void> {
   for (const d of RELLA_LOGO_PATHS) g.fill(new Path2D(d), "evenodd");
   g.restore();
 
-  g.fillStyle = INK;
-  g.font = `500 20px ${fam}`;
+  g.fillStyle = ON_PINK;
+  g.font = `700 22px ${fam}`;
   spacedRight(g, "PASS ID", R, y + 84, 5.6);
-  g.font = `600 25px ${fam}`;
+  g.font = `700 25px ${fam}`;
   spacedRight(g, passId, R, y + 122, 3.4);
 
   // Card face keeps the gift card's 1.586 ratio.
   const faceH = Math.round(w / 1.586);
   g.textAlign = "left";
   g.font = `300 104px ${fam}`;
-  spaced(g, COPY.pass.brand, L, y + faceH - 92, 14);
-  g.font = `500 22px ${fam}`;
+  spaced(g, COPY.pass.brand, L, y + faceH - 104, 14);
+  g.font = `700 23px ${fam}`;
   spaced(g, COPY.pass.title, L, y + faceH - 52, 4.4);
-  g.fillStyle = "rgba(255,255,255,0.6)";
+  g.fillStyle = "#FFFFFF";
   g.fillRect(x + 20, y + faceH, w - 40, 2);
 
-  g.fillStyle = INK;
+  g.fillStyle = ON_PINK;
   g.font = `italic 500 34px ${famI}`;
   g.fillText(COPY.pass.line, L, y + faceH + 78);
-  g.font = `600 27px ${fam}`;
+  g.font = `700 27px ${fam}`;
   g.fillText(COPY.pass.heading, L, y + faceH + 140);
 
   let py = y + faceH + 204;
@@ -67,18 +67,15 @@ export async function downloadPassPng(passId: string): Promise<void> {
     g.arc(L + 7, py - 9, 6, 0, Math.PI * 2);
     g.fillStyle = "#FFFFFF";
     g.fill();
-    g.strokeStyle = INK;
-    g.lineWidth = 2;
-    g.stroke();
-    g.fillStyle = INK;
-    g.font = `400 27px ${fam}`;
+    g.fillStyle = ON_PINK;
+    g.font = `500 27px ${fam}`;
     py = wrap(g, e.label, L + 36, py, R - L - 36, 38) + 52;
   }
-  g.font = `400 25px ${fam}`;
+  g.font = `500 25px ${fam}`;
   g.fillText("Your guest chooses ONE experience.", L, py + 2);
 
   const dy = y + h - 170;
-  g.strokeStyle = "rgba(255,255,255,0.85)";
+  g.strokeStyle = "#FFFFFF";
   g.lineWidth = 2;
   g.setLineDash([10, 8]);
   g.beginPath();
@@ -86,11 +83,11 @@ export async function downloadPassPng(passId: string): Promise<void> {
   g.lineTo(R, dy);
   g.stroke();
   g.setLineDash([]);
-  g.fillStyle = INK;
-  g.font = `500 20px ${fam}`;
+  g.fillStyle = ON_PINK;
+  g.font = `700 22px ${fam}`;
   spaced(g, "BOOK BY", L, dy + 56, 4);
   spacedRight(g, "REDEEM BY", R, dy + 56, 4);
-  g.font = `600 29px ${fam}`;
+  g.font = `700 29px ${fam}`;
   g.textAlign = "right";
   g.fillText(BLACK_FRIDAY_2026.pass.redeemBy.label, R, dy + 98);
   g.textAlign = "left";

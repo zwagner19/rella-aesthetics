@@ -46,8 +46,8 @@
 .btn {
   display: inline-flex; align-items: center; justify-content: center; gap: 10px;
   min-height: 52px; padding: 0 28px; border-radius: 0;
-  border: 1.5px solid var(--g-rose); background: var(--g-rose); color: var(--g-ink);
-  font: inherit; font-size: 11px; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase;
+  border: 1.5px solid var(--g-rose); background: var(--g-rose); color: #fff;
+  font: inherit; font-size: 12px; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase;
   text-decoration: none; cursor: pointer;
   transition: transform 220ms ease, background-color 220ms ease, color 220ms ease;
 }
@@ -60,22 +60,22 @@
 /* ── gift card art (pending reference photo — restyle here) ─── */
 .card {
   position: relative; width: 100%; aspect-ratio: 1.586; border-radius: 18px; overflow: hidden;
-  background: var(--g-rose); color: var(--g-ink);
+  background: var(--g-rose); color: #fff;
   box-shadow: 0 1px 0 rgba(255,255,255,.35) inset, 0 24px 48px -28px rgba(26,26,26,.35);
   padding: 7% 7.5%;
   display: flex; flex-direction: column; justify-content: space-between;
 }
 .card::after { content: ""; position: absolute; inset: 10px; border: 1px solid rgba(255,255,255,.38); border-radius: 12px; pointer-events: none; }
 .cardTop { display: flex; align-items: flex-start; justify-content: space-between; }
-.cardKicker { font-size: 10px; letter-spacing: .28em; text-transform: uppercase; font-weight: 500; color: var(--g-ink); }
+.cardKicker { font-size: 12px; letter-spacing: .24em; text-transform: uppercase; font-weight: 700; color: #fff; }
 .cardValue { font-size: clamp(34px, 7vw, 54px); font-weight: 300; line-height: 1; letter-spacing: -0.01em; }
-.cardMeta { margin-top: 6px; font-size: 11px; letter-spacing: .2em; text-transform: uppercase; font-weight: 500; }
+.cardMeta { margin-top: 6px; font-size: 12px; letter-spacing: .18em; text-transform: uppercase; font-weight: 700; }
 
 /* ── VIP pass: same family as .card (surface, radius, hairline, logo, type) ── */
 .pass {
   position: relative; width: 100%; max-width: 460px; margin: 0 auto; text-align: left;
   border-radius: 18px; overflow: hidden;
-  background: var(--g-rose); color: var(--g-ink);
+  background: var(--g-rose); color: #fff;
   box-shadow: 0 1px 0 rgba(255,255,255,.35) inset, 0 24px 48px -28px rgba(26,26,26,.35);
 }
 .pass::after { content: ""; position: absolute; inset: 10px; border: 1px solid rgba(255,255,255,.38); border-radius: 12px; pointer-events: none; }
@@ -85,27 +85,28 @@
 }
 .passFace .cardTop { gap: 12px; }
 .passFace .cardTop > svg { flex: none; }
-.passId { text-align: right; font-size: 10px; letter-spacing: .28em; text-transform: uppercase; font-weight: 500; color: var(--g-ink); }
-.passId strong { display: block; margin-top: 4px; font-size: 12px; letter-spacing: .14em; white-space: nowrap; color: var(--g-ink); font-weight: 600; }
-.passBrand { margin: 0; font-size: clamp(34px, 7vw, 54px); font-weight: 300; line-height: 1; letter-spacing: .14em; color: var(--g-ink); }
-.passTitle { margin: 8px 0 0; font-size: 11px; letter-spacing: .2em; text-transform: uppercase; font-weight: 500; color: var(--g-ink); }
+.passId { text-align: right; font-size: 12px; letter-spacing: .22em; text-transform: uppercase; font-weight: 700; color: #fff; }
+.passId strong { display: block; margin-top: 4px; font-size: 12px; letter-spacing: .12em; white-space: nowrap; color: #fff; font-weight: 700; }
+.passBrand { margin: 0; font-size: clamp(34px, 7vw, 54px); font-weight: 300; line-height: 1; letter-spacing: .14em; color: #fff; }
+.passTitle { margin: 8px 0 0; font-size: 12px; letter-spacing: .18em; text-transform: uppercase; font-weight: 700; color: #fff; }
 .passBody { position: relative; padding: 20px 7.5% 8%; }
-.passBody::before { content: ""; position: absolute; top: 0; left: 10px; right: 10px; height: 1px; background: rgba(255,255,255,.6); }
-.passLine { margin: 0 0 16px; font-size: 16px; line-height: 1.45; color: var(--g-ink); }
-.passHeading { margin: 0 0 10px; font-size: 13px; font-weight: 600; color: var(--g-ink); }
+.passBody::before { content: ""; position: absolute; top: 0; left: 10px; right: 10px; height: 1px; background: #fff; }
+.passLine { margin: 0 0 16px; font-size: 16px; line-height: 1.45; color: #fff; }
+.passHeading { margin: 0 0 10px; font-size: 13px; font-weight: 700; color: #fff; }
 .perks { list-style: none; margin: 0 0 12px; padding: 0; display: grid; gap: 8px; }
-.perks li { display: grid; grid-template-columns: 14px 1fr; gap: 8px; font-size: 13px; line-height: 1.45; color: var(--g-ink); }
-.perks li::before { content: ""; width: 6px; height: 6px; margin-top: 7px; border-radius: 50%; background: #fff; box-shadow: 0 0 0 1px var(--g-ink); }
-.chooseOne { margin: 0 0 16px; font-size: 12px; color: var(--g-ink); }
-.perf { border: 0; border-top: 1px dashed rgba(255,255,255,.85); margin: 0 0 12px; }
-.dates { display: flex; justify-content: space-between; gap: 12px; font-size: 10px; letter-spacing: .2em; text-transform: uppercase; font-weight: 500; color: var(--g-ink); }
-.dates strong { display: block; margin-top: 3px; font-size: 12.5px; letter-spacing: .02em; text-transform: none; color: var(--g-ink); font-weight: 600; }
+.perks li { display: grid; grid-template-columns: 14px 1fr; gap: 8px; font-size: 13px; line-height: 1.45; font-weight: 500; color: #fff; }
+.perks li::before { content: ""; width: 6px; height: 6px; margin-top: 7px; border-radius: 50%; background: #fff; }
+.chooseOne { margin: 0 0 16px; font-size: 12px; font-weight: 500; color: #fff; }
+.chooseOne strong { font-weight: 700; }
+.perf { border: 0; border-top: 1px dashed #fff; margin: 0 0 12px; }
+.dates { display: flex; justify-content: space-between; gap: 12px; font-size: 12px; letter-spacing: .16em; text-transform: uppercase; font-weight: 700; color: #fff; }
+.dates strong { display: block; margin-top: 3px; font-size: 13px; letter-spacing: .02em; text-transform: none; color: #fff; font-weight: 700; }
 .teaserVeil { margin-top: 4px; }
 .teaserBars { list-style: none; margin: 0 0 16px; padding: 0; display: grid; gap: 11px; }
 .teaserBars li { display: grid; grid-template-columns: 14px 1fr; gap: 8px; align-items: center; }
-.teaserBars li::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: #fff; box-shadow: 0 0 0 1px var(--g-ink); }
+.teaserBars li::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: #fff; }
 .teaserBars li span { display: block; height: 9px; border-radius: 999px; background: rgba(255,255,255,.55); }
-.teaserCaption { margin: 0; padding-top: 12px; border-top: 1px dashed rgba(255,255,255,.85); font-size: 10.5px; letter-spacing: .22em; text-transform: uppercase; font-weight: 500; color: var(--g-ink); text-align: center; }
+.teaserCaption { margin: 0; padding-top: 12px; border-top: 1px dashed #fff; font-size: 12px; letter-spacing: .14em; text-transform: uppercase; font-weight: 700; color: #fff; text-align: center; }
 
 /* ── modal ──────────────────────────────────────────────────── */
 .overlay {
@@ -294,5 +295,5 @@
 .loadingBlock { display: flex; flex-direction: column; align-items: center; gap: 16px; padding: 36px 0 20px; text-align: center; }
 .loadingBlock .spinner { width: 28px; height: 28px; }
 @media (max-width: 400px) {
-  .passId strong { font-size: 10.5px; letter-spacing: .08em; }
+  .passId strong { font-size: 12px; letter-spacing: .04em; }
 }
