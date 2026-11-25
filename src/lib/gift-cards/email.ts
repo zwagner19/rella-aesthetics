@@ -59,6 +59,7 @@ function shell(opts: { title: string; preheader: string; body: string }): string
     .h1{font-size:30px!important;line-height:38px!important}
     .pass-inner{padding:22px 18px!important}
     .pid{font-size:12px!important;letter-spacing:0!important}
+    .pid-row{font-size:11px!important;letter-spacing:0!important}
   }
 </style>
 </head>
@@ -235,7 +236,7 @@ export function renderPurchaserEmail(i: PurchaserEmailInput, assets: EmailAssets
     ${row("Amount paid", formatUsd(i.paidCents))}
     ${row("Gift card value", formatUsd(i.offer.valueCents))}
     ${row("Order", esc(i.orderNumber))}
-    ${row("VIP Guest Pass", `Included &middot; ${esc(i.passId)}`)}
+    ${row("VIP Guest Pass", `Included &middot; <span class="pid-row" style="white-space:nowrap;">${esc(i.passId)}</span>`)}
   </table>
   <h2 style="margin:0 0 10px;font-family:${FONT};font-size:16px;font-weight:600;color:${C.ink};">Your gift card</h2>
   ${p(`Your gift card code is sent separately from Boulevard, our booking system, to this email address. It carries the full ${formatUsd(i.offer.valueCents)} value, including the ${formatUsd(i.offer.bonusCents)} in additional value. Keep it for yourself or forward it to someone you love. Present the code at checkout at either Rella location, or apply it when booking online.`)}
