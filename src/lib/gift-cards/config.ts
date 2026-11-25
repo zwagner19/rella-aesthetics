@@ -88,6 +88,55 @@ export const BLACK_FRIDAY_2026 = Object.freeze({
   ],
 });
 
+/**
+ * Boulevard checkout. Both offers are Boulevard Packages that add account
+ * credit (Boulevard caps gift cards at $1,500). Credit is granted at the
+ * clinic where the package is bought, so the visitor picks a clinic first.
+ * IDs are Zach's (Boulevard dashboard, "Other Packages" category); do not
+ * invent or edit them here without his confirmation.
+ *
+ * Purchase opens Boulevard's own booking widget for the chosen package. That
+ * path has NO server-verified payment, so it never shows the celebration;
+ * the VIP Guest Pass is staff-issued and arrives by email.
+ */
+export type ClinicId = "napa" | "vacaville";
+
+export const BOULEVARD_CHECKOUT = Object.freeze({
+  businessId: "a12f397a-6db3-4b18-bc34-01f02dfb7216",
+  injectorSrc: "https://static.joinboulevard.com/injector.min.js",
+  menuCategory: "Other Packages",
+  visitType: "PACKAGE",
+  clinics: Object.freeze([
+    { id: "napa", name: "Napa House", locationId: "91eba843-57fb-49e9-8505-431d501ffec7" },
+    { id: "vacaville", name: "Vacaville", locationId: "0f146f87-364e-4dfd-b938-61ba49528820" },
+  ] as const),
+  packages: Object.freeze({
+    "bf26-1000": { napa: "p_0c568ac1-560e-4a8f-a18e-a11cff0af950", vacaville: "p_b7d2e9ac-c9e0-42cd-b818-a7aba38b9676" },
+    "bf26-2100": { napa: "p_216ed6c4-0cc4-4717-bdd8-7430539ea3f2", vacaville: "p_17a12f26-1eb3-4b93-823d-c58915152d11" },
+  } satisfies Record<GiftCardOfferId, Record<ClinicId, string>>),
+});
+
+/** urlParams for blvd.openBookingWidget for one offer at one clinic. */
+export function boulevardWidgetParams(offerId: GiftCardOfferId, clinicId: ClinicId) {
+  const clinic = BOULEVARD_CHECKOUT.clinics.find((c) => c.id === clinicId);
+  const pkg = BOULEVARD_CHECKOUT.packages[offerId]?.[clinicId];
+  if (!clinic || !pkg) throw Error("unknown-package");
+  return {
+    locationId: clinic.locationId,
+    path: `/cart/menu/${BOULEVARD_CHECKOUT.menuCategory}/${pkg}`,
+    visitType: BOULEVARD_CHECKOUT.visitType,
+  };
+}
+
+/**
+ * Server-side gate for the Boulevard widget checkout. Preview only: it needs
+ * BF_BOULEVARD_WIDGET_CHECKOUT=1 AND a non-production Vercel environment.
+ * Anything else keeps Purchase fail-closed.
+ */
+export function boulevardWidgetCheckoutEnabled(env: Record<string, string | undefined> = process.env): boolean {
+  return env.BF_BOULEVARD_WIDGET_CHECKOUT === "1" && env.VERCEL_ENV !== "production";
+}
+
 export type VipExperienceId =
   | "member-tox"
   | "beauty-blend-iv"
@@ -120,6 +169,9 @@ export const OFFER_TERMS_DRAFT: readonly string[] = Object.freeze([
 
 /** Approved copy (verbatim from Zach's spec). */
 export const COPY = Object.freeze({
+  /** Approved by Zach (Nov 25, 2026). */
+  delivery: "Delivered as Rella account credit.",
+  boulevardNote: "Your purchase is processed by Boulevard; your VIP Guest Pass will arrive by email.",
   landing: {
     eyebrow: "THE BLACK FRIDAY EVENT | NOVEMBER 27 – DECEMBER 1",
     headline: "The gift that gives a little more.",

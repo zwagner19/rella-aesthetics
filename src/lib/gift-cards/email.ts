@@ -239,6 +239,7 @@ export function renderPurchaserEmail(i: PurchaserEmailInput, assets: EmailAssets
     ${row("VIP Guest Pass", `Included &middot; <span class="pid-row" style="white-space:nowrap;">${esc(i.passId)}</span>`)}
   </table>
   <h2 style="margin:0 0 10px;font-family:${FONT};font-size:16px;font-weight:600;color:${C.ink};">Your gift card</h2>
+  ${p(COPY.delivery)}
   ${p(`Your gift card code is sent separately from Boulevard, our booking system, to this email address. It carries the full ${formatUsd(i.offer.valueCents)} value, including the ${formatUsd(i.offer.bonusCents)} in additional value. Keep it for yourself or forward it to someone you love. Present the code at checkout at either Rella location, or apply it when booking online.`)}
   <h2 style="margin:16px 0 10px;font-family:${FONT};font-size:16px;font-weight:600;color:${C.ink};">Your VIP Guest Pass</h2>
   ${gifting}
@@ -258,6 +259,7 @@ ${footerRow()}`;
     `Order: ${i.orderNumber}`,
     `VIP Guest Pass: included (${i.passId})`,
     "",
+    COPY.delivery,
     `Your gift card code is sent separately from Boulevard to this email address and carries the full ${formatUsd(i.offer.valueCents)} value.`,
     "",
     i.gifting.state === "sent"

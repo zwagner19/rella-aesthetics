@@ -237,6 +237,28 @@
 .offerFacts li strong { font-weight: 500; }
 .offerBonus { color: var(--g-ink); font-weight: 600 !important; }
 .offer .btn { width: 100%; margin-top: auto; }
+.offerDelivery { margin: -12px 0 22px; font-size: 13px; line-height: 1.5; color: var(--g-charcoal); }
+
+/* ── clinic chooser (Boulevard checkout) ───────────────────── */
+.chooserOverlay { align-items: center; padding: 24px 14px; }
+.chooser { max-width: 460px; padding: 40px clamp(20px, 5vw, 36px) 28px; }
+.chooserEyebrow { margin: 0 0 10px; font-size: 11px; letter-spacing: .18em; text-transform: uppercase; color: var(--g-charcoal); font-weight: 500; }
+.chooserTitle { margin: 0 0 10px; font-size: clamp(26px, 6vw, 32px); line-height: 1.15; color: var(--g-ink); }
+.chooserBody { margin: 0 0 24px; font-size: 15px; line-height: 1.6; color: var(--g-charcoal); }
+.chooserOptions { display: grid; gap: 12px; }
+.chooserOption {
+  display: flex; flex-direction: column; align-items: center; gap: 4px; width: 100%;
+  min-height: 72px; padding: 14px 18px; border-radius: 14px;
+  border: 1.5px solid var(--g-rose); background: var(--g-rose); color: #fff;
+  font: inherit; cursor: pointer; transition: background-color 200ms ease, transform 200ms ease;
+}
+.chooserOption:hover { background: #f28e86; border-color: #f28e86; transform: translateY(-1px); }
+.chooserOption:focus-visible { outline: 2px solid var(--g-ink); outline-offset: 3px; }
+.chooserOption:disabled { opacity: .6; cursor: progress; transform: none; }
+.chooserName { font-size: 14px; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; }
+.chooserAddr { font-size: 13px; font-weight: 500; }
+.chooserFoot { margin: 18px 0 0; font-size: 12px; line-height: 1.5; color: var(--g-charcoal); }
+@media (prefers-reduced-motion: reduce) { .chooserOption, .chooserOption:hover { transition: none; transform: none; } }
 .offerNote { margin: 14px 0 0; padding: 14px 16px; border-radius: 12px; background: var(--g-ivory); font-size: 14px; line-height: 1.55; color: var(--g-ink); }
 .offerNote a { color: inherit; }
 
