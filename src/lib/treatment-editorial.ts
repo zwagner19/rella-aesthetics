@@ -323,7 +323,7 @@ export const treatmentEditorialBySlug: Readonly<
     approachHeadline: "Settings follow assessment — not the other way around.",
     approachLead: RELLA_APPROACH_LEAD,
     approachBody:
-      "IPL, laser hair removal, spider-vein care, Erbium resurfacing, and CO2 CoolPeel are different tools with different recovery profiles. Skin type, medications, recent sun, and event timing shape the recommendation.",
+      "IPL, laser hair removal, Erbium resurfacing, and CO2 CoolPeel are different tools with different recovery profiles. Skin type, medications, recent sun, and event timing shape the recommendation.",
     experienceHeading: "How the experience unfolds",
     experienceSteps: [
       {
@@ -348,7 +348,7 @@ export const treatmentEditorialBySlug: Readonly<
       },
     ],
     glance: [
-      { label: "Modalities", value: "IPL · LHR · veins · Erbium · CoolPeel" },
+      { label: "Modalities", value: "IPL · LHR · Erbium · CoolPeel" },
       { label: "Assessment", value: "Skin type and history first" },
       { label: "Recovery", value: "Varies substantially by modality" },
       { label: "Plan", value: "Area, device, and settings specific" },

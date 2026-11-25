@@ -66,18 +66,6 @@ export const LASERS_CONCERNS: readonly LasersConcern[] = [
     imagePosition: "object-[center_30%]",
   },
   {
-    id: "veins",
-    label: "Spider veins",
-    summary:
-      "Spider veins and broken capillaries may be addressed with laser or IPL therapy after the area and vessel pattern are reviewed.",
-    possibleTreatments: [
-      { name: "Spider-vein treatment", href: LASERS_DETAIL_HREF },
-    ],
-    image: "/images/service-laser.jpg",
-    imageAlt: "Laser treatment context at Rella Aesthetics",
-    imagePosition: "object-center",
-  },
-  {
     id: "texture",
     label: "Texture, fine lines & acne scars",
     summary:
