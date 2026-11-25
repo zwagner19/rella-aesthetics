@@ -92,11 +92,6 @@ const primaryCategories: readonly Category[] = [
         summary: "Hair reduction planned by treatment area.",
       },
       {
-        name: "Spider-vein treatment",
-        summary:
-          "Laser or IPL therapy for spider veins and broken capillaries after the area is reviewed.",
-      },
-      {
         name: "Erbium resurfacing",
         summary:
           "Resurfacing considered for texture, tone, fine lines, sun damage, and acne scars after assessment.",
