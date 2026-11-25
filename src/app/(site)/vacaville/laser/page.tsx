@@ -50,7 +50,7 @@ const faqs = [
   {
     question: "Which laser services are listed at Rella Vacaville?",
     answer:
-      "Vacaville's live laser menu includes the Initial Laser Consult, IPL, CoolPeel, resurfacing, laser hair removal, tattoo removal, and spider-vein treatment. Browse the live menu for current services and availability, and review consultation requirements before selecting treatment.",
+      "Vacaville's live laser menu includes the Initial Laser Consult, IPL, CoolPeel, resurfacing, laser hair removal, and tattoo removal. Browse the live menu for current services and availability, and review consultation requirements before selecting treatment.",
   },
   {
     question: "How much downtime should I expect?",
@@ -114,7 +114,7 @@ const treatmentPaths = [
   },
   {
     title: "Hair & targeted concerns",
-    body: "Hair removal, tattoo removal, and spider-vein treatment are distinct pathways to ask about. The consult determines availability and the responsible next step.",
+    body: "Hair removal and tattoo removal are distinct pathways to ask about. The consult determines availability and the responsible next step.",
   },
 ] as const;
 

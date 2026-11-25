@@ -59,7 +59,7 @@ export const services = [
     slug: "laser-treatments",
     title: "Laser Treatments",
     category: "Body & Wellness",
-    description: "IPL, spider vein removal, laser hair removal, and Erbium skin resurfacing.",
+    description: "IPL, laser hair removal, and Erbium skin resurfacing.",
     image: "/images/treatments/laser-treatment.webp",
     imageAlt: "A Rella provider performing a device-based skin treatment",
   },

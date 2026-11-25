@@ -126,7 +126,7 @@ export const servicePages: ServicePageData[] = [
     heroDescription: "Consultation-led peel options in Vacaville and Napa, selected around your skin, goals, and expected recovery.",
     whatItIs: {
       heading: "What Is a Chemical Peel?",
-      body: "Chemical peels use controlled solutions to exfoliate the skin. Browse Rella's live menu at your preferred clinic for current peel options and availability. The appropriate option depends on your skin, concerns, recent treatments, and expected recovery.",
+      body: "Chemical peels use controlled solutions to exfoliate the skin. At Napa House, MicroPeel Sensitive, MicroPeel Plus 30, and Universal Peel are offered with Natalie Molina, our licensed esthetician. She can help you choose an option based on your skin, concerns, recent treatments, and expected recovery.",
     },
     whoItsFor: {
       heading: "Who Is It For?",
@@ -265,7 +265,7 @@ export const servicePages: ServicePageData[] = [
     heroDescription: "A controlled microchannel treatment planned around candidacy, treatment area, skin response, and recovery.",
     whatItIs: {
       heading: "What Is Microneedling?",
-      body: "Microneedling uses small needles to create controlled microchannels in the skin. The device, treatment area, depth, number of procedures, and expected response require an individual plan; not everyone is an appropriate candidate.",
+      body: "Microneedling uses small needles to create controlled microchannels in the skin. The device, treatment area, depth, number of procedures, and expected response require an individual plan; not everyone is an appropriate candidate. At Napa House, options include SkinPen microneedling, radiofrequency (RF) microneedling, and an initial microneedling consultation.",
     },
     whoItsFor: {
       heading: "Who Is It For?",
@@ -350,13 +350,13 @@ export const servicePages: ServicePageData[] = [
     slug: "laser-treatments",
     title: "Laser Treatments",
     metaTitle: "Laser Treatments in Vacaville & Napa CA",
-    metaDescription: "Explore consultation-led IPL, laser hair removal, spider-vein, and resurfacing options at Rella Aesthetics in Vacaville and Napa.",
+    metaDescription: "Explore consultation-led IPL, laser hair removal, and resurfacing options at Rella Aesthetics in Vacaville and Napa.",
     heroEyebrow: "Body & Wellness",
     heroTitle: "Laser Treatments",
     heroDescription: "Consultation-led laser and light-based options selected around your skin, goals, treatment area, and recovery needs.",
     whatItIs: {
       heading: "What Are Laser Treatments?",
-      body: "Rella's laser and light-based menu includes options such as IPL photofacials, laser hair removal, spider-vein treatment, Erbium resurfacing, and CO2 CoolPeel. The appropriate modality, settings, treatment area, and expected recovery depend on an individual assessment.",
+      body: "Rella's laser and light-based menu includes options such as IPL photofacials, laser hair removal, Erbium resurfacing, and CO2 CoolPeel. The appropriate modality, settings, treatment area, and expected recovery depend on an individual assessment.",
     },
     whoItsFor: {
       heading: "Who Is It For?",
@@ -364,7 +364,6 @@ export const servicePages: ServicePageData[] = [
       bullets: [
         "Sun damage, brown spots, and redness (IPL)",
         "Unwanted body and facial hair (laser hair removal)",
-        "Spider veins and broken capillaries",
         "Acne scars and deep texture concerns (Erbium resurfacing)",
         "General skin rejuvenation and tone improvement",
       ],

@@ -63,7 +63,7 @@ export const teamRoleGroups = [
         primaryLocation: "vacaville",
         alsoServes: "napa",
         bio: [
-          "Warda is passionate about wellness and personalized patient care, specializing in IV therapy, vitamin injections, peptide consultations, hormone optimization, and testosterone replacement therapy. She loves creating individualized treatment plans that help patients feel their best from the inside out.",
+          "Warda is passionate about wellness and personalized patient care, specializing in IV therapy, vitamin injections, hormone optimization, and testosterone replacement therapy. She loves creating individualized treatment plans that help patients feel their best from the inside out.",
           "Her favorite part of working at Rella is helping patients feel confident, supported, and empowered on their wellness journey.",
         ],
       },
