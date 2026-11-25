@@ -16,15 +16,15 @@ const FONT = `'Poppins','Helvetica Neue',Helvetica,Arial,sans-serif`;
 const FONT_LINK = "https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,400;0,500;0,600;1,500&display=swap";
 const C = {
   rose: "#F7A19A",
-  blush: "#FBD9D5",
-  blushSoft: "#FDEDEA",
   ivory: "#F7F4EF",
   ink: "#1A1A1A",
   charcoal: "#2B2B2B",
   silver: "#64696E",
   rule: "#BFB6AB",
-  gold: "#B8975A",
-  goldSoft: "#D9C39A",
+  /** White at ~38% over Rella pink (the gift card's inset hairline), flattened for email. */
+  hairline: "#FAC5C0",
+  /** White at ~60% over Rella pink. */
+  hairlineStrong: "#FCD9D7",
   white: "#FFFFFF",
 };
 
@@ -34,7 +34,7 @@ export const esc = (s: string) =>
 export type EmailAssets = {
   /** Absolute https URL to a PNG of the white circle-"r" mark (SVG is blocked by Gmail/Outlook). */
   logoUrl: string;
-  /** Same mark in ink (#1A1A1A) for the blush pass, where white would lack contrast. */
+  /** Same mark in ink (#1A1A1A). Kept for callers; the pink pass now uses the white logo like the gift card. */
   passMarkUrl: string;
 };
 
@@ -86,32 +86,37 @@ function headerRow(assets: EmailAssets): string {
 const p = (text: string, extra = "") =>
   `<p style="margin:0 0 16px;font-family:${FONT};font-size:15px;line-height:24px;color:${C.charcoal};${extra}">${text}</p>`;
 
-/** The VIP Guest Pass as a bulletproof table (no images required to read it). */
+/**
+ * The VIP Guest Pass as a bulletproof table (no images required to read it).
+ * Same family as the gift card art: Rella pink surface, rounded corners, inset
+ * white hairline, white logo top-left, tracked kicker top-right, light display
+ * type for RELLA. All text is ink on pink for contrast.
+ */
 export function passTable(passId: string, assets: EmailAssets): string {
   const perks = VIP_EXPERIENCES.map(
-    (e) => `<tr><td valign="top" width="18" style="padding:0 0 9px;font-family:${FONT};font-size:12px;line-height:20px;color:${C.gold};">&#9670;</td><td style="padding:0 0 9px;font-family:${FONT};font-size:13px;line-height:20px;color:${C.ink};">${esc(e.label)}</td></tr>`,
+    (e) => `<tr><td valign="top" width="18" style="padding:0 0 9px;font-family:${FONT};font-size:10px;line-height:20px;color:${C.ink};">&#9675;</td><td style="padding:0 0 9px;font-family:${FONT};font-size:13px;line-height:20px;color:${C.ink};">${esc(e.label)}</td></tr>`,
   ).join("");
-  return `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:${C.blush};border:1px solid ${C.gold};">
-<tr><td style="padding:5px;">
-<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="border:1px solid ${C.goldSoft};">
-<tr><td class="pass-inner" style="padding:28px 30px;">
+  return `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="${C.rose}" style="background:${C.rose};border-radius:18px;">
+<tr><td style="padding:10px;">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="border:1px solid ${C.hairline};border-radius:12px;">
+<tr><td class="pass-inner" style="padding:26px 26px 30px;">
   <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
   <tr>
-    <td valign="middle" width="100"><img src="${esc(assets.passMarkUrl)}" width="94" height="36" alt="Rella Aesthetics" style="display:block;width:94px;height:36px;"></td>
-    <td valign="middle" align="right" style="font-family:${FONT};font-size:10px;letter-spacing:2px;color:${C.charcoal};">PASS ID<br><span class="pid" style="font-size:13px;letter-spacing:1.5px;color:${C.ink};font-weight:600;white-space:nowrap;">${esc(passId)}</span></td>
+    <td valign="top" width="110"><img src="${esc(assets.logoUrl)}" width="105" height="40" alt="Rella Aesthetics" style="display:block;width:105px;height:40px;"></td>
+    <td valign="top" align="right" style="font-family:${FONT};font-size:10px;line-height:14px;letter-spacing:2.5px;font-weight:500;color:${C.ink};">PASS ID<br><span class="pid" style="font-size:12px;line-height:20px;letter-spacing:1.5px;color:${C.ink};font-weight:600;white-space:nowrap;">${esc(passId)}</span></td>
   </tr>
   </table>
-  <p style="margin:22px 0 2px;font-family:${FONT};font-size:26px;line-height:30px;letter-spacing:8px;font-weight:600;color:${C.ink};">${COPY.pass.brand}</p>
-  <p style="margin:0 0 14px;font-family:${FONT};font-size:12px;letter-spacing:4px;font-weight:500;color:${C.charcoal};">${COPY.pass.title}</p>
-  <table role="presentation" width="64" cellpadding="0" cellspacing="0" border="0"><tr><td height="1" style="height:1px;line-height:1px;font-size:1px;background:${C.gold};">&nbsp;</td></tr></table>
-  <p style="margin:14px 0 18px;font-family:${FONT};font-size:15px;line-height:22px;font-style:italic;font-weight:500;color:${C.ink};">${esc(COPY.pass.line)}</p>
+  <p style="margin:56px 0 0;font-family:${FONT};font-size:44px;line-height:46px;letter-spacing:6px;font-weight:300;color:${C.ink};">${COPY.pass.brand}</p>
+  <p style="margin:8px 0 22px;font-family:${FONT};font-size:11px;line-height:16px;letter-spacing:2.5px;font-weight:500;color:${C.ink};">${COPY.pass.title}</p>
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td height="1" style="height:1px;line-height:1px;font-size:1px;background:${C.hairlineStrong};">&nbsp;</td></tr></table>
+  <p style="margin:18px 0 16px;font-family:${FONT};font-size:15px;line-height:22px;font-style:italic;font-weight:500;color:${C.ink};">${esc(COPY.pass.line)}</p>
   <p style="margin:0 0 12px;font-family:${FONT};font-size:13px;line-height:20px;font-weight:600;color:${C.ink};">${esc(COPY.pass.heading)}</p>
   <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">${perks}</table>
-  <p style="margin:8px 0 16px;font-family:${FONT};font-size:12px;line-height:18px;color:${C.charcoal};">Choose <strong>one</strong> experience. One pass per guest.</p>
-  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="border-top:1px dashed ${C.gold};">
+  <p style="margin:8px 0 16px;font-family:${FONT};font-size:12px;line-height:18px;color:${C.ink};">Choose <strong>one</strong> experience. One pass per guest.</p>
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="border-top:1px dashed ${C.white};">
   <tr>
-    <td style="padding-top:12px;font-family:${FONT};font-size:11px;letter-spacing:1px;color:${C.charcoal};">BOOK BY<br><span style="font-size:13px;color:${C.ink};font-weight:600;letter-spacing:0;">${BLACK_FRIDAY_2026.pass.bookBy.label}</span></td>
-    <td align="right" style="padding-top:12px;font-family:${FONT};font-size:11px;letter-spacing:1px;color:${C.charcoal};">REDEEM BY<br><span style="font-size:13px;color:${C.ink};font-weight:600;letter-spacing:0;">${BLACK_FRIDAY_2026.pass.redeemBy.label}</span></td>
+    <td style="padding-top:12px;font-family:${FONT};font-size:10px;letter-spacing:2px;font-weight:500;color:${C.ink};">BOOK BY<br><span style="font-size:13px;color:${C.ink};font-weight:600;letter-spacing:0;">${BLACK_FRIDAY_2026.pass.bookBy.label}</span></td>
+    <td align="right" style="padding-top:12px;font-family:${FONT};font-size:10px;letter-spacing:2px;font-weight:500;color:${C.ink};">REDEEM BY<br><span style="font-size:13px;color:${C.ink};font-weight:600;letter-spacing:0;">${BLACK_FRIDAY_2026.pass.redeemBy.label}</span></td>
   </tr>
   </table>
 </td></tr>
@@ -150,7 +155,7 @@ export function renderRecipientEmail(i: RecipientEmailInput, assets: EmailAssets
   const first = esc(i.recipientFirstName);
   const sender = esc(i.senderName);
   const note = i.message
-    ? `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:4px 0 24px;"><tr><td style="background:${C.blushSoft};border-left:2px solid ${C.rose};padding:18px 20px;font-family:${FONT};font-size:15px;line-height:23px;font-style:italic;color:${C.ink};">&ldquo;${esc(i.message).replace(/\n/g, "<br>")}&rdquo;<br><span style="font-style:normal;font-size:12px;letter-spacing:1px;color:${C.silver};">&mdash; ${sender}</span></td></tr></table>`
+    ? `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:4px 0 24px;"><tr><td style="background:${C.ivory};border-left:2px solid ${C.rose};padding:18px 20px;font-family:${FONT};font-size:15px;line-height:23px;font-style:italic;color:${C.ink};">&ldquo;${esc(i.message).replace(/\n/g, "<br>")}&rdquo;<br><span style="font-style:normal;font-size:12px;letter-spacing:1px;color:${C.silver};">&mdash; ${sender}</span></td></tr></table>`
     : "";
   const body = `${headerRow(assets)}
 <tr><td class="px" style="padding:44px 48px 8px;">

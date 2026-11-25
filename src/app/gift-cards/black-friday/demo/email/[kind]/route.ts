@@ -45,7 +45,7 @@ export async function GET(req: Request, ctx: { params: Promise<{ kind: string }>
       assets,
     ).html;
   } else return new Response("Not found", { status: 404 });
-  const banner = `<div style="background:#A34F49;color:#fff;font:500 11px/1.4 Arial,sans-serif;letter-spacing:2px;text-align:center;padding:10px;text-transform:uppercase;">DEMO email preview · fixture data · not sent</div>`;
+  const banner = `<div style="background:#1A1A1A;color:#fff;font:500 11px/1.4 Arial,sans-serif;letter-spacing:2px;text-align:center;padding:10px;text-transform:uppercase;">DEMO email preview · fixture data · not sent</div>`;
   return new Response(html.replace(/<body([^>]*)>/, `<body$1>${banner}`), {
     headers: { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "no-store", "X-Robots-Tag": "noindex, nofollow" },
   });

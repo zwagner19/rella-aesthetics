@@ -17,80 +17,84 @@ export async function downloadPassPng(passId: string): Promise<void> {
   if (!g) throw Error("canvas-unavailable");
   g.fillStyle = "#F7F4EF";
   g.fillRect(0, 0, W, H);
+  // Same family as the gift card art: Rella pink surface, 18px-equivalent radius,
+  // inset white hairline, white logo top-left, tracked kicker top-right.
   const x = 90, y = 110, w = W - 180, h = H - 220;
-  g.fillStyle = "#FBD9D5";
-  roundRect(g, x, y, w, h, 34);
+  const INK = "#1A1A1A";
+  g.fillStyle = "#F7A19A";
+  roundRect(g, x, y, w, h, 35);
   g.fill();
-  g.strokeStyle = "#B8975A";
+  g.strokeStyle = "rgba(255,255,255,0.38)";
   g.lineWidth = 2;
-  roundRect(g, x + 16, y + 16, w - 32, h - 32, 22);
-  g.stroke();
-  g.strokeStyle = "#D9C39A";
-  roundRect(g, x + 28, y + 28, w - 56, h - 56, 16);
+  roundRect(g, x + 20, y + 20, w - 40, h - 40, 23);
   g.stroke();
 
-  const L = x + 80;
-  const k = 92 / RELLA_LOGO_VIEWBOX.h;
+  const L = x + 68;
+  const R = x + w - 68;
+  const k = 78 / RELLA_LOGO_VIEWBOX.h;
   g.save();
-  g.translate(L - RELLA_LOGO_VIEWBOX.x * k, y + 90 - RELLA_LOGO_VIEWBOX.y * k);
+  g.translate(L - RELLA_LOGO_VIEWBOX.x * k, y + 63 - RELLA_LOGO_VIEWBOX.y * k);
   g.scale(k, k);
-  g.fillStyle = "#1A1A1A";
+  g.fillStyle = "#FFFFFF";
   for (const d of RELLA_LOGO_PATHS) g.fill(new Path2D(d), "evenodd");
   g.restore();
 
-  g.textAlign = "right";
-  g.fillStyle = "#64696E";
+  g.fillStyle = INK;
   g.font = `500 20px ${fam}`;
-  g.fillText("PASS ID", x + w - 80, y + 120);
-  g.fillStyle = "#1A1A1A";
-  g.font = `600 28px ${fam}`;
-  g.fillText(passId, x + w - 80, y + 158);
+  spacedRight(g, "PASS ID", R, y + 84, 5.6);
+  g.font = `600 25px ${fam}`;
+  spacedRight(g, passId, R, y + 122, 3.4);
 
+  // Card face keeps the gift card's 1.586 ratio.
+  const faceH = Math.round(w / 1.586);
   g.textAlign = "left";
-  g.font = `600 84px ${fam}`;
-  spaced(g, COPY.pass.brand, L, y + 340, 26);
-  g.font = `500 30px ${fam}`;
-  g.fillStyle = "#2B2B2B";
-  spaced(g, COPY.pass.title, L, y + 400, 11);
-  g.fillStyle = "#B8975A";
-  g.fillRect(L, y + 440, 150, 2);
-  g.fillStyle = "#1A1A1A";
-  g.font = `italic 500 38px ${famI}`;
-  g.fillText(COPY.pass.line, L, y + 510);
-  g.font = `600 30px ${fam}`;
-  g.fillText(COPY.pass.heading, L, y + 590);
+  g.font = `300 104px ${fam}`;
+  spaced(g, COPY.pass.brand, L, y + faceH - 92, 14);
+  g.font = `500 22px ${fam}`;
+  spaced(g, COPY.pass.title, L, y + faceH - 52, 4.4);
+  g.fillStyle = "rgba(255,255,255,0.6)";
+  g.fillRect(x + 20, y + faceH, w - 40, 2);
 
-  let py = y + 660;
+  g.fillStyle = INK;
+  g.font = `italic 500 34px ${famI}`;
+  g.fillText(COPY.pass.line, L, y + faceH + 78);
+  g.font = `600 27px ${fam}`;
+  g.fillText(COPY.pass.heading, L, y + faceH + 140);
+
+  let py = y + faceH + 204;
   for (const e of VIP_EXPERIENCES) {
-    g.fillStyle = "#B8975A";
-    g.font = `22px ${fam}`;
-    g.fillText("◆", L, py);
-    g.fillStyle = "#1A1A1A";
-    g.font = `400 29px ${fam}`;
-    py = wrap(g, e.label, L + 44, py, w - 220, 40) + 58;
+    g.beginPath();
+    g.arc(L + 7, py - 9, 6, 0, Math.PI * 2);
+    g.fillStyle = "#FFFFFF";
+    g.fill();
+    g.strokeStyle = INK;
+    g.lineWidth = 2;
+    g.stroke();
+    g.fillStyle = INK;
+    g.font = `400 27px ${fam}`;
+    py = wrap(g, e.label, L + 36, py, R - L - 36, 38) + 52;
   }
-  g.fillStyle = "#2B2B2B";
-  g.font = `400 26px ${fam}`;
-  g.fillText("Your guest chooses ONE experience.", L, py + 6);
+  g.font = `400 25px ${fam}`;
+  g.fillText("Your guest chooses ONE experience.", L, py + 2);
 
-  const dy = y + h - 190;
-  g.strokeStyle = "#B8975A";
+  const dy = y + h - 170;
+  g.strokeStyle = "rgba(255,255,255,0.85)";
+  g.lineWidth = 2;
   g.setLineDash([10, 8]);
   g.beginPath();
-  g.moveTo(x + 40, dy);
-  g.lineTo(x + w - 40, dy);
+  g.moveTo(L, dy);
+  g.lineTo(R, dy);
   g.stroke();
   g.setLineDash([]);
-  g.fillStyle = "#64696E";
+  g.fillStyle = INK;
   g.font = `500 20px ${fam}`;
-  g.fillText("BOOK BY", L, dy + 66);
+  spaced(g, "BOOK BY", L, dy + 56, 4);
+  spacedRight(g, "REDEEM BY", R, dy + 56, 4);
+  g.font = `600 29px ${fam}`;
   g.textAlign = "right";
-  g.fillText("REDEEM BY", x + w - 80, dy + 66);
-  g.fillStyle = "#1A1A1A";
-  g.font = `600 30px ${fam}`;
-  g.fillText(BLACK_FRIDAY_2026.pass.redeemBy.label, x + w - 80, dy + 108);
+  g.fillText(BLACK_FRIDAY_2026.pass.redeemBy.label, R, dy + 98);
   g.textAlign = "left";
-  g.fillText(BLACK_FRIDAY_2026.pass.bookBy.label, L, dy + 108);
+  g.fillText(BLACK_FRIDAY_2026.pass.bookBy.label, L, dy + 98);
 
   g.textAlign = "center";
   g.fillStyle = "#64696E";
@@ -124,6 +128,14 @@ function spaced(g: CanvasRenderingContext2D, t: string, x: number, y: number, sp
     g.fillText(ch, cx, y);
     cx += g.measureText(ch).width + sp;
   }
+}
+function spacedRight(g: CanvasRenderingContext2D, t: string, right: number, y: number, sp: number) {
+  const prev = g.textAlign;
+  g.textAlign = "left";
+  let width = 0;
+  for (const ch of t) width += g.measureText(ch).width + sp;
+  spaced(g, t, right - (width - sp), y, sp);
+  g.textAlign = prev;
 }
 function wrap(g: CanvasRenderingContext2D, t: string, x: number, y: number, max: number, lh: number): number {
   const words = t.split(" ");
