@@ -337,7 +337,7 @@ describe("paid aesthetics eligibility and URL boundaries", () => {
     expect(wordpressSitemapPaths).toHaveLength(WORDPRESS_LANDINGS.length);
     expect(new Set(wordpressSitemapPaths.map(path => path.replace(/\/$/, "")))).toEqual(retainedWordPressPages);
     const routes = [
-      ...staticPages(app).filter(path => !["/booking", "/wpbc-booking-received"].includes(path)),
+      ...staticPages(app).filter(path => !["/booking", "/wpbc-booking-received"].includes(path) && !path.startsWith("/gift-cards/black-friday/demo")),
       ...sitemapPaths.filter(path => !isWordPressLanding(path)),
       ...servicePages.filter(service => service.slug !== "weight-loss").map(service => `/services/${service.slug}`),
       ...LOCAL_EDITORIAL_POSTS.map(post => `/blog/${post.slug}`),

@@ -1,5 +1,6 @@
 import { NextRequest } from "next/server";
 import { bookingBackendOrigin } from "./server-bridge";
+import { blackFridayCheckoutMode, RELLA_PACKAGE_KEYS } from "../gift-cards/config";
 
 const GETS = new Set(["catalog", "status", "owned"]);
 const POSTS = new Set(["start", "prepare", "consent", "payment", "checkout", "auth-code", "auth-verify", "auth-profile", "auth-logout", "book-owned"]);
@@ -23,6 +24,10 @@ export async function packageBridge(req: NextRequest, operation: string): Promis
       if (raw.length > 10_240) return Response.json({ ok: false }, { status: 413 });
       payload = JSON.parse(raw);
       if (!payload || typeof payload !== "object" || Array.isArray(payload)) return Response.json({ ok: false }, { status: 400 });
+      if (operation === "start" && Object.values(RELLA_PACKAGE_KEYS).some(clinics => Object.values(clinics).includes(payload!.packageKey as string))
+        && blackFridayCheckoutMode() !== "rella") {
+        return Response.json({ ok: false, reason: "promotion_closed", stage: "SAFE_TO_RETRY" }, { status: 409, headers: { "Cache-Control": "no-store" } });
+      }
     }
     const cookie = (req.headers.get("cookie") ?? "").split(";").map(value => value.trim()).filter(value => COOKIES.has(value.split("=")[0])).join("; ");
     const upstream = await fetch(url, { method: req.method,
