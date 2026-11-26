@@ -13,7 +13,9 @@ const WP_FILES = new Set(["/wp-login.php", "/xmlrpc.php", "/wp-cron.php", "/wp-c
 const WP_QUERIES = ["rest_route", "p", "page_id", "preview", "preview_id", "preview_nonce", "elementor-preview", "wc-ajax", "s"];
 const PRIVATE_PREFIXES = ["/api", "/studio", "/booking", "/book", "/secure-card", "/_next"];
 const ASSET_EXTENSIONS = /\.(?:css|js|mjs|json|map|xml|txt|ico|svg|png|jpe?g|webp|avif|gif|woff2?|ttf|otf|mp4|webm|pdf)$/i;
-const ORIGIN_HOST = /^rella-aesthetics-[a-z0-9]+-zwagner19s-projects\.vercel\.app$/;
+// Either a pinned deployment URL or the exact production alias, which follows
+// whatever build is promoted to Production in Vercel (branch aliases stay blocked).
+const ORIGIN_HOST = /^(?:rella-aesthetics-[a-z0-9]+-zwagner19s-projects|rella-aesthetics)\.vercel\.app$/;
 const TIMEOUT_MS = 30_000;
 const MAX_HTML_BYTES = 2 * 1024 * 1024;
 const CANONICAL_EXCEPTIONS = Object.freeze({
