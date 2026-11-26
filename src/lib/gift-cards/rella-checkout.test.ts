@@ -48,6 +48,12 @@ describe("Black Friday keys for Rella's own package checkout", () => {
 
 describe("Black Friday checkout mode", () => {
   const open = BLACK_FRIDAY_2026.window.startsAt;
+  it("opens on the owner's November 25 authorization without extending the December 1 deadline", () => {
+    expect(open).toBe(Date.parse("2026-11-26T01:07:37.000Z"));
+    expect(BLACK_FRIDAY_2026.window.endsAt).toBe(Date.parse("2026-12-02T07:59:59.999Z"));
+    expect(BLACK_FRIDAY_2026.window.label).toBe("NOVEMBER 25 – DECEMBER 1");
+    expect(blackFridayCheckoutMode({ VERCEL_ENV: "production", BF_RELLA_CHECKOUT_LIVE: "1" }, Date.parse("2026-11-26T02:00:00Z"))).toBe("rella");
+  });
   it("is closed in production no matter which flags are set", () => {
     expect(blackFridayCheckoutMode({ VERCEL_ENV: "production", BF_RELLA_CHECKOUT: "1", BF_BOULEVARD_WIDGET_CHECKOUT: "1" }, open)).toBe("closed");
   });

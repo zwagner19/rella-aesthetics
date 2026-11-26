@@ -53,11 +53,11 @@ export const OFFERS: readonly GiftCardOffer[] = Object.freeze([
 
 export const BLACK_FRIDAY_2026 = Object.freeze({
   campaignId: "black-friday-2026",
-  /** Nov 27 2026 00:00 PST (UTC-8) → Dec 1 2026 23:59:59.999 PST. */
+  /** Owner opened purchases Nov 25 at 17:07:37 PST; Dec 1 closing is unchanged. */
   window: {
-    startsAt: Date.parse("2026-11-27T08:00:00.000Z"),
+    startsAt: Date.parse("2026-11-26T01:07:37.000Z"),
     endsAt: Date.parse("2026-12-02T07:59:59.999Z"),
-    label: "NOVEMBER 27 – DECEMBER 1",
+    label: "NOVEMBER 25 – DECEMBER 1",
   },
   pass: {
     /** Last day to BOOK the chosen experience (end of day, Pacific). */
@@ -215,7 +215,7 @@ export const VIP_EXPERIENCES: readonly { id: VipExperienceId; label: string }[] 
  * decision, not a representation that this copy received legal review.
  */
 export const OFFER_TERMS: readonly string[] = Object.freeze([
-  "Black Friday gift card offers are available for purchase November 27 through December 1, 2026 (Pacific Time), or while the promotion remains available.",
+  "Black Friday gift card offers are available for purchase November 25 through December 1, 2026 (Pacific Time), or while the promotion remains available.",
   "Open to new and existing Rella clients. There is no per-person purchase limit.",
   "The $1,000 Rella Gift Card is purchased for $800 and the $2,100 Rella Gift Card is purchased for $1,600. Delivered as Rella account credit, including the additional promotional value. Account credit is added at the clinic selected during checkout.",
   "Each qualifying purchase includes one Rella VIP Guest Pass for a friend or family member. The recipient chooses one experience. Book by December 15, 2026; redeem by January 31, 2027.",
@@ -237,7 +237,7 @@ export const COPY = Object.freeze({
   /** "Book by Dec 15, 2026 · Redeem by Jan 31, 2027" */
   passDeadlines: "Book by Dec 15, 2026 · Redeem by Jan 31, 2027",
   landing: {
-    eyebrow: "THE BLACK FRIDAY EVENT | NOVEMBER 27 – DECEMBER 1",
+    eyebrow: "THE BLACK FRIDAY EVENT | NOVEMBER 25 – DECEMBER 1",
     headline: "The gift that gives a little more.",
     body: "Something for you. Something for someone you love. Discover our exclusive Black Friday gift card offers and unlock a little extra Rella magic.",
   },
