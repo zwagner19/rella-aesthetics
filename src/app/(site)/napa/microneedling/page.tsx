@@ -4,18 +4,20 @@ import Image from "next/image";
 import Link from "next/link";
 import { FaqAccordion, FaqSchema } from "@/components/blocks/FaqAccordion";
 import { TrustStrip } from "@/components/blocks/TrustStrip";
+import { BookTrigger } from "@/components/guided-booking/BookTrigger";
 import { Button } from "@/components/ui/Button";
 import { napaHouseIdentity, napaHouseVisuals } from "@/content/napa-house";
-import { resolveBookingHref } from "@/lib/booking-routes";
 import { locations } from "@/lib/data";
 import { NAPA } from "@/lib/napa-botox-facts";
 import { localBusinessSchema } from "@/lib/schemas";
 
 const CANONICAL = "https://experiencerella.com/napa/microneedling";
-const BOOKING_HREF = resolveBookingHref({
-  location: "napa",
-  service: "microneedling",
-});
+// Opens the in-site booking menu, which reads Napa's live Boulevard menu
+// (Initial Microneedling Consult, SkinPen and RF). The older external chooser
+// has no Napa microneedling category and is only the no-JS fallback.
+const BOOKING_INTENT = { location: "napa", service: "microneedling" } as const;
+const CTA_CLASS =
+  "inline-flex items-center justify-center rounded-full border-[1.5px] border-rose bg-rose px-10 py-[18px] text-[0.6875rem] font-bold uppercase tracking-[0.2em] text-white transition-colors duration-150";
 const clinic = locations.napa;
 const { treatmentRoom } = napaHouseVisuals;
 
@@ -169,15 +171,15 @@ export default function NapaMicroneedlingPage() {
               Napa House offers standard and RF microneedling. Your visit starts with a consult, so the modality, settings and recovery are planned around your skin rather than picked from a menu.
             </p>
             <div className="flex flex-col gap-3 sm:flex-row">
-              <Button disableHover href={BOOKING_HREF} data-cta="service-booking" className="whitespace-nowrap rounded-full">
+              <BookTrigger intent={BOOKING_INTENT} data-cta="service-booking" className={`${CTA_CLASS} whitespace-nowrap`}>
                 Book a Napa Consult
-              </Button>
+              </BookTrigger>
               <Button disableHover href="tel:+17073582928" data-cta="phone" variant="ghost" className="whitespace-nowrap rounded-full bg-white/75">
                 Call 707.358.2928
               </Button>
             </div>
             <p className="mt-5 text-xs leading-6 text-ink/70">
-              Opens Rella Napa&apos;s live microneedling booking category. You choose the service, professional and appointment.
+              Opens Rella Napa&apos;s live booking menu at the microneedling consult. You choose the service, professional and appointment.
             </p>
           </div>
 
@@ -376,12 +378,12 @@ export default function NapaMicroneedlingPage() {
             Start at Napa House.
           </h2>
           <p className="mb-8 text-lg font-light leading-relaxed text-white">
-            Open the live Napa microneedling category to review current services and availability, or call the team with a question first.
+            Open the live Napa booking menu to review current microneedling services and availability, or call the team with a question first.
           </p>
           <div className="flex flex-col justify-center gap-3 sm:flex-row">
-            <Button disableHover href={BOOKING_HREF} data-cta="service-booking" className="rounded-full bg-white !text-rose-text">
+            <BookTrigger intent={BOOKING_INTENT} data-cta="service-booking" className={`${CTA_CLASS} !border-white !bg-white !text-rose-text`}>
               Book a Napa Microneedling Consult
-            </Button>
+            </BookTrigger>
             <Button disableHover href="tel:+17073582928" data-cta="phone" variant="ghost" className="!border-white !bg-white !text-rose-text">
               Call Rella
             </Button>
