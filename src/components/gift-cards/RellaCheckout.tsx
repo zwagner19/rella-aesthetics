@@ -7,6 +7,7 @@ import {
   createSharedPackageClient,
   PackageRequestError,
   type PackageClient,
+  type PackageConfirmation,
   type PackageContact,
   type PackagePurchaseReview,
 } from "@/lib/guided-booking/package-client";
@@ -14,16 +15,19 @@ import { ASSESSMENT_CONTACT_CONSENT, MARKETING_CONSENT } from "@/lib/guided-book
 import { SecureCardFrame } from "@/components/guided-booking/SecureCardFrame";
 import { Confetti } from "./Confetti";
 import { VipPass } from "./VipPass";
+import { CelebrationModal } from "./CelebrationModal";
+import { giftSubmitFor, sendLaterFor } from "@/lib/gift-cards/gift-client";
+import type { GiftSubmit } from "./GiftingForm";
 import s from "./gift.module.css";
 
 type Step =
   | { name: "loading" }
-  | { name: "already" }
+  | { name: "already"; result: PackageConfirmation }
   | { name: "details"; review: PackagePurchaseReview }
   | { name: "payment"; review: PackagePurchaseReview }
   | { name: "pending" }
   | { name: "mismatch" }
-  | { name: "confirmed" };
+  | { name: "confirmed"; result: PackageConfirmation };
 
 type Props = {
   offer: GiftCardOffer;
@@ -33,6 +37,10 @@ type Props = {
   onClose: () => void;
   /** Tests and the local mock only. */
   client?: PackageClient;
+  /** Isolated preview harness only; never supplied by the production route. */
+  previewPayment?: boolean;
+  previewGift?: GiftSubmit;
+  previewLater?: () => Promise<{ ok: boolean; message: string }>;
 };
 
 const CARD_HOSTS = new Set(["experiencerella.com", "www.experiencerella.com", "localhost", "127.0.0.1"]);
@@ -47,7 +55,7 @@ function CallRella() {
  * The celebration is shown ONLY for a purchase the server reports CONFIRMED.
  * An unverified payment is never retried: the buyer is told to call.
  */
-export function RellaCheckout({ offer, clinic, onUnavailable, onClose, client: provided }: Props) {
+export function RellaCheckout({ offer, clinic, onUnavailable, onClose, client: provided, previewPayment, previewGift, previewLater }: Props) {
   const [client] = useState(() => provided ?? createSharedPackageClient());
   const [step, setStep] = useState<Step>({ name: "loading" });
   const [contact, setContact] = useState<PackageContact>(() => ({ ...initialGuidedBookingState.client }));
@@ -70,7 +78,7 @@ export function RellaCheckout({ offer, clinic, onUnavailable, onClose, client: p
     const result = await openRellaCheckout(client, offer, clinic, { buyAnother });
     if (result.kind === "ready") setStep({ name: "details", review: result.review });
     else if (result.kind === "unavailable") unavailable.current();
-    else if (result.kind === "already") setStep({ name: "already" });
+    else if (result.kind === "already") setStep({ name: "already", result });
     else if (result.kind === "pending") setStep({ name: "pending" });
     else setStep({ name: "mismatch" });
   }
@@ -142,7 +150,7 @@ export function RellaCheckout({ offer, clinic, onUnavailable, onClose, client: p
   const pay = (token: string) =>
     run(async () => {
       const result = await client.purchase({ client: contact, token });
-      setStep(result.status === "confirmed" ? { name: "confirmed" } : { name: "pending" });
+      setStep(result.status === "confirmed" ? { name: "confirmed", result } : { name: "pending" });
     });
 
   const field = (key: "firstName" | "lastName" | "email" | "phone", label: string, type: string, autoComplete: string) => (
@@ -183,6 +191,12 @@ export function RellaCheckout({ offer, clinic, onUnavailable, onClose, client: p
     </ul>
   );
 
+  if (step.name === "confirmed" && step.result.passId && step.result.giftToken) {
+    return <CelebrationModal passId={step.result.passId} purchaserName={`${contact.firstName} ${contact.lastName}`.trim()}
+      onSubmit={previewGift ?? giftSubmitFor(step.result.giftToken)} onSendLater={previewLater ?? sendLaterFor(step.result.giftToken)} onClose={onClose}
+      banner={previewPayment ? <p className={s.demoBanner}>SIMULATED PAYMENT · no charge, pass issuance or email</p> : undefined} />;
+  }
+
   return (
     <div
       className={`${s.root} ${s.overlay} ${tall ? "" : s.chooserOverlay}`}
@@ -214,6 +228,7 @@ export function RellaCheckout({ offer, clinic, onUnavailable, onClose, client: p
             </h2>
             <p className={s.lede}>A Rella purchase was already completed on this device. Would you like to buy another?</p>
             <div className={s.formActions}>
+              {step.result.passId ? <button type="button" className={s.btn} onClick={() => setStep({ name: "confirmed", result: step.result })}>View my VIP Guest Pass</button> : null}
               <button type="button" className={s.btn} onClick={() => void open(true)}>
                 Buy another
               </button>
@@ -290,11 +305,13 @@ export function RellaCheckout({ offer, clinic, onUnavailable, onClose, client: p
               {contact.firstName.trim()} {contact.lastName.trim()} · {contact.email.trim()}
             </p>
             {summary(step.review)}
-            {cardHostOk ? null : (
+            {cardHostOk || previewPayment ? null : (
               <p className={s.alert}>Preview note: secure card entry only loads on experiencerella.com, so this step cannot be completed on a preview link. Nothing is charged here.</p>
             )}
             <div className={s.cardFrame}>
-              <SecureCardFrame origin={step.review.cardFrameOrigin as string} purpose="package" busy={busy} onToken={pay} />
+              {previewPayment ? <div className={s.sheet}><p className={s.demoBanner}>TEST PAYMENT · no card data collected</p>
+                <button className={s.btn} type="button" disabled={busy} onClick={() => void pay("synthetic-card-token")}>Simulate payment of {formatUsd(offer.priceCents)}</button></div>
+                : <SecureCardFrame origin={step.review.cardFrameOrigin as string} purpose="package" busy={busy} onToken={pay} />}
             </div>
             {busy ? (
               <p className={s.small} role="status">
@@ -358,7 +375,7 @@ export function RellaCheckout({ offer, clinic, onUnavailable, onClose, client: p
             <p className={s.lede}>{COPY.purchased.body}</p>
             <p className={`${s.secondary} ${s.italic}`}>{COPY.purchased.secondary}</p>
             <div className={s.reveal}>
-              <VipPass passId="Arriving by email" />
+              <VipPass passId={step.result.passId ?? "Arriving by email"} />
             </div>
             <ul className={`${s.rows} ${s.receipt}`}>
               <li>
@@ -376,6 +393,7 @@ export function RellaCheckout({ offer, clinic, onUnavailable, onClose, client: p
                 <strong>{COPY.passDeadlines}</strong>
               </li>
             </ul>
+            {step.result.emailSent === false ? <p className={s.small} role="status">Payment is confirmed. VIP pass email delivery has not been confirmed; please call Rella for help. Do not pay again.</p> : null}
             <div className={s.formActions}>
               <button type="button" className={s.btn} onClick={onClose}>
                 Done

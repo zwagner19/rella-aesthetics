@@ -15,40 +15,45 @@ import { GiftCardArt } from "./GiftCardArt";
 import { VipPass } from "./VipPass";
 import { DemoExperience } from "./DemoExperience";
 import { RellaCheckout } from "./RellaCheckout";
+import type { PackageClient } from "@/lib/guided-booking/package-client";
+import type { GiftSubmit } from "./GiftingForm";
 import s from "./gift.module.css";
 
 /**
- * /gift-cards/black-friday. Live mode links to the ONE Boulevard checkout
- * placeholder in config; while it is null the Purchase buttons fail closed.
- * Demo mode (preview-only route) runs the full flow on fixture data.
- *
- * `checkout` (server-gated, preview only) sends Purchase through a clinic
- * chooser, then:
+ * /gift-cards/black-friday. Checkout stays closed without the explicit
+ * environment-specific release flag and server-clock campaign window.
+ * `checkout` sends Purchase through a clinic chooser, then:
  *  - "rella":  Rella's own package checkout on this page. Payment is verified
  *    by the server, so a confirmed purchase shows the celebration. If that
  *    checkout cannot start, it fails closed (phone note), or falls back to
  *    Boulevard's widget only when the emergency flag is on.
  *  - "widget": Boulevard's own widget. No server-verified payment on that
  *    path, so no celebration is shown.
- * Either way the VIP Guest Pass is staff-issued by email.
+ * Only independently verified Rella checkout can issue the order-bound pass.
+ * The separate demo/rehearsal routes use fixtures and never issue or send.
  */
 export function BlackFridayLanding({
   demo = false,
   checkout = "closed",
   widgetFallback = false,
+  initialSelection = null,
+  preview,
 }: {
   demo?: boolean;
   checkout?: BlackFridayCheckoutMode;
   /** Emergency fallback only (BF_BOULEVARD_WIDGET_CHECKOUT=1). Off: a checkout that can't start shows the phone note. */
   widgetFallback?: boolean;
+  initialSelection?: { offer: GiftCardOffer; clinic?: ClinicId } | null;
+  preview?: { client: (offer: GiftCardOffer, clinic: ClinicId) => PackageClient; gift: GiftSubmit; later: () => Promise<{ ok: boolean; message: string }> };
 }) {
   const onlineCheckout = checkout !== "closed";
-  const [unavailable, setUnavailable] = useState<string | null>(null);
+  const [unavailable, setUnavailable] = useState<string | null>(() => initialSelection && !onlineCheckout ? initialSelection.offer.id : null);
   const [demoOffer, setDemoOffer] = useState<GiftCardOffer | null>(null);
-  const [choosing, setChoosing] = useState<GiftCardOffer | null>(null);
+  const [choosing, setChoosing] = useState<GiftCardOffer | null>(() => onlineCheckout && initialSelection && !initialSelection.clinic ? initialSelection.offer : null);
   const [opening, setOpening] = useState(false);
   const [handedOff, setHandedOff] = useState<string | null>(null);
-  const [buying, setBuying] = useState<{ offer: GiftCardOffer; clinic: ClinicId } | null>(null);
+  const [buying, setBuying] = useState<{ offer: GiftCardOffer; clinic: ClinicId } | null>(() =>
+    checkout === "rella" && initialSelection?.clinic ? { offer: initialSelection.offer, clinic: initialSelection.clinic } : null);
   const closeChooser = useCallback(() => setChoosing(null), []);
 
   async function openWidget(offer: GiftCardOffer, clinic: ClinicId) {
@@ -98,17 +103,12 @@ export function BlackFridayLanding({
       setChoosing(offer);
       return;
     }
-    const url = BLACK_FRIDAY_2026.checkoutUrl;
-    if (url) {
-      window.location.assign(`${url}${url.includes("?") ? "&" : "?"}offer=${encodeURIComponent(offer.id)}`);
-      return;
-    }
     setUnavailable(offer.id);
   }
 
   return (
     <div className={s.landing}>
-      {demo ? <div className={s.demoBanner}>DEMO preview · fixture data · nothing is charged, issued or sent</div> : null}
+      {demo || preview ? <div className={s.demoBanner}>DEMO preview · fixture data · nothing is charged, issued or sent</div> : null}
       <section className={`${s.hero} ${s.container}`} aria-labelledby="bf-title">
         <p className={s.eyebrow}>{COPY.landing.eyebrow}</p>
         <h1 id="bf-title" className={`${s.heroTitle} ${s.italic}`}>
@@ -217,6 +217,10 @@ export function BlackFridayLanding({
           key={`${buying.offer.id}/${buying.clinic}`}
           offer={buying.offer}
           clinic={buying.clinic}
+          client={preview?.client(buying.offer, buying.clinic)}
+          previewPayment={Boolean(preview)}
+          previewGift={preview?.gift}
+          previewLater={preview?.later}
           onUnavailable={fallBackToWidget}
           onClose={() => setBuying(null)}
         />

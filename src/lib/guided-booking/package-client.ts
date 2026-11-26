@@ -47,13 +47,14 @@ export interface OwnedPackageWallet {
   redemption: "STAFF_CHECKOUT";
 }
 
+export type PackageConfirmation = { confirmationId: string; passId?: string; giftToken?: string; emailSent?: boolean; passPending?: boolean };
 export type PackagePurchaseResult =
-  | { status: "confirmed"; confirmationId: string }
+  | ({ status: "confirmed" } & PackageConfirmation)
   | { status: "pending" };
 
 export type PackageSessionStatus =
   | { state: "NONE" | "DRAFT" | "PAYMENT_READY" | "PENDING" }
-  | { state: "CONFIRMED"; confirmationId: string };
+  | ({ state: "CONFIRMED" } & PackageConfirmation);
 
 /**
  * The HTTP/auth adapter supplies verified operations. There are deliberately no
@@ -82,7 +83,7 @@ export function createPackageClient(operations: PackageOperations, onConfirmedRe
   return {
     async status() {
       const status = await operations.status();
-      if (status.state === "CONFIRMED") purchaseResult = { status: "confirmed", confirmationId: status.confirmationId };
+      if (status.state === "CONFIRMED") purchaseResult = { status: "confirmed", ...confirmationDetails(status) };
       else if (status.state === "PENDING" || status.state === "PAYMENT_READY") purchaseResult = { status: "pending" };
       return purchaseResult?.status === "pending" ? { state: "PENDING" } : status;
     },
@@ -103,7 +104,7 @@ export function createPackageClient(operations: PackageOperations, onConfirmedRe
         try {
           const result = await operations.purchase(input);
           purchaseResult = result.status === "confirmed" && typeof result.confirmationId === "string" && result.confirmationId.trim()
-            ? { status: "confirmed", confirmationId: result.confirmationId }
+            ? { status: "confirmed", ...confirmationDetails(result) }
             : { status: "pending" };
         } catch (error) {
           if (error instanceof PackageRequestError && error.definitive) throw error;
@@ -171,11 +172,20 @@ function readReview(data: Record<string, unknown>, offering: PackageOffering): P
 function readStatus(data: Record<string, unknown>): PackageSessionStatus {
   if (data.state === "CONFIRMED") {
     return typeof data.confirmationId === "string" && data.confirmationId.trim()
-      ? { state: "CONFIRMED", confirmationId: data.confirmationId }
+      ? { state: "CONFIRMED", ...confirmationDetails(data as PackageConfirmation) }
       : { state: "PENDING" };
   }
   if (data.state === "NONE" || data.state === "DRAFT" || data.state === "PAYMENT_READY" || data.state === "PENDING") return { state: data.state };
   throw new PackageRequestError("Package purchase status could not be verified. Please call Rella.");
+}
+
+/** Pass metadata is optional and never turns a verified payment into a retry. */
+function confirmationDetails(data: PackageConfirmation): PackageConfirmation {
+  return { confirmationId: data.confirmationId,
+    ...(typeof data.passId === "string" && /^RELLA-VIP-[2-9A-HJKMNP-Z]{4}-[2-9A-HJKMNP-Z]{4}$/.test(data.passId) ? { passId: data.passId } : {}),
+    ...(typeof data.giftToken === "string" && /^[A-Za-z0-9_-]{43}$/.test(data.giftToken) ? { giftToken: data.giftToken } : {}),
+    ...(typeof data.emailSent === "boolean" ? { emailSent: data.emailSent } : {}),
+    ...(data.passPending === true ? { passPending: true } : {}) };
 }
 
 async function packageRequest(fetcher: typeof fetch, operation: string, body?: unknown, location?: BookingLocation) {
@@ -275,7 +285,7 @@ export function createSharedPackageClient(fetcher: typeof fetch = fetch): Packag
           paymentAttached = true;
         }
         const result = readStatus(await call("checkout", {}));
-        return result.state === "CONFIRMED" ? { status: "confirmed", confirmationId: result.confirmationId } : { status: "pending" };
+        return result.state === "CONFIRMED" ? { status: "confirmed", ...confirmationDetails(result) } : { status: "pending" };
       });
     },
   }, () => { review = undefined; preparedContact = undefined; paymentAttached = false; });

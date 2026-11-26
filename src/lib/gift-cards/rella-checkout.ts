@@ -1,4 +1,4 @@
-import type { PackageClient, PackagePurchaseReview } from "@/lib/guided-booking/package-client";
+import type { PackageClient, PackageConfirmation, PackagePurchaseReview } from "@/lib/guided-booking/package-client";
 import { quoteMatchesOffer, rellaPackageKey, type ClinicId, type GiftCardOffer } from "./config";
 
 /**
@@ -13,7 +13,7 @@ import { quoteMatchesOffer, rellaPackageKey, type ClinicId, type GiftCardOffer }
  */
 export type RellaCheckoutOpening =
   | { kind: "ready"; review: PackagePurchaseReview }
-  | { kind: "already"; confirmationId: string }
+  | ({ kind: "already" } & PackageConfirmation)
   | { kind: "pending" }
   | { kind: "mismatch" }
   | { kind: "unavailable" };
@@ -28,19 +28,21 @@ export async function openRellaCheckout(
   clinic: ClinicId,
   options: { buyAnother?: boolean } = {},
 ): Promise<RellaCheckoutOpening> {
+  let safeToStart = false;
   try {
     const status = await client.status();
     if (status.state === "PENDING" || status.state === "PAYMENT_READY") return { kind: "pending" };
     if (status.state === "CONFIRMED") {
-      if (!options.buyAnother) return { kind: "already", confirmationId: status.confirmationId };
+      if (!options.buyAnother) { const { state, ...result } = status; void state; return { kind: "already", ...result }; }
       if (!client.resetConfirmed()) return { kind: "unavailable" };
     }
+    safeToStart = true;
     const key = rellaPackageKey(offer.id, clinic);
     const offerings = await client.listOfferings(clinic);
     if (!offerings.some((item) => item.id === key)) return { kind: "unavailable" };
     const review = await client.reviewPurchase({ location: clinic, packageId: key });
     return reviewIsSellable(offer, review) ? { kind: "ready", review } : { kind: "mismatch" };
   } catch {
-    return client.verificationPending() ? { kind: "pending" } : { kind: "unavailable" };
+    return !safeToStart || client.verificationPending() ? { kind: "pending" } : { kind: "unavailable" };
   }
 }

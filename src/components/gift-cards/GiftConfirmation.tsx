@@ -12,7 +12,7 @@ export function GiftConfirmation({ recipientFirstName }: { recipientFirstName: s
         <path d="M14 78 40 56M82 78 56 56" stroke="#1A1A1A" strokeOpacity="0.35" strokeWidth="1.5" fill="none" />
         <path className={s.envFlap} d="M14 36 48 60 82 36" fill="#F7F4EF" stroke="#1A1A1A" strokeWidth="1.5" strokeLinejoin="round" />
       </svg>
-      <h2 className={`${s.h1} ${s.italic}`}>{COPY.sent.headline}</h2>
+      <h2 id="gift-confirmation-title" className={`${s.h1} ${s.italic}`}>{COPY.sent.headline}</h2>
       <p className={s.lede}>{COPY.sent.body(recipientFirstName)}</p>
       <Link className={s.btn} href="/">
         {COPY.sent.back}

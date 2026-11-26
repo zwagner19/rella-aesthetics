@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { COPY } from "@/lib/gift-cards/config";
 import { Confetti } from "./Confetti";
 import { GiftConfirmation } from "./GiftConfirmation";
@@ -12,7 +12,7 @@ type Props = {
   passId: string;
   purchaserName: string;
   onSubmit: GiftSubmit;
-  onSendLater: () => Promise<{ ok: boolean; message: string }>;
+  onSendLater: () => Promise<{ ok: boolean; message: string; recoveryUrl?: string }>;
   /** Pass already sent (returning visitor): skip straight to status. */
   initialSentTo?: string | null;
   banner?: React.ReactNode;
@@ -30,7 +30,7 @@ export function CelebrationModal({ passId, purchaserName, onSubmit, onSendLater,
   const [open, setOpen] = useState(true);
   const [downloadError, setDownloadError] = useState(false);
   const dialog = useRef<HTMLDivElement>(null);
-  const close = () => (onClose ? onClose() : setOpen(false));
+  const close = useCallback(() => (onClose ? onClose() : setOpen(false)), [onClose]);
 
   useEffect(() => {
     if (!open) return;
@@ -39,6 +39,13 @@ export function CelebrationModal({ passId, purchaserName, onSubmit, onSendLater,
     dialog.current?.parentElement?.scrollTo({ top: 0 });
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") close();
+      if (e.key === "Tab" && dialog.current) {
+        const fields = dialog.current.querySelectorAll<HTMLElement>("button:not([disabled]),input:not([disabled]),textarea:not([disabled]),a[href]");
+        if (!fields.length) return;
+        const first = fields[0], last = fields[fields.length - 1];
+        if (e.shiftKey && (document.activeElement === first || document.activeElement === dialog.current)) { e.preventDefault(); last.focus(); }
+        else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+      }
     };
     document.addEventListener("keydown", onKey);
     const overflow = document.body.style.overflow;
@@ -48,7 +55,7 @@ export function CelebrationModal({ passId, purchaserName, onSubmit, onSendLater,
       document.body.style.overflow = overflow;
       prev?.focus?.();
     };
-  }, [open]);
+  }, [open, close]);
 
   if (!open) {
     return (
@@ -63,7 +70,7 @@ export function CelebrationModal({ passId, purchaserName, onSubmit, onSendLater,
   return (
     <div className={`${s.root} ${s.overlay}`}>
       {sentTo ? null : <Confetti key={demoConfetti?.replay ?? 0} ignoreReducedMotion={Boolean(demoConfetti)} />}
-      <div ref={dialog} className={s.modal} role="dialog" aria-modal="true" aria-labelledby="celebration-title" tabIndex={-1}>
+      <div ref={dialog} className={s.modal} role="dialog" aria-modal="true" aria-labelledby={sentTo ? "gift-confirmation-title" : "celebration-title"} tabIndex={-1}>
         {banner}
         <button type="button" className={s.close} onClick={close} aria-label="Close">
           ×

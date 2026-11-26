@@ -62,7 +62,7 @@ const nextConfig: NextConfig = {
       },
       // Private endpoints remain excluded even after the public domain moves.
       // These rules run last so the host-only preview rule cannot weaken them.
-      ...["/api/:path*", "/studio/:path*", "/booking"].map((source) => ({
+      ...["/api/:path*", "/studio/:path*", "/booking", "/gift-cards/:path*"].map((source) => ({
         source,
         headers: [{ key: "X-Robots-Tag", value: "noindex, nofollow" }],
       })),

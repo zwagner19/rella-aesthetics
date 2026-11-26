@@ -1,7 +1,7 @@
 import { createHash } from "node:crypto";
 import { describe, expect, it } from "vitest";
 import { createPackageClient, PackageRequestError, type PackageOperations, type PackageSessionStatus } from "@/lib/guided-booking/package-client";
-import { BOULEVARD_CHECKOUT, OFFERS, RELLA_PACKAGE_KEYS, blackFridayCheckoutMode, offerById, quoteMatchesOffer, rellaPackageKey } from "./config";
+import { BLACK_FRIDAY_2026, BOULEVARD_CHECKOUT, OFFERS, RELLA_PACKAGE_KEYS, blackFridayCheckoutMode, blackFridayDeepLink, offerById, quoteMatchesOffer, rellaPackageKey } from "./config";
 import { openRellaCheckout } from "./rella-checkout";
 
 const offer = offerById("bf26-1000")!;
@@ -47,19 +47,39 @@ describe("Black Friday keys for Rella's own package checkout", () => {
 });
 
 describe("Black Friday checkout mode", () => {
+  const open = BLACK_FRIDAY_2026.window.startsAt;
   it("is closed in production no matter which flags are set", () => {
-    expect(blackFridayCheckoutMode({ VERCEL_ENV: "production", BF_RELLA_CHECKOUT: "1", BF_BOULEVARD_WIDGET_CHECKOUT: "1" })).toBe("closed");
+    expect(blackFridayCheckoutMode({ VERCEL_ENV: "production", BF_RELLA_CHECKOUT: "1", BF_BOULEVARD_WIDGET_CHECKOUT: "1" }, open)).toBe("closed");
   });
   it("is closed without a flag and uses Rella's checkout on a flagged preview", () => {
-    expect(blackFridayCheckoutMode({})).toBe("closed");
-    expect(blackFridayCheckoutMode({ VERCEL_ENV: "preview" })).toBe("closed");
-    expect(blackFridayCheckoutMode({ VERCEL_ENV: "preview", BF_RELLA_CHECKOUT: "true" })).toBe("closed");
-    expect(blackFridayCheckoutMode({ VERCEL_ENV: "preview", BF_RELLA_CHECKOUT: "1" })).toBe("rella");
-    expect(blackFridayCheckoutMode({ VERCEL_ENV: "preview", BF_BOULEVARD_WIDGET_CHECKOUT: "1" })).toBe("rella");
+    expect(blackFridayCheckoutMode({}, open)).toBe("closed");
+    expect(blackFridayCheckoutMode({ VERCEL_ENV: "preview" }, open)).toBe("closed");
+    expect(blackFridayCheckoutMode({ VERCEL_ENV: "preview", BF_RELLA_CHECKOUT: "true" }, open)).toBe("closed");
+    expect(blackFridayCheckoutMode({ VERCEL_ENV: "preview", BF_RELLA_CHECKOUT: "1" }, open)).toBe("rella");
+    expect(blackFridayCheckoutMode({ VERCEL_ENV: "preview", BF_BOULEVARD_WIDGET_CHECKOUT: "1" }, open)).toBe("rella");
   });
   it("can be forced back to Boulevard's widget", () => {
-    expect(blackFridayCheckoutMode({ VERCEL_ENV: "preview", BF_BOULEVARD_WIDGET_CHECKOUT: "1", BF_RELLA_CHECKOUT: "0" })).toBe("widget");
-    expect(blackFridayCheckoutMode({ VERCEL_ENV: "preview", BF_RELLA_CHECKOUT: "0" })).toBe("closed");
+    expect(blackFridayCheckoutMode({ VERCEL_ENV: "preview", BF_BOULEVARD_WIDGET_CHECKOUT: "1", BF_RELLA_CHECKOUT: "0" }, open)).toBe("widget");
+    expect(blackFridayCheckoutMode({ VERCEL_ENV: "preview", BF_RELLA_CHECKOUT: "0" }, open)).toBe("closed");
+  });
+  it("requires the exact production flag AND the server-clock window", () => {
+    const env = { VERCEL_ENV: "production", BF_RELLA_CHECKOUT_LIVE: "1" };
+    expect(blackFridayCheckoutMode(env, open)).toBe("rella");
+    expect(blackFridayCheckoutMode(env, open - 1)).toBe("closed");
+    expect(blackFridayCheckoutMode(env, BLACK_FRIDAY_2026.window.endsAt + 1)).toBe("closed");
+    expect(blackFridayCheckoutMode({ ...env, BF_RELLA_CHECKOUT_LIVE: "true" }, open)).toBe("closed");
+    expect(blackFridayCheckoutMode({ BF_RELLA_CHECKOUT: "1" }, NaN)).toBe("closed");
+  });
+});
+
+describe("Black Friday direct checkout links", () => {
+  it("opens only the exact known offer and optionally skips the clinic tap", () => {
+    expect(blackFridayDeepLink({ offer: "bf26-1000" })).toEqual({ offer });
+    expect(blackFridayDeepLink({ offer: "bf26-1000", clinic: "vacaville" })).toEqual({ offer, clinic: "vacaville" });
+    expect(blackFridayDeepLink({ offer: "bf26-1000", clinic: "unknown" })).toEqual({ offer });
+    expect(blackFridayDeepLink({ offer: ["bf26-1000", "bf26-2100"] })).toBeNull();
+    expect(blackFridayDeepLink({ offer: "unknown", clinic: "napa" })).toBeNull();
+    expect(blackFridayDeepLink({ clinic: "napa" })).toBeNull();
   });
 });
 
@@ -99,7 +119,7 @@ describe("opening Rella's checkout for a Black Friday offer", () => {
 
   it("reports unavailable (so the page can fall back) when the checkout is down", async () => {
     const down = fakeClient({ status: async () => { throw new PackageRequestError("down"); } });
-    expect((await openRellaCheckout(down.client, offer, "napa")).kind).toBe("unavailable");
+    expect((await openRellaCheckout(down.client, offer, "napa")).kind).toBe("pending");
     const noStart = fakeClient({ reviewPurchase: async () => { throw new PackageRequestError("packages_unavailable"); } });
     expect((await openRellaCheckout(noStart.client, offer, "vacaville")).kind).toBe("unavailable");
   });

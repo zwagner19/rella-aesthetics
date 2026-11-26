@@ -16,9 +16,9 @@ export type GiftCardOffer = {
   label: "Offer 01" | "Offer 02";
   /** Total value the recipient can spend (purchase + bonus). */
   valueCents: number;
-  /** What the purchaser is charged. This is the Boulevard gift card item price. */
+  /** What the purchaser is charged for the Boulevard account-credit package. */
   priceCents: number;
-  /** valueCents - priceCents, added to the SAME Boulevard gift card after verified payment. */
+  /** Additional value already included in the package's account-credit entitlement. */
   bonusCents: number;
   title: string;
   priceLine: string;
@@ -67,8 +67,6 @@ export const BLACK_FRIDAY_2026 = Object.freeze({
     /** Recipient picks exactly one at redemption. */
     choose: 1,
   },
-  /** Bonus value is applied only when this AND the server env arm are both on. */
-  bonusApprovedByOwner: false,
   /**
    * SINGLE checkout placeholder. Zach sets up the Boulevard side; when he
    * provides the checkout URL (it receives `?offer=<id>`), set it here.
@@ -172,18 +170,27 @@ export function quoteMatchesOffer(offer: GiftCardOffer, quote: { totalCents: num
 
 /**
  * How Purchase behaves, decided on the server.
- *  - "closed": fail closed, show the phone number (always in production until Zach's go-live yes).
+ *  - "closed": show the phone note; every release arm defaults off.
  *  - "rella":  Rella's own checkout, with Boulevard's widget as the fallback.
  *  - "widget": Boulevard's own pop-up only (set BF_RELLA_CHECKOUT=0 to force it).
- * Preview only: needs a non-production Vercel environment AND one of the flags.
+ * Production additionally requires the explicit live arm and the server-clock window.
  */
 export type BlackFridayCheckoutMode = "closed" | "rella" | "widget";
 
-export function blackFridayCheckoutMode(env: Record<string, string | undefined> = process.env): BlackFridayCheckoutMode {
-  if (env.VERCEL_ENV === "production") return "closed";
+export function blackFridayCheckoutMode(env: Record<string, string | undefined> = process.env, now = Date.now()): BlackFridayCheckoutMode {
+  if (promoWindowState(now) !== "open") return "closed";
+  if (env.VERCEL_ENV === "production") return env.BF_RELLA_CHECKOUT_LIVE === "1" ? "rella" : "closed";
   const widget = env.BF_BOULEVARD_WIDGET_CHECKOUT === "1";
   if (env.BF_RELLA_CHECKOUT === "0") return widget ? "widget" : "closed";
   return widget || env.BF_RELLA_CHECKOUT === "1" ? "rella" : "closed";
+}
+
+/** Repeated, unknown and partial clinic values never select another offer or clinic. */
+export function blackFridayDeepLink(params: Record<string, string | string[] | undefined>): { offer: GiftCardOffer; clinic?: ClinicId } | null {
+  const offer = typeof params.offer === "string" ? offerById(params.offer) : null;
+  if (!offer) return null;
+  const clinic = params.clinic === "napa" || params.clinic === "vacaville" ? params.clinic : undefined;
+  return { offer, ...(clinic ? { clinic } : {}) };
 }
 
 export type VipExperienceId =
@@ -210,7 +217,7 @@ export const VIP_EXPERIENCES: readonly { id: VipExperienceId; label: string }[] 
 export const OFFER_TERMS_DRAFT: readonly string[] = Object.freeze([
   "Black Friday gift card offers are available for purchase November 27 through December 1, 2026 (Pacific Time), or while the promotion remains available.",
   "Open to new and existing Rella clients. Limit and eligibility details to be confirmed by Rella before launch.",
-  "The $1,000 Rella Gift Card is purchased for $800 and the $2,100 Rella Gift Card is purchased for $1,600. Additional value is promotional and is included on the same gift card.",
+  "The $1,000 Rella Gift Card is purchased for $800 and the $2,100 Rella Gift Card is purchased for $1,600. Delivered as Rella account credit, including the additional promotional value.",
   "Each qualifying purchase includes one Rella VIP Guest Pass for a friend or family member. The recipient chooses one experience. Book by December 15, 2026; redeem by January 31, 2027.",
   "All treatments are subject to consultation and provider approval. Results vary and are not guaranteed.",
   "Gift cards and passes have no cash value except as required by law and may not be combined with other offers unless stated.",

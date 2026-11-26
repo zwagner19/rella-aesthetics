@@ -11,21 +11,22 @@ export type GiftSubmit = (v: {
 }) => Promise<
   | { status: "sent"; recipientFirstName: string }
   | { status: "invalid-input"; errors: Record<string, string> }
-  | { status: "error"; message: string }
+  | { status: "error"; message: string; retryable?: boolean }
 >;
 
 type Props = {
   purchaserName: string;
   onSubmit: GiftSubmit;
-  onSendLater: () => Promise<{ ok: boolean; message: string }>;
+  onSendLater: () => Promise<{ ok: boolean; message: string; recoveryUrl?: string }>;
   onSent: (recipientFirstName: string) => void;
 };
 
 export function GiftingForm({ purchaserName, onSubmit, onSendLater, onSent }: Props) {
-  const [state, setState] = useState<"idle" | "sending" | "later" | "later-done">("idle");
+  const [state, setState] = useState<"idle" | "sending" | "uncertain" | "later" | "later-done">("idle");
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [alert, setAlert] = useState<string | null>(null);
   const [laterMessage, setLaterMessage] = useState<string | null>(null);
+  const [recoveryUrl, setRecoveryUrl] = useState<string | null>(null);
 
   async function submit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -49,9 +50,11 @@ export function GiftingForm({ purchaserName, onSubmit, onSendLater, onSent }: Pr
       const r = await onSubmit(v);
       if (r.status === "sent") return onSent(r.recipientFirstName);
       if (r.status === "invalid-input") setErrors(r.errors);
-      else setAlert(r.message);
+      else { setAlert(r.message); setState(r.retryable === true ? "idle" : "uncertain"); return; }
     } catch {
-      setAlert("We couldn't send their pass just now. Nothing was sent. Please try again.");
+      setAlert("We couldn't confirm delivery. Please don't resend; call Rella so we can check it.");
+      setState("uncertain");
+      return;
     }
     setState("idle");
   }
@@ -61,6 +64,7 @@ export function GiftingForm({ purchaserName, onSubmit, onSendLater, onSent }: Pr
     try {
       const r = await onSendLater();
       setLaterMessage(r.message);
+      setRecoveryUrl(r.recoveryUrl ?? null);
       setState(r.ok ? "later-done" : "idle");
       if (!r.ok) setAlert(r.message);
     } catch {
@@ -74,6 +78,7 @@ export function GiftingForm({ purchaserName, onSubmit, onSendLater, onSent }: Pr
       <section className={s.form} aria-live="polite">
         <h2 className={`${s.h2} ${s.italic}`}>Whenever you&apos;re ready.</h2>
         <p className={s.lede}>{laterMessage}</p>
+        {recoveryUrl ? <a href={recoveryUrl} className={s.linkBtn} referrerPolicy="no-referrer">Your private gifting link — keep this for later</a> : null}
       </section>
     );
   }

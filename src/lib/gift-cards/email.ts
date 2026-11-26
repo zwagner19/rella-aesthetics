@@ -242,7 +242,7 @@ export function renderPurchaserEmail(i: PurchaserEmailInput, assets: EmailAssets
   </table>
   <h2 style="margin:0 0 10px;font-family:${FONT};font-size:16px;font-weight:600;color:${C.ink};">Your gift card</h2>
   ${p(COPY.delivery)}
-  ${p(`Your gift card code is sent separately from Boulevard, our booking system, to this email address. It carries the full ${formatUsd(i.offer.valueCents)} value, including the ${formatUsd(i.offer.bonusCents)} in additional value. Keep it for yourself or forward it to someone you love. Present the code at checkout at either Rella location, or apply it when booking online.`)}
+  ${p(`Your purchase includes ${formatUsd(i.offer.valueCents)} in account credit, including ${formatUsd(i.offer.bonusCents)} in additional value. It is added to the purchaser's Rella profile at the clinic selected during checkout. Your VIP Guest Pass below is the separate benefit you can share.`)}
   <h2 style="margin:16px 0 10px;font-family:${FONT};font-size:16px;font-weight:600;color:${C.ink};">Your VIP Guest Pass</h2>
   ${gifting}
 </td></tr>
@@ -262,7 +262,7 @@ ${footerRow()}`;
     `VIP Guest Pass: included (${i.passId})`,
     "",
     COPY.delivery,
-    `Your gift card code is sent separately from Boulevard to this email address and carries the full ${formatUsd(i.offer.valueCents)} value.`,
+    `${formatUsd(i.offer.valueCents)} in account credit is added to the purchaser's Rella profile at the clinic selected during checkout.`,
     "",
     i.gifting.state === "sent"
       ? `Gifting status: sent to ${i.gifting.recipientFirstName} on ${i.gifting.sentOn}.`
