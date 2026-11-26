@@ -4,7 +4,7 @@ import {
   BLACK_FRIDAY_2026,
   COPY,
   OFFERS,
-  OFFER_TERMS_DRAFT,
+  OFFER_TERMS,
   formatUsd,
   type BlackFridayCheckoutMode,
   type ClinicId,
@@ -197,10 +197,9 @@ export function BlackFridayLanding({
               <h2 id="terms-title" className={s.termsTitle}>
                 Offer terms
               </h2>
-              <span className={s.draftFlag}>Draft · pending owner approval</span>
             </div>
             <ul className={s.termsList}>
-              {OFFER_TERMS_DRAFT.map((t) => (
+              {OFFER_TERMS.map((t) => (
                 <li key={t}>{t}</li>
               ))}
             </ul>

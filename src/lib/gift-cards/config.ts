@@ -211,13 +211,13 @@ export const VIP_EXPERIENCES: readonly { id: VipExperienceId; label: string }[] 
 ]);
 
 /**
- * DRAFT offer terms — PLACEHOLDER pending Zach's approval (flagged in the PR).
- * Not legal advice; the owner must approve before launch.
+ * Owner-approved offer rules, November 25, 2026. Approval is a business
+ * decision, not a representation that this copy received legal review.
  */
-export const OFFER_TERMS_DRAFT: readonly string[] = Object.freeze([
+export const OFFER_TERMS: readonly string[] = Object.freeze([
   "Black Friday gift card offers are available for purchase November 27 through December 1, 2026 (Pacific Time), or while the promotion remains available.",
-  "Open to new and existing Rella clients. Limit and eligibility details to be confirmed by Rella before launch.",
-  "The $1,000 Rella Gift Card is purchased for $800 and the $2,100 Rella Gift Card is purchased for $1,600. Delivered as Rella account credit, including the additional promotional value.",
+  "Open to new and existing Rella clients. There is no per-person purchase limit.",
+  "The $1,000 Rella Gift Card is purchased for $800 and the $2,100 Rella Gift Card is purchased for $1,600. Delivered as Rella account credit, including the additional promotional value. Account credit is added at the clinic selected during checkout.",
   "Each qualifying purchase includes one Rella VIP Guest Pass for a friend or family member. The recipient chooses one experience. Book by December 15, 2026; redeem by January 31, 2027.",
   "All treatments are subject to consultation and provider approval. Results vary and are not guaranteed.",
   "Gift cards and passes have no cash value except as required by law and may not be combined with other offers unless stated.",
