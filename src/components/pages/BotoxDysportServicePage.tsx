@@ -401,7 +401,7 @@ export function BotoxDysportServicePage() {
 
             <article className="lg:pl-12">
               <ClinicLocationPhoto visual={napaVisual} />
-              <h3 className="text-2xl font-medium tracking-[-0.01em] text-ink"><a href="/napa/botox/">Napa House</a></h3>
+              <h3 className="text-2xl font-medium tracking-[-0.01em] text-ink"><a href="/napa/botox">Napa House</a></h3>
               <p className="mt-3 text-sm font-light leading-relaxed text-silver">
                 {locations.napa.address}
                 <br />

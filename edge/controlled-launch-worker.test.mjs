@@ -40,10 +40,27 @@ test("retired Napa homepage does not replay submitted bodies or match treatment 
     const result = await handleRequest(new Request(`https://experiencerella.com${path}`, { method: "POST", body: "synthetic" }), env, io.fetcher);
     assert.equal(result.status, 405); assert.equal(result.headers.get("Location"), null); assert.equal(io.calls.length, 0);
   }
-  const input = new Request("https://experiencerella.com/napa/botox/?utm_source=email");
-  const io = fixture(new Response("WordPress"));
-  assert.equal(await (await handleRequest(input, env, io.fetcher)).text(), "WordPress");
-  assert.equal(io.calls[0], input);
+});
+for (const host of ["experiencerella.com", "www.experiencerella.com"]) {
+  test(`old Napa Botox slash URL on ${host} 301s to the Next.js canonical with its query`, async () => {
+    const io = fixture();
+    const result = await handleRequest(new Request(`https://${host}/napa/botox/?utm_source=email&gclid=TEST`), env, io.fetcher);
+    assert.equal(result.status, 301);
+    assert.equal(result.headers.get("Location"), "https://experiencerella.com/napa/botox?utm_source=email&gclid=TEST");
+    assert.equal(io.calls.length, 0);
+  });
+}
+test("old Napa Botox slash URL refuses a body instead of redirecting it", async () => {
+  const io = fixture();
+  const result = await handleRequest(new Request("https://experiencerella.com/napa/botox/", { method: "POST", body: "synthetic" }), env, io.fetcher);
+  assert.equal(result.status, 405); assert.equal(io.calls.length, 0);
+});
+test("Napa Botox is served from the Next.js origin, not WordPress", async () => {
+  const io = fixture(page("/napa/botox"));
+  const result = await handleRequest(new Request("https://experiencerella.com/napa/botox?utm_source=fixture"), env, io.fetcher);
+  assert.equal(result.status, 200); assert.equal(io.calls.length, 1);
+  assert.equal(io.calls[0].url, `https://${ORIGIN}/napa/botox?utm_source=fixture`);
+  assert.equal(result.headers.get("X-Robots-Tag"), null);
 });
 for (const path of WORDPRESS_LANDINGS) for (const slash of ["", "/"]) {
   test(`preserves WordPress landing ${path}${slash} and its query without following or rewriting`, async () => {

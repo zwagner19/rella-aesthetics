@@ -5,7 +5,7 @@
 export const SITE_ORIGIN_MARKER = "next-controlled-launch-v1";
 export const PUBLIC_ORIGIN = "https://experiencerella.com";
 export const WORDPRESS_LANDINGS = Object.freeze([
-  "/napa/botox", "/napa/laser", "/napa/filler", "/napa/hydrafacial", "/napa/hyperhidrosis",
+  "/napa/laser", "/napa/filler", "/napa/hydrafacial", "/napa/hyperhidrosis",
 ]);
 const PUBLIC_HOSTS = new Set(["experiencerella.com", "www.experiencerella.com"]);
 const WP_PREFIXES = ["/wp-content", "/wp-includes", "/wp-json", "/wp-admin"];
@@ -83,6 +83,14 @@ export async function handleRequest(request, env = {}, fetcher = fetch) {
     return new Response(null, { status: 308, headers: { Location: canonical.href, "Cache-Control": "no-store" } });
   }
   if (oldNapaHome) return failure(405);
+  // Napa Botox moved from WordPress to the Next.js page. Permanently redirect the
+  // old slash URL (still indexed) to the slashless canonical, keeping the query.
+  if (publicUrl.pathname === "/napa/botox/") {
+    if (!read) return failure(405);
+    const canonical = new URL(publicUrl); canonical.protocol = "https:";
+    canonical.hostname = "experiencerella.com"; canonical.pathname = "/napa/botox";
+    return new Response(null, { status: 301, headers: { Location: canonical.href, "Cache-Control": "no-store" } });
+  }
   if (publicUrl.protocol !== "https:") {
     if (!read) return failure(400);
     const secure = new URL(publicUrl); secure.protocol = "https:";

@@ -28,7 +28,7 @@ export const napaHousePractical = {
  * Microneedling (standard and RF) is owner-confirmed for Napa House and links to its local page.
  */
 export const napaHouseCategories = [
-  { label: "Injectables", href: "/napa/botox/", ariaLabel: "Injectables: Botox and Dysport in Napa" },
+  { label: "Injectables", href: "/napa/botox", ariaLabel: "Injectables: Botox and Dysport in Napa" },
   { label: "Skin", href: "/napa/facials", ariaLabel: "Skin: Facials in Napa" },
   { label: "Microneedling", href: "/napa/microneedling", ariaLabel: "Microneedling in Napa" },
   { label: "Lasers", href: "/napa/laser/", ariaLabel: "Lasers: Laser treatments in Napa" },
