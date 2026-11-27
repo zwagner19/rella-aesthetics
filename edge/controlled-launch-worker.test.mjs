@@ -196,10 +196,16 @@ test("unexpected HTML at an API or asset is blocked, not mistaken for a successf
   }
 });
 test("invalid origin configuration/host and oversized HTML fail closed without unexpected requests", async () => {
-  for (const host of ["attacker.test", "rella-aesthetics.vercel.app", "rella-aesthetics-git-main-zwagner19s-projects.vercel.app", `${ORIGIN}.attacker.test`]) {
+  for (const host of ["attacker.test", "rella-aesthetics.vercel.app.attacker.test", "xrella-aesthetics.vercel.app", "rella-aesthetics-git-main-zwagner19s-projects.vercel.app", `${ORIGIN}.attacker.test`]) {
     const io = fixture(); assert.equal((await handleRequest(new Request("https://experiencerella.com/"), { ...env, ORIGIN_HOST: host }, io.fetcher)).status, 503); assert.equal(io.calls.length, 0);
   }
   const io = fixture(); assert.equal((await handleRequest(new Request("https://foreign.test/"), env, io.fetcher)).status, 400); assert.equal(io.calls.length, 0);
   const large = fixture(page("/", { "Content-Length": String(3 * 1024 * 1024) }));
   assert.equal((await handleRequest(new Request("https://experiencerella.com/"), env, large.fetcher)).status, 502);
+});
+test("the exact production alias is accepted as an origin", async () => {
+  const io = fixture(page("/"));
+  const res = await handleRequest(new Request("https://experiencerella.com/"), { ...env, ORIGIN_HOST: "rella-aesthetics.vercel.app" }, io.fetcher);
+  assert.equal(res.status, 200); assert.equal(io.calls.length, 1);
+  assert.equal(new URL(io.calls[0].url ?? io.calls[0]).hostname, "rella-aesthetics.vercel.app");
 });

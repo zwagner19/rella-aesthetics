@@ -96,3 +96,12 @@ The quickest site rollback is removal of the **two newly added route IDs**, rest
 If an authorized Vercel promotion also occurred, restore the exact deployment anchors above with the relevant project’s rollback, then verify both domains sharing that project. Prefer keeping the last known compatible backend available for already-started visits rather than blindly rolling it back during pending checkout. Vercel rollback stops automatic production-domain assignment until explicitly restored; record that state. [Vercel rollback](https://vercel.com/docs/deployments/rollback-a-deployment)
 
 Do not delete the additive consent/package ledgers during rollback. New Worker version IDs, release deployment IDs, route IDs, current flag values and the owner’s go/no-go decision must be entered in the release record before activation; they are intentionally not invented here.
+
+## Release flow with the production alias (Nov 2026)
+
+`ORIGIN_HOST` may be set to `rella-aesthetics.vercel.app`, the Vercel production alias. With that value:
+
+1. Merge the PR into `codex/amie-shared-booking`.
+2. In Vercel, open that deployment and choose Promote to Production. The live site follows on its own.
+
+No Cloudflare change is needed per release. Roll back with Instant Rollback in Vercel. A pinned `rella-aesthetics-<id>-zwagner19s-projects.vercel.app` value still works if a hard pin is ever needed. Branch aliases (`-git-…`) stay blocked.
