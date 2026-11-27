@@ -2,6 +2,7 @@ export const CONTACT_INTENTS = {
   membership: "Membership Questions",
   "private-parties": "Private Party Questions",
   "payment-plans": "Payment Plan Questions",
+  "hormone-peptide": "Hormone and Peptide Consult",
 } as const;
 
 export const EXTRA_CONTACT_INTERESTS = Object.values(CONTACT_INTENTS);

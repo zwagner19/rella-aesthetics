@@ -24,6 +24,7 @@ type Category = {
   treatments: readonly Treatment[];
   consult?: readonly ConsultAction[];
   phone?: { label: string; href: string };
+  link?: { label: string; href: string };
 };
 
 const primaryCategories: readonly Category[] = [
@@ -110,7 +111,7 @@ const secondaryCategories: readonly Category[] = [
   {
     id: "wellness",
     label: "Wellness",
-    description: "IV hydration, with screening before treatment.",
+    description: "IV hydration, hormone therapy, and peptide therapy, with screening before treatment.",
     cta: "Explore Wellness",
     treatments: [
       {
@@ -118,8 +119,14 @@ const secondaryCategories: readonly Category[] = [
         summary:
           "Clinician-guided fluids and ingredients, chosen after screening. The infusion is monitored, and the formula depends on your history, goals, and symptoms.",
       },
+      {
+        name: "Hormone & Peptide Therapy",
+        summary:
+          "A wellness consult with Warda Harchaoui, PA-C, that starts with complimentary baseline labs. Treatment is prescribed only when clinically appropriate.",
+      },
     ],
     phone: { label: "Call to book", href: PHONE_HREF },
+    link: { label: "Hormone & Peptide Therapy", href: "/services/hormone-peptide-therapy" },
   },
   {
     id: "weight-loss",
@@ -242,6 +249,14 @@ function ServiceCard({
                 className="rella-cta-rect rella-cta-rect--ghost-light w-fit focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4"
               >
                 {category.phone.label}
+              </a>
+            ) : null}
+            {category.link ? (
+              <a
+                href={category.link.href}
+                className="rella-cta-rect rella-cta-rect--ghost-light w-fit focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4"
+              >
+                {category.link.label}
               </a>
             ) : null}
           </div>

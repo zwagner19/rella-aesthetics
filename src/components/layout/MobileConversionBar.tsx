@@ -18,6 +18,7 @@ const EXCLUDED_PATHS = new Set([
   "/napa/botox",
   "/privacy-policy",
   "/promotional-terms",
+  "/services/hormone-peptide-therapy",
   "/services/weight-loss",
   "/terms",
   "/wpbc-booking-received",
