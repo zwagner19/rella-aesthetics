@@ -1,4 +1,4 @@
-import type { PackageClient, PackageConfirmation, PackagePurchaseReview } from "@/lib/guided-booking/package-client";
+import { PackageRequestError, type PackageClient, type PackageConfirmation, type PackagePurchaseReview } from "@/lib/guided-booking/package-client";
 import { quoteMatchesOffer, rellaPackageKey, type ClinicId, type GiftCardOffer } from "./config";
 
 /**
@@ -20,6 +20,11 @@ export type RellaCheckoutOpening =
 
 export function reviewIsSellable(offer: GiftCardOffer, review: PackagePurchaseReview): boolean {
   return quoteMatchesOffer(offer, review) && review.needsCard && typeof review.cardFrameOrigin === "string";
+}
+
+/** Only this exact server-proven pre-checkout failure permits a fresh cart. */
+export function isSafeCardRestart(error: unknown): boolean {
+  return error instanceof PackageRequestError && error.definitive && error.reason === "package_card_not_attached";
 }
 
 export async function openRellaCheckout(
