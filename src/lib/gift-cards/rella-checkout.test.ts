@@ -2,7 +2,7 @@ import { createHash } from "node:crypto";
 import { describe, expect, it } from "vitest";
 import { createPackageClient, PackageRequestError, type PackageOperations, type PackageSessionStatus } from "@/lib/guided-booking/package-client";
 import { BLACK_FRIDAY_2026, BOULEVARD_CHECKOUT, OFFERS, RELLA_PACKAGE_KEYS, blackFridayCheckoutMode, blackFridayDeepLink, offerById, quoteMatchesOffer, rellaPackageKey } from "./config";
-import { openRellaCheckout } from "./rella-checkout";
+import { isSafeCardRestart, openRellaCheckout } from "./rella-checkout";
 
 const offer = offerById("bf26-1000")!;
 const KEY = rellaPackageKey("bf26-1000", "napa");
@@ -90,6 +90,41 @@ describe("Black Friday direct checkout links", () => {
 });
 
 describe("opening Rella's checkout for a Black Friday offer", () => {
+  it("offers a fresh checkout only for the exact definitive unattached-card failure", () => {
+    expect(isSafeCardRestart(new PackageRequestError("not attached", true, "package_card_not_attached"))).toBe(true);
+    expect(isSafeCardRestart(new PackageRequestError("uncertain", false, "package_card_not_attached"))).toBe(false);
+    expect(isSafeCardRestart(new PackageRequestError("other rejection", true, "validated_rejection"))).toBe(false);
+    expect(isSafeCardRestart(new PackageRequestError("wrong session", true, "package_session_not_ready"))).toBe(false);
+    expect(isSafeCardRestart(new Error("package_card_not_attached"))).toBe(false);
+    expect(isSafeCardRestart({ definitive: true, reason: "package_card_not_attached" })).toBe(false);
+  });
+
+  it("does not automatically retry a failed card and rechecks status before an explicit fresh checkout", async () => {
+    const { client, calls } = fakeClient({ purchase: async () => {
+      calls.push("payment-failed");
+      throw new PackageRequestError("not attached", true, "package_card_not_attached");
+    } });
+    await openRellaCheckout(client, offer, "napa");
+    const input = { client: { firstName: "Test", lastName: "Buyer", email: "buyer@example.test", phone: "7075550100", assessmentContactConsent: true, marketingConsent: false }, token: "synthetic-token" };
+    await expect(client.purchase(input)).rejects.toThrow("not attached");
+    expect(client.verificationPending()).toBe(false);
+    expect(calls).toEqual(["status", "catalog", `start:${KEY}`, "payment-failed"]);
+    expect((await openRellaCheckout(client, offer, "napa")).kind).toBe("ready");
+    expect(calls).toEqual(["status", "catalog", `start:${KEY}`, "payment-failed", "status", "catalog", `start:${KEY}`]);
+  });
+
+  it.each(["PENDING", "PAYMENT_READY", "CONFIRMED"] as const)("does not open a replacement cart when a restart status recheck finds %s", async state => {
+    let current: PackageSessionStatus = { state: "DRAFT" };
+    const { client, calls } = fakeClient({ status: async () => { calls.push("status"); return current; }, purchase: async () => {
+      throw new PackageRequestError("not attached", true, "package_card_not_attached");
+    } });
+    await openRellaCheckout(client, offer, "napa");
+    await expect(client.purchase({ client: { firstName: "Test", lastName: "Buyer", email: "buyer@example.test", phone: "7075550100", assessmentContactConsent: true, marketingConsent: false }, token: "synthetic-token" })).rejects.toThrow("not attached");
+    current = state === "CONFIRMED" ? { state, confirmationId: "already-paid" } : { state };
+    expect((await openRellaCheckout(client, offer, "napa")).kind).toBe(state === "CONFIRMED" ? "already" : "pending");
+    expect(calls.filter(call => call.startsWith("start:"))).toHaveLength(1);
+  });
+
   it("starts the one matching package and is ready at the advertised price", async () => {
     const { client, calls } = fakeClient();
     const result = await openRellaCheckout(client, offer, "napa");

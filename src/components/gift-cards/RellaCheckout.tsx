@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
 import { BLACK_FRIDAY_2026, BOULEVARD_CHECKOUT, COPY, formatUsd, type ClinicId, type GiftCardOffer } from "@/lib/gift-cards/config";
-import { openRellaCheckout, reviewIsSellable } from "@/lib/gift-cards/rella-checkout";
+import { isSafeCardRestart, openRellaCheckout, reviewIsSellable } from "@/lib/gift-cards/rella-checkout";
 import { clientLooksComplete, initialGuidedBookingState } from "@/lib/guided-booking/machine";
 import {
   createSharedPackageClient,
@@ -25,6 +25,7 @@ type Step =
   | { name: "already"; result: PackageConfirmation }
   | { name: "details"; review: PackagePurchaseReview }
   | { name: "payment"; review: PackagePurchaseReview }
+  | { name: "card-restart" }
   | { name: "pending" }
   | { name: "mismatch" }
   | { name: "confirmed"; result: PackageConfirmation };
@@ -134,6 +135,7 @@ export function RellaCheckout({ offer, clinic, onUnavailable, onClose, client: p
       await work();
     } catch (cause) {
       if (client.verificationPending()) setStep({ name: "pending" });
+      else if (isSafeCardRestart(cause)) setStep({ name: "card-restart" });
       else setError(cause instanceof PackageRequestError || cause instanceof Error ? cause.message : "That could not be completed. Please call Rella.");
     } finally {
       working.current = false;
@@ -330,6 +332,26 @@ export function RellaCheckout({ offer, clinic, onUnavailable, onClose, client: p
             <div className={s.formActions}>
               <button type="button" className={s.linkBtn} disabled={busy} onClick={() => setStep({ name: "details", review: step.review })}>
                 Edit my details
+              </button>
+            </div>
+          </div>
+        ) : null}
+
+        {step.name === "card-restart" ? (
+          <div role="alert">
+            <h2 id="rella-checkout-title" className={`${s.h2} ${s.italic}`}>
+              Let&apos;s try your card in a fresh checkout
+            </h2>
+            <p className={s.lede}>
+              Your card could not be added, so no payment was submitted for this attempt. Start again securely, then enter your card again or use a different card.
+            </p>
+            <p className={s.small}>We&apos;ll keep your contact details and recheck your purchase status and price before continuing.</p>
+            <div className={s.formActions}>
+              <button type="button" className={s.btn} disabled={busy} onClick={() => void run(() => open(false))}>
+                Start again securely
+              </button>
+              <button type="button" className={s.linkBtn} disabled={busy} onClick={onClose}>
+                Close
               </button>
             </div>
           </div>
