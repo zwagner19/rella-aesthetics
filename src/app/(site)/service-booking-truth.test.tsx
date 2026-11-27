@@ -34,6 +34,16 @@ describe("service booking truth", () => {
     expect(html).toContain("Book in Vacaville");
   });
 
+  it("sends the Napa microneedling clinic link to the in-site booking menu", async () => {
+    const html = await renderService("microneedling");
+    const napa = html.match(/<a[^>]*data-location="napa"[^>]*>/g) ?? [];
+    const vacaville = html.match(/<a[^>]*data-location="vacaville"[^>]*>/g) ?? [];
+    expect(napa).toHaveLength(1);
+    expect(napa[0]).toContain("data-guided-booking");
+    expect(vacaville).toHaveLength(1);
+    expect(vacaville[0]).not.toContain("data-guided-booking");
+  });
+
   it("opens IV hydration booking while retaining clinical screening guidance", async () => {
     const html = await renderService("iv-hydration");
     expect(html).toContain('href="https://book.experiencerella.com/book"');

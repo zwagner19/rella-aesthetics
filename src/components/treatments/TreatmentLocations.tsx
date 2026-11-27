@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { BookTrigger } from "@/components/guided-booking/BookTrigger";
 import { ClinicLocationPhoto } from "@/components/home/ClinicLocationPhoto";
 import { HOME_LOCATION_VISUALS } from "@/components/home/home-location-visuals";
 import type { BookingLocation } from "@/lib/booking-routes";
@@ -11,6 +12,9 @@ const localTreatmentPages: Record<string, Partial<Record<BookingLocation, string
   "laser-treatments": { vacaville: "/vacaville/laser" },
   microneedling: { vacaville: "/vacaville/microneedling", napa: "/napa/microneedling" },
 };
+// Clinic links whose chooser category is missing from the old booking page.
+// These open the in-site booking menu instead, preselecting the service.
+const guidedLocationBooking = new Set(["napa/microneedling"]);
 const wordpressNapaTreatmentPages: Record<string, string> = {
   hydrafacial: "/napa/hydrafacial/",
   "laser-treatments": "/napa/laser/",
@@ -109,6 +113,15 @@ export function TreatmentLocations({
                   >
                     Call about availability
                   </Link>
+                ) : guidedLocationBooking.has(`${visual.slug}/${serviceSlug}`) ? (
+                  <BookTrigger
+                    intent={{ location: visual.slug, service: serviceSlug }}
+                    className="mt-7 inline-flex text-[0.6875rem] font-bold uppercase tracking-[0.18em] text-ink underline-offset-4 hover:text-rose hover:underline"
+                    data-cta="service-booking"
+                    data-location={visual.slug}
+                  >
+                    Book in {visual.slug === "napa" ? "Napa" : "Vacaville"}
+                  </BookTrigger>
                 ) : (
                   <Link
                     href={bookingHrefFor(visual.slug)}
