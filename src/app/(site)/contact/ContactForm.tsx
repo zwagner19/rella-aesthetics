@@ -7,8 +7,12 @@ import { ASSESSMENT_CONTACT_CONSENT, CONTACT_CONSENT_POLICY_VERSION, MARKETING_C
 
 export function ContactForm({
   initialServiceInterest = "",
+  submitLabel = "Send Message",
+  messageLabel = "Message",
 }: {
   initialServiceInterest?: string;
+  submitLabel?: string;
+  messageLabel?: string;
 }) {
   const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error" | "pending">(
     "idle",
@@ -217,7 +221,7 @@ export function ContactForm({
 
       <div>
         <label htmlFor="message" className={labelClassName}>
-          Message
+          {messageLabel}
         </label>
         <textarea
           id="message"
@@ -278,7 +282,7 @@ export function ContactForm({
         disabled={status === "sending" || status === "pending"}
         className="rella-cta-rect rella-cta-rect--filled disabled:cursor-not-allowed disabled:opacity-50"
       >
-        {status === "sending" ? "Sending..." : "Send Message"}
+        {status === "sending" ? "Sending..." : submitLabel}
       </button>
     </form>
   );
