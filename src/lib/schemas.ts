@@ -151,7 +151,9 @@ export function physicianOwnerSchema() {
   };
 }
 
-export const MEDICAL_WEIGHT_LOSS_CANONICAL_URL = "https://weightloss.experiencerella.com/";
+// rellaweightloss.com is the LegitScript-certified weight-loss domain that ads
+// land on, so search credit for the shared weight-loss page consolidates there.
+export const MEDICAL_WEIGHT_LOSS_CANONICAL_URL = "https://rellaweightloss.com/";
 
 export function medicalWeightLossServiceSchema() {
   return {
