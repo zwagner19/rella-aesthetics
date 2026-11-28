@@ -110,18 +110,18 @@ describe("medical weight-loss subdomain", () => {
     }
   });
 
-  it("serves a one-page sitemap and host-correct robots policy", async () => {
+  it("serves an empty sitemap and no sitemap pointer, since the canonical is rellaweightloss.com", async () => {
     const sitemap = proxy(req("/sitemap.xml", WEIGHT_LOSS));
     const sitemapBody = await sitemap.text();
     expect(sitemap.headers.get("content-type")).toContain("application/xml");
     expect(sitemap.headers.get("cache-control")).toContain("s-maxage");
-    expect(sitemapBody).toContain("https://weightloss.experiencerella.com/");
-    expect(sitemapBody).not.toContain("experiencerella.com/services/");
+    expect(sitemapBody).toContain("<urlset");
+    expect(sitemapBody).not.toContain("<loc>");
 
     const robots = proxy(req("/robots.txt", WEIGHT_LOSS));
-    expect(await robots.text()).toContain(
-      "Sitemap: https://weightloss.experiencerella.com/sitemap.xml",
-    );
+    const robotsBody = await robots.text();
+    expect(robotsBody).toContain("Allow: /");
+    expect(robotsBody).not.toContain("Sitemap:");
   });
 
   it("canonicalizes SEO document variants without forwarding their query", () => {

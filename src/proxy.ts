@@ -53,7 +53,9 @@ const ALLOWED_PREFIXES = ["/_next/static/"];
 const WEIGHT_LOSS_ASSET_PREFIXES = ["/_next/static/", "/brand/", "/images/", "/media/"];
 const WEIGHT_LOSS_EXACT_ASSETS = new Set(["/favicon.ico"]);
 const WEIGHT_LOSS_SEO_DOCUMENTS = new Set(["/robots.txt", "/sitemap.xml", "/sitemap-0.xml"]);
-const WEIGHT_LOSS_SITEMAP = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"><url><loc>https://weightloss.experiencerella.com/</loc><changefreq>weekly</changefreq><priority>1.0</priority></url></urlset>`;
+// The weight-loss page's canonical is rellaweightloss.com, so this host lists
+// no URLs of its own; an empty urlset avoids a sitemap/canonical conflict.
+const WEIGHT_LOSS_SITEMAP = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"></urlset>`;
 
 export function isWeightLossAsset(pathname: string): boolean {
   const lowerPath = pathname.toLowerCase();
@@ -128,7 +130,7 @@ export function proxy(request: NextRequest) {
 
     if (pathname === "/robots.txt") {
       return new NextResponse(
-        "User-agent: *\nAllow: /\nDisallow: /api/\nDisallow: /studio/\nSitemap: https://weightloss.experiencerella.com/sitemap.xml\n",
+        "User-agent: *\nAllow: /\nDisallow: /api/\nDisallow: /studio/\n",
         {
           headers: {
             "content-type": "text/plain; charset=utf-8",

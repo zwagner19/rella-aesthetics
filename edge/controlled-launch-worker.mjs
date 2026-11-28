@@ -18,8 +18,12 @@ const ASSET_EXTENSIONS = /\.(?:css|js|mjs|json|map|xml|txt|ico|svg|png|jpe?g|web
 const ORIGIN_HOST = /^(?:rella-aesthetics-[a-z0-9]+-zwagner19s-projects|rella-aesthetics)\.vercel\.app$/;
 const TIMEOUT_MS = 30_000;
 const MAX_HTML_BYTES = 2 * 1024 * 1024;
+// Each exception lists every canonical the page may declare. The weight-loss
+// page moved its canonical to the LegitScript-certified rellaweightloss.com;
+// the previous value stays accepted so Worker and Vercel releases can happen
+// in either order without a 502 on that page.
 const CANONICAL_EXCEPTIONS = Object.freeze({
-  "/services/weight-loss": "https://weightloss.experiencerella.com/",
+  "/services/weight-loss": Object.freeze(["https://rellaweightloss.com/", "https://weightloss.experiencerella.com/"]),
 });
 
 function under(path, prefix) { return path === prefix || path.startsWith(`${prefix}/`); }
@@ -152,9 +156,10 @@ export async function handleRequest(request, env = {}, fetcher = fetch) {
       || Number(upstream.headers.get("content-length") ?? "0") > MAX_HTML_BYTES) return failure();
     let body;
     try { body = await upstream.text(); } catch { return failure(); }
-    const expectedCanonical = CANONICAL_EXCEPTIONS[publicUrl.pathname] ?? `${PUBLIC_ORIGIN}${publicUrl.pathname}`;
+    const expectedCanonicals = CANONICAL_EXCEPTIONS[publicUrl.pathname] ?? [`${PUBLIC_ORIGIN}${publicUrl.pathname}`];
+    const declaredCanonical = normalizedCanonical(canonicalFromHtml(body));
     if (new TextEncoder().encode(body).byteLength > MAX_HTML_BYTES
-      || normalizedCanonical(canonicalFromHtml(body)) !== normalizedCanonical(expectedCanonical)) return failure();
+      || !expectedCanonicals.some(value => normalizedCanonical(value) === declaredCanonical)) return failure();
     // Remove only the Vercel transport noindex after proving this exact public page.
     // Any meta robots policy in the document remains unchanged.
     if (!isPrivate && !resultHeaders.has("set-cookie") && resultHeaders.get("x-robots-tag")?.trim().toLowerCase() === "noindex") resultHeaders.delete("x-robots-tag");

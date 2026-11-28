@@ -97,8 +97,16 @@ test("homepage accepts an absolute HTTPS canonical without the equivalent traili
   const result = await handleRequest(new Request("https://experiencerella.com/"), env, io.fetcher);
   assert.equal(result.status, 200); assert.equal(result.headers.get("X-Robots-Tag"), null);
 });
+test("the weight-loss page accepts the certified rellaweightloss.com canonical and the previous one", async () => {
+  for (const canonical of ["https://rellaweightloss.com/", "https://weightloss.experiencerella.com"]) {
+    const ok = fixture(page("/services/weight-loss", {}, `<link rel="canonical" href="${canonical}">`));
+    assert.equal((await handleRequest(new Request("https://experiencerella.com/services/weight-loss"), env, ok.fetcher)).status, 200, canonical);
+  }
+  const foreign = fixture(page("/services/weight-loss", {}, '<link rel="canonical" href="https://foreign.test/">'));
+  assert.equal((await handleRequest(new Request("https://experiencerella.com/services/weight-loss"), env, foreign.fetcher)).status, 502);
+});
 test("only the existing weight-loss service page permits its fixed external canonical", async () => {
-  const html = '<link rel="canonical" href="https://weightloss.experiencerella.com">';
+  const html = '<link rel="canonical" href="https://rellaweightloss.com/">';
   const io = fixture(page("/services/weight-loss", {}, html));
   const result = await handleRequest(new Request("https://experiencerella.com/services/weight-loss?gclid=TEST-retain"), env, io.fetcher);
   assert.equal(result.status, 200); assert.equal(result.headers.get("X-Robots-Tag"), null); assert.equal(await result.text(), html);
