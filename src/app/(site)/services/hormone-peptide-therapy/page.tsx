@@ -45,7 +45,7 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 const OFFER_TERMS =
-  "Complimentary baseline labs apply to new hormone and peptide wellness consults at Rella Vacaville or Napa. Your provider selects the panel. Additional tests, follow-up visits, and any treatment are priced separately and reviewed with you before you begin.";
+  "Complimentary baseline labs apply to new hormone and peptide wellness consults at Rella Vacaville or Napa, valid through December 31, 2026. Your provider selects the panel. Additional tests, follow-up visits, and any treatment are priced separately and reviewed with you before you begin.";
 
 const CONCERNS = [
   "Low energy or fatigue you want looked at",
