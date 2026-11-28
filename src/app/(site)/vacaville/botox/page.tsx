@@ -1,3 +1,4 @@
+import { withWebsiteSeo } from "@/lib/website-seo";
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
@@ -13,7 +14,7 @@ const CANONICAL = "https://experiencerella.com/vacaville/botox";
 const BOOKING_HREF = resolveBookingHref({ location: "vacaville", service: "botox" });
 const clinic = locations.vacaville;
 
-export const metadata: Metadata = {
+const defaultMetadata: Metadata = {
   title: "Botox in Vacaville, CA | Pricing & Visit Guide",
   description:
     "Explore current Botox and Dysport pricing, product-specific timing, and what to expect at Rella Aesthetics, 542 Main St in Vacaville.",
@@ -71,7 +72,7 @@ const serviceSchema = {
   "@id": `${CANONICAL}#service`,
   name: "Botox and Dysport in Vacaville",
   serviceType: "Neuromodulator consultation and treatment",
-  description: metadata.description,
+  description: defaultMetadata.description,
   url: CANONICAL,
   image: "https://experiencerella.com/images/service-botox.jpg",
   provider: {
@@ -314,4 +315,8 @@ export default function VacavilleBotoxPage() {
       </section>
     </>
   );
+}
+
+export async function generateMetadata(): Promise<Metadata> {
+  return withWebsiteSeo("/vacaville/botox", defaultMetadata);
 }

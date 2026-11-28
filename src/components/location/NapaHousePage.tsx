@@ -119,7 +119,14 @@ export function NapaHousePage() {
           <p className="mt-6 max-w-[36rem] text-base font-light leading-relaxed text-silver md:text-lg">
             At Napa House, the visit is a conversation first: what you want,
             what fits, and what can wait. Treatment follows that clarity —
-            unhurried, in rooms that still feel like a house.
+            unhurried, in rooms that still feel like a house. Explore our{" "}
+            <a
+              href="/napa/hydrafacial/"
+              className="underline underline-offset-4 hover:underline focus-visible:underline"
+            >
+              Napa HydraFacial options
+            </a>
+            .
           </p>
         </div>
       </section>
@@ -146,7 +153,11 @@ export function NapaHousePage() {
                 key={category.label}
                 className="border-b border-rule py-3.5 text-xl font-medium tracking-[-0.01em] text-ink md:py-4 md:text-2xl"
               >
-                {category.label}
+                {"href" in category ? (
+                  <a href={category.href} aria-label={category.ariaLabel} className="block">
+                    {category.label}
+                  </a>
+                ) : category.label}
               </li>
             ))}
           </ul>

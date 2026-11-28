@@ -1,6 +1,11 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { CANCELLATION_POLICY } from "@/lib/napa-botox-facts";
+import {
+  PREPAID_PACKAGE_POLICY,
+  PREPAID_PACKAGE_TIMING_POLICY,
+  STANDARD_BOOKING_POLICY,
+} from "./policy-copy";
 
 export const metadata: Metadata = {
   title: "Cancellation Policy",
@@ -32,19 +37,26 @@ export default function CancellationPolicyPage() {
           <div className="prose prose-lg max-w-none space-y-6 text-ink/70">
             <h2 className="font-medium text-xl text-ink">Current Policy</h2>
             <p>
-              Please give at least 48 hours&apos; notice if you need to cancel. Rella may retain the
-              applicable booking deposit for cancellations within 48 hours. Emergencies are
-              reviewed individually.
+              Please give at least 48 hours&apos; notice if you need to cancel or reschedule. Rella may
+              retain the applicable booking deposit for a cancellation or reschedule within 48
+              hours, or for a no-show. Emergencies are reviewed individually.
             </p>
+
+            <h2 className="font-medium text-xl text-ink mt-8">
+              Standard Booking Deposits
+            </h2>
+            <p>{STANDARD_BOOKING_POLICY}</p>
+
+            <h2 className="font-medium text-xl text-ink mt-8">
+              Prepaid Packages
+            </h2>
+            <p>{PREPAID_PACKAGE_POLICY}</p>
+            <p>{PREPAID_PACKAGE_TIMING_POLICY}</p>
 
             <h2 className="font-medium text-xl text-ink mt-8">
               Napa New-Patient Tox Appointments
             </h2>
             <p>{CANCELLATION_POLICY}</p>
-            <p>
-              A $50 booking deposit is charged when the appointment is confirmed. The
-              deposit is separate from per-unit treatment pricing.
-            </p>
 
             <h2 className="font-medium text-xl text-ink mt-8">Need to Make a Change?</h2>
             <p>

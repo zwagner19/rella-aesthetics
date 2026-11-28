@@ -8,7 +8,9 @@ import {
   useState,
   type ReactNode,
 } from "react";
+import { startBookingInsight, endBookingInsight } from "@/lib/website-insights";
 import type { BookingIntent } from "@/lib/booking-routes";
+import { setPublicAnalyticsBookingState } from "@/lib/public-analytics-parent";
 import {
   createDefaultBackend,
   emitGuidedBookingEvent,
@@ -46,6 +48,9 @@ export function BookingExperienceProvider({
   );
 
   const open = useCallback((next: BookingIntent = {}) => {
+    startBookingInsight();
+    setPublicAnalyticsBookingState(true);
+    resolvedBackend.setOwnedPackageContext?.(false);
     setIntent(next);
     setIsOpen(true);
     emitGuidedBookingEvent({
@@ -53,9 +58,11 @@ export function BookingExperienceProvider({
       intent: next,
       at: Date.now(),
     });
-  }, []);
+  }, [resolvedBackend]);
 
   const close = useCallback(() => {
+    endBookingInsight();
+    setPublicAnalyticsBookingState(false);
     setIsOpen(false);
   }, []);
 

@@ -33,8 +33,9 @@ export default function TermsPage() {
           <p>
             Appointments booked through our website are subject to confirmation and the terms shown
             during booking. Our current policy asks for at least 48 hours&apos; notice before a
-            cancellation; Rella may retain an applicable booking deposit for a cancellation within
-            that window. Emergencies are reviewed individually. Please review the current{" "}
+            cancellation or reschedule; Rella may retain an applicable booking deposit for a
+            cancellation or reschedule within that window, or for a no-show. Emergencies are
+            reviewed individually. Please review the current{" "}
             <a href="/cancellation-policy" className="text-rose-text hover:underline">
               cancellation policy
             </a>

@@ -1,22 +1,27 @@
 "use client";
 
-import { useState, type FormEvent } from "react";
+import { useRef, useState, type FormEvent } from "react";
 import { EXTRA_CONTACT_INTERESTS } from "@/lib/contact-intents";
 import { services } from "@/lib/data";
+import { ASSESSMENT_CONTACT_CONSENT, CONTACT_CONSENT_POLICY_VERSION, MARKETING_CONSENT } from "@/lib/guided-booking/policies";
 
 export function ContactForm({
   initialServiceInterest = "",
 }: {
   initialServiceInterest?: string;
 }) {
-  const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">(
+  const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error" | "pending">(
     "idle",
   );
   const [contactMethodError, setContactMethodError] = useState("");
   const [serviceInterest, setServiceInterest] = useState(initialServiceInterest);
+  const [phoneProvided, setPhoneProvided] = useState(false);
+  const submitting = useRef(false);
+  const submissionId = useRef<string | null>(null);
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    if (submitting.current || status === "pending") return;
     const form = event.currentTarget;
     const data = Object.fromEntries(new FormData(form));
     const email = typeof data.email === "string" ? data.email.trim() : "";
@@ -31,26 +36,35 @@ export function ContactForm({
     }
 
     setContactMethodError("");
+    if (phone && data.operationalConsent !== "on") {
+      setContactMethodError("Please confirm the required contact consent before sending.");
+      return;
+    }
+    submitting.current = true;
+    submissionId.current ??= crypto.randomUUID();
     setStatus("sending");
 
     try {
       const response = await fetch("/api/leads", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
+        body: JSON.stringify({ ...data, submissionId: submissionId.current,
+          consent: { policyVersion: CONTACT_CONSENT_POLICY_VERSION, operational: data.operationalConsent === "on",
+            marketing: Boolean(phone) && data.marketingConsent === "on" } }),
       });
-      const result: { accepted?: boolean } = await response
+      const result: { accepted?: boolean; pending?: boolean } = await response
         .json()
         .catch(() => ({}));
       const honeypotFilled = Boolean(data.website);
-      if (!response.ok || (result.accepted !== true && !honeypotFilled)) {
-        throw new Error("Lead was not accepted");
-      }
+      if (result.pending) { setStatus("pending"); return; }
+      if (!response.ok) { setStatus("error"); return; }
+      if (result.accepted !== true && !honeypotFilled) { setStatus("pending"); return; }
       setStatus("sent");
       form.reset();
     } catch {
-      setStatus("error");
-    }
+      // A lost response can follow a saved lead; do not invite another submission.
+      setStatus("pending");
+    } finally { submitting.current = false; }
   }
 
   if (status === "sent") {
@@ -144,7 +158,7 @@ export function ContactForm({
                   ? "contact-method-help contact-method-error"
                   : "contact-method-help"
               }
-              onInput={() => setContactMethodError("")}
+              onInput={(event) => { setContactMethodError(""); setPhoneProvided(Boolean(event.currentTarget.value.trim())); }}
               className={fieldClassName}
             />
           </div>
@@ -219,6 +233,23 @@ export function ContactForm({
         </p>
       </div>
 
+      <div className="space-y-4">
+        <label className="flex items-start gap-3 text-sm font-light leading-relaxed text-ink/80">
+          <input type="checkbox" name="operationalConsent" required={phoneProvided} disabled={status === "sending" || status === "pending"}
+            className="mt-1 size-4 shrink-0 accent-rose" />
+          <span>{ASSESSMENT_CONTACT_CONSENT}</span>
+        </label>
+        <label className="flex items-start gap-3 text-sm font-light leading-relaxed text-ink/80">
+          <input type="checkbox" name="marketingConsent" disabled={!phoneProvided || status === "sending" || status === "pending"}
+            className="mt-1 size-4 shrink-0 accent-rose" />
+          <span>{MARKETING_CONSENT}</span>
+        </label>
+      </div>
+
+      {status === "pending" ? <div role="status" className="border border-rose-text bg-rose-blush p-4 text-sm text-ink">
+        We could not verify that your request and contact choices were saved. Please call <a className="font-medium underline" href="tel:+17073582928">707.358.2928</a> before sending another request.
+      </div> : null}
+
       {status === "error" ? (
         <div
           role="alert"
@@ -244,7 +275,7 @@ export function ContactForm({
 
       <button
         type="submit"
-        disabled={status === "sending"}
+        disabled={status === "sending" || status === "pending"}
         className="rella-cta-rect rella-cta-rect--filled disabled:cursor-not-allowed disabled:opacity-50"
       >
         {status === "sending" ? "Sending..." : "Send Message"}

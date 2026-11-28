@@ -1,13 +1,19 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { Suspense, useEffect, useRef, useState } from "react";
+import { usePathname, useSearchParams } from "next/navigation";
+import { registerAestheticsBookingPreparation } from "@/lib/aesthetics-booking-boundary";
+import { requestClinicBookingEntry } from "@/lib/clinic-booking-entry";
+import { WebsiteInsights } from "@/lib/website-insights";
+import { PublicAnalyticsParent } from "@/lib/public-analytics-parent";
+import { useGuidedBooking } from "@/components/guided-booking/BookingExperienceProvider";
 import {
   AESTHETICS_CONSENT_CHANNEL,
   AestheticsAttributionController,
   cleanAestheticsBookingHref,
   createBrowserAestheticsAttributionRuntime,
   isAestheticsBookingHref,
-  isApprovedAestheticsPilotPage,
+  isApprovedAestheticsPage,
   type AestheticsConsentMessage,
   type AestheticsConsentView,
 } from "@/lib/aesthetics-attribution";
@@ -24,9 +30,21 @@ const BOOKING_LINK_SELECTOR =
   'a[href^="https://book.experiencerella.com/"]';
 
 export function AestheticsAttributionConsent() {
+  return <Suspense fallback={null}><AestheticsAttributionConsentClient /></Suspense>;
+}
+
+function AestheticsAttributionConsentClient() {
   const [view, setView] = useState(INITIAL_VIEW);
   const controllerRef = useRef<AestheticsAttributionController | null>(null);
+  const analyticsRef = useRef<PublicAnalyticsParent | null>(null);
+  const viewRef = useRef(INITIAL_VIEW);
+  const bookingOpen = useGuidedBooking()?.isOpen ?? false;
+  const bookingOpenRef = useRef(bookingOpen);
+  useEffect(() => { bookingOpenRef.current = bookingOpen; }, [bookingOpen]);
   const acceptRef = useRef<HTMLButtonElement | null>(null);
+  const pathname = usePathname();
+  const search = useSearchParams()?.toString();
+  const openBooking = useGuidedBooking()?.open;
 
   useEffect(() => {
     let channel: BroadcastChannel | null = null;
@@ -47,11 +65,20 @@ export function AestheticsAttributionConsent() {
       createBrowserAestheticsAttributionRuntime(publish),
     );
     controllerRef.current = controller;
-    const unsubscribe = controller.subscribe(setView);
+    const analytics = new PublicAnalyticsParent();
+    const insights = new WebsiteInsights();
+    analyticsRef.current = analytics;
+    const unsubscribe = controller.subscribe((next) => {
+      viewRef.current = next;
+      analytics.reconcile(next, bookingOpenRef.current);
+      insights.reconcile(next);
+      setView(next);
+    });
+    const unregisterPreparation = registerAestheticsBookingPreparation(() => controller.prepareBooking());
 
     function sanitizeBookingLinks() {
       if (
-        !isApprovedAestheticsPilotPage(
+        !isApprovedAestheticsPage(
           window.location.hostname,
           window.location.pathname,
         )
@@ -72,6 +99,7 @@ export function AestheticsAttributionConsent() {
     }
 
     function handleDocumentClick(event: MouseEvent) {
+      if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
       const target = event.target;
       if (!(target instanceof Element)) return;
       const link = target.closest<HTMLAnchorElement>("a[href]");
@@ -79,7 +107,7 @@ export function AestheticsAttributionConsent() {
 
       if (isAestheticsBookingHref(link.href)) {
         if (
-          !isApprovedAestheticsPilotPage(
+          !isApprovedAestheticsPage(
             window.location.hostname,
             window.location.pathname,
           )
@@ -88,7 +116,10 @@ export function AestheticsAttributionConsent() {
         }
         const clean = cleanAestheticsBookingHref(link.href);
         if (clean !== link.href) link.href = clean;
-        if (controller.guardBookingNavigation(clean)) {
+        const continueInSite = link.dataset.guidedBooking === "modal"
+          ? () => { if (link.isConnected) link.click(); }
+          : undefined;
+        if (controller.guardBookingNavigation(clean, continueInSite)) {
           event.preventDefault();
           window.requestAnimationFrame(() => acceptRef.current?.focus());
         }
@@ -138,6 +169,9 @@ export function AestheticsAttributionConsent() {
 
     return () => {
       observer?.disconnect();
+      analytics.destroy();
+      insights.destroy();
+      analyticsRef.current = null;
       channel?.removeEventListener("message", handleChannelMessage);
       channel?.close();
       document.removeEventListener("click", handleDocumentClick, {
@@ -148,10 +182,37 @@ export function AestheticsAttributionConsent() {
       window.removeEventListener("pageshow", reconcile);
       window.removeEventListener("popstate", reconcile);
       unsubscribe();
+      unregisterPreparation();
       controller.destroy();
       if (controllerRef.current === controller) controllerRef.current = null;
     };
   }, []);
+
+  useEffect(() => {
+    function reconcileEntry() {
+      const controller = controllerRef.current;
+      if (!controller) return;
+      controller.reconcileNavigation();
+      if (openBooking) {
+        requestClinicBookingEntry(controller, {
+          currentHref: () => window.location.href,
+          replaceHref: href => window.history.replaceState(window.history.state, "", href),
+          open: openBooking,
+        });
+      }
+    }
+    reconcileEntry();
+    window.addEventListener("hashchange", reconcileEntry);
+    window.addEventListener("popstate", reconcileEntry);
+    return () => {
+      window.removeEventListener("hashchange", reconcileEntry);
+      window.removeEventListener("popstate", reconcileEntry);
+    };
+  }, [pathname, search, openBooking]);
+
+  useEffect(() => {
+    analyticsRef.current?.reconcile(viewRef.current, bookingOpen);
+  }, [bookingOpen, pathname, search]);
 
   if (view.mode === "hidden") return null;
 
@@ -185,8 +246,8 @@ export function AestheticsAttributionConsent() {
         Cookies
       </h2>
       <p id="rella-aesthetics-cookie-copy" className={styles.copy}>
-        Accept cookies to help us understand whether a Google ad leads to a
-        booked appointment. Booking and care are unchanged. {" "}
+        Allow Google Analytics visits, ad attribution, and Rella’s click, scroll and
+        booking-step counts. No session recordings or form entries. {" "}
         <a href="/privacy-policy">
           Privacy policy
         </a>

@@ -1,8 +1,9 @@
+import { withWebsiteSeo } from "@/lib/website-seo";
 import type { Metadata } from "next";
 import { BookTrigger } from "@/components/guided-booking/BookTrigger";
 import { ServicesDirectory } from "@/components/services/ServicesDirectory";
 
-export const metadata: Metadata = {
+const defaultMetadata: Metadata = {
   title: "Services",
   description:
     "Explore personalized aesthetic treatments at Rella Aesthetics in Vacaville and Napa, including injectables, skin, lasers, wellness, and medical weight loss.",
@@ -42,4 +43,8 @@ export default function ServicesPage() {
       </section>
     </div>
   );
+}
+
+export async function generateMetadata(): Promise<Metadata> {
+  return withWebsiteSeo("/services", defaultMetadata);
 }

@@ -26,7 +26,7 @@ function buildProviderRail(): readonly ProviderRailItem[] {
     image: member.image,
   }));
 
-  return [
+  const roster = [
     {
       name: leadershipMember.name,
       role: leadershipMember.role,
@@ -35,6 +35,24 @@ function buildProviderRail(): readonly ProviderRailItem[] {
     ...fromGroups,
     ...additional,
   ];
+  const homepageOrder = [
+    "Dr. Zachary Wagner",
+    "Warda Harchaoui",
+    "Anna Johnson",
+    "Devyn Pickett",
+    "Marisa Avalos",
+    "Michaela",
+    "Natalie",
+    "Sandra Maldonado",
+    "Pia Tiaoqui",
+    "Paula",
+    "Ayano",
+  ];
+  const position = new Map(homepageOrder.map((name, index) => [name, index]));
+  return roster.toSorted((a, b) =>
+    (position.get(a.name) ?? homepageOrder.length) -
+    (position.get(b.name) ?? homepageOrder.length),
+  );
 }
 
 export function HomeProviders() {

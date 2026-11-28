@@ -3,7 +3,7 @@ import type {
 } from "./types";
 
 /**
- * Funnel analytics for the guided booking shell.
+ * Browser-local diagnostics for the guided booking shell.
  * Opens and handoffs are tracked separately from verified confirmations.
  * Never include PII or treatment-sensitive details in payloads.
  */
@@ -35,9 +35,7 @@ function defaultSink(event: GuidedBookingAnalyticsEvent): void {
       : event.type === "booking_handoff"
         ? {
             event: SAFE_HANDOFF,
-            location: event.locationSlug,
-            // service slug is a public catalog key, not clinical notes
-            service: event.serviceSlug,
+            hasLocation: Boolean(event.locationSlug),
           }
         : {
             event: SAFE_CONFIRMED,
@@ -48,14 +46,4 @@ function defaultSink(event: GuidedBookingAnalyticsEvent): void {
   window.dispatchEvent(
     new CustomEvent("rella:guided-booking", { detail }),
   );
-
-  const w = window as Window & {
-    dataLayer?: Array<Record<string, unknown>>;
-    gtag?: (...args: unknown[]) => void;
-  };
-
-  w.dataLayer?.push({ ...detail, at: event.at });
-  if (typeof w.gtag === "function") {
-    w.gtag("event", detail.event, detail);
-  }
 }

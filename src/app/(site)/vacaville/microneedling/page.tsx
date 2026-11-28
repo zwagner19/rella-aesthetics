@@ -1,3 +1,4 @@
+import { withWebsiteSeo } from "@/lib/website-seo";
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
@@ -15,15 +16,15 @@ const BOOKING_HREF = resolveBookingHref({
 });
 const clinic = locations.vacaville;
 
-export const metadata: Metadata = {
+const defaultMetadata: Metadata = {
   title: "Microneedling in Vacaville | Consult & Options",
   description:
-    "Compare microneedling pathways at Rella Aesthetics in Vacaville, then book the Initial Microneedling Consult currently available online.",
+    "Explore microneedling at Rella Aesthetics in Vacaville. Browse the live menu for current services, consultations and availability.",
   alternates: { canonical: CANONICAL },
   openGraph: {
     title: "Microneedling in Vacaville | Rella Aesthetics",
     description:
-      "Consult-first Skin Stylus and RF microneedling planning with online booking for the Vacaville initial consultation.",
+      "Consultation-led microneedling planning with current services and availability in the live Vacaville booking menu.",
     url: CANONICAL,
     type: "website",
     images: [
@@ -73,7 +74,7 @@ const faqs = [
   {
     question: "Which microneedling options are listed at Rella Vacaville?",
     answer:
-      "Rella's current Vacaville online microneedling category lists the Initial Microneedling Consult. Skin Stylus, RF microneedling, packages, and add-ons may be discussed with the team, but their availability should not be inferred from the online menu.",
+      "Vacaville's live microneedling menu includes SkinPen, RF Microneedling, and the Initial Microneedling Consult. Browse the live menu for current details and availability; the team can help compare suitable options.",
   },
   {
     question: "What is the difference between Skin Stylus and RF microneedling?",
@@ -108,7 +109,7 @@ const serviceSchema = {
   "@id": `${CANONICAL}#service`,
   name: "Microneedling in Vacaville",
   serviceType: "Microneedling consultation and treatment",
-  description: metadata.description,
+  description: defaultMetadata.description,
   url: CANONICAL,
   image: "https://experiencerella.com/images/service-microneedling.jpg",
   provider: {
@@ -170,7 +171,7 @@ export default function VacavilleMicroneedlingPage() {
               </Button>
             </div>
             <p className="mt-5 text-xs leading-6 text-ink/70">
-              This button opens Vacaville&apos;s live microneedling category, which currently lists the Initial Microneedling Consult.
+              This button opens Vacaville&apos;s live microneedling category. Browse current treatments, the Initial Microneedling Consult, and availability.
             </p>
           </div>
 
@@ -197,7 +198,7 @@ export default function VacavilleMicroneedlingPage() {
 
       <TrustStrip
         ariaLabel="Rella Vacaville microneedling visit facts"
-        items={["Initial consult online", "Modality selected later", "Individual recovery plan", "Downtown Vacaville"]}
+        items={["Live microneedling menu", "Modality selected later", "Individual recovery plan", "Downtown Vacaville"]}
       />
 
       <section className="py-20 md:py-28" aria-labelledby="vacaville-microneedling-options">
@@ -210,7 +211,7 @@ export default function VacavilleMicroneedlingPage() {
               One consult. Two different technologies.
             </h2>
             <p className="text-lg font-light leading-relaxed text-ink/70">
-              Skin Stylus and RF microneedling use different technology and carry different considerations. The current online category lists the Initial Microneedling Consult so the team can compare fit and availability first.
+              Skin Stylus and RF microneedling use different technology and carry different considerations. Browse the live menu for current services and availability, or choose the Initial Microneedling Consult to discuss fit first.
             </p>
           </div>
           <div className="grid gap-5 lg:grid-cols-3">
@@ -285,7 +286,7 @@ export default function VacavilleMicroneedlingPage() {
               Start with the Initial Microneedling Consult.
             </h2>
             <p className="max-w-[700px] text-ink/70">
-              The live category currently lists the Initial Microneedling Consult. Select it to review details before choosing a professional or appointment.
+              The live category includes the Initial Microneedling Consult alongside current treatment options. Select a service to review its details before choosing a professional or appointment.
             </p>
           </div>
           <Button disableHover href={BOOKING_HREF} data-cta="service-booking" className="rounded-full">
@@ -310,7 +311,7 @@ export default function VacavilleMicroneedlingPage() {
             Choose the modality after the assessment.
           </h2>
           <p className="mb-8 text-lg font-light leading-relaxed text-white">
-            Open the live Vacaville microneedling category to review the Initial Microneedling Consult, or call the team before choosing a treatment.
+            Open the live Vacaville microneedling category to review current services and availability, or call the team before choosing a treatment.
           </p>
           <div className="flex flex-col justify-center gap-3 sm:flex-row">
             <Button disableHover href={BOOKING_HREF} data-cta="service-booking" className="rounded-full bg-white !text-rose-text">
@@ -332,4 +333,8 @@ export default function VacavilleMicroneedlingPage() {
       </section>
     </>
   );
+}
+
+export async function generateMetadata(): Promise<Metadata> {
+  return withWebsiteSeo("/vacaville/microneedling", defaultMetadata);
 }

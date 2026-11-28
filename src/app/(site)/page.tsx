@@ -1,3 +1,4 @@
+import { withWebsiteSeo } from "@/lib/website-seo";
 import type { Metadata } from "next";
 import { headers } from "next/headers";
 import { FinalCta } from "@/components/home/FinalCta";
@@ -24,7 +25,7 @@ const mainSiteMetadata: Metadata = {
 
 export async function generateMetadata(): Promise<Metadata> {
   const host = (await headers()).get("host");
-  return isWeightLossHost(host) ? getServiceMetadata("weight-loss") : mainSiteMetadata;
+  return isWeightLossHost(host) ? getServiceMetadata("weight-loss") : withWebsiteSeo("/", mainSiteMetadata);
 }
 
 function HomePageContent({ isWeightLoss }: { isWeightLoss: boolean }) {

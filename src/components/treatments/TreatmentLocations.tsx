@@ -1,11 +1,28 @@
 import Link from "next/link";
+import { BookTrigger } from "@/components/guided-booking/BookTrigger";
 import { ClinicLocationPhoto } from "@/components/home/ClinicLocationPhoto";
 import { HOME_LOCATION_VISUALS } from "@/components/home/home-location-visuals";
 import type { BookingLocation } from "@/lib/booking-routes";
 import { locations } from "@/lib/data";
 
+const localTreatmentPages: Record<string, Partial<Record<BookingLocation, string>>> = {
+  "chemical-peels": { vacaville: "/vacaville/chemical-peels" },
+  facials: { vacaville: "/vacaville/facials", napa: "/napa/facials" },
+  hydrafacial: { vacaville: "/vacaville/hydrafacial" },
+  "laser-treatments": { vacaville: "/vacaville/laser" },
+  microneedling: { vacaville: "/vacaville/microneedling", napa: "/napa/microneedling" },
+};
+// Clinic links whose chooser category is missing from the old booking page.
+// These open the in-site booking menu instead, preselecting the service.
+const guidedLocationBooking = new Set(["napa/microneedling"]);
+const wordpressNapaTreatmentPages: Record<string, string> = {
+  hydrafacial: "/napa/hydrafacial/",
+  "laser-treatments": "/napa/laser/",
+};
+
 interface TreatmentLocationsProps {
   id: string;
+  serviceSlug: string;
   availableLocations: readonly BookingLocation[];
   bookingHrefFor: (location: BookingLocation) => string;
   callAssisted?: boolean;
@@ -14,6 +31,7 @@ interface TreatmentLocationsProps {
 
 export function TreatmentLocations({
   id,
+  serviceSlug,
   availableLocations,
   bookingHrefFor,
   callAssisted = false,
@@ -57,6 +75,9 @@ export function TreatmentLocations({
         >
           {visuals.map((visual, index) => {
             const location = locations[visual.slug];
+            const detailsHref = localTreatmentPages[serviceSlug]?.[visual.slug];
+            const wordpressHref = visual.slug === "napa" ? wordpressNapaTreatmentPages[serviceSlug] : undefined;
+            const locationName = visual.slug === "napa" ? "Napa House" : "Vacaville";
             return (
               <article
                 key={visual.slug}
@@ -73,7 +94,11 @@ export function TreatmentLocations({
                   sizes={dual ? "(min-width: 1024px) 45vw, 100vw" : "100vw"}
                 />
                 <h3 className="text-2xl font-medium tracking-[-0.01em] text-ink">
-                  {visual.slug === "napa" ? "Napa House" : "Vacaville"}
+                  {wordpressHref ? (
+                    <a href={wordpressHref}>{locationName}</a>
+                  ) : detailsHref ? (
+                    <Link href={detailsHref}>{locationName}</Link>
+                  ) : locationName}
                 </h3>
                 <p className="mt-3 text-sm font-light leading-relaxed text-silver">
                   {location.address}
@@ -88,6 +113,15 @@ export function TreatmentLocations({
                   >
                     Call about availability
                   </Link>
+                ) : guidedLocationBooking.has(`${visual.slug}/${serviceSlug}`) ? (
+                  <BookTrigger
+                    intent={{ location: visual.slug, service: serviceSlug }}
+                    className="mt-7 inline-flex text-[0.6875rem] font-bold uppercase tracking-[0.18em] text-ink underline-offset-4 hover:text-rose hover:underline"
+                    data-cta="service-booking"
+                    data-location={visual.slug}
+                  >
+                    Book in {visual.slug === "napa" ? "Napa" : "Vacaville"}
+                  </BookTrigger>
                 ) : (
                   <Link
                     href={bookingHrefFor(visual.slug)}

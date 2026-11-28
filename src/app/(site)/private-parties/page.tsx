@@ -1,8 +1,9 @@
+import { withWebsiteSeo } from "@/lib/website-seo";
 import type { Metadata } from "next";
 
 import { Button } from "@/components/ui/Button";
 
-export const metadata: Metadata = {
+const defaultMetadata: Metadata = {
   title: "Private Parties",
   description:
     "Ask Rella Aesthetics about planning an at-home private event for a group of six or more.",
@@ -68,4 +69,8 @@ export default function PrivatePartiesPage() {
       </section>
     </>
   );
+}
+
+export async function generateMetadata(): Promise<Metadata> {
+  return withWebsiteSeo("/private-parties", defaultMetadata);
 }

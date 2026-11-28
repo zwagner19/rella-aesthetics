@@ -1,10 +1,11 @@
+import { withWebsiteSeo } from "@/lib/website-seo";
 import type { Metadata } from "next";
 import { LocationCard } from "@/components/blocks/LocationCard";
 import { ContactForm } from "./ContactForm";
 import { resolveContactIntent } from "@/lib/contact-intents";
 import { locations } from "@/lib/data";
 
-export const metadata: Metadata = {
+const defaultMetadata: Metadata = {
   title: "Contact Us",
   description:
     "Get in touch with Rella Aesthetics in Vacaville or Napa. Call, email, or submit a contact form. We're here to help you begin your aesthetic journey.",
@@ -109,4 +110,8 @@ export default async function ContactPage({
       </section>
     </>
   );
+}
+
+export async function generateMetadata(): Promise<Metadata> {
+  return withWebsiteSeo("/contact", defaultMetadata);
 }

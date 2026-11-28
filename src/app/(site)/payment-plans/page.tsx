@@ -1,9 +1,10 @@
+import { withWebsiteSeo } from "@/lib/website-seo";
 import type { Metadata } from "next";
 
 import { CherryFinancingWidget } from "@/components/integrations/CherryFinancingWidget";
 import { Button } from "@/components/ui/Button";
 
-export const metadata: Metadata = {
+const defaultMetadata: Metadata = {
   title: "Payment Plans",
   description:
     "Ask Rella Aesthetics about current payment-plan availability through Cherry and its lending partners.",
@@ -78,4 +79,8 @@ export default function PaymentPlansPage() {
       </section>
     </>
   );
+}
+
+export async function generateMetadata(): Promise<Metadata> {
+  return withWebsiteSeo("/payment-plans", defaultMetadata);
 }

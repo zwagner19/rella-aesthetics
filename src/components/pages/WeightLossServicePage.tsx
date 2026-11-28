@@ -151,7 +151,7 @@ function LocationCard({ option }: { option: LocationOption }) {
         </Button>
       </div>
       <p className="mt-5 text-xs leading-relaxed text-silver">
-        30-minute medical qualification consultation · No card required · No pressure
+        30-minute medical qualification consultation · $100 reservation deposit · No pressure
       </p>
     </article>
   );
@@ -193,7 +193,7 @@ export function WeightLossServicePage() {
             <p className="flex flex-wrap gap-x-5 gap-y-2 text-sm font-medium text-silver">
               <span>30-minute phone consultation</span>
               <span aria-hidden="true" className="hidden text-rose-text sm:inline">•</span>
-              <span>No card required</span>
+              <span>$100 reservation deposit</span>
               <span aria-hidden="true" className="hidden text-rose-text sm:inline">•</span>
               <span>No pressure</span>
               <span aria-hidden="true" className="hidden text-rose-text sm:inline">•</span>
@@ -409,7 +409,7 @@ export function WeightLossServicePage() {
             <p className="mb-4 text-[0.6875rem] font-bold uppercase tracking-[0.2em] text-rose-dark">Choose your clinic</p>
             <h2 className="mb-5 text-3xl font-medium tracking-[-0.035em] text-ink md:text-5xl">Choose your clinic and book your qualification call.</h2>
             <p className="text-lg font-light leading-relaxed text-silver">
-              Select Napa or Vacaville to see live times for your 30-minute phone consultation with Dr. Wagner. There is one clear next step and no card is required.
+              Select Napa or Vacaville to see live times for your 30-minute phone consultation with Dr. Wagner. A $100 reservation deposit is required when you book. After you attend, it is applied toward treatment or account credit, or refunded if you are not a candidate or choose not to proceed.
             </p>
           </div>
           <div className="grid gap-6 lg:grid-cols-2">

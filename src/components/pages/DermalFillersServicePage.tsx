@@ -186,6 +186,14 @@ export function DermalFillersServicePage() {
                 <p className="mt-5 max-w-[22rem] text-base font-light leading-relaxed text-silver">
                   {area.body}
                 </p>
+                {index === 0 ? (
+                  <Link
+                    href="/services/lip-filler"
+                    className="mt-5 inline-flex text-[0.6875rem] font-bold uppercase tracking-[0.18em] text-ink underline-offset-4 hover:text-rose hover:underline"
+                  >
+                    Read the lip filler guide
+                  </Link>
+                ) : null}
               </article>
             ))}
           </div>
@@ -416,7 +424,7 @@ export function DermalFillersServicePage() {
           <div className="grid gap-16 lg:grid-cols-2 lg:gap-0">
             <article className="lg:border-r lg:border-rule lg:pr-12">
               <ClinicLocationPhoto visual={vacavilleVisual} />
-              <h3 className="text-2xl font-medium tracking-[-0.01em] text-ink">Vacaville</h3>
+              <h3 className="text-2xl font-medium tracking-[-0.01em] text-ink"><Link href="/vacaville/filler">Vacaville</Link></h3>
               <p className="mt-3 text-sm font-light leading-relaxed text-silver">
                 {locations.vacaville.address}
                 <br />
@@ -434,7 +442,7 @@ export function DermalFillersServicePage() {
 
             <article className="lg:pl-12">
               <ClinicLocationPhoto visual={napaVisual} />
-              <h3 className="text-2xl font-medium tracking-[-0.01em] text-ink">Napa House</h3>
+              <h3 className="text-2xl font-medium tracking-[-0.01em] text-ink"><a href="/napa/filler/">Napa House</a></h3>
               <p className="mt-3 text-sm font-light leading-relaxed text-silver">
                 {locations.napa.address}
                 <br />

@@ -1,6 +1,11 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { isWeightLossHost } from "@/lib/site-hosts";
+import {
+  PUBLIC_ANALYTICS_ORIGIN,
+  PUBLIC_ANALYTICS_FRAME_PATH,
+  PUBLIC_ANALYTICS_CLEAR_PATH,
+} from "@/lib/public-analytics-frame";
 export { isWeightLossHost } from "@/lib/site-hosts";
 
 /**
@@ -48,7 +53,9 @@ const ALLOWED_PREFIXES = ["/_next/static/"];
 const WEIGHT_LOSS_ASSET_PREFIXES = ["/_next/static/", "/brand/", "/images/", "/media/"];
 const WEIGHT_LOSS_EXACT_ASSETS = new Set(["/favicon.ico"]);
 const WEIGHT_LOSS_SEO_DOCUMENTS = new Set(["/robots.txt", "/sitemap.xml", "/sitemap-0.xml"]);
-const WEIGHT_LOSS_SITEMAP = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"><url><loc>https://weightloss.experiencerella.com/</loc><changefreq>weekly</changefreq><priority>1.0</priority></url></urlset>`;
+// The weight-loss page's canonical is rellaweightloss.com, so this host lists
+// no URLs of its own; an empty urlset avoids a sitemap/canonical conflict.
+const WEIGHT_LOSS_SITEMAP = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"></urlset>`;
 
 export function isWeightLossAsset(pathname: string): boolean {
   const lowerPath = pathname.toLowerCase();
@@ -79,6 +86,36 @@ export function isAllowedOnReleaseOrigin(pathname: string): boolean {
 
 export function proxy(request: NextRequest) {
   const host = request.headers.get("host");
+  const { pathname } = request.nextUrl;
+
+  // This origin is an isolated analytics document, never another app alias.
+  // Match either URL or Host so a disagreement cannot fall through to the app.
+  const analyticsHost = new URL(PUBLIC_ANALYTICS_ORIGIN).hostname;
+  if (request.nextUrl.hostname === analyticsHost
+    || host?.trim().toLowerCase().split(":")[0] === analyticsHost) {
+    const headers = {
+      "content-type": "text/plain; charset=utf-8",
+      "x-robots-tag": "noindex, nofollow, noarchive",
+      "cache-control": "no-store, private, max-age=0",
+      "referrer-policy": "no-referrer",
+      "x-content-type-options": "nosniff",
+    };
+    if (request.nextUrl.origin === PUBLIC_ANALYTICS_ORIGIN
+      && (!host || host.toLowerCase() === request.nextUrl.host)
+      && !request.nextUrl.search) {
+      if (pathname === PUBLIC_ANALYTICS_FRAME_PATH || pathname === PUBLIC_ANALYTICS_CLEAR_PATH) {
+        return NextResponse.next();
+      }
+      if (pathname === "/robots.txt" && ["GET", "HEAD"].includes(request.method)) {
+        return new NextResponse("User-agent: *\nDisallow: /\n", { headers });
+      }
+    }
+    return new NextResponse("Not Found", { status: 404, headers });
+  }
+
+  // The previous matcher bypassed this prefix on every other host. Keep that
+  // behavior while allowing the isolated-host guard to intercept image URLs.
+  if (pathname.startsWith("/_next/image")) return NextResponse.next();
 
   if (isWeightLossHost(host)) {
     const { pathname } = request.nextUrl;
@@ -93,7 +130,7 @@ export function proxy(request: NextRequest) {
 
     if (pathname === "/robots.txt") {
       return new NextResponse(
-        "User-agent: *\nAllow: /\nDisallow: /api/\nDisallow: /studio/\nSitemap: https://weightloss.experiencerella.com/sitemap.xml\n",
+        "User-agent: *\nAllow: /\nDisallow: /api/\nDisallow: /studio/\n",
         {
           headers: {
             "content-type": "text/plain; charset=utf-8",
@@ -158,7 +195,6 @@ export function proxy(request: NextRequest) {
     return NextResponse.next();
   }
 
-  const { pathname } = request.nextUrl;
   if (pathname === "/napa/botox/") {
     const canonicalUrl = new URL(request.url);
     canonicalUrl.pathname = "/napa/botox";
@@ -184,9 +220,8 @@ export function proxy(request: NextRequest) {
 
 export const config = {
   /**
-   * Run on everything except Next's internal image/HMR endpoints, so that API
-   * routes and Studio are genuinely intercepted rather than bypassed. Static
-   * assets still pass through the matcher and are explicitly allowlisted above.
+   * Every path must reach the isolated analytics-host guard, including Next's
+   * image optimizer. Other hosts retain their previous image-prefix bypass.
    */
-  matcher: ["/((?!_next/image).*)"],
+  matcher: ["/:path*"],
 };

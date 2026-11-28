@@ -1,6 +1,7 @@
 const publicRoutes = [
   "/",
   "/about",
+  "/blog/botox-cost-napa",
   "/cancellation-policy",
   "/contact",
   "/gallery",
@@ -8,13 +9,20 @@ const publicRoutes = [
   "/locations/vacaville",
   "/membership",
   "/napa/botox",
+  "/napa/filler/",
+  "/napa/hydrafacial/",
+  "/napa/hyperhidrosis/",
+  "/napa/laser/",
   "/napa/facials",
+  "/napa/microneedling",
   "/payment-plans",
   "/privacy-policy",
+  "/promotional-terms",
   "/private-parties",
   "/services",
   "/services/botox",
   "/services/chemical-peels",
+  "/services/co2-laser",
   "/services/dermal-fillers",
   "/services/facials",
   "/services/hydrafacial",
@@ -22,6 +30,7 @@ const publicRoutes = [
   "/services/iv-hydration",
   "/services/laser-treatments",
   "/services/lasers",
+  "/services/lip-filler",
   "/services/microneedling",
   "/services/skin",
   "/team",
@@ -44,6 +53,9 @@ module.exports = {
   // checked-in sitemap reproducible and avoids sending crawlers a false signal.
   autoLastmod: false,
   exclude: [
+    "/napa",
+    "/napa/",
+    "/gift-cards/**",
     "/studio",
     "/studio/**",
     "/blog",
@@ -75,6 +87,14 @@ module.exports = {
     additionalSitemaps: [],
   },
   transform: async (config, path) => {
+    // These four treatment pages still belong to WordPress, whose canonical URLs
+    // retain their slash. Normalize build-discovered Next routes to that same
+    // public URL, without changing slashless URLs for the new site.
+    const wordpressPath = [
+      "/napa/filler", "/napa/hydrafacial",
+      "/napa/hyperhidrosis", "/napa/laser",
+    ].includes(path.replace(/\/$/, ""));
+    const canonicalPath = wordpressPath ? `${path.replace(/\/$/, "")}/` : path;
     const priorityMap = {
       "/": 1.0,
       "/services": 0.9,
@@ -82,6 +102,7 @@ module.exports = {
       "/locations/vacaville": 0.9,
       "/napa/botox": 0.9,
       "/napa/facials": 0.9,
+      "/napa/microneedling": 0.9,
       "/vacaville/botox": 0.9,
       "/vacaville/filler": 0.9,
       "/vacaville/laser": 0.9,
@@ -99,10 +120,11 @@ module.exports = {
     };
 
     return {
-      loc: path,
+      loc: canonicalPath,
+      ...(wordpressPath ? { trailingSlash: true } : {}),
       changefreq: path.startsWith("/blog") ? "daily" : config.changefreq,
       priority:
-        priorityMap[path] ??
+        priorityMap[wordpressPath ? path.replace(/\/$/, "") : path] ??
         (path.startsWith("/services/") ? 0.8 : config.priority),
       lastmod: config.autoLastmod ? new Date().toISOString() : undefined,
     };

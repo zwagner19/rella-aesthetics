@@ -1,3 +1,4 @@
+import { withWebsiteSeo } from "@/lib/website-seo";
 import type { Metadata } from "next";
 import Image from "next/image";
 import { notFound } from "next/navigation";
@@ -28,7 +29,7 @@ export async function generateStaticParams() {
 
 export async function generateMetadata({ params }: ServicePageProps): Promise<Metadata> {
   const { slug } = await params;
-  return getServiceMetadata(slug);
+  return slug === "weight-loss" ? getServiceMetadata(slug) : withWebsiteSeo(`/services/${slug}`, getServiceMetadata(slug));
 }
 
 export default async function ServicePage({ params }: ServicePageProps) {

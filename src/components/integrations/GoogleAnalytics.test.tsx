@@ -14,7 +14,24 @@ type ScriptProps = {
 type AnalyticsWindow = {
   dataLayer?: ArrayLike<unknown>[];
   gtag?: (...args: unknown[]) => void;
+  location?: { hostname: string };
+  document?: {
+    head: { appendChild: (el: Record<string, unknown>) => void };
+    createElement: (tag: string) => Record<string, unknown>;
+  };
 };
+
+function fakeWindow(hostname: string) {
+  const appended: Record<string, unknown>[] = [];
+  const window: AnalyticsWindow = {
+    location: { hostname },
+    document: {
+      head: { appendChild: (el) => appended.push(el) },
+      createElement: (tag) => ({ tag }),
+    },
+  };
+  return { window, appended };
+}
 
 afterEach(() => {
   vi.resetModules();
@@ -35,8 +52,14 @@ async function loadWithId(measurementId?: string) {
   return import("./GoogleAnalytics");
 }
 
-function scriptsFrom(element: ReactElement<{ children: ReactElement<ScriptProps>[] }>) {
-  return Children.toArray(element.props.children) as ReactElement<ScriptProps>[];
+function bootstrapFrom(element: unknown) {
+  const script = element as ReactElement<ScriptProps>;
+  expect(Children.count(script)).toBe(1);
+  expect(script.props).toMatchObject({
+    id: "google-analytics-bootstrap",
+    strategy: "afterInteractive",
+  });
+  return script.props.children ?? "";
 }
 
 function commands(window: AnalyticsWindow) {
@@ -59,40 +82,47 @@ describe("GoogleAnalytics production bootstrap", () => {
     }
   });
 
-  it("loads gtag and emits the standard js + config queue commands", async () => {
+  it("configures GA4 and loads gtag.js on the live domain", async () => {
     const { GoogleAnalytics } = await loadWithId("  G-WKDS1158Y1  ");
-    const scripts = scriptsFrom(
-      GoogleAnalytics() as ReactElement<{ children: ReactElement<ScriptProps>[] }>,
-    );
+    const bootstrap = bootstrapFrom(GoogleAnalytics());
 
-    expect(scripts).toHaveLength(2);
-    expect(scripts[0].props).toMatchObject({
-      id: "google-analytics-loader",
-      src: "https://www.googletagmanager.com/gtag/js?id=G-WKDS1158Y1",
-      strategy: "afterInteractive",
-    });
+    for (const host of ["experiencerella.com", "www.experiencerella.com"]) {
+      const { window, appended } = fakeWindow(host);
+      runInNewContext(bootstrap, { window, Date });
 
-    const bootstrap = scripts[1];
-    expect(bootstrap.props).toMatchObject({
-      id: "google-analytics-bootstrap",
-      strategy: "afterInteractive",
-    });
+      expect(commands(window).map((command) => command[0])).toEqual(["js", "config"]);
+      expect(commands(window)[1]).toEqual(["config", "G-WKDS1158Y1"]);
+      expect(window.gtag).toBeTypeOf("function");
+      expect(appended).toHaveLength(1);
+      expect(appended[0].src).toBe("https://www.googletagmanager.com/gtag/js?id=G-WKDS1158Y1");
+    }
+  });
 
-    const window: AnalyticsWindow = {};
-    runInNewContext(bootstrap.props.children ?? "", { window, Date });
+  it("sends nothing from Vercel, localhost, or other hosts", async () => {
+    const { GoogleAnalytics } = await loadWithId("G-WKDS1158Y1");
+    const bootstrap = bootstrapFrom(GoogleAnalytics());
 
-    expect(commands(window).map((command) => command[0])).toEqual(["js", "config"]);
-    expect(commands(window)[1]).toEqual(["config", "G-WKDS1158Y1"]);
-    expect(window.gtag).toBeTypeOf("function");
+    for (const host of [
+      "rella-aesthetics.vercel.app",
+      "rella-aesthetics-git-codex-amie-cont-d87d57-zwagner19s-projects.vercel.app",
+      "localhost",
+      "experiencerella.com.evil.example",
+      "",
+    ]) {
+      const { window, appended } = fakeWindow(host);
+      runInNewContext(bootstrap, { window, Date });
+      window.gtag?.("event", "select_content", { item_id: "booking_intent" });
+
+      expect(commands(window).filter((c) => c[0] === "config"), host).toHaveLength(0);
+      expect(appended, host).toHaveLength(0);
+      expect(window.gtag, host).toBeTypeOf("function");
+    }
   });
 
   it("queues booking-intent events and never configures the property twice", async () => {
     const { GoogleAnalytics } = await loadWithId("G-WKDS1158Y1");
-    const scripts = scriptsFrom(
-      GoogleAnalytics() as ReactElement<{ children: ReactElement<ScriptProps>[] }>,
-    );
-    const bootstrap = scripts[1].props.children ?? "";
-    const window: AnalyticsWindow = {};
+    const bootstrap = bootstrapFrom(GoogleAnalytics());
+    const { window, appended } = fakeWindow("experiencerella.com");
 
     runInNewContext(bootstrap, { window, Date });
     runInNewContext(bootstrap, { window, Date });
@@ -105,6 +135,7 @@ describe("GoogleAnalytics production bootstrap", () => {
     const queued = commands(window);
     expect(queued.filter((command) => command[0] === "config")).toHaveLength(1);
     expect(queued.filter((command) => command[0] === "js")).toHaveLength(1);
+    expect(appended).toHaveLength(1);
     expect(queued.at(-1)).toEqual([
       "event",
       "select_content",

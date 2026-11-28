@@ -21,7 +21,7 @@ export function ReviewStep({
     .map((key) => {
       const service = key.split("/")[1];
       if (!state.locationSlug || !service) return null;
-      return resolveGuidedTreatment(state.locationSlug, service);
+      return resolveGuidedTreatment(state.locationSlug, service, state.treatments);
     })
     .filter(Boolean);
 
@@ -32,8 +32,8 @@ export function ReviewStep({
           Review your visit
         </h3>
         <p className="mt-2 text-sm font-light text-silver">
-          Prep notes and policies below are Rella’s. Live pricing and deposits
-          are confirmed in Boulevard when you reserve.
+          Review your treatment details and booking policies before choosing your
+          provider and time.
         </p>
       </div>
 
@@ -68,8 +68,14 @@ export function ReviewStep({
                 ) : null}
               </div>
               <p className="mt-3 text-xs text-silver">
-                {paymentRuleLabel(treatment)}
+                {state.selectedTreatmentKeys.length > 1 ? "Amount confirmed for your complete visit before payment" : paymentRuleLabel(treatment)}
               </p>
+              {treatment.bookingNotes ? (
+                <p className="mt-3 text-sm text-ink/80">
+                  <span className="font-medium">Before you book: </span>
+                  {treatment.bookingNotes}
+                </p>
+              ) : null}
               {treatment.prepCopy ? (
                 <p className="mt-3 text-sm text-ink/80">
                   <span className="font-medium">Prep: </span>

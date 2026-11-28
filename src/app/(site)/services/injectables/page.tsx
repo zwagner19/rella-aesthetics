@@ -1,7 +1,8 @@
+import { withWebsiteSeo } from "@/lib/website-seo";
 import type { Metadata } from "next";
 import { InjectablesCategoryPage } from "@/components/pages/InjectablesCategoryPage";
 
-export const metadata: Metadata = {
+const defaultMetadata: Metadata = {
   title: "Injectables | Botox, Dysport & Dermal Fillers",
   description:
     "Explore injectable options at Rella Aesthetics by goal — movement lines, volume, lips, and contour — with consultation-led Botox, Dysport, and filler care in Vacaville and Napa.",
@@ -10,4 +11,8 @@ export const metadata: Metadata = {
 
 export default function InjectablesCategoryRoute() {
   return <InjectablesCategoryPage />;
+}
+
+export async function generateMetadata(): Promise<Metadata> {
+  return withWebsiteSeo("/services/injectables", defaultMetadata);
 }

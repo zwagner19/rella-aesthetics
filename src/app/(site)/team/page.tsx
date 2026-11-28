@@ -1,3 +1,4 @@
+import { withWebsiteSeo } from "@/lib/website-seo";
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
@@ -9,7 +10,7 @@ import {
 } from "@/content/team";
 import { resolveBookingHref } from "@/lib/booking-routes";
 
-export const metadata: Metadata = {
+const defaultMetadata: Metadata = {
   title: "Meet the Rella Aesthetics Team | Vacaville & Napa",
   description:
     "Meet the Rella Aesthetics leadership and care team serving Vacaville and Napa.",
@@ -300,4 +301,8 @@ export default function TeamPage() {
       </section>
     </>
   );
+}
+
+export async function generateMetadata(): Promise<Metadata> {
+  return withWebsiteSeo("/team", defaultMetadata);
 }
