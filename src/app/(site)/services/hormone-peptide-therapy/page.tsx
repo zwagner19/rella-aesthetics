@@ -131,14 +131,14 @@ export default function HormonePeptideTherapyPage() {
         <div className="mx-auto grid max-w-[1200px] items-center gap-12 px-6 md:px-8 lg:grid-cols-[1.05fr_0.95fr] lg:gap-20 lg:px-12">
           <div>
             <p className="mb-5 text-sm font-medium italic tracking-[0.04em] text-ink">
-              Hormone &amp; Peptide Therapy &middot; Vacaville + Napa
+              Hormone &amp; Peptide Therapy <br className="sm:hidden" />Vacaville &amp; Napa
             </p>
             <h1 className="mb-6 break-words text-[clamp(1.9rem,9vw,2.25rem)] font-bold uppercase leading-[1.04] tracking-[0.04em] text-rose-text sm:text-4xl sm:tracking-[0.08em] md:text-6xl">
               Start with your labs, not a guess.
             </h1>
             <p className="mb-6 max-w-[600px] text-lg font-light leading-relaxed text-ink/70">
               A hormone and peptide wellness consult with Warda Harchaoui, PA-C, under the supervision of
-              Zachary Wagner, DO. Your baseline labs are on us.
+              Zachary Wagner, DO.
             </p>
             <div className="mb-8 inline-flex items-center gap-3 rounded-full border border-rose bg-rose-blush px-5 py-2.5 text-sm font-medium text-ink">
               <span aria-hidden="true" className="h-2 w-2 rounded-full bg-rose" />
@@ -146,7 +146,7 @@ export default function HormonePeptideTherapyPage() {
             </div>
             <div className="flex flex-col gap-3 sm:flex-row">
               <Button href={`#${FORM_ID}`} data-cta="wellness-consult-form" className="whitespace-nowrap" disableHover>
-                Request my free-labs consult
+                Request my consult
               </Button>
               <Button href={PHONE_HREF} data-cta="phone" variant="ghost" className="whitespace-nowrap" disableHover>
                 Call {PHONE_DISPLAY}
@@ -222,7 +222,7 @@ export default function HormonePeptideTherapyPage() {
           </ol>
           <div className="mt-10">
             <Button href={`#${FORM_ID}`} data-cta="wellness-consult-form" variant="light" disableHover>
-              Request my free-labs consult
+              Request my consult
             </Button>
           </div>
         </div>
@@ -232,7 +232,7 @@ export default function HormonePeptideTherapyPage() {
       <section className="bg-white py-20 md:py-28">
         <div className="mx-auto max-w-[1100px] px-6 md:px-8">
           <p className="mb-4 text-sm font-medium italic text-ink">What we offer</p>
-          <h2 className={`${headingClass} mb-10 text-rose-text`}>Care built around your results</h2>
+          <h2 className={`${headingClass} mb-10 text-rose-text`}>Care built around you</h2>
           <div className="grid gap-6 md:grid-cols-3">
             {OPTIONS.map((option) => (
               <article key={option.title} className="rounded-[1.25rem] border border-rose/40 bg-white p-7">
@@ -249,10 +249,10 @@ export default function HormonePeptideTherapyPage() {
         <div className="mx-auto grid max-w-[1100px] gap-10 px-6 md:px-8 lg:grid-cols-[0.7fr_1.3fr] lg:items-center">
           <div className="relative mx-auto aspect-[4/5] w-full max-w-[300px] overflow-hidden rounded-[1.5rem] bg-white">
             <Image
-              src="/images/team/warda-harchaoui.jpg"
-              alt="Warda Harchaoui, PA-C"
+              src="/images/clinic/vacaville-lounge.jpg"
+              alt="The lounge at Rella Vacaville"
               fill
-              className="object-cover object-top"
+              className="object-cover"
               sizes="(min-width: 1024px) 300px, 80vw"
             />
           </div>
@@ -260,9 +260,8 @@ export default function HormonePeptideTherapyPage() {
             <p className="mb-4 text-sm font-medium italic text-ink">Your provider</p>
             <h2 className={`${headingClass} mb-6 text-ink`}>Meet Warda</h2>
             <p className="mb-5 text-lg font-light leading-relaxed text-ink/80">
-              Warda Harchaoui, PA-C, is passionate about wellness and personalized care. She focuses on
-              hormone optimization, testosterone replacement therapy, IV therapy, and vitamin injections,
-              and builds each plan around the person in front of her.
+              Warda Harchaoui, PA-C, builds every plan around the person in front of her. She focuses on
+              hormone optimization, testosterone replacement therapy, IV therapy, and vitamin injections.
             </p>
             <p className="text-base font-light leading-relaxed text-ink/70">
               Rella&rsquo;s wellness care is supervised by Zachary Wagner, DO, Rella&rsquo;s owner and
@@ -276,7 +275,7 @@ export default function HormonePeptideTherapyPage() {
       <section id={FORM_ID} className="scroll-mt-24 bg-white py-20 md:py-28">
         <div className="mx-auto grid max-w-[1100px] gap-12 px-6 md:px-8 lg:grid-cols-[0.9fr_1.1fr]">
           <div>
-            <p className="mb-4 text-sm font-medium italic text-ink">Free labs with your consult</p>
+            <p className="mb-4 text-sm font-medium italic text-ink">Complimentary labs with your consult</p>
             <h2 className={`${headingClass} mb-6 text-rose-text`}>Request your consult</h2>
             <p className="mb-6 text-lg font-light leading-relaxed text-ink/70">
               Tell us a little about your goals and your preferred clinic. Our team will reach out to
@@ -294,7 +293,7 @@ export default function HormonePeptideTherapyPage() {
             <ContactForm
               initialServiceInterest={CONTACT_INTENTS["hormone-peptide"]}
               messageLabel="What would you like help with?"
-              submitLabel="Request my free-labs consult"
+              submitLabel="Request my consult"
             />
           </div>
         </div>
@@ -330,7 +329,7 @@ export default function HormonePeptideTherapyPage() {
           data-cta="wellness-consult-form"
           className="inline-flex min-h-12 items-center justify-center rounded-full border-[1.5px] border-rose bg-rose px-3 text-center text-[0.6875rem] font-bold uppercase tracking-[0.14em] text-white"
         >
-          Free-labs consult
+          Request consult
         </a>
       </nav>
     </>
